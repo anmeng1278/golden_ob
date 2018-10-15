@@ -1,0 +1,11 @@
+
+runmode: dev
+
+#spring
+spring:
+  datasource:
+      type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:mysql://172.16.5.102:3306/golden_ob?useUnicode=true&characterEncoding=utf-8
+      username: zhangning
+      password: zhangning123
+      driver-class-name: com.mysql.jdbc.Driver

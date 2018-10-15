@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsj.member.ob.dao.CouponMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.Coupon">
+        <id column="coupon_id" property="couponId" />
+        <result column="coupon_name" property="couponName" />
+        <result column="amount" property="amount" />
+        <result column="type_id" property="typeId" />
+        <result column="instruction" property="instruction" />
+        <result column="remarks" property="remarks" />
+        <result column="user_range" property="userRange" />
+        <result column="expired_days" property="expiredDays" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="delete_time" property="deleteTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        coupon_id AS couponId, coupon_name AS couponName, amount, type_id AS typeId, instruction, remarks, user_range AS userRange, expired_days AS expiredDays, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+    </sql>
+
+</mapper>
