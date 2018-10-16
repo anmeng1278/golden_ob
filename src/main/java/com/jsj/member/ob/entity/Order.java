@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Order 订单表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-15
+ *   @since 2018-10-16
  */
 @TableName("_order")
 public class Order implements Serializable {
@@ -83,6 +83,11 @@ public class Order implements Serializable {
      */
 	@TableField("pay_time")
 	private Integer payTime;
+    /**
+     * 支付有效时间
+     */
+	@TableField("expired_time")
+	private Integer expiredTime;
     /**
      * 创建时间
      */
@@ -212,6 +217,14 @@ public class Order implements Serializable {
 		this.payTime = payTime;
 	}
 
+	public Integer getExpiredTime() {
+		return expiredTime;
+	}
+
+	public void setExpiredTime(Integer expiredTime) {
+		this.expiredTime = expiredTime;
+	}
+
 	public Integer getCreateTime() {
 		return createTime;
 	}
@@ -254,6 +267,7 @@ public class Order implements Serializable {
 			", seckillId=" + seckillId +
 			", typeId=" + typeId +
 			", payTime=" + payTime +
+			", expiredTime=" + expiredTime +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +

@@ -1,18 +1,17 @@
 package com.jsj.member.ob.enums;
 
-public enum OrderType {
+public enum ProductImgType {
 
-    NORMAL(0, "普通订单"),
+    //0 封面  1 商品图片
+    COVER(0, "封面"),
 
-    TEAM(10, "团单"),
-
-    SECKILL(20, "秒杀单");
+    PRODUCT(1, "商品图片");
 
     private Integer value;
 
     private String message;
 
-    OrderType(Integer value, String message) {
+    ProductImgType(Integer value, String message) {
         this.value = value;
         this.message = message;
     }
@@ -25,14 +24,12 @@ public enum OrderType {
         return message;
     }
 
-    public static OrderType valueOf(int value) {
+    public static ProductImgType valueOf(int value) {
         switch (value) {
-            case 10:
-                return TEAM;
-            case 20:
-                return SECKILL;
+            case 1:
+                return PRODUCT;
             default:
-                return NORMAL;
+                return COVER;
         }
     }
 }

@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : WechatCoupon 用户领取优惠券表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-15
+ *   @since 2018-10-16
  */
 @TableName("_wechat_coupon")
 public class WechatCoupon implements Serializable {
@@ -37,8 +36,8 @@ public class WechatCoupon implements Serializable {
     /**
      * 过期时间
      */
-	@TableField("expire_time")
-	private Integer expireTime;
+	@TableField("expired_time")
+	private Integer expiredTime;
     /**
      * 0未使用 10已使用 60已过期
      */
@@ -93,12 +92,12 @@ public class WechatCoupon implements Serializable {
 		this.couponId = couponId;
 	}
 
-	public Integer getExpireTime() {
-		return expireTime;
+	public Integer getExpiredTime() {
+		return expiredTime;
 	}
 
-	public void setExpireTime(Integer expireTime) {
-		this.expireTime = expireTime;
+	public void setExpiredTime(Integer expiredTime) {
+		this.expiredTime = expiredTime;
 	}
 
 	public Integer getStatus() {
@@ -156,7 +155,7 @@ public class WechatCoupon implements Serializable {
 			", wechatCouponId=" + wechatCouponId +
 			", openId=" + openId +
 			", couponId=" + couponId +
-			", expireTime=" + expireTime +
+			", expiredTime=" + expiredTime +
 			", status=" + status +
 			", amount=" + amount +
 			", typeId=" + typeId +

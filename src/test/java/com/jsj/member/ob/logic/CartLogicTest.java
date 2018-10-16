@@ -16,7 +16,5 @@ public class CartLogicTest {
     @Test
     public void get() {
 
-        CartLogic.Get();
-
     }
 }

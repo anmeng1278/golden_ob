@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : ProductSize Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-15
+ *   @since 2018-10-16
  */
 @Repository
 public interface ProductSizeMapper extends BaseMapper<ProductSize> {

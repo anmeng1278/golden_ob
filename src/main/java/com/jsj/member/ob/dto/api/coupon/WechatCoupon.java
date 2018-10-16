@@ -21,7 +21,7 @@ public class WechatCoupon extends BaseDto {
     /**
      * 过期时间
      */
-    private Integer expireTime;
+    private Integer expiredTime;
     /**
      * 0未使用 10已使用 60已过期
      */
@@ -60,12 +60,12 @@ public class WechatCoupon extends BaseDto {
         this.couponId = couponId;
     }
 
-    public Integer getExpireTime() {
-        return expireTime;
+    public Integer getExpiredTime() {
+        return expiredTime;
     }
 
-    public void setExpireTime(Integer expireTime) {
-        this.expireTime = expireTime;
+    public void setExpiredTime(Integer expiredTime) {
+        this.expiredTime = expiredTime;
     }
 
     public CouponStatus getCouponStatus() {

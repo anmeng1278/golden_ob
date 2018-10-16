@@ -60,7 +60,7 @@ public class CouponLogic {
         if (wechatCoupon.getStatus() != CouponStatus.UNUSE.getValue()) {
             throw new TipException(String.format("当前优惠券不可用，%s", CouponStatus.valueOf(wechatCoupon.getStatus()).getMessage()));
         }
-        if (wechatCoupon.getExpireTime() < DateUtils.getCurrentUnixTime()) {
+        if (wechatCoupon.getExpiredTime() < DateUtils.getCurrentUnixTime()) {
             throw new TipException("当前优惠券不可用，已过期");
         }
 
@@ -127,7 +127,7 @@ public class CouponLogic {
         coupon.setCouponType(CouponType.valueOf(entity.getTypeId()));
         coupon.setCouponUseRange(CouponUseRange.valueOf(entity.getUserRange()));
 
-        coupon.setExpiredDays(entity.getExpiredDays());
+        coupon.setValidDays(entity.getValidDays());
 
         return coupon;
     }
@@ -150,7 +150,7 @@ public class CouponLogic {
         wechatCoupon.setAmount(entity.getAmount());
         wechatCoupon.setCouponId(entity.getCouponId());
         wechatCoupon.setCouponType(CouponType.valueOf(entity.getTypeId()));
-        wechatCoupon.setExpireTime(entity.getExpireTime());
+        wechatCoupon.setExpiredTime(entity.getExpiredTime());
         wechatCoupon.setOpenId(entity.getOpenId());
 
         wechatCoupon.setCouponStatus(CouponStatus.valueOf(entity.getStatus()));
