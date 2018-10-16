@@ -2,7 +2,13 @@ package com.jsj.member.ob.dto.api.Cart;
 
 import com.jsj.member.ob.dto.api.BaseDto;
 
-public class Cart extends BaseDto {
+public class CartProductDto extends BaseDto {
+
+
+    /**
+     * id
+     */
+    private Integer cartProductId;
 
     /**
      * 购物车id
@@ -12,7 +18,7 @@ public class Cart extends BaseDto {
     /**
      * 用户openid
      */
-    private Integer openId;
+    private String openId;
 
     /**
      * 商品id
@@ -29,19 +35,11 @@ public class Cart extends BaseDto {
      */
     private Integer number;
 
-    public Integer getCartId() {
-        return cartId;
-    }
-
-    public void setCartId(Integer cartId) {
-        this.cartId = cartId;
-    }
-
-    public Integer getOpenId() {
+    public String getOpenId() {
         return openId;
     }
 
-    public void setOpenId(Integer openId) {
+    public void setOpenId(String openId) {
         this.openId = openId;
     }
 
@@ -67,5 +65,21 @@ public class Cart extends BaseDto {
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public Integer getCartProductId() {
+        return cartProductId;
+    }
+
+    public void setCartProductId(Integer cartProductId) {
+        this.cartProductId = cartProductId;
+    }
+
+    public Integer getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(Integer cartId) {
+        this.cartId = cartId;
     }
 }
