@@ -14,9 +14,28 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class CartLogicTest {
 
     @Test
-    public void get() {
-
-        CartLogic.Get();
-
+    public void getcart() {
+        CartLogic.GetCart("111");
     }
+    @Test
+    public void getProduct() {
+        CartLogic.GetCartProduct("111");
+    }
+
+    @Test
+    public void deleteCart() {
+        CartLogic.DeleteCart("111");
+    }
+
+    @Test
+    public void deleteProduct() {
+        CartLogic.DeleteProduct("111");
+    }
+
+    @Test
+    public void  saveAndUpdate(){
+        CartLogic.SaveAndUpdate("111",1,2);
+    }
+
+
 }
