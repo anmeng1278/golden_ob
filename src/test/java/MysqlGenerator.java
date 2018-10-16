@@ -77,7 +77,9 @@ public class MysqlGenerator {
             "_team_order",
             "_team_product",
             "_wechat",
-            "_wechat_coupon"
+            "_wechat_coupon",
+            "_cart",
+            "_cart_product"
     };
     private static String[] prefix = new String[]{""};
     private static File file = new File(packageName);

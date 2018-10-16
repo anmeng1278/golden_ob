@@ -1,0 +1,29 @@
+package com.jsj.member.ob.dto.proto;
+
+import "CardTypeEnum.proto";
+import "PayMethodEnum.proto";
+import "TransactionTypeEnum.proto";
+
+message NotifyModel {
+   optional string JoinPlatformID = 1;
+   optional string PartnerID = 2;
+   optional string PartnerName = 3;
+   optional string TradeOrderID = 4;
+   optional string OutTradeId = 5;
+   optional string OutOrderIds = 6;
+   optional string TradeAmount = 7;
+   optional PayMethodEnum PayMethodID = 8 [default = PayMethodEnum_Unknown];
+   optional string PayChannelID = 9;
+   optional string TradeTime = 10;
+   optional TransactionTypeEnum TradeType = 11 [default = TransactionTypeEnum_Unknown];
+   optional string ApplyStatus = 12;
+   optional string TradeBillNo = 13;
+   optional CardTypeEnum CardType = 14 [default = BankCard];
+   optional string OutCustomerID = 15;
+   optional string CardNo = 16;
+   optional string CardHolderName = 17;
+   optional string BankName = 18;
+   optional string NotifyTime = 19;
+   optional string PartnerAccountID = 20;
+   optional string Sign = 21;
+}

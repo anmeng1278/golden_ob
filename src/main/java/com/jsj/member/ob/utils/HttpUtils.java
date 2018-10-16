@@ -1,14 +1,13 @@
 package com.jsj.member.ob.utils;
 
 import okhttp3.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class HttpUtils {
@@ -95,5 +94,32 @@ public class HttpUtils {
 
     }
 
+    /**
+     * 二进制读取
+     * @param request
+     * @return
+     */
+    public static byte[] readAsBytes(HttpServletRequest request) {
 
+        int len = request.getContentLength();
+        byte[] buffer = new byte[len];
+        ServletInputStream in = null;
+
+        try {
+            in = request.getInputStream();
+            in.read(buffer, 0, len);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != in) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return buffer;
+    }
 }

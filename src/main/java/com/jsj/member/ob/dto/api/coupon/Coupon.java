@@ -41,7 +41,6 @@ public class Coupon extends BaseDto {
      */
     private Integer expiredDays;
 
-
     public int getCouponId() {
         return couponId;
     }

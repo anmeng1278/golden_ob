@@ -1,0 +1,17 @@
+package com.jsj.member.ob.dto.proto;
+
+enum TransactionTypeEnum {
+   TransactionTypeEnum_Unknown = 0;
+   PUR = 1;
+   PRE = 2;
+   CFM = 3;
+   VTX = 4;
+   RFD = 5;
+   INP = 6;
+   SOD = 7;
+   SIG = 8;
+   QUE = 9;
+   COI = 10;
+   DPU = 11;
+   APD = 12;
+}

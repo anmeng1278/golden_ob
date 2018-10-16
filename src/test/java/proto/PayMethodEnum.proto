@@ -1,0 +1,25 @@
+package com.jsj.member.ob.dto.proto;
+
+enum PayMethodEnum {
+   PayMethodEnum_Unknown = 0;
+   NetBank = 1;
+   IVR = 2;
+   BankTransfer = 4;
+   QuickPay = 6;
+   NoCard = 7;
+   ThirdAccount = 8;
+   NetBankWap = 9;
+   WechatApp = 21;
+   WechatWeb = 22;
+   WechatNative = 23;
+   WechatWap = 24;
+   AlipayApp = 31;
+   AlipayWeb = 32;
+   AlipayWap = 33;
+   UnionPayApp = 73;
+   AppleYeepayApp = 101;
+   AppleLianLianApp = 102;
+   AppleUnionPayApp = 103;
+   SamsungPayApp = 111;
+   MiPayApp = 121;
+}

@@ -1,0 +1,7 @@
+package com.jsj.member.ob.dto.proto;
+
+enum CardTypeEnum {
+   BankCard = 0;
+   CreditCard = 1;
+   DebitCard = 2;
+}
