@@ -2,6 +2,7 @@ package com.jsj.member.ob.logic;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.entity.Cart;
 import com.jsj.member.ob.entity.CartProduct;
 import com.jsj.member.ob.exception.TipException;
@@ -10,7 +11,6 @@ import com.jsj.member.ob.service.CartService;
 import com.jsj.member.ob.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * 购物车逻辑处理类
- *
+ * <p>
  * 1.添加、修改购物车
  * 2.清空购物车
  * 3.获取购物车
@@ -48,8 +48,9 @@ public class CartLogic {
 
     /**
      * 清空购物车
+     * TODO 未做参数合法校验
      */
-    public static void DeleteCart(String openId){
+    public static void DeleteCart(String openId) {
         //获取用户的购物车
         Cart cart = CartLogic.GetCart(openId);
         //修改购物车deleteTime，清空购物车
@@ -60,14 +61,17 @@ public class CartLogic {
 
     /**
      * 删除购物车中的某件商品
+     * TODO 未做参数合法校验
+     * TODO 删除购物车中的商品,传入参数应该是_cart_product表中的主键cart_product_id
+     * TODO 方法名改为DeleteCartProduct
      */
-    public static void DeleteProduct(String openId){
-        Map<String,Object> map = new HashMap<>();
+    public static void DeleteProduct(String openId) {
+        Map<String, Object> map = new HashMap<>();
         //获取用户的购物车中的商品详情
         List<CartProduct> cartProductList = CartLogic.GetCartProduct(openId);
         for (CartProduct cartProduct : cartProductList) {
             Integer productId = cartProduct.getProductId();
-            map.put("product_id",productId);
+            map.put("product_id", productId);
             cartLogic.cartProductService.deleteByMap(map);
         }
     }
@@ -75,62 +79,68 @@ public class CartLogic {
 
     /**
      * 添加或修改购物车
+     * TODO 未做参数合法校验
+     * TODO 方法名改为 AddUpdateCartProduct
+     *
      * @param openId
      * @param productId
      * @param number
      * @return
      */
-    public static CartProduct SaveAndUpdate(String openId,Integer productId,Integer number){
-        CartProduct cartProduct = null;
+    public static void AddUpdateCartProduct(String openId, int productId, int productSizeId, int number) {
 
-        EntityWrapper<CartProduct> wrapper = new EntityWrapper<>();
-        wrapper.where("product_id={0}", productId);
+        EntityWrapper<Cart> cartWrapper = new EntityWrapper<>();
+        cartWrapper.where("open_id={0} and delete_time is null");
 
-        //查询用户的购物车
-        Cart cart = CartLogic.GetCart(openId);
-        //1.1判断该用户是否有购物车没有则创建
-        if(cart == null){
+        Cart cart = cartLogic.cartService.selectOne(cartWrapper);
+        if (cart == null) {
+
+            cart = new Cart();
             cart.setOpenId(openId);
             cart.setCreateTime(DateUtils.getCurrentUnixTime());
             cart.setUpdateTime(DateUtils.getCurrentUnixTime());
             cartLogic.cartService.insert(cart);
-        }else {
-            //1.2判断该用户购物车中是否含有此商品没有则添加
-            List<CartProduct> cartProductList = CartLogic.GetCartProduct(openId);
-            //购物车中不存在此商品
-           if(CollectionUtils.isEmpty(cartProductList)){
-               cartProduct = new CartProduct();
-               cartProduct.setProductId(productId);
-               cartProduct.setNumber(number);
-               cartProduct.setCartId(cart.getCartId());
-               cartProduct.setProductSizeId(1);
-               cartProduct.setCreateTime(DateUtils.getCurrentUnixTime());
-               cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
-               cartLogic.cartProductService.insert(cartProduct);
-           }else {
-               //购物车商品中存在此商品，修改数量
-               cartProduct = cartLogic.cartProductService.selectOne(wrapper);
-               cartProduct.setNumber(cartProduct.getNumber()+number);
-               //当商品数量小于0，移除购物车中此商品
-               if (cartProduct.getNumber()<=0){
-                   cartLogic.cartProductService.deleteById(cartProduct.getCartProductId());
-               }
-           }
 
         }
-            return cartProduct;
+
+        EntityWrapper<CartProduct> cartProductWrapper = new EntityWrapper<CartProduct>();
+        Wrapper<CartProduct> where = cartProductWrapper.where("cart_id={0} and product_id={1} and product_size_id={2}",
+                cart.getCartId(),
+                productId,
+                productSizeId
+        );
+
+        CartProduct cartProduct = cartLogic.cartProductService.selectOne(where);
+
+        if (cartProduct == null) {
+
+            cartProduct = new CartProduct();
+            cartProduct.setCartId(cart.getCartId());
+            cartProduct.setProductId(productId);
+            cartProduct.setProductSizeId(productSizeId);
+            cartProduct.setNumber(number);
+            cartProduct.setCreateTime(DateUtils.getCurrentUnixTime());
+            cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+            cartLogic.cartProductService.insert(cartProduct);
+        } else {
+            cartProduct.setNumber(number);
+            cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
+            cartLogic.cartProductService.updateById(cartProduct);
+        }
 
     }
 
     /**
      * 获得用户的购物车
+     *
      * @param
      */
-    public static Cart GetCart(String openId){
+    public static Cart GetCart(String openId) {
         EntityWrapper<Cart> wrapper = new EntityWrapper<>();
         wrapper.where("open_id={0}", openId);
         Cart cart = cartLogic.cartService.selectOne(wrapper);
-        if(cart == null){
+        if (cart == null) {
             throw new TipException("购物车为空");
         }
         return cart;
@@ -139,10 +149,11 @@ public class CartLogic {
 
     /**
      * 获得用户购物车中商品列表
+     *
      * @param openId
      * @return
      */
-    public static List<CartProduct> GetCartProduct(String openId){
+    public static List<CartProduct> GetCartProduct(String openId) {
         Cart cart = CartLogic.GetCart(openId);
         EntityWrapper<CartProduct> wrapper = new EntityWrapper<>();
         wrapper.where("cart_id={0}", cart.getCartId());
