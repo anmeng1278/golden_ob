@@ -19,7 +19,7 @@ public class CartLogicTest {
     }
     @Test
     public void getProduct() {
-        CartLogic.GetCartProduct("111");
+        CartLogic.GetCartProduct("111",10);
     }
 
     @Test
@@ -28,13 +28,13 @@ public class CartLogicTest {
     }
 
     @Test
-    public void deleteProduct() {
-        CartLogic.DeleteProduct("111");
+    public void deleteCartProduct() {
+        CartLogic.DeleteCartProduct(1);
     }
 
     @Test
     public void  saveAndUpdate(){
-        CartLogic.SaveAndUpdate("111",1,2);
+        CartLogic.AddUpdateCartProduct("3",2,4,1);;
     }
 
 
