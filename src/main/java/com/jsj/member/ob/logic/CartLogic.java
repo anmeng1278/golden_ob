@@ -175,6 +175,9 @@ public class CartLogic {
         if(openId == null){
             throw new TipException("参数不合法，用户openId为空");
         }
+        if(cartId == 0){
+            throw new TipException("参数不合法，没有此购物车");
+        }
         EntityWrapper<CartProduct> wrapper = new EntityWrapper<>();
         wrapper.where("cart_id={0}", cartId);
         //获取购物车中商品
