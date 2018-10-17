@@ -4,12 +4,9 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
-import com.jsj.member.ob.dto.api.order.OrderProduct;
-import com.jsj.member.ob.dto.api.product.Product;
-import com.jsj.member.ob.entity.Order;
-import com.jsj.member.ob.entity.Team;
-import com.jsj.member.ob.entity.TeamOrder;
-import com.jsj.member.ob.entity.TeamProduct;
+import com.jsj.member.ob.dto.api.order.OrderProductDto;
+import com.jsj.member.ob.dto.api.product.ProductDto;
+import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.enums.OrderType;
 import com.jsj.member.ob.enums.TeamOrderStatus;
@@ -131,28 +128,28 @@ public class OrderTeam extends OrderBase {
             List<com.jsj.member.ob.entity.OrderProduct> orderProducts = new ArrayList<>();
 
             //商品订单列表，用于消减商品库存
-            List<OrderProduct> orderProducts1 = new ArrayList<>();
+            List<OrderProductDto> orderProducts1 = new ArrayList<>();
 
             for (TeamProduct tpt : teamProducts) {
 
                 //获取商品信息
-                Product product = ProductLogic.GetProduct(tpt.getProductId());
+                ProductDto productDto = ProductLogic.GetProduct(tpt.getProductId());
 
                 //判断库存
-                if (product.getStockCount() <= 0) {
+                if (productDto.getStockCount() <= 0) {
 
-                    teamOrder.setRemarks(String.format("库存不足，下单失败，商品名称：%s", product.getProductName()));
+                    teamOrder.setRemarks(String.format("库存不足，下单失败，商品名称：%s", productDto.getProductName()));
                     teamOrder.setUpdateTime(DateUtils.getCurrentUnixTime());
                     teamOrder.setStatus(TeamOrderStatus.FAIL.getValue());
                     teamOrderService.updateById(teamOrder);
 
-                    resp.setMessage(String.format("库存不足，下单失败，商品名称：%s", product.getProductName()));
+                    resp.setMessage(String.format("库存不足，下单失败，商品名称：%s", productDto.getProductName()));
                     return resp;
 
                 }
 
                 //创建商品订单
-                com.jsj.member.ob.entity.OrderProduct orderProduct = new com.jsj.member.ob.entity.OrderProduct();
+                OrderProduct orderProduct = new OrderProduct();
 
                 orderProduct.setNumber(1);
                 orderProduct.setOrderProductId(tpt.getProductId());
@@ -165,12 +162,12 @@ public class OrderTeam extends OrderBase {
 
 
                 //组织使用数据,用于消减库存
-                OrderProduct orderProduct1 = new OrderProduct();
-                orderProduct1.setNumber(1);
-                orderProduct1.setProductSizeId(tpt.getProductSizeId());
-                orderProduct1.setProductId(tpt.getProductId());
+                OrderProductDto orderProductDto = new OrderProductDto();
+                orderProductDto.setNumber(1);
+                orderProductDto.setProductSizeId(tpt.getProductSizeId());
+                orderProductDto.setProductId(tpt.getProductId());
 
-                orderProducts1.add(orderProduct1);
+                orderProducts1.add(orderProductDto);
 
             }
 

@@ -5,8 +5,8 @@ import com.jsj.member.ob.dto.api.coupon.UseCouponRequ;
 import com.jsj.member.ob.dto.api.coupon.UseCouponResp;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
-import com.jsj.member.ob.dto.api.order.OrderProduct;
-import com.jsj.member.ob.dto.api.product.Product;
+import com.jsj.member.ob.dto.api.order.OrderProductDto;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.enums.OrderType;
@@ -53,7 +53,7 @@ public class OrderNormal extends OrderBase {
         if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
             throw new TipException("用户编号不能为空");
         }
-        if (requ.getOrderProducts() == null || requ.getOrderProducts().size() == 0) {
+        if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().size() == 0) {
             throw new TipException("购买商品不能为空");
         }
 
@@ -75,14 +75,14 @@ public class OrderNormal extends OrderBase {
         //订单应支付金额
         double orderAmount = 0d;
 
-        for (OrderProduct op : requ.getOrderProducts()) {
+        for (OrderProductDto op : requ.getOrderProductDtos()) {
 
-            Product product = ProductLogic.GetProduct(op.getProductId());
-            if (op.getNumber() > product.getStockCount()) {
-                throw new TipException(String.format("库存不足，下单失败，商品名称：%s", product.getProductName()));
+            ProductDto productDto = ProductLogic.GetProduct(op.getProductId());
+            if (op.getNumber() > productDto.getStockCount()) {
+                throw new TipException(String.format("库存不足，下单失败，商品名称：%s", productDto.getProductName()));
             }
 
-            orderAmount += product.getSalePrice();
+            orderAmount += productDto.getSalePrice();
 
             com.jsj.member.ob.entity.OrderProduct orderProduct = new com.jsj.member.ob.entity.OrderProduct();
 
@@ -131,7 +131,7 @@ public class OrderNormal extends OrderBase {
 
 
         //削减库存
-        ProductLogic.ReductionProductStock(requ.getOrderProducts());
+        ProductLogic.ReductionProductStock(requ.getOrderProductDtos());
 
         if (payAmount == 0) {
             this.OrderPaySuccess(order.getOrderNumber());

@@ -1,7 +1,9 @@
 package com.jsj.member.ob.logic;
 
+import com.jsj.member.ob.dto.api.coupon.CouponDto;
 import com.jsj.member.ob.dto.api.coupon.UseCouponRequ;
 import com.jsj.member.ob.dto.api.coupon.UseCouponResp;
+import com.jsj.member.ob.dto.api.coupon.WechatCouponDto;
 import com.jsj.member.ob.entity.Coupon;
 import com.jsj.member.ob.entity.WechatCoupon;
 import com.jsj.member.ob.enums.CouponStatus;
@@ -115,11 +117,11 @@ public class CouponLogic {
      * @param couponId
      * @return
      */
-    public static com.jsj.member.ob.dto.api.coupon.Coupon GetCoupon(int couponId) {
+    public static CouponDto GetCoupon(int couponId) {
 
         Coupon entity = couponLogic.couponService.selectById(couponId);
 
-        com.jsj.member.ob.dto.api.coupon.Coupon coupon = new com.jsj.member.ob.dto.api.coupon.Coupon();
+        CouponDto coupon = new CouponDto();
 
         coupon.setAmount(entity.getAmount());
         coupon.setCouponId(entity.getCouponId());
@@ -141,22 +143,22 @@ public class CouponLogic {
      * @param wechatCouponId
      * @return
      */
-    public static com.jsj.member.ob.dto.api.coupon.WechatCoupon GetWechatCoupon(int wechatCouponId) {
+    public static WechatCouponDto GetWechatCoupon(int wechatCouponId) {
 
         WechatCoupon entity = couponLogic.wechatCouponService.selectById(wechatCouponId);
 
-        com.jsj.member.ob.dto.api.coupon.WechatCoupon wechatCoupon = new com.jsj.member.ob.dto.api.coupon.WechatCoupon();
+        WechatCouponDto wechatCouponDto = new WechatCouponDto();
 
-        wechatCoupon.setAmount(entity.getAmount());
-        wechatCoupon.setCouponId(entity.getCouponId());
-        wechatCoupon.setCouponType(CouponType.valueOf(entity.getTypeId()));
-        wechatCoupon.setExpiredTime(entity.getExpiredTime());
-        wechatCoupon.setOpenId(entity.getOpenId());
+        wechatCouponDto.setAmount(entity.getAmount());
+        wechatCouponDto.setCouponId(entity.getCouponId());
+        wechatCouponDto.setCouponType(CouponType.valueOf(entity.getTypeId()));
+        wechatCouponDto.setExpiredTime(entity.getExpiredTime());
+        wechatCouponDto.setOpenId(entity.getOpenId());
 
-        wechatCoupon.setCouponStatus(CouponStatus.valueOf(entity.getStatus()));
-        wechatCoupon.setWechatCouponId(entity.getWechatCouponId());
+        wechatCouponDto.setCouponStatus(CouponStatus.valueOf(entity.getStatus()));
+        wechatCouponDto.setWechatCouponId(entity.getWechatCouponId());
 
-        return wechatCoupon;
+        return wechatCouponDto;
 
     }
     //endregion

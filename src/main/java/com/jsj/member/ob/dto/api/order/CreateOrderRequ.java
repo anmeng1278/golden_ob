@@ -16,7 +16,7 @@ public class CreateOrderRequ {
     /**
      * 购买商品
      */
-    private List<OrderProduct> orderProducts;
+    private List<OrderProductDto> orderProductDtos;
 
     /**
      * 使用优惠券编号
@@ -52,12 +52,12 @@ public class CreateOrderRequ {
         this.baseRequ = baseRequ;
     }
 
-    public List<OrderProduct> getOrderProducts() {
-        return orderProducts;
+    public List<OrderProductDto> getOrderProductDtos() {
+        return orderProductDtos;
     }
 
-    public void setOrderProducts(List<OrderProduct> orderProducts) {
-        this.orderProducts = orderProducts;
+    public void setOrderProductDtos(List<OrderProductDto> orderProductDtos) {
+        this.orderProductDtos = orderProductDtos;
     }
 
     public int getWechatCouponId() {

@@ -4,7 +4,8 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
-import com.jsj.member.ob.dto.api.product.Product;
+import com.jsj.member.ob.dto.api.order.OrderProductDto;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.entity.Seckill;
@@ -50,31 +51,31 @@ public class OrderSeckill extends OrderBase {
         if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
             throw new TipException("用户编号不能为空");
         }
-        if (requ.getOrderProducts() == null || requ.getOrderProducts().size() == 0) {
+        if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().size() == 0) {
             throw new TipException("购买商品不能为空");
         }
 
-        if (requ.getOrderProducts().size() > 1) {
+        if (requ.getOrderProductDtos().size() > 1) {
             throw new TipException("秒杀订单暂不支持多种商品");
         }
 
-        com.jsj.member.ob.dto.api.order.OrderProduct opt = requ.getOrderProducts().get(0);
+       OrderProductDto opt = requ.getOrderProductDtos().get(0);
 
         if (opt.getNumber() != 1) {
             throw new TipException("秒杀商品只能购买一个");
         }
 
-        Product product = ProductLogic.GetProduct(opt.getProductId());
-        if (product.getStockCount() <= 0) {
+        ProductDto productDto = ProductLogic.GetProduct(opt.getProductId());
+        if (productDto.getStockCount() <= 0) {
             throw new TipException("商品库存不足");
         }
 
         //产品类型判断
-        if (product.getSeckillId() == 0) {
+        if (productDto.getSeckillId() == 0) {
             throw new TipException("非秒杀商品不允许下单");
         }
 
-        Seckill seckill = seckillService.selectById(product.getSeckillId());
+        Seckill seckill = seckillService.selectById(productDto.getSeckillId());
         if (seckill.getBeginTime() > DateUtils.getCurrentUnixTime()) {
             throw new TipException("秒杀活动未开始");
         }
@@ -95,7 +96,7 @@ public class OrderSeckill extends OrderBase {
         EntityWrapper<Order> orderWrapper = new EntityWrapper<>();
         orderWrapper.where("open_id = {0}", requ.getBaseRequ().getOpenId());
         orderWrapper.where("type_id = {0}", OrderType.SECKILL.getValue());
-        orderWrapper.where("exists( select * from _order_product as op where op.product_id = {0} and op.order_id = _order.order_id )", product.getProductId());
+        orderWrapper.where("exists( select * from _order_product as op where op.product_id = {0} and op.order_id = _order.order_id )", productDto.getProductId());
 
         if (orderService.selectCount(orderWrapper) > 0) {
             throw new TipException("秒杀商品只能购买一次");
@@ -118,7 +119,7 @@ public class OrderSeckill extends OrderBase {
         List<OrderProduct> orderProducts = new ArrayList<>();
 
         //订单应支付金额
-        double orderAmount = product.getSecPrice();
+        double orderAmount = productDto.getSecPrice();
 
         com.jsj.member.ob.entity.OrderProduct orderProduct = new com.jsj.member.ob.entity.OrderProduct();
 
@@ -150,7 +151,7 @@ public class OrderSeckill extends OrderBase {
         seckillService.updateById(seckill);
 
         //削减库存
-        ProductLogic.ReductionProductStock(requ.getOrderProducts());
+        ProductLogic.ReductionProductStock(requ.getOrderProductDtos());
 
         CreateOrderResp resp = new CreateOrderResp();
 

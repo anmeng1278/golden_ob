@@ -66,3 +66,9 @@ logging:
         member:
           ob:
             dao: debug
+
+webconfig:
+  # 图片服务器
+  imgServerURL: http://img.jsjinfo.cn/upload
+  # 是否上传到图片服务器 (true为上传到图片服务器 false为上传到本地服务器)
+  imgServerSwitch: true

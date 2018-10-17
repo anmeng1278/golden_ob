@@ -2,10 +2,13 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.jsj.member.ob.dto.api.order.OrderProduct;
-import com.jsj.member.ob.dto.api.product.Product;
-import com.jsj.member.ob.dto.api.product.ProductImg;
-import com.jsj.member.ob.dto.api.product.ProductSize;
+import com.jsj.member.ob.dto.api.order.OrderProductDto;
+import com.jsj.member.ob.dto.api.product.ProductDto;
+import com.jsj.member.ob.dto.api.product.ProductImgDto;
+import com.jsj.member.ob.dto.api.product.ProductSizeDto;
+import com.jsj.member.ob.entity.Product;
+import com.jsj.member.ob.entity.ProductImg;
+import com.jsj.member.ob.entity.ProductSize;
 import com.jsj.member.ob.entity.Seckill;
 import com.jsj.member.ob.enums.ProductImgType;
 import com.jsj.member.ob.exception.TipException;
@@ -52,64 +55,64 @@ public class ProductLogic {
      *
      * @param productId
      */
-    public static Product GetProduct(int productId) {
+    public static ProductDto GetProduct(int productId) {
 
-        com.jsj.member.ob.entity.Product entity = productLogic.productService.selectById(productId);
+        Product entity = productLogic.productService.selectById(productId);
 
         //商品实体
-        Product product = new Product();
+        ProductDto productDto = new ProductDto();
 
-        product.setGiftCopywriting(entity.getGiftCopywriting());
-        product.setIfdistribution(entity.getIfdistribution());
-        product.setIfpass(entity.getIfpass());
-        product.setIfpickup(entity.getIfpickup());
-        product.setIntroduce(entity.getIntroduce());
+        productDto.setGiftCopywriting(entity.getGiftCopywriting());
+        productDto.setIfdistribution(entity.getIfdistribution());
+        productDto.setIfpass(entity.getIfpass());
+        productDto.setIfpickup(entity.getIfpickup());
+        productDto.setIntroduce(entity.getIntroduce());
 
-        product.setOriginalPrice(entity.getOriginalPrice());
-        product.setProductId(entity.getProductId());
-        product.setProductName(entity.getProductName());
-        product.setPropertyTypeId(entity.getPropertyTypeId());
-        product.setRemarks(entity.getRemarks());
+        productDto.setOriginalPrice(entity.getOriginalPrice());
+        productDto.setProductId(entity.getProductId());
+        productDto.setProductName(entity.getProductName());
+        productDto.setPropertyTypeId(entity.getPropertyTypeId());
+        productDto.setRemarks(entity.getRemarks());
 
-        product.setSalePrice(entity.getSalePrice());
-        product.setStockCount(entity.getStockCount());
-        product.setTypeId(entity.getTypeId());
-        product.setUnit(entity.getUnit());
-        product.setUseIntro(entity.getUseIntro());
+        productDto.setSalePrice(entity.getSalePrice());
+        productDto.setStockCount(entity.getStockCount());
+        productDto.setTypeId(entity.getTypeId());
+        productDto.setUnit(entity.getUnit());
+        productDto.setUseIntro(entity.getUseIntro());
 
         //商品图片
-        Wrapper<com.jsj.member.ob.entity.ProductImg> productImgWrapper = new EntityWrapper<com.jsj.member.ob.entity.ProductImg>();
+        Wrapper<ProductImg> productImgWrapper = new EntityWrapper<com.jsj.member.ob.entity.ProductImg>();
         productImgWrapper.where("product_id={0} and delete_time is null", productId);
         productImgWrapper.orderBy("update_time desc");
 
-        List<com.jsj.member.ob.entity.ProductImg> productImgs = productLogic.productImgService.selectList(productImgWrapper);
-        for (com.jsj.member.ob.entity.ProductImg pi : productImgs) {
+        List<ProductImg> productImgs = productLogic.productImgService.selectList(productImgWrapper);
+        for (ProductImg pi : productImgs) {
 
-            ProductImg productImg = new ProductImg();
+            ProductImgDto productImgDto = new ProductImgDto();
 
-            productImg.setImgPath(pi.getImgPath());
-            productImg.setProductId(pi.getProductId());
-            productImg.setProductImgId(pi.getProductImgId());
-            productImg.setProductImgType(ProductImgType.valueOf(pi.getTypeId()));
+            productImgDto.setImgPath(pi.getImgPath());
+            productImgDto.setProductId(pi.getProductId());
+            productImgDto.setProductImgId(pi.getProductImgId());
+            productImgDto.setProductImgType(ProductImgType.valueOf(pi.getTypeId()));
 
-            product.getProductImgs().add(productImg);
+            productDto.getProductImgDtos().add(productImgDto);
         }
 
         //商品尺寸
-        Wrapper<com.jsj.member.ob.entity.ProductSize> productSizeWrapper = new EntityWrapper<com.jsj.member.ob.entity.ProductSize>();
+        Wrapper<ProductSize> productSizeWrapper = new EntityWrapper<com.jsj.member.ob.entity.ProductSize>();
         productSizeWrapper.where("product_id={0} and delete_time is null", productId);
         productSizeWrapper.orderBy("update_time desc");
 
-        List<com.jsj.member.ob.entity.ProductSize> productSizes = productLogic.productSizeService.selectList(productSizeWrapper);
-        for (com.jsj.member.ob.entity.ProductSize pz : productSizes) {
+        List<ProductSize> productSizes = productLogic.productSizeService.selectList(productSizeWrapper);
+        for (ProductSize pz : productSizes) {
 
-            ProductSize productSize = new ProductSize();
+            ProductSizeDto productSizeDto = new ProductSizeDto();
 
-            productSize.setProductId(pz.getProductId());
-            productSize.setProductSizeId(pz.getProductSizeId());
-            productSize.setSizeName(pz.getSizeName());
+            productSizeDto.setProductId(pz.getProductId());
+            productSizeDto.setProductSizeId(pz.getProductSizeId());
+            productSizeDto.setSizeName(pz.getSizeName());
 
-            product.getProductSizes().add(productSize);
+            productDto.getProductSizeDtos().add(productSizeDto);
 
         }
 
@@ -121,12 +124,12 @@ public class ProductLogic {
 
         Seckill seckill = productLogic.seckillService.selectOne(seckillWrapper);
         if (seckill != null) {
-            product.setStockCount(seckill.getStockCount());
-            product.setSeckillId(seckill.getSeckillId());
-            product.setSecPrice(seckill.getSeckillPrice().doubleValue());
+            productDto.setStockCount(seckill.getStockCount());
+            productDto.setSeckillId(seckill.getSeckillId());
+            productDto.setSecPrice(seckill.getSeckillPrice().doubleValue());
         }
 
-        return product;
+        return productDto;
 
     }
 
@@ -134,11 +137,11 @@ public class ProductLogic {
     /**
      * 创建订单后削减商品库存
      *
-     * @param orderProducts
+     * @param orderProductDtos
      */
-    public static void ReductionProductStock(List<OrderProduct> orderProducts) {
+    public static void ReductionProductStock(List<OrderProductDto> orderProductDtos) {
 
-        for (OrderProduct opt : orderProducts) {
+        for (OrderProductDto opt : orderProductDtos) {
 
             com.jsj.member.ob.entity.Product product = productLogic.productService.selectById(opt.getProductId());
             if (product.getStockCount() < opt.getNumber()) {
@@ -155,11 +158,11 @@ public class ProductLogic {
     /**
      * 恢复商品库存
      *
-     * @param orderProducts
+     * @param orderProductDtos
      */
-    public static void RestoreProductStock(List<OrderProduct> orderProducts) {
+    public static void RestoreProductStock(List<OrderProductDto> orderProductDtos) {
 
-        for (OrderProduct opt : orderProducts) {
+        for (OrderProductDto opt : orderProductDtos) {
 
             com.jsj.member.ob.entity.Product product = productLogic.productService.selectById(opt.getProductId());
 

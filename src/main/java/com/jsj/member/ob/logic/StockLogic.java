@@ -2,7 +2,7 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.jsj.member.ob.dto.api.product.Product;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.GetMyStockRequ;
 import com.jsj.member.ob.dto.api.stock.GetMyStockResp;
 import com.jsj.member.ob.entity.Stock;
@@ -73,25 +73,34 @@ public class StockLogic {
         GetMyStockResp resp = new GetMyStockResp();
 
         EntityWrapper<Stock> stockWrapper = new EntityWrapper<>();
-        stockWrapper.where("open_id={0} and status in(0,11) and delete_time is null",requ.getBaseRequ().getOpenId());
+        stockWrapper.where("open_id={0} and status in(0) and delete_time is null",requ.getBaseRequ().getOpenId());
        //查询该用户下所有库存
         List<Stock> stockList = stockLogic.stockService.selectList(stockWrapper);
         if(stockList.size() == 0){
             return resp;
         }
         EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
+
+
         for (Stock stock : stockList) {
             //获取库存中商品信息
             Wrapper<Stock> where = productWrapper.where("product_id={0}", stock.getProductId());
             //计算库存中每样商品的数量
             int number = stockLogic.stockService.selectCount(where);
-            Product product = ProductLogic.GetProduct(stock.getProductId());
+
+
+
+            ProductDto productDto = ProductLogic.GetProduct(stock.getProductId());
+
             resp.setOpenId(requ.getBaseRequ().getOpenId());
             resp.setOrderId(stock.getOrderId());
             resp.setProductId(stock.getProductId());
             resp.setStockId(stock.getStockId());
             resp.setNumber(number);
+
         }
+
+
         return resp;
     }
 

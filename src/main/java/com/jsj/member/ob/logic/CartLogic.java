@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.dto.api.cart.GetCartProductsRequ;
 import com.jsj.member.ob.dto.api.cart.GetCartProductsResp;
-import com.jsj.member.ob.dto.api.product.Product;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Cart;
 import com.jsj.member.ob.entity.CartProduct;
 import com.jsj.member.ob.exception.TipException;
@@ -195,10 +195,9 @@ public class CartLogic {
 
         for (CartProduct cp : cartProductList) {
             //获取商品详情
-            Product product = ProductLogic.GetProduct(cp.getProductId());
+            ProductDto productDto = ProductLogic.GetProduct(cp.getProductId());
             resp.setCarProductId(cp.getCartProductId());
-            resp.setOpenId(requ.getBaseRequ().getOpenId());
-            resp.setProductId(product.getProductId());
+            resp.setProductId(productDto.getProductId());
             resp.setNumber(cp.getNumber());
         }
         return resp;

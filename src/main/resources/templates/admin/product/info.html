@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="admin/layout">
+
+<div layout:fragment="content" class="admin-main layui-anim" style="margin: 15px;">
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend th:text="|${info.productName} 信息编辑|"></legend>
+    </fieldset>
+
+    <form class="layui-form" method="post" action="">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品名称</label>
+            <div class="layui-input-inline" style="width: 85%;">
+                <input type="text" class="layui-input" name="productName"
+                       lay-verify="req"
+                       title="商品名称"
+                       th:value="${info.productName}" placeholder="请输入商品名称"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品类型</label>
+
+            <div class="layui-input-inline">
+                <select name="typeId" lay-verify="req" title="商品类型">
+                    <option value="">商品类型</option>
+                    <th:block th:each="pts : ${productTypes}">
+                        <option th:value="${pts.dictId}" th:selected="${info.typeId==pts.dictId}"
+                                th:text="${pts.dictName}"></option>
+                    </th:block>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+
+            <label class="layui-form-label">商品属性</label>
+            <div class="layui-input-inline">
+                <select name="propertyTypeId" lay-verify="req" title="商品属性">
+                    <option value="">商品属性</option>
+                    <th:block th:each="pps : ${productPerproties}">
+                        <option th:value="${pps.dictId}" th:selected="${info.propertyTypeId==pps.dictId}"
+                                th:text="${pps.dictName}"></option>
+                    </th:block>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+
+            <label class="layui-form-label">商品单位</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="unit" th:value="${info.unit}" placeholder="请输入单位"
+                       lay-verify="req" title="商品单位"/>
+
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">售价</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="salePrice" lay-verify="float" th:value="${info.salePrice}"
+                       placeholder="请输入售价"
+                       title="售价"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+
+            <label class="layui-form-label">原价</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="originalPrice" lay-verify="float"  th:value="${info.originalPrice}"
+                       placeholder="请输入原价"
+                       title="原价"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+
+            <label class="layui-form-label">库存</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="stockCount" lay-verify="num"  th:value="${info.stockCount}"
+                       placeholder="请输入库存"
+                       title="库存"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">型号规格</label>
+            <div class="layui-input-inline" style="width:70%;">
+                <input type="text" class="layui-input" name="productSize" lay-verify="req" th:value="${productSize}"
+                       placeholder="请输入型号规格"
+                       title="型号规格"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux">必填，多个用|号隔开，如：1瓶(330ml)</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">简介</label>
+            <div class="layui-input-inline" style="width: 85%;">
+                <textarea class="layui-textarea" name="introduce" id="introduce" style="width:100%;" rows="2"
+                          lay-verify="req"
+                          placeholder="请输入简介" title="简介" th:text="${info.introduce}"
+                          autocomplete="off"></textarea>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">赠送文案</label>
+            <div class="layui-input-inline" style="width: 85%;">
+                <textarea class="layui-textarea" name="giftCopywriting" id="giftCopywriting"
+                          style="width:100%;height:30px;"
+                          lay-verify="req"
+                          placeholder="请输入赠送文案" title="赠送文案" th:text="${info.giftCopywriting}"
+                          autocomplete="off"></textarea>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-inline" style="width: 85%;">
+                <textarea class="layui-textarea" name="remarks" id="remarks" style="width:100%;height:30px;"
+
+                          placeholder="请输入备注" title="备注" th:text="${info.remarks}"
+                          autocomplete="off"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">使用说明</label>
+            <div class="layui-input-inline" style="width:85%;">
+                <textarea class="layui-textarea" name="useIntro" id="useIntro"
+                          placeholder="请输入使用说明" title="备注" th:text="${info.useIntro}"
+                          autocomplete="off"></textarea>
+
+                <script type="text/javascript">
+                    UE.getEditor('useIntro', {
+                        initialFrameWidth: "100%",//设置编辑器宽度
+                        initialFrameHeight: 300,
+                        scaleEnabled: true
+                    });
+                </script>
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">审核</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" th:checked="${info.ifpass}" name="ifpass" lay-skin="switch" lay-text="已审|未审">
+            </div>
+
+            <label class="layui-form-label">支持自提</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" th:checked="${info.ifpickup}" name="ifpickup" lay-skin="switch" lay-text="是|否">
+            </div>
+
+            <label class="layui-form-label">支持配送</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" th:checked="${info.ifdistribution}" name="ifdistribution" lay-skin="switch"
+                       lay-text="是|否">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="sort" lay-verify="num"  th:value="${info.sort}" placeholder="请输入排序"
+                       title="排序"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux">只能输入数字</div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit="">
+                    <i class="layui-icon">&#xea97;</i>
+                    保存
+                </button>
+                <button type="button" class="layui-btn" id="btnClose">
+                    <i class="layui-icon">&#xe68d;</i>
+                    关闭
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        TX.INIT(function (layui) {
+
+            var form = layui.form;
+            form.on("submit", function (data) {
+
+                TX.CORE.p({
+                    data: $("form.layui-form").serialize(),
+                    success: function (resp) {
+                        if (resp.success) {
+                            TX.MSG.msg("保存成功", {time: 1500}, function () {
+                                parent.tab.openTab("/admin/product/index", {refershType: "refersh"});
+                            });
+                        } else {
+                            TX.MSG.msg(resp.msg, {icon: 2});
+                        }
+                    }
+                });
+
+            });
+
+
+            $("#btnClose").click(function () {
+                if (parent.window.TX.TEMP.LAYERINDEX) {
+                    parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
+                } else {
+                    var currentTabId = parent.tab.getCurrentTabId();
+                    parent.tab.deleteTab(currentTabId);
+                }
+            });
+
+        });
+    </script>
+</th:block>

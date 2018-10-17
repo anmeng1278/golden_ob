@@ -5,7 +5,7 @@ import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
-import com.jsj.member.ob.dto.api.order.OrderProduct;
+import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.enums.OrderType;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,24 +38,24 @@ public class OrderLogicTest {
         requ.setRemarks("备注信息");
         requ.setOrderType(OrderType.NORMAL);
 
-        List<OrderProduct> orderProducts = new ArrayList<>();
+        List<OrderProductDto> orderProductDtos = new ArrayList<>();
 
-        OrderProduct orderProduct1 = new OrderProduct();
-        orderProduct1.setNumber(1);
-        orderProduct1.setProductId(1);
-        orderProduct1.setProductSizeId(1);
+        OrderProductDto orderProductDto1 = new OrderProductDto();
+        orderProductDto1.setNumber(1);
+        orderProductDto1.setProductId(1);
+        orderProductDto1.setProductSizeId(1);
         //100
 
-        OrderProduct orderProduct2 = new OrderProduct();
-        orderProduct2.setNumber(5);
-        orderProduct2.setProductId(2);
-        orderProduct2.setProductSizeId(2);
+        OrderProductDto orderProductDto2 = new OrderProductDto();
+        orderProductDto2.setNumber(5);
+        orderProductDto2.setProductId(2);
+        orderProductDto2.setProductSizeId(2);
         //30
 
-        orderProducts.add(orderProduct1);
-        orderProducts.add(orderProduct2);
+        orderProductDtos.add(orderProductDto1);
+        orderProductDtos.add(orderProductDto2);
 
-        requ.setOrderProducts(orderProducts);
+        requ.setOrderProductDtos(orderProductDtos);
         requ.setWechatCouponId(2);
 
         CreateOrderResp createOrderResp = OrderLogic.CreateOrder(requ);
@@ -81,17 +81,17 @@ public class OrderLogicTest {
         requ.setRemarks("备注信息");
         requ.setOrderType(OrderType.SECKILL);
 
-        List<OrderProduct> orderProducts = new ArrayList<>();
+        List<OrderProductDto> orderProductDtos = new ArrayList<>();
 
-        OrderProduct orderProduct1 = new OrderProduct();
-        orderProduct1.setNumber(1);
-        orderProduct1.setProductId(1);
-        orderProduct1.setProductSizeId(1);
+        OrderProductDto orderProductDto1 = new OrderProductDto();
+        orderProductDto1.setNumber(1);
+        orderProductDto1.setProductId(1);
+        orderProductDto1.setProductSizeId(1);
         //100
 
-        orderProducts.add(orderProduct1);
+        orderProductDtos.add(orderProductDto1);
 
-        requ.setOrderProducts(orderProducts);
+        requ.setOrderProductDtos(orderProductDtos);
 
         CreateOrderResp createOrderResp = OrderLogic.CreateOrder(requ);
         System.out.println(JSON.toJSONString(createOrderResp));

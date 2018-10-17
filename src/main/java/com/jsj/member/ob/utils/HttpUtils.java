@@ -1,23 +1,33 @@
 package com.jsj.member.ob.utils;
 
+import com.jsj.member.ob.config.Webconfig;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class HttpUtils {
 
     public static HttpUtils httpUtils;
 
+    @Autowired
+    Webconfig webconfig;
+
     // 初始化的时候，将本类中的sysConfigManager赋值给静态的本类变量
     @PostConstruct
     public void init() {
         httpUtils = this;
+        httpUtils.webconfig = this.webconfig;
     }
 
 
@@ -96,6 +106,7 @@ public class HttpUtils {
 
     /**
      * 二进制读取
+     *
      * @param request
      * @return
      */
@@ -121,5 +132,62 @@ public class HttpUtils {
             }
         }
         return buffer;
+    }
+
+    /**
+     * 上传图片
+     *
+     * @param contents
+     * @return
+     */
+    public static Map<String, Object> uploadImg(byte[] contents) {
+
+        Pattern pattern = Pattern.compile("<a\\s*href=\\\"\\/(?<md5>[^\\\"]*)\\\"");
+        URI uri = URI.create(httpUtils.webconfig.getImgServerURL());
+
+        OkHttpClient mOkHttpClent = new OkHttpClient();
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("img", "a.jpg",
+                        RequestBody.create(MediaType.parse("image/png"), contents));
+
+        RequestBody requestBody = builder.build();
+
+        Request request = new Request.Builder()
+                .url(uri.toString())
+                .post(requestBody)
+                .build();
+
+        HashMap<String, Object> map = new HashMap<>();
+
+        try {
+            Response response = mOkHttpClent.newCall(request).execute();//得到Response 对象
+            String str = response.body().string();
+            String port = (uri.getPort() == -1 || uri.getPort() == 80) ? "" : ":" + uri.getPort() + "";
+
+            Matcher matcher = pattern.matcher(str);
+            boolean rs = matcher.find();
+            if (rs) {
+                String md5 = matcher.group("md5").toString();
+
+                map.put("Issuccess", true);
+                map.put("MD5", md5);
+                map.put("Address", String.format("http://%s%s/", uri.getHost(), port));
+                map.put("Url", String.format("http://%s%s/%s", uri.getHost(), port, md5));
+
+            } else {
+                map.put("Issuccess", false);
+                map.put("ErrorMessage", "上传失败");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            map.put("Issuccess", false);
+            map.put("ErrorMessage", "上传失败");
+        }
+
+        return map;
+
     }
 }
