@@ -96,7 +96,7 @@ public class CartLogic {
      * @return
      */
     public static void AddUpdateCartProduct(String openId, int productId, int productSizeId, int number) {
-        if (openId == null) {
+        if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
         if (productId == 0) {
@@ -162,7 +162,7 @@ public class CartLogic {
      * @param
      */
     public static Cart GetCart(String openId) {
-        if (openId == null) {
+        if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
         EntityWrapper<Cart> wrapper = new EntityWrapper<>();
@@ -179,9 +179,6 @@ public class CartLogic {
      * @return
      */
     public static GetCartProductsResp GetCartProducts(GetCartProductsRequ requ) {
-        if (StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
-            throw new TipException("参数不合法，用户openId为空");
-        }
 
         GetCartProductsResp resp = new GetCartProductsResp();
 
@@ -192,27 +189,18 @@ public class CartLogic {
 
         EntityWrapper<CartProduct> wrapper = new EntityWrapper<>();
         wrapper.where("cart_id={0}", cart.getCartId());
+
         //获取购物车中商品
         List<CartProduct> cartProductList = cartLogic.cartProductService.selectList(wrapper);
 
-        //
-        //if (cartProductList.size() == 0) {
-        //    throw new TipException("您的购物车中空空如也，快加购商品吧！");
-        //}
-        //for (CartProduct cartProduct : cartProductList) {
-        //    //TODO
-        //    //获取商品详细信息
-        //    Product product = ProductLogic.GetProduct(cartProduct.getProductId());
-        //}
-        //
-        //List<com.jsj.member.ob.dto.api.Cart.CartProductDto> results = new ArrayList<>();
-
         for (CartProduct cp : cartProductList) {
-
             //获取商品详情
             Product product = ProductLogic.GetProduct(cp.getProductId());
+            resp.setCarProductId(cp.getCartProductId());
+            resp.setOpenId(requ.getBaseRequ().getOpenId());
+            resp.setProductId(product.getProductId());
+            resp.setNumber(cp.getNumber());
         }
-
         return resp;
     }
 
