@@ -1,11 +1,18 @@
 package com.jsj.member.ob.logic;
 
 import com.jsj.member.ob.App;
+import com.jsj.member.ob.dto.BaseRequ;
+import com.jsj.member.ob.dto.api.cart.CartProductDto;
+import com.jsj.member.ob.dto.api.cart.GetCartProductsRequ;
+import com.jsj.member.ob.entity.CartProduct;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -16,10 +23,6 @@ public class CartLogicTest {
     @Test
     public void getcart() {
         CartLogic.GetCart("111");
-    }
-    @Test
-    public void getProduct() {
-        CartLogic.GetCartProduct("111",10);
     }
 
     @Test
@@ -37,5 +40,29 @@ public class CartLogicTest {
         CartLogic.AddUpdateCartProduct("3",2,4,1);;
     }
 
+    @Test
+    public void getCartProduct(){
+        GetCartProductsRequ requ = new GetCartProductsRequ();
+        BaseRequ baseRequ = new BaseRequ();
+        baseRequ.setOpenId("111");
+
+        List<CartProductDto> cartProducts = new ArrayList<>();
+
+        CartProductDto cartProductDto = new CartProductDto();
+        cartProductDto.setCartId(1);
+        cartProductDto.setCartProductId(1);
+        cartProductDto.setNumber(10);
+        cartProductDto.setProductSizeId(1);
+        cartProductDto.setOpenId(baseRequ.getOpenId());
+        cartProductDto.setProductId(1);
+
+        cartProducts.add(cartProductDto);
+
+        requ.setBaseRequ(baseRequ);
+        requ.setCartProductDtos(cartProducts);
+
+        CartLogic.GetCartProducts(requ);
+
+    }
 
 }
