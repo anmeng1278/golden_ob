@@ -3,6 +3,8 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.jsj.member.ob.dto.api.cart.GetCartProductsRequ;
+import com.jsj.member.ob.dto.api.cart.GetCartProductsResp;
 import com.jsj.member.ob.dto.api.product.Product;
 import com.jsj.member.ob.entity.Cart;
 import com.jsj.member.ob.entity.CartProduct;
@@ -11,6 +13,7 @@ import com.jsj.member.ob.service.CartProductService;
 import com.jsj.member.ob.service.CartService;
 import com.jsj.member.ob.service.ProductService;
 import com.jsj.member.ob.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,55 +56,61 @@ public class CartLogic {
 
     /**
      * 清空购物车
+     *
      * @param openId
      */
     public static void DeleteCart(String openId) {
-        if(openId == null){
+        if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法,用户openId为空");
         }
         //获取用户的购物车
         Cart cart = CartLogic.GetCart(openId);
-        //修改购物车deleteTime，清空购物车
-        cart.setDeleteTime(DateUtils.getCurrentUnixTime());
-        cartLogic.cartService.updateById(cart);
+
+        if (cart != null) {
+            //修改购物车deleteTime，清空购物车
+            cart.setDeleteTime(DateUtils.getCurrentUnixTime());
+            cartLogic.cartService.updateById(cart);
+        }
     }
 
 
     /**
      * 删除购物车中的某件商品
+     *
      * @param cartProductId
      */
     public static void DeleteCartProduct(int cartProductId) {
-        if(cartProductId == 0){
+        if (cartProductId == 0) {
             throw new TipException("参数不合法，cartProductId为空");
         }
-       cartLogic.cartProductService.deleteById(cartProductId);
+        cartLogic.cartProductService.deleteById(cartProductId);
     }
 
 
     /**
      * 添加或修改购物车
+     *
      * @param openId
      * @param productId
      * @param number
      * @return
      */
     public static void AddUpdateCartProduct(String openId, int productId, int productSizeId, int number) {
-        if(openId == null){
+        if (openId == null) {
             throw new TipException("参数不合法，用户openId为空");
         }
-        if(productId == 0){
+        if (productId == 0) {
             throw new TipException("参数不合法，商品ID不能为空");
         }
-        if(productSizeId == 0){
+        if (productSizeId == 0) {
             throw new TipException("参数不合法，商品规格不能为空");
         }
-        if(number == 0){
-            throw new TipException("参数不合法，商品数量不能为空");
+        if (number < 0) {
+            number = 0;
         }
 
         EntityWrapper<Cart> cartWrapper = new EntityWrapper<>();
-        cartWrapper.where("open_id={0} and delete_time is null",openId);
+        cartWrapper.where("open_id={0} and delete_time is null", openId);
 
         //判断当前用户是否有购物车，没有则创建购物车
         Cart cart = cartLogic.cartService.selectOne(cartWrapper);
@@ -136,11 +145,12 @@ public class CartLogic {
 
             cartLogic.cartProductService.insert(cartProduct);
         } else {   //含有此商品，修改商品数量
-            cartProduct.setNumber(number);
-            cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
-            cartLogic.cartProductService.updateById(cartProduct);
-            if(cartProduct.getNumber()<=0){
+            if (number <= 0) {
                 CartLogic.DeleteCartProduct(cartProduct.getCartProductId());
+            } else {
+                cartProduct.setNumber(number);
+                cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
+                cartLogic.cartProductService.updateById(cartProduct);
             }
         }
 
@@ -152,15 +162,12 @@ public class CartLogic {
      * @param
      */
     public static Cart GetCart(String openId) {
-        if(openId == null){
+        if (openId == null) {
             throw new TipException("参数不合法，用户openId为空");
         }
         EntityWrapper<Cart> wrapper = new EntityWrapper<>();
-        wrapper.where("open_id={0}", openId);
+        wrapper.where("open_id={0} and delete_time is null", openId);
         Cart cart = cartLogic.cartService.selectOne(wrapper);
-        if (cart == null) {
-            throw new TipException("购物车为空");
-        }
         return cart;
     }
 
@@ -168,28 +175,45 @@ public class CartLogic {
     /**
      * 获取用户购物车中商品列表
      *
-     * @param openId
+     * @param requ
      * @return
      */
-    public static List<CartProduct> GetCartProduct(String openId,int cartId) {
-        if(openId == null){
+    public static GetCartProductsResp GetCartProducts(GetCartProductsRequ requ) {
+        if (StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
             throw new TipException("参数不合法，用户openId为空");
         }
-        if(cartId == 0){
-            throw new TipException("参数不合法，没有此购物车");
+
+        GetCartProductsResp resp = new GetCartProductsResp();
+
+        Cart cart = CartLogic.GetCart(requ.getBaseRequ().getOpenId());
+        if (cart == null) {
+            return resp;
         }
+
         EntityWrapper<CartProduct> wrapper = new EntityWrapper<>();
-        wrapper.where("cart_id={0}", cartId);
+        wrapper.where("cart_id={0}", cart.getCartId());
         //获取购物车中商品
         List<CartProduct> cartProductList = cartLogic.cartProductService.selectList(wrapper);
-        if(cartProductList == null || cartProductList.size() == 0){
-            throw new TipException("您的购物车中空空如也，快加购商品吧！");
+
+        //
+        //if (cartProductList.size() == 0) {
+        //    throw new TipException("您的购物车中空空如也，快加购商品吧！");
+        //}
+        //for (CartProduct cartProduct : cartProductList) {
+        //    //TODO
+        //    //获取商品详细信息
+        //    Product product = ProductLogic.GetProduct(cartProduct.getProductId());
+        //}
+        //
+        //List<com.jsj.member.ob.dto.api.Cart.CartProductDto> results = new ArrayList<>();
+
+        for (CartProduct cp : cartProductList) {
+
+            //获取商品详情
+            Product product = ProductLogic.GetProduct(cp.getProductId());
         }
-        for (CartProduct cartProduct : cartProductList) {
-            //获取商品详细信息
-            Product product = ProductLogic.GetProduct(cartProduct.getProductId());
-        }
-        return cartProductList;
+
+        return resp;
     }
 
 
