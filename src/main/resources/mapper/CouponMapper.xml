@@ -11,7 +11,7 @@
         <result column="instruction" property="instruction" />
         <result column="remarks" property="remarks" />
         <result column="user_range" property="userRange" />
-        <result column="expired_days" property="expiredDays" />
+        <result column="valid_days" property="validDays" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="delete_time" property="deleteTime" />
@@ -19,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        coupon_id AS couponId, coupon_name AS couponName, amount, type_id AS typeId, instruction, remarks, user_range AS userRange, expired_days AS expiredDays, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        coupon_id AS couponId, coupon_name AS couponName, amount, type_id AS typeId, instruction, remarks, user_range AS userRange, valid_days AS validDays, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

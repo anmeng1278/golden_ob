@@ -7,7 +7,7 @@
         <id column="wechat_coupon_id" property="wechatCouponId" />
         <result column="open_id" property="openId" />
         <result column="coupon_id" property="couponId" />
-        <result column="expire_time" property="expireTime" />
+        <result column="expired_time" property="expiredTime" />
         <result column="status" property="status" />
         <result column="amount" property="amount" />
         <result column="type_id" property="typeId" />
@@ -18,7 +18,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        wechat_coupon_id AS wechatCouponId, open_id AS openId, coupon_id AS couponId, expire_time AS expireTime, status, amount, type_id AS typeId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        wechat_coupon_id AS wechatCouponId, open_id AS openId, coupon_id AS couponId, expired_time AS expiredTime, status, amount, type_id AS typeId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

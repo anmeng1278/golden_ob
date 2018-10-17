@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : TeamOrder 团见订单表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-15
+ *   @since 2018-10-16
  */
 @TableName("_team_order")
 public class TeamOrder implements Serializable {
@@ -35,7 +34,7 @@ public class TeamOrder implements Serializable {
      * 微信openid
      */
 	@TableField("open_id")
-	private Integer openId;
+	private String openId;
     /**
      * 过期时间
      */
@@ -47,9 +46,10 @@ public class TeamOrder implements Serializable {
 	@TableField("parent_team_order_id")
 	private Integer parentTeamOrderId;
     /**
-     * 组团状态 0 组团中  10 组团成功  20 组团失败   60 已取消
+     * 组团状态 0 组团中  10 组团成功  20 组团失败 30 创建订单成功   60 已取消
      */
 	private Integer status;
+	private String remarks;
     /**
      * 创建时间
      */
@@ -91,11 +91,11 @@ public class TeamOrder implements Serializable {
 		this.teamId = teamId;
 	}
 
-	public Integer getOpenId() {
+	public String getOpenId() {
 		return openId;
 	}
 
-	public void setOpenId(Integer openId) {
+	public void setOpenId(String openId) {
 		this.openId = openId;
 	}
 
@@ -121,6 +121,14 @@ public class TeamOrder implements Serializable {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 
 	public Integer getCreateTime() {
@@ -158,6 +166,7 @@ public class TeamOrder implements Serializable {
 			", expireTime=" + expireTime +
 			", parentTeamOrderId=" + parentTeamOrderId +
 			", status=" + status +
+			", remarks=" + remarks +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +

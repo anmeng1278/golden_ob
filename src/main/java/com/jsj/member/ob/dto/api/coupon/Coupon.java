@@ -39,7 +39,7 @@ public class Coupon extends BaseDto {
     /**
      * 有效天数
      */
-    private Integer expiredDays;
+    private Integer validDays;
 
     public int getCouponId() {
         return couponId;
@@ -97,11 +97,11 @@ public class Coupon extends BaseDto {
         this.couponUseRange = couponUseRange;
     }
 
-    public Integer getExpiredDays() {
-        return expiredDays;
+    public Integer getValidDays() {
+        return validDays;
     }
 
-    public void setExpiredDays(Integer expiredDays) {
-        this.expiredDays = expiredDays;
+    public void setValidDays(Integer validDays) {
+        this.validDays = validDays;
     }
 }

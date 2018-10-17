@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Coupon 优惠券表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-15
+ *   @since 2018-10-16
  */
 @TableName("_coupon")
 public class Coupon implements Serializable {
@@ -54,8 +53,8 @@ public class Coupon implements Serializable {
     /**
      * 有效天数
      */
-	@TableField("expired_days")
-	private Integer expiredDays;
+	@TableField("valid_days")
+	private Integer validDays;
     /**
      * 创建时间
      */
@@ -129,12 +128,12 @@ public class Coupon implements Serializable {
 		this.userRange = userRange;
 	}
 
-	public Integer getExpiredDays() {
-		return expiredDays;
+	public Integer getValidDays() {
+		return validDays;
 	}
 
-	public void setExpiredDays(Integer expiredDays) {
-		this.expiredDays = expiredDays;
+	public void setValidDays(Integer validDays) {
+		this.validDays = validDays;
 	}
 
 	public Integer getCreateTime() {
@@ -172,7 +171,7 @@ public class Coupon implements Serializable {
 			", instruction=" + instruction +
 			", remarks=" + remarks +
 			", userRange=" + userRange +
-			", expiredDays=" + expiredDays +
+			", validDays=" + validDays +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +

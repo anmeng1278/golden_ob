@@ -21,7 +21,7 @@ public class CreateOrderRequ {
     /**
      * 使用优惠券编号
      */
-    private Integer wechatCouponId;
+    private int wechatCouponId;
 
     /**
      * 备注
@@ -31,12 +31,12 @@ public class CreateOrderRequ {
     /**
      * 团单号
      */
-    private Integer teamOrderId;
+    private int teamOrderId;
 
     /**
      * 秒杀编号
      */
-    private Integer secKillId;
+    private int secKillId;
 
     /**
      * 订单类型
@@ -60,11 +60,11 @@ public class CreateOrderRequ {
         this.orderProducts = orderProducts;
     }
 
-    public Integer getWechatCouponId() {
+    public int getWechatCouponId() {
         return wechatCouponId;
     }
 
-    public void setWechatCouponId(Integer wechatCouponId) {
+    public void setWechatCouponId(int wechatCouponId) {
         this.wechatCouponId = wechatCouponId;
     }
 
@@ -76,19 +76,19 @@ public class CreateOrderRequ {
         this.remarks = remarks;
     }
 
-    public Integer getTeamOrderId() {
+    public int getTeamOrderId() {
         return teamOrderId;
     }
 
-    public void setTeamOrderId(Integer teamOrderId) {
+    public void setTeamOrderId(int teamOrderId) {
         this.teamOrderId = teamOrderId;
     }
 
-    public Integer getSecKillId() {
+    public int getSecKillId() {
         return secKillId;
     }
 
-    public void setSecKillId(Integer secKillId) {
+    public void setSecKillId(int secKillId) {
         this.secKillId = secKillId;
     }
 

@@ -11,6 +11,7 @@
         <result column="expire_time" property="expireTime" />
         <result column="parent_team_order_id" property="parentTeamOrderId" />
         <result column="status" property="status" />
+        <result column="remarks" property="remarks" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="delete_time" property="deleteTime" />
@@ -18,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        team_order_id AS teamOrderId, team_order_number AS teamOrderNumber, team_id AS teamId, open_id AS openId, expire_time AS expireTime, parent_team_order_id AS parentTeamOrderId, status, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        team_order_id AS teamOrderId, team_order_number AS teamOrderNumber, team_id AS teamId, open_id AS openId, expire_time AS expireTime, parent_team_order_id AS parentTeamOrderId, status, remarks, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

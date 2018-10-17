@@ -7,6 +7,7 @@
         <id column="team_product_id" property="teamProductId" />
         <result column="team_id" property="teamId" />
         <result column="product_id" property="productId" />
+        <result column="product_size_id" property="productSizeId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="delete_time" property="deleteTime" />
@@ -14,7 +15,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        team_product_id AS teamProductId, team_id AS teamId, product_id AS productId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        team_product_id AS teamProductId, team_id AS teamId, product_id AS productId, product_size_id AS productSizeId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

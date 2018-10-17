@@ -4,9 +4,9 @@ public enum OrderType {
 
     NORMAL(0, "普通订单"),
 
-    TEAMORDER(10, "团单"),
+    TEAM(10, "团单"),
 
-    SECORDER(20, "秒杀单");
+    SECKILL(20, "秒杀单");
 
     private Integer value;
 
@@ -28,9 +28,9 @@ public enum OrderType {
     public static OrderType valueOf(int value) {
         switch (value) {
             case 10:
-                return TEAMORDER;
+                return TEAM;
             case 20:
-                return SECORDER;
+                return SECKILL;
             default:
                 return NORMAL;
         }

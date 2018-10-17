@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : TeamProduct 团购订单商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-15
+ *   @since 2018-10-16
  */
 @TableName("_team_product")
 public class TeamProduct implements Serializable {
@@ -31,6 +30,8 @@ public class TeamProduct implements Serializable {
 	private Integer teamId;
 	@TableField("product_id")
 	private Integer productId;
+	@TableField("product_size_id")
+	private Integer productSizeId;
     /**
      * 创建时间
      */
@@ -72,6 +73,14 @@ public class TeamProduct implements Serializable {
 		this.productId = productId;
 	}
 
+	public Integer getProductSizeId() {
+		return productSizeId;
+	}
+
+	public void setProductSizeId(Integer productSizeId) {
+		this.productSizeId = productSizeId;
+	}
+
 	public Integer getCreateTime() {
 		return createTime;
 	}
@@ -103,6 +112,7 @@ public class TeamProduct implements Serializable {
 			", teamProductId=" + teamProductId +
 			", teamId=" + teamId +
 			", productId=" + productId +
+			", productSizeId=" + productSizeId +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +

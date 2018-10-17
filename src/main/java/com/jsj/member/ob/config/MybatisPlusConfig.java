@@ -7,11 +7,13 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @Configuration
 @MapperScan("com.jsj.member.ob.dao*")
 @ImportResource(locations={"classpath:applicationContext.xml"})
+@EnableTransactionManagement
 public class MybatisPlusConfig {
 
 
