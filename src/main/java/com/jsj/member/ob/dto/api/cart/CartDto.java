@@ -1,4 +1,4 @@
-package com.jsj.member.ob.dto.api.Cart;
+package com.jsj.member.ob.dto.api.cart;
 
 import com.jsj.member.ob.dto.api.BaseDto;
 
