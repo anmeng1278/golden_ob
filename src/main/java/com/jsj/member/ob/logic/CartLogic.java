@@ -3,6 +3,7 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.jsj.member.ob.dto.api.cart.CartProductDto;
 import com.jsj.member.ob.dto.api.cart.GetCartProductsRequ;
 import com.jsj.member.ob.dto.api.cart.GetCartProductsResp;
 import com.jsj.member.ob.dto.api.product.ProductDto;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -190,15 +192,20 @@ public class CartLogic {
         EntityWrapper<CartProduct> wrapper = new EntityWrapper<>();
         wrapper.where("cart_id={0}", cart.getCartId());
 
+        List<CartProductDto> cartProductDtoList = new ArrayList<>();
         //获取购物车中商品
         List<CartProduct> cartProductList = cartLogic.cartProductService.selectList(wrapper);
 
+        CartProductDto cartProductDto = new CartProductDto();
         for (CartProduct cp : cartProductList) {
             //获取商品详情
             ProductDto productDto = ProductLogic.GetProduct(cp.getProductId());
-            resp.setCarProductId(cp.getCartProductId());
-            resp.setProductId(productDto.getProductId());
-            resp.setNumber(cp.getNumber());
+            cartProductDto.setCartProductId(cp.getCartProductId());
+            cartProductDto.setProductId(productDto.getProductId());
+            cartProductDto.setNumber(cp.getNumber());
+            cartProductDto.setProductDto(productDto);
+            cartProductDtoList.add(cartProductDto);
+            resp.setCartProductDtoList(cartProductDtoList);
         }
         return resp;
     }
