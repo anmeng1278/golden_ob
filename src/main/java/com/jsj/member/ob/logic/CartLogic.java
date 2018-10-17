@@ -3,19 +3,19 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.jsj.member.ob.dto.api.product.Product;
 import com.jsj.member.ob.entity.Cart;
 import com.jsj.member.ob.entity.CartProduct;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.CartProductService;
 import com.jsj.member.ob.service.CartService;
+import com.jsj.member.ob.service.ProductService;
 import com.jsj.member.ob.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 购物车逻辑处理类
@@ -36,6 +36,8 @@ public class CartLogic {
         cartLogic = this;
         cartLogic.cartService = this.cartService;
         cartLogic.cartProductService = this.cartProductService;
+        cartLogic.productService = this.productService;
+
     }
 
     @Autowired
@@ -45,12 +47,18 @@ public class CartLogic {
     @Autowired
     CartProductService cartProductService;
 
+    @Autowired
+    ProductService productService;
+
 
     /**
      * 清空购物车
-     * TODO 未做参数合法校验
+     * @param openId
      */
     public static void DeleteCart(String openId) {
+        if(openId == null){
+            throw new TipException("参数不合法,用户openId为空");
+        }
         //获取用户的购物车
         Cart cart = CartLogic.GetCart(openId);
         //修改购物车deleteTime，清空购物车
@@ -61,40 +69,43 @@ public class CartLogic {
 
     /**
      * 删除购物车中的某件商品
-     * TODO 未做参数合法校验
-     * TODO 删除购物车中的商品,传入参数应该是_cart_product表中的主键cart_product_id
-     * TODO 方法名改为DeleteCartProduct
+     * @param cartProductId
      */
-    public static void DeleteProduct(String openId) {
-        Map<String, Object> map = new HashMap<>();
-        //获取用户的购物车中的商品详情
-        List<CartProduct> cartProductList = CartLogic.GetCartProduct(openId);
-        for (CartProduct cartProduct : cartProductList) {
-            Integer productId = cartProduct.getProductId();
-            map.put("product_id", productId);
-            cartLogic.cartProductService.deleteByMap(map);
+    public static void DeleteCartProduct(int cartProductId) {
+        if(cartProductId == 0){
+            throw new TipException("参数不合法，cartProductId为空");
         }
+       cartLogic.cartProductService.deleteById(cartProductId);
     }
 
 
     /**
      * 添加或修改购物车
-     * TODO 未做参数合法校验
-     * TODO 方法名改为 AddUpdateCartProduct
-     *
      * @param openId
      * @param productId
      * @param number
      * @return
      */
     public static void AddUpdateCartProduct(String openId, int productId, int productSizeId, int number) {
+        if(openId == null){
+            throw new TipException("参数不合法，用户openId为空");
+        }
+        if(productId == 0){
+            throw new TipException("参数不合法，商品ID不能为空");
+        }
+        if(productSizeId == 0){
+            throw new TipException("参数不合法，商品规格不能为空");
+        }
+        if(number == 0){
+            throw new TipException("参数不合法，商品数量不能为空");
+        }
 
         EntityWrapper<Cart> cartWrapper = new EntityWrapper<>();
-        cartWrapper.where("open_id={0} and delete_time is null");
+        cartWrapper.where("open_id={0} and delete_time is null",openId);
 
+        //判断当前用户是否有购物车，没有则创建购物车
         Cart cart = cartLogic.cartService.selectOne(cartWrapper);
         if (cart == null) {
-
             cart = new Cart();
             cart.setOpenId(openId);
             cart.setCreateTime(DateUtils.getCurrentUnixTime());
@@ -112,6 +123,7 @@ public class CartLogic {
 
         CartProduct cartProduct = cartLogic.cartProductService.selectOne(where);
 
+        //如果购物车中没有此商品，添加此商品
         if (cartProduct == null) {
 
             cartProduct = new CartProduct();
@@ -123,20 +135,26 @@ public class CartLogic {
             cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
 
             cartLogic.cartProductService.insert(cartProduct);
-        } else {
+        } else {   //含有此商品，修改商品数量
             cartProduct.setNumber(number);
             cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
             cartLogic.cartProductService.updateById(cartProduct);
+            if(cartProduct.getNumber()<=0){
+                CartLogic.DeleteCartProduct(cartProduct.getCartProductId());
+            }
         }
 
     }
 
     /**
-     * 获得用户的购物车
+     * 获取用户的购物车
      *
      * @param
      */
     public static Cart GetCart(String openId) {
+        if(openId == null){
+            throw new TipException("参数不合法，用户openId为空");
+        }
         EntityWrapper<Cart> wrapper = new EntityWrapper<>();
         wrapper.where("open_id={0}", openId);
         Cart cart = cartLogic.cartService.selectOne(wrapper);
@@ -148,20 +166,26 @@ public class CartLogic {
 
 
     /**
-     * 获得用户购物车中商品列表
+     * 获取用户购物车中商品列表
      *
      * @param openId
      * @return
      */
-    public static List<CartProduct> GetCartProduct(String openId) {
-        Cart cart = CartLogic.GetCart(openId);
+    public static List<CartProduct> GetCartProduct(String openId,int cartId) {
+        if(openId == null){
+            throw new TipException("参数不合法，用户openId为空");
+        }
         EntityWrapper<CartProduct> wrapper = new EntityWrapper<>();
-        wrapper.where("cart_id={0}", cart.getCartId());
-        //获取购物车中商品商品
+        wrapper.where("cart_id={0}", cartId);
+        //获取购物车中商品
         List<CartProduct> cartProductList = cartLogic.cartProductService.selectList(wrapper);
-        /*if(cartProductList == null || cartProductList.size() == 0){
+        if(cartProductList == null || cartProductList.size() == 0){
             throw new TipException("您的购物车中空空如也，快加购商品吧！");
-        }*/
+        }
+        for (CartProduct cartProduct : cartProductList) {
+            //获取商品详细信息
+            Product product = ProductLogic.GetProduct(cartProduct.getProductId());
+        }
         return cartProductList;
     }
 
