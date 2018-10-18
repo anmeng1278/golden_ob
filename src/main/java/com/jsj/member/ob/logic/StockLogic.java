@@ -64,7 +64,7 @@ public class StockLogic {
         StockDto stockDto = new StockDto();
         for (Stock stock : stockList) {
             //获得库存中每样商品总量
-            productWrapper.where("product_id={0}", stock.getProductId());
+            productWrapper.where("product_id={0} and open_id={1}", stock.getProductId(),stock.getOpenId());
             int number = stockLogic.stockService.selectCount(productWrapper);
             ProductDto productDto = ProductLogic.GetProduct(stock.getProductId());
             stockDto.setProductDto(productDto);
