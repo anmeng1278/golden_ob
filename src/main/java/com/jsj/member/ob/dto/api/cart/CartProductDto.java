@@ -1,6 +1,7 @@
 package com.jsj.member.ob.dto.api.cart;
 
 import com.jsj.member.ob.dto.api.BaseDto;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 
 public class CartProductDto extends BaseDto {
 
@@ -34,6 +35,19 @@ public class CartProductDto extends BaseDto {
      * 商品数量
      */
     private Integer number;
+
+    /**
+     * 商品信息
+     */
+    private ProductDto productDto;
+
+    public ProductDto getProductDto() {
+        return productDto;
+    }
+
+    public void setProductDto(ProductDto productDto) {
+        this.productDto = productDto;
+    }
 
     public String getOpenId() {
         return openId;
