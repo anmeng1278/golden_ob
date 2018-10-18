@@ -38,12 +38,13 @@ public class StockLogic {
 
     /**
      * 获取我的库存
+     *
      * @param requ
      * @return
      */
-    public static GetMyStockResp GetMyStock(GetMyStockRequ requ){
+    public static GetMyStockResp GetMyStock(GetMyStockRequ requ) {
 
-        if(StringUtils.isBlank(requ.getBaseRequ().getOpenId())){
+        if (StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
             throw new TipException("参数不合法，用户openId为空");
         }
 
@@ -55,15 +56,15 @@ public class StockLogic {
 
         //查询该用户下所有库存
         EntityWrapper<Stock> stockWrapper = new EntityWrapper<>();
-        stockWrapper.where("open_id={0} and status = {0} and delete_time is null",requ.getBaseRequ().getOpenId(), StockStatus.UNUSE.getValue());
+        stockWrapper.where("open_id={0} and status = {1} and delete_time is null", requ.getBaseRequ().getOpenId(), StockStatus.UNUSE.getValue());
         List<Stock> stockList = stockLogic.stockService.selectList(stockWrapper);
-       if(stockList.size() == 0){
+        if (stockList.size() == 0) {
             return resp;
         }
         StockDto stockDto = new StockDto();
         for (Stock stock : stockList) {
             //获得库存中每样商品总量
-            productWrapper.where("product_id={0}",stock.getProductId());
+            productWrapper.where("product_id={0}", stock.getProductId());
             int number = stockLogic.stockService.selectCount(productWrapper);
             ProductDto productDto = ProductLogic.GetProduct(stock.getProductId());
             stockDto.setProductDto(productDto);
