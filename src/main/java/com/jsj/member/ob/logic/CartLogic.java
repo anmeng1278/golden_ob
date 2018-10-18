@@ -182,7 +182,7 @@ public class CartLogic {
      */
     public static GetCartProductsResp GetCartProducts(GetCartProductsRequ requ) {
 
-        if(StringUtils.isBlank(requ.getBaseRequ().getOpenId())){
+        if (StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
             throw new TipException("参数不合法，用户openId为空");
         }
 
