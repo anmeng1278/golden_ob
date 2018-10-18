@@ -1,36 +1,19 @@
 package com.jsj.member.ob.dto.api.cart;
 
 
+import java.util.List;
 
 public class GetCartProductsResp {
 
-    private Integer carProductId;
 
-    private Integer productId;
+    private List<CartProductDto> cartProductDtoList;
 
-    private Integer number;
-
-    public Integer getCarProductId() {
-        return carProductId;
+    public List<CartProductDto> getCartProductDtoList() {
+        return cartProductDtoList;
     }
 
-    public void setCarProductId(Integer carProductId) {
-        this.carProductId = carProductId;
+    public void setCartProductDtoList(List<CartProductDto> cartProductDtoList) {
+        this.cartProductDtoList = cartProductDtoList;
     }
 
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
-    }
-
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
-    }
 }
