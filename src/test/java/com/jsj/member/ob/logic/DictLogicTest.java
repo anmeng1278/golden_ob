@@ -16,12 +16,40 @@ import java.util.List;
 @WebAppConfiguration
 public class DictLogicTest {
 
+    /**
+     * 获取省份
+     */
+    @Test
+    public void getProvince() {
+        DictResp dictResp = DictLogic.GetArea(0);
+        List<DictDto> dictDtoList = dictResp.getDictDtoList();
+        for (DictDto dictDto : dictDtoList) {
+            System.out.println(dictDto.getDictId() + "  " + dictDto.getDictName());
+        }
+    }
+
+    /**
+     * 获取城市
+     */
+    @Test
+    public void getCity() {
+        DictResp dictResp = DictLogic.GetArea(130100);
+        List<DictDto> dictDtoList = dictResp.getDictDtoList();
+        for (DictDto dictDto : dictDtoList) {
+            System.out.println(dictDto.getDictId() + "  " + dictDto.getDictName());
+        }
+    }
+
+    /**
+     * 获取区域
+     */
     @Test
     public void getArea() {
         DictResp dictResp = DictLogic.GetArea(130100);
         List<DictDto> dictDtoList = dictResp.getDictDtoList();
         for (DictDto dictDto : dictDtoList) {
-            System.out.println(dictDto.getDictId()+"  "+dictDto.getDictName());
+            System.out.println(dictDto.getDictId() + "  " + dictDto.getDictName());
         }
     }
+
 }
