@@ -24,4 +24,14 @@ public class DictLogicTest {
             System.out.println(dictDto.getDictId()+"  "+dictDto.getDictName());
         }
     }
+
+    @Test
+    public void getProvince(){
+        DictResp dictResp = DictLogic.GetProvince(0);
+        List<DictDto> dictDtoList = dictResp.getDictDtoList();
+        for (DictDto dictDto : dictDtoList) {
+            System.out.println(dictDto.getDictId()+"  "+dictDto.getDictName());
+        }
+    }
+
 }

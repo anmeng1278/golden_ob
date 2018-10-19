@@ -63,6 +63,13 @@ public class DictLogic {
 
             DictDto dictDto = new DictDto();
 
+            //获得省份直辖市列表
+            if(dict.getDictId() % 10000 == 0){
+                dictDto.setDictId(dict.getDictId());
+                dictDto.setDictName(dict.getDictName());
+                dictDtoList.add(dictDto);
+            }
+
             //得到省份的下一级
             if (dictId / 10000 == dict.getDictId() / 10000 && dict.getDictId() % 10000 != 0 && dictId % 10000 == 0) {
                 if (dict.getDictId() % 100 == 0) { //省份下的市
@@ -84,6 +91,30 @@ public class DictLogic {
                 dictDtoList.add(dictDto);
             }
             dictResp.setDictDtoList(dictDtoList);
+        }
+        return dictResp;
+    }
+
+    public  static DictResp GetProvince( int id){
+        //如果传入0获得省份
+        DictResp dictResp = new DictResp();
+        if(id == 0) {
+            List<DictDto> dictDtoList = new ArrayList<>();
+            EntityWrapper<Dict> entityWrapper = new EntityWrapper<>();
+            entityWrapper.where("delete_time is null and parent_dict_id=50000");
+            List<Dict> dictList = dictLogic.dictService.selectList(entityWrapper);
+            for (Dict dict : dictList) {
+
+                DictDto dictDto = new DictDto();
+
+                //得到省份的下一级
+                if (dict.getDictId() % 1000 == 0) {
+                    dictDto.setDictId(dict.getDictId());
+                    dictDto.setDictName(dict.getDictName());
+                    dictDtoList.add(dictDto);
+                }
+                dictResp.setDictDtoList(dictDtoList);
+            }
         }
         return dictResp;
     }
