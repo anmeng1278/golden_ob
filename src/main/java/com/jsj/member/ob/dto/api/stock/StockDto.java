@@ -4,18 +4,39 @@ import com.jsj.member.ob.dto.api.product.ProductDto;
 
 public class StockDto {
 
+    /**
+     * 库存id
+     */
     private Integer stockId;
 
+    /**
+     * 用户openId
+     */
     private String openId;
 
+    /**
+     * 商品id
+     */
     private Integer productId;
 
+<<<<<<< Updated upstream
     private int productSpecId;
 
+=======
+    /**
+     * 订单id
+     */
+>>>>>>> Stashed changes
     private Integer orderId;
 
+    /**
+     * 商品数量
+     */
     private Integer number;
 
+    /**
+     * 商品信息
+     */
     private ProductDto productDto;
 
     public Integer getStockId() {
