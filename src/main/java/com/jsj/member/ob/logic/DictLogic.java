@@ -1,6 +1,8 @@
 package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.jsj.member.ob.dto.api.dict.DictDto;
+import com.jsj.member.ob.dto.api.dict.DictResp;
 import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.service.DictService;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -41,5 +44,47 @@ public class DictLogic {
 
         return dictLogic.dictService.selectList(entityWrapper);
 
+    }
+
+
+    /**
+     * 获得区域
+     *
+     * @param dictId
+     * @return
+     */
+    public static DictResp GetArea(int dictId) {
+        DictResp dictResp = new DictResp();
+        List<DictDto> dictDtoList = new ArrayList<>();
+        EntityWrapper<Dict> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where("delete_time is null and parent_dict_id=50000");
+        List<Dict> dictList = dictLogic.dictService.selectList(entityWrapper);
+        for (Dict dict : dictList) {
+
+            DictDto dictDto = new DictDto();
+
+            //得到省份的下一级
+            if (dictId / 10000 == dict.getDictId() / 10000 && dict.getDictId() % 10000 != 0 && dictId % 10000 == 0) {
+                if (dict.getDictId() % 100 == 0) { //省份下的市
+                    dictDto.setDictId(dict.getDictId());
+                    dictDto.setDictName(dict.getDictName());
+                    dictDtoList.add(dictDto);
+
+                } else if (dict.getDictId() % 100 != 0) { //直辖市的区
+                    dictDto.setDictId(dict.getDictId());
+                    dictDto.setDictName(dict.getDictName());
+                    dictDtoList.add(dictDto);
+                }
+            }
+
+            //得到市下边的区
+            if (dict.getDictId() / 100 == dictId / 100 && dictId % 100 == 0 && dict.getDictId() % 100 != 0) {
+                dictDto.setDictId(dict.getDictId());
+                dictDto.setDictName(dict.getDictName());
+                dictDtoList.add(dictDto);
+            }
+            dictResp.setDictDtoList(dictDtoList);
+        }
+        return dictResp;
     }
 }
