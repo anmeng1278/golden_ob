@@ -19,14 +19,14 @@ public class StockDto {
      */
     private Integer productId;
 
-<<<<<<< Updated upstream
+    /**
+     * 商品规格id
+     */
     private int productSpecId;
 
-=======
     /**
      * 订单id
      */
->>>>>>> Stashed changes
     private Integer orderId;
 
     /**
