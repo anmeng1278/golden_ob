@@ -13,9 +13,9 @@ public class OrderProductDto {
     private int number;
 
     /**
-     * 尺寸型号
+     * 规格型号编号
      */
-    private int productSizeId;
+    private int productSpecId;
 
     public int getProductId() {
         return productId;
@@ -33,11 +33,11 @@ public class OrderProductDto {
         this.number = number;
     }
 
-    public int getProductSizeId() {
-        return productSizeId;
+    public int getProductSpecId() {
+        return productSpecId;
     }
 
-    public void setProductSizeId(int productSizeId) {
-        this.productSizeId = productSizeId;
+    public void setProductSpecId(int productSpecId) {
+        this.productSpecId = productSpecId;
     }
 }

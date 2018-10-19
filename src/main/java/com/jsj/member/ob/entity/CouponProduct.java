@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : CouponProduct 优惠券适用商品范围表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-16
+ *   @since 2018-10-19
  */
 @TableName("_coupon_product")
 public class CouponProduct implements Serializable {

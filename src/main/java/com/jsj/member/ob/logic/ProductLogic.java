@@ -2,24 +2,26 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductImgDto;
-import com.jsj.member.ob.dto.api.product.ProductSizeDto;
+import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.entity.Product;
 import com.jsj.member.ob.entity.ProductImg;
-import com.jsj.member.ob.entity.ProductSize;
-import com.jsj.member.ob.entity.Seckill;
+import com.jsj.member.ob.entity.ProductSpec;
+import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.ProductImgType;
-import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.exception.ProductStockException;
+import com.jsj.member.ob.service.ActivityProductService;
 import com.jsj.member.ob.service.ProductImgService;
 import com.jsj.member.ob.service.ProductService;
-import com.jsj.member.ob.service.ProductSizeService;
-import com.jsj.member.ob.service.SeckillService;
+import com.jsj.member.ob.service.ProductSpecService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -33,8 +35,8 @@ public class ProductLogic {
         productLogic = this;
         productLogic.productService = this.productService;
         productLogic.productImgService = this.productImgService;
-        productLogic.productSizeService = this.productSizeService;
-        productLogic.seckillService = this.seckillService;
+        productLogic.productSpecService = this.productSpecService;
+        productLogic.activityProductService = this.activityProductService;
     }
 
     @Autowired
@@ -44,11 +46,10 @@ public class ProductLogic {
     ProductImgService productImgService;
 
     @Autowired
-    ProductSizeService productSizeService;
+    ProductSpecService productSpecService;
 
     @Autowired
-    SeckillService seckillService;
-
+    ActivityProductService activityProductService;
 
     /**
      * 获取商品信息
@@ -81,6 +82,93 @@ public class ProductLogic {
         productDto.setUseIntro(entity.getUseIntro());
 
         //商品图片
+        List<ProductImgDto> productImgDtos = ProductLogic.GetProductImgDtos(productId);
+        productDto.setProductImgDtos(productImgDtos);
+
+        //商品规格
+        List<ProductSpecDto> productSpecDtos = ProductLogic.GetProductSpecDtos(productId);
+        productDto.setProductSpecDtos(productSpecDtos);
+
+        //商品正在参加的活动
+        List<ActivityDto> currentActivityDtos = ActivityLogic.GetProductCurrentActivityDtos(productId);
+        productDto.setCurrentActivityDtos(currentActivityDtos);
+
+        return productDto;
+
+    }
+
+
+    /**
+     * 获取商品规格
+     *
+     * @param productSpecId
+     * @return
+     */
+    public static ProductSpecDto GetProductSpec(int productSpecId) {
+
+        ProductSpec productSpec = productLogic.productSpecService.selectById(productSpecId);
+        ProductSpecDto productSpecDto = new ProductSpecDto();
+
+        productSpecDto.setProductId(productSpec.getProductId());
+        productSpecDto.setProductSpecId(productSpec.getProductSpecId());
+        productSpecDto.setSpecName(productSpec.getSpecName());
+        productSpecDto.setOriginalPrice(productSpec.getOriginalPrice());
+        productSpecDto.setSalePrice(productSpec.getSalePrice());
+
+        productSpecDto.setStockCount(productSpec.getStockCount());
+        productSpecDto.setSort(productSpec.getSort());
+
+        return productSpecDto;
+
+    }
+
+    /**
+     * 获取商品规格
+     *
+     * @param productId
+     * @return
+     */
+    public static List<ProductSpecDto> GetProductSpecDtos(int productId) {
+
+        List<ProductSpecDto> productSpecDtos = new ArrayList<>();
+
+        //商品规格
+        Wrapper<ProductSpec> productSpecWrapper = new EntityWrapper<>();
+        productSpecWrapper.where("product_id={0} and delete_time is null", productId);
+        productSpecWrapper.orderBy("update_time desc");
+
+        List<ProductSpec> productSpecs = productLogic.productSpecService.selectList(productSpecWrapper);
+        for (ProductSpec ps : productSpecs) {
+
+            ProductSpecDto productSpecDto = new ProductSpecDto();
+
+            productSpecDto.setProductId(ps.getProductId());
+            productSpecDto.setProductSpecId(ps.getProductSpecId());
+            productSpecDto.setSpecName(ps.getSpecName());
+            productSpecDto.setOriginalPrice(ps.getOriginalPrice());
+            productSpecDto.setSalePrice(ps.getSalePrice());
+
+            productSpecDto.setStockCount(ps.getStockCount());
+            productSpecDto.setSort(ps.getSort());
+
+            productSpecDtos.add(productSpecDto);
+        }
+
+        return productSpecDtos;
+
+    }
+
+    /**
+     * 获取商品图片
+     *
+     * @param productId
+     * @return
+     */
+    public static List<ProductImgDto> GetProductImgDtos(int productId) {
+
+        List<ProductImgDto> productImgDtos = new ArrayList<>();
+
+        //商品图片
         Wrapper<ProductImg> productImgWrapper = new EntityWrapper<com.jsj.member.ob.entity.ProductImg>();
         productImgWrapper.where("product_id={0} and delete_time is null", productId);
         productImgWrapper.orderBy("update_time desc");
@@ -95,64 +183,69 @@ public class ProductLogic {
             productImgDto.setProductImgId(pi.getProductImgId());
             productImgDto.setProductImgType(ProductImgType.valueOf(pi.getTypeId()));
 
-            productDto.getProductImgDtos().add(productImgDto);
+            productImgDtos.add(productImgDto);
         }
 
-        //商品尺寸
-        Wrapper<ProductSize> productSizeWrapper = new EntityWrapper<com.jsj.member.ob.entity.ProductSize>();
-        productSizeWrapper.where("product_id={0} and delete_time is null", productId);
-        productSizeWrapper.orderBy("update_time desc");
-
-        List<ProductSize> productSizes = productLogic.productSizeService.selectList(productSizeWrapper);
-        for (ProductSize pz : productSizes) {
-
-            ProductSizeDto productSizeDto = new ProductSizeDto();
-
-            productSizeDto.setProductId(pz.getProductId());
-            productSizeDto.setProductSizeId(pz.getProductSizeId());
-            productSizeDto.setSizeName(pz.getSizeName());
-
-            productDto.getProductSizeDtos().add(productSizeDto);
-
-        }
-
-        //商品秒杀价
-        EntityWrapper<Seckill> seckillWrapper = new EntityWrapper<>();
-        seckillWrapper.where("product_id={0} and ( UNIX_TIMESTAMP() between begin_time and end_time )", productId);
-        seckillWrapper.where("ifpass = 1");
-        seckillWrapper.where("delete_time is null");
-
-        Seckill seckill = productLogic.seckillService.selectOne(seckillWrapper);
-        if (seckill != null) {
-            productDto.setStockCount(seckill.getStockCount());
-            productDto.setSeckillId(seckill.getSeckillId());
-            productDto.setSecPrice(seckill.getSeckillPrice().doubleValue());
-        }
-
-        return productDto;
-
+        return productImgDtos;
     }
 
-
     /**
-     * 创建订单后削减商品库存
+     * 削减商品库存
      *
      * @param orderProductDtos
      */
-    public static void ReductionProductStock(List<OrderProductDto> orderProductDtos) {
+    public static void ReductionProductStock(List<OrderProductDto> orderProductDtos, ActivityType activityType, Integer orderId) {
 
         for (OrderProductDto opt : orderProductDtos) {
 
-            com.jsj.member.ob.entity.Product product = productLogic.productService.selectById(opt.getProductId());
+            Product product = productLogic.productService.selectById(opt.getProductId());
             if (product.getStockCount() < opt.getNumber()) {
-                throw new TipException("商品库存不足");
+
+                ProductStockException pe = new ProductStockException("库存不足");
+                pe.setNumber(opt.getNumber());
+                pe.setStock(product.getStockCount());
+                pe.setActivityType(activityType);
+                pe.setOrderId(orderId);
+                pe.setProductId(product.getProductId());
+
+                throw pe;
             }
+
 
             product.setStockCount(product.getStockCount() - opt.getNumber());
             productLogic.productService.updateById(product);
 
         }
+    }
 
+
+    /**
+     * 削减商品规格库存
+     *
+     * @param orderProductDtos
+     */
+    public static void ReductionProductSpecStock(List<OrderProductDto> orderProductDtos, ActivityType activityType, Integer orderId) {
+
+        for (OrderProductDto opt : orderProductDtos) {
+
+            ProductSpec productSpec = productLogic.productSpecService.selectById(opt.getProductSpecId());
+            if (productSpec.getStockCount() < opt.getNumber()) {
+
+                ProductStockException pe = new ProductStockException("库存不足");
+                pe.setNumber(opt.getNumber());
+                pe.setStock(productSpec.getStockCount());
+                pe.setActivityType(activityType);
+                pe.setOrderId(orderId);
+                pe.setProductId(productSpec.getProductId());
+                pe.setProductSpecId(opt.getProductSpecId());
+
+                throw pe;
+            }
+
+            productSpec.setStockCount(productSpec.getStockCount() - opt.getNumber());
+            productLogic.productSpecService.updateById(productSpec);
+
+        }
     }
 
     /**
@@ -164,10 +257,28 @@ public class ProductLogic {
 
         for (OrderProductDto opt : orderProductDtos) {
 
-            com.jsj.member.ob.entity.Product product = productLogic.productService.selectById(opt.getProductId());
+            Product product = productLogic.productService.selectById(opt.getProductId());
 
             product.setStockCount(product.getStockCount() + opt.getNumber());
             productLogic.productService.updateById(product);
+
+        }
+
+    }
+
+    /**
+     * 恢复商品规格库存
+     *
+     * @param orderProductDtos
+     */
+    public static void RestoreProductSpecStock(List<OrderProductDto> orderProductDtos) {
+
+        for (OrderProductDto opt : orderProductDtos) {
+
+            ProductSpec productSpec = productLogic.productSpecService.selectById(opt.getProductSpecId());
+
+            productSpec.setStockCount(productSpec.getStockCount() + opt.getNumber());
+            productLogic.productSpecService.updateById(productSpec);
 
         }
 

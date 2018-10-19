@@ -39,11 +39,11 @@ public class OrderLogic {
     public static CreateOrderResp CreateOrder(CreateOrderRequ requ) {
 
         //参数校验
-        if (requ.getOrderType() == null) {
-            throw new TipException("订单类型不能为空");
+        if (requ.getActivityType() == null) {
+            throw new TipException("活动类型不能为空");
         }
 
-        OrderBase orderBase = OrderFactory.GetInstance(requ.getOrderType());
+        OrderBase orderBase = OrderFactory.GetInstance(requ.getActivityType());
         return orderBase.CreateOrder(requ);
 
     }

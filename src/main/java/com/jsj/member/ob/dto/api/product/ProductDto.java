@@ -1,5 +1,7 @@
 package com.jsj.member.ob.dto.api.product;
 
+import com.jsj.member.ob.dto.api.activity.ActivityDto;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +9,7 @@ public class ProductDto {
 
     public ProductDto() {
         this.productImgDtos = new ArrayList<>();
-        this.productSizeDtos = new ArrayList<>();
+        this.productSpecDtos = new ArrayList<>();
     }
 
     /**
@@ -56,14 +58,14 @@ public class ProductDto {
     private double secPrice;
 
     /**
-     * 秒杀库存
+     * 正在参与的活动
      */
-    private int secStockCount;
+    private List<ActivityDto> currentActivityDtos;
 
     /**
-     * 秒杀编号
+     * 父编号(组团商品使用)
      */
-    private int seckillId;
+    private int parentProductId;
 
     /**
      * 使用说明
@@ -108,7 +110,7 @@ public class ProductDto {
     /**
      * 商品尺寸
      */
-    private List<ProductSizeDto> productSizeDtos;
+    private List<ProductSpecDto> productSpecDtos;
 
 
     public Integer getProductId() {
@@ -183,20 +185,20 @@ public class ProductDto {
         this.secPrice = secPrice;
     }
 
-    public int getSecStockCount() {
-        return secStockCount;
+    public List<ActivityDto> getCurrentActivityDtos() {
+        return currentActivityDtos;
     }
 
-    public void setSecStockCount(int secStockCount) {
-        this.secStockCount = secStockCount;
+    public void setCurrentActivityDtos(List<ActivityDto> currentActivityDtos) {
+        this.currentActivityDtos = currentActivityDtos;
     }
 
-    public int getSeckillId() {
-        return seckillId;
+    public int getParentProductId() {
+        return parentProductId;
     }
 
-    public void setSeckillId(int seckillId) {
-        this.seckillId = seckillId;
+    public void setParentProductId(int parentProductId) {
+        this.parentProductId = parentProductId;
     }
 
     public String getUseIntro() {
@@ -263,11 +265,11 @@ public class ProductDto {
         this.productImgDtos = productImgDtos;
     }
 
-    public List<ProductSizeDto> getProductSizeDtos() {
-        return productSizeDtos;
+    public List<ProductSpecDto> getProductSpecDtos() {
+        return productSpecDtos;
     }
 
-    public void setProductSizeDtos(List<ProductSizeDto> productSizeDtos) {
-        this.productSizeDtos = productSizeDtos;
+    public void setProductSpecDtos(List<ProductSpecDto> productSpecDtos) {
+        this.productSpecDtos = productSpecDtos;
     }
 }

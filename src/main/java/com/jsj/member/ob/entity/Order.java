@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Order 订单表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-16
+ *   @since 2018-10-19
  */
 @TableName("_order")
 public class Order implements Serializable {
@@ -24,11 +24,6 @@ public class Order implements Serializable {
      */
 	@TableId(value="order_id", type= IdType.AUTO)
 	private Integer orderId;
-    /**
-     * 订单编号
-     */
-	@TableField("order_number")
-	private String orderNumber;
     /**
      * 公众号open_id
      */
@@ -66,15 +61,18 @@ public class Order implements Serializable {
      * 备注
      */
 	private String remarks;
-	@TableField("team_order_id")
-	private Integer teamOrderId;
     /**
-     * 秒杀编号
+     * 活动编号
      */
-	@TableField("seckill_id")
-	private Integer seckillId;
+	@TableField("activity_id")
+	private Integer activityId;
     /**
-     * 0 普通订单  10 团单  20 秒杀单
+     * 活动订单编号(团购时不为空)
+     */
+	@TableField("activity_order_id")
+	private Integer activityOrderId;
+    /**
+     * 0 普通订单  10团单  20秒杀单 30商品组合单
      */
 	@TableField("type_id")
 	private Integer typeId;
@@ -111,14 +109,6 @@ public class Order implements Serializable {
 
 	public void setOrderId(Integer orderId) {
 		this.orderId = orderId;
-	}
-
-	public String getOrderNumber() {
-		return orderNumber;
-	}
-
-	public void setOrderNumber(String orderNumber) {
-		this.orderNumber = orderNumber;
 	}
 
 	public String getOpenId() {
@@ -185,20 +175,20 @@ public class Order implements Serializable {
 		this.remarks = remarks;
 	}
 
-	public Integer getTeamOrderId() {
-		return teamOrderId;
+	public Integer getActivityId() {
+		return activityId;
 	}
 
-	public void setTeamOrderId(Integer teamOrderId) {
-		this.teamOrderId = teamOrderId;
+	public void setActivityId(Integer activityId) {
+		this.activityId = activityId;
 	}
 
-	public Integer getSeckillId() {
-		return seckillId;
+	public Integer getActivityOrderId() {
+		return activityOrderId;
 	}
 
-	public void setSeckillId(Integer seckillId) {
-		this.seckillId = seckillId;
+	public void setActivityOrderId(Integer activityOrderId) {
+		this.activityOrderId = activityOrderId;
 	}
 
 	public Integer getTypeId() {
@@ -254,7 +244,6 @@ public class Order implements Serializable {
 	public String toString() {
 		return "Order{" +
 			", orderId=" + orderId +
-			", orderNumber=" + orderNumber +
 			", openId=" + openId +
 			", amount=" + amount +
 			", payAmount=" + payAmount +
@@ -263,8 +252,8 @@ public class Order implements Serializable {
 			", wechatCouponId=" + wechatCouponId +
 			", couponPrice=" + couponPrice +
 			", remarks=" + remarks +
-			", teamOrderId=" + teamOrderId +
-			", seckillId=" + seckillId +
+			", activityId=" + activityId +
+			", activityOrderId=" + activityOrderId +
 			", typeId=" + typeId +
 			", payTime=" + payTime +
 			", expiredTime=" + expiredTime +

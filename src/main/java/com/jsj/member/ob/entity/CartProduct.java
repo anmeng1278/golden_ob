@@ -12,21 +12,36 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : CartProduct 实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-16
+ *   @since 2018-10-19
  */
 @TableName("_cart_product")
 public class CartProduct implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 主键
+     */
 	@TableId(value="cart_product_id", type= IdType.AUTO)
 	private Integer cartProductId;
+    /**
+     * 购物车编号
+     */
 	@TableField("cart_id")
 	private Integer cartId;
+    /**
+     * 商品编号
+     */
 	@TableField("product_id")
 	private Integer productId;
-	@TableField("product_size_id")
-	private Integer productSizeId;
+    /**
+     * 规格编号
+     */
+	@TableField("product_spec_id")
+	private Integer productSpecId;
+    /**
+     * 数量
+     */
 	private Integer number;
     /**
      * 创建时间
@@ -69,12 +84,12 @@ public class CartProduct implements Serializable {
 		this.productId = productId;
 	}
 
-	public Integer getProductSizeId() {
-		return productSizeId;
+	public Integer getProductSpecId() {
+		return productSpecId;
 	}
 
-	public void setProductSizeId(Integer productSizeId) {
-		this.productSizeId = productSizeId;
+	public void setProductSpecId(Integer productSpecId) {
+		this.productSpecId = productSpecId;
 	}
 
 	public Integer getNumber() {
@@ -116,7 +131,7 @@ public class CartProduct implements Serializable {
 			", cartProductId=" + cartProductId +
 			", cartId=" + cartId +
 			", productId=" + productId +
-			", productSizeId=" + productSizeId +
+			", productSpecId=" + productSpecId +
 			", number=" + number +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +

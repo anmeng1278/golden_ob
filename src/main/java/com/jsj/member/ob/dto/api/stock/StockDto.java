@@ -10,19 +10,13 @@ public class StockDto {
 
     private Integer productId;
 
+    private int productSpecId;
+
     private Integer orderId;
 
     private Integer number;
 
     private ProductDto productDto;
-
-    public ProductDto getProductDto() {
-        return productDto;
-    }
-
-    public void setProductDto(ProductDto productDto) {
-        this.productDto = productDto;
-    }
 
     public Integer getStockId() {
         return stockId;
@@ -48,6 +42,14 @@ public class StockDto {
         this.productId = productId;
     }
 
+    public int getProductSpecId() {
+        return productSpecId;
+    }
+
+    public void setProductSpecId(int productSpecId) {
+        this.productSpecId = productSpecId;
+    }
+
     public Integer getOrderId() {
         return orderId;
     }
@@ -62,5 +64,13 @@ public class StockDto {
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public ProductDto getProductDto() {
+        return productDto;
+    }
+
+    public void setProductDto(ProductDto productDto) {
+        this.productDto = productDto;
     }
 }

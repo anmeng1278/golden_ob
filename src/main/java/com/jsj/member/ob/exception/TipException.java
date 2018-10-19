@@ -1,5 +1,8 @@
 package com.jsj.member.ob.exception;
 
+/**
+ * 操作用户的错误信息
+ */
 public class TipException extends RuntimeException {
 
     public TipException() {

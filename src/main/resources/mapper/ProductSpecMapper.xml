@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsj.member.ob.dao.ProductSpecMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.ProductSpec">
+        <id column="product_spec_id" property="productSpecId" />
+        <result column="product_id" property="productId" />
+        <result column="spec_name" property="specName" />
+        <result column="sale_price" property="salePrice" />
+        <result column="original_price" property="originalPrice" />
+        <result column="stock_count" property="stockCount" />
+        <result column="sort" property="sort" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="delete_time" property="deleteTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        product_spec_id AS productSpecId, product_id AS productId, spec_name AS specName, sale_price AS salePrice, original_price AS originalPrice, stock_count AS stockCount, sort, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+    </sql>
+
+</mapper>

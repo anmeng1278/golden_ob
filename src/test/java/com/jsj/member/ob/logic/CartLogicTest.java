@@ -4,7 +4,6 @@ import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.dto.api.cart.CartProductDto;
 import com.jsj.member.ob.dto.api.cart.GetCartProductsRequ;
-import com.jsj.member.ob.entity.CartProduct;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,7 +51,7 @@ public class CartLogicTest {
         cartProductDto.setCartId(1);
         cartProductDto.setCartProductId(1);
         cartProductDto.setNumber(10);
-        cartProductDto.setProductSizeId(1);
+        cartProductDto.setProductSpecId(1);
         cartProductDto.setOpenId(baseRequ.getOpenId());
         cartProductDto.setProductId(1);
 

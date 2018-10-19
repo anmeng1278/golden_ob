@@ -64,8 +64,9 @@ public class StockLogic {
         StockDto stockDto = new StockDto();
         for (Stock stock : stockList) {
             //获得库存中每样商品总量
-            productWrapper.where("product_id={0} and open_id={1}", stock.getProductId(),stock.getOpenId());
+            productWrapper.where("product_id={0} and open_id={1}", stock.getProductId(), stock.getOpenId());
             int number = stockLogic.stockService.selectCount(productWrapper);
+
             ProductDto productDto = ProductLogic.GetProduct(stock.getProductId());
             stockDto.setProductDto(productDto);
             stockDto.setOpenId(requ.getBaseRequ().getOpenId());
@@ -74,7 +75,7 @@ public class StockLogic {
             stockDto.setStockId(stock.getStockId());
             stockDto.setNumber(number);
             stockDtoList.add(stockDto);
-            resp.setStockDtoList(stockDtoList);
+            resp.setStockDtos(stockDtoList);
         }
         return resp;
     }

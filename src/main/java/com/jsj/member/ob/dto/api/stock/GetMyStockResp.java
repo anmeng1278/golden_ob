@@ -4,15 +4,13 @@ import java.util.List;
 
 public class GetMyStockResp {
 
-    List<StockDto> stockDtoList;
+    private List<StockDto> stockDtos;
 
-    public List<StockDto> getStockDtoList() {
-        return stockDtoList;
+    public List<StockDto> getStockDtos() {
+        return stockDtos;
     }
 
-    public void setStockDtoList(List<StockDto> stockDtoList) {
-        this.stockDtoList = stockDtoList;
+    public void setStockDtos(List<StockDto> stockDtos) {
+        this.stockDtos = stockDtos;
     }
-
-
 }

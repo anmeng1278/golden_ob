@@ -20,7 +20,7 @@ public class CreateOrderResp {
     /**
      * 订单号
      */
-    private String orderNumber;
+    private int orderId;
 
     /**
      * 订单支付超时时间
@@ -35,12 +35,13 @@ public class CreateOrderResp {
         this.amount = amount;
     }
 
-    public String getOrderNumber() {
-        return orderNumber;
+
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public int getExpiredTime() {

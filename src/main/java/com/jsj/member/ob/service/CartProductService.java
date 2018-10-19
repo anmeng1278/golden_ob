@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.service.IService;
  *   @description : CartProduct 服务接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-16
+ *   @since 2018-10-19
  */
 public interface CartProductService extends IService<CartProduct> {
 	

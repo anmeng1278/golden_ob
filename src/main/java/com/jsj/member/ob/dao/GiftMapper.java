@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : Gift Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-16
+ *   @since 2018-10-19
  */
 @Repository
 public interface GiftMapper extends BaseMapper<Gift> {

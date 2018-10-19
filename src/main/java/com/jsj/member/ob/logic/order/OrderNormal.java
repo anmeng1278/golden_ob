@@ -1,18 +1,18 @@
 package com.jsj.member.ob.logic.order;
 
 import com.jsj.member.ob.constant.Constant;
-import com.jsj.member.ob.dto.api.coupon.UseCouponRequ;
-import com.jsj.member.ob.dto.api.coupon.UseCouponResp;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
-import com.jsj.member.ob.dto.api.product.ProductDto;
+import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.entity.Order;
+import com.jsj.member.ob.entity.OrderProduct;
+import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.OrderStatus;
-import com.jsj.member.ob.enums.OrderType;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.ProductLogic;
+import com.jsj.member.ob.service.ActivityOrderService;
+import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.service.OrderProductService;
 import com.jsj.member.ob.service.OrderService;
 import com.jsj.member.ob.utils.DateUtils;
@@ -30,17 +30,28 @@ import java.util.List;
 public class OrderNormal extends OrderBase {
 
     public OrderNormal() {
-        super(OrderType.NORMAL);
+        super(ActivityType.NORMAL);
+        super.setCanUseCoupon(true);
     }
 
     @Autowired
-    public void initService(OrderService orderService, OrderProductService orderProductService) {
+    public void initService(OrderService orderService,
+                            OrderProductService orderProductService,
+                            ActivityService activityService,
+                            ActivityOrderService activityOrderService
+    ) {
         super.orderService = orderService;
         super.orderProductService = orderProductService;
+        super.activityService = activityService;
+        super.activityOrderService = activityOrderService;
     }
 
     /**
      * 创建订单
+     * 订单金额 = sum(订单规格售价) - 优惠券金额
+     * 允许使用优惠券
+     * 削减规格库存
+     * 允许购买多种商品
      *
      * @param requ
      * @return
@@ -48,6 +59,9 @@ public class OrderNormal extends OrderBase {
     @Override
     @Transactional(Constant.DBTRANSACTIONAL)
     public CreateOrderResp CreateOrder(CreateOrderRequ requ) {
+
+        //通用验证
+        super.validateCreateRequ(requ);
 
         //参数校验
         if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
@@ -61,14 +75,13 @@ public class OrderNormal extends OrderBase {
         Order order = new Order();
 
         order.setOpenId(requ.getBaseRequ().getOpenId());
-        order.setTypeId(this.getOrderType().getValue());
+        order.setTypeId(this.getActivityType().getValue());
         order.setRemarks(requ.getRemarks());
 
         order.setStatus(OrderStatus.UNPAY.getValue());
         order.setCreateTime(DateUtils.getCurrentUnixTime());
         order.setUpdateTime(DateUtils.getCurrentUnixTime());
         order.setExpiredTime(DateUtils.getCurrentUnixTime() + Constant.ORDER_EXPIRED_TIME);
-        order.setOrderNumber("");
 
         List<com.jsj.member.ob.entity.OrderProduct> orderProducts = new ArrayList<>();
 
@@ -77,51 +90,32 @@ public class OrderNormal extends OrderBase {
 
         for (OrderProductDto op : requ.getOrderProductDtos()) {
 
-            ProductDto productDto = ProductLogic.GetProduct(op.getProductId());
-            if (op.getNumber() > productDto.getStockCount()) {
-                throw new TipException(String.format("库存不足，下单失败，商品名称：%s", productDto.getProductName()));
-            }
-
-            orderAmount += productDto.getSalePrice();
-
-            com.jsj.member.ob.entity.OrderProduct orderProduct = new com.jsj.member.ob.entity.OrderProduct();
+            ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(op.getProductSpecId());
+            OrderProduct orderProduct = new OrderProduct();
 
             orderProduct.setNumber(op.getNumber());
             orderProduct.setOrderProductId(op.getProductId());
-            orderProduct.setProductSizeId(op.getProductSizeId());
+            orderProduct.setProductSpecId(op.getProductSpecId());
             orderProduct.setCreateTime(DateUtils.getCurrentUnixTime());
             orderProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
 
             orderProduct.setProductId(op.getProductId());
             orderProducts.add(orderProduct);
+
+            //获取规格金额
+            orderAmount += productSpecDto.getSalePrice();
+
         }
+        //削减规格库存
+        ProductLogic.ReductionProductSpecStock(requ.getOrderProductDtos(), this.getActivityType(), null);
 
-        //订单金额
-        order.setAmount(orderAmount);
-        double payAmount = orderAmount;
-
-        //使用优惠券
-        if (requ.getWechatCouponId() > 0) {
-
-            UseCouponRequ useCouponRequ = new UseCouponRequ();
-            useCouponRequ.setUseAmount(orderAmount);
-            useCouponRequ.setUse(true);
-            useCouponRequ.setWechatCouponId(requ.getWechatCouponId());
-
-            UseCouponResp useCouponResp = CouponLogic.UseCoupon(useCouponRequ);
-            if (useCouponResp.getDiscountAmount() > 0) {
-                order.setWechatCouponId(useCouponResp.getWechatCouponId());
-                order.setCouponPrice(useCouponResp.getDiscountAmount());
-                payAmount = useCouponResp.getPayAmount();
-            }
-        }
-
+        //使用优惠券后的支付金额
+        double payAmount = super.UseCoupon(requ.getWechatCouponId(), orderAmount, order);
         //支付金额
         order.setPayAmount(payAmount);
+        //订单金额
+        order.setAmount(orderAmount);
         orderService.insert(order);
-
-        order.setOrderNumber((10000 + order.getOrderId()) + "");
-        orderService.updateById(order);
 
         //更新订单商品中的订单编号
         orderProducts.stream().forEach(op -> {
@@ -129,18 +123,14 @@ public class OrderNormal extends OrderBase {
             orderProductService.insert(op);
         });
 
-
-        //削减库存
-        ProductLogic.ReductionProductStock(requ.getOrderProductDtos());
-
         if (payAmount == 0) {
-            this.OrderPaySuccess(order.getOrderNumber());
+            this.OrderPaySuccess(order.getOrderId());
         }
 
         CreateOrderResp resp = new CreateOrderResp();
 
         resp.setAmount(order.getPayAmount());
-        resp.setOrderNumber(order.getOrderNumber());
+        resp.setOrderId(order.getOrderId());
         resp.setExpiredTime(order.getExpiredTime());
         resp.setSuccess(true);
 
@@ -151,10 +141,10 @@ public class OrderNormal extends OrderBase {
     /**
      * 订单支付成功
      *
-     * @param orderNumber
+     * @param orderId
      */
     @Override
-    public void OrderPaySuccess(String orderNumber) {
+    public void OrderPaySuccess(int orderId) {
 
         //修改订单状态
         //添加库存

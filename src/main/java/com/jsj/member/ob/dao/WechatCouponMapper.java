@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : WechatCoupon Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-16
+ *   @since 2018-10-19
  */
 @Repository
 public interface WechatCouponMapper extends BaseMapper<WechatCoupon> {

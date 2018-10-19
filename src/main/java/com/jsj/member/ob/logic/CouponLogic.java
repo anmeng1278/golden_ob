@@ -72,12 +72,13 @@ public class CouponLogic {
         double discountAmount = 0d;
 
         switch (CouponType.valueOf(wechatCoupon.getTypeId())) {
+
             //直减券
             case CUT: {
                 if (requ.getUseAmount() <= wechatCoupon.getAmount()) {
                     //支付金额小于券面额时，支付金额置为0
                     payAmount = 0;
-                    discountAmount = wechatCoupon.getAmount();
+                    discountAmount = requ.getUseAmount();
                 } else {
                     //支付金额大于券面额时，支付金额 = 请求金额 - 券面额
                     payAmount = requ.getUseAmount() - wechatCoupon.getAmount();
@@ -85,6 +86,7 @@ public class CouponLogic {
                 }
             }
             break;
+
             //折扣券
             case DISCOUNT: {
                 //支付金额 = 请求金额 * 折扣
@@ -92,6 +94,7 @@ public class CouponLogic {
                 discountAmount = (requ.getUseAmount() - payAmount);
             }
             break;
+
             default:
                 throw new TipException("当前优惠券不可用，未知的优惠券类型");
         }

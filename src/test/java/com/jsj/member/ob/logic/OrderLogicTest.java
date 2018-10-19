@@ -6,7 +6,8 @@ import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
-import com.jsj.member.ob.enums.OrderType;
+import com.jsj.member.ob.enums.ActivityType;
+import com.jsj.member.ob.exception.ProductStockException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,39 +30,49 @@ public class OrderLogicTest {
     @Test
     public void createNormalOrder() {
 
-        CreateOrderRequ requ = new CreateOrderRequ();
+        try {
 
-        BaseRequ baseRequ = new BaseRequ();
-        baseRequ.setOpenId("111111");
+            CreateOrderRequ requ = new CreateOrderRequ();
 
-        requ.setBaseRequ(baseRequ);
-        requ.setRemarks("备注信息");
-        requ.setOrderType(OrderType.NORMAL);
+            BaseRequ baseRequ = new BaseRequ();
+            baseRequ.setOpenId("111111");
 
-        List<OrderProductDto> orderProductDtos = new ArrayList<>();
+            requ.setBaseRequ(baseRequ);
+            requ.setRemarks("备注信息");
+            requ.setActivityType(ActivityType.NORMAL);
 
-        OrderProductDto orderProductDto1 = new OrderProductDto();
-        orderProductDto1.setNumber(1);
-        orderProductDto1.setProductId(1);
-        orderProductDto1.setProductSizeId(1);
-        //100
+            List<OrderProductDto> orderProductDtos = new ArrayList<>();
 
-        OrderProductDto orderProductDto2 = new OrderProductDto();
-        orderProductDto2.setNumber(5);
-        orderProductDto2.setProductId(2);
-        orderProductDto2.setProductSizeId(2);
-        //30
+            OrderProductDto orderProductDto1 = new OrderProductDto();
+            orderProductDto1.setNumber(1);
+            orderProductDto1.setProductId(1);
+            orderProductDto1.setProductSpecId(1);
+            //100
 
-        orderProductDtos.add(orderProductDto1);
-        orderProductDtos.add(orderProductDto2);
+            OrderProductDto orderProductDto2 = new OrderProductDto();
+            orderProductDto2.setNumber(5);
+            orderProductDto2.setProductId(2);
+            orderProductDto2.setProductSpecId(2);
+            //30
 
-        requ.setOrderProductDtos(orderProductDtos);
-        requ.setWechatCouponId(2);
+            orderProductDtos.add(orderProductDto1);
+            orderProductDtos.add(orderProductDto2);
 
-        CreateOrderResp createOrderResp = OrderLogic.CreateOrder(requ);
-        System.out.println(JSON.toJSONString(createOrderResp));
+            requ.setOrderProductDtos(orderProductDtos);
+            requ.setWechatCouponId(2);
 
-        Assert.assertEquals(true, true);
+            CreateOrderResp createOrderResp = OrderLogic.CreateOrder(requ);
+            System.out.println(JSON.toJSONString(createOrderResp));
+
+        } catch (ProductStockException e) {
+            e.printStackTrace();
+            System.out.println("商品编号：" + e.getProductId());
+            System.out.println("规格编号：" + e.getProductSpecId());
+            System.out.println("订单编号：" + e.getOrderId());
+            System.out.println("使用数量：" + e.getNumber());
+            System.out.println("当前库存：" + e.getStock());
+            System.out.println("订单类型：" + e.getActivityType().getMessage());
+        }
 
     }
 
@@ -72,31 +83,32 @@ public class OrderLogicTest {
     @Test
     public void createSeckillOrder() {
 
-        CreateOrderRequ requ = new CreateOrderRequ();
+        try {
 
-        BaseRequ baseRequ = new BaseRequ();
-        baseRequ.setOpenId("111111");
+            CreateOrderRequ requ = new CreateOrderRequ();
 
-        requ.setBaseRequ(baseRequ);
-        requ.setRemarks("备注信息");
-        requ.setOrderType(OrderType.SECKILL);
+            BaseRequ baseRequ = new BaseRequ();
+            baseRequ.setOpenId("333333");
 
-        List<OrderProductDto> orderProductDtos = new ArrayList<>();
+            requ.setBaseRequ(baseRequ);
+            requ.setRemarks("备注信息");
+            requ.setActivityType(ActivityType.SECKILL);
+            requ.setActivityId(1);
 
-        OrderProductDto orderProductDto1 = new OrderProductDto();
-        orderProductDto1.setNumber(1);
-        orderProductDto1.setProductId(1);
-        orderProductDto1.setProductSizeId(1);
-        //100
 
-        orderProductDtos.add(orderProductDto1);
+            CreateOrderResp createOrderResp = OrderLogic.CreateOrder(requ);
+            System.out.println(JSON.toJSONString(createOrderResp));
 
-        requ.setOrderProductDtos(orderProductDtos);
+        } catch (ProductStockException e) {
+            e.printStackTrace();
+            System.out.println("商品编号：" + e.getProductId());
+            System.out.println("规格编号：" + e.getProductSpecId());
+            System.out.println("订单编号：" + e.getOrderId());
+            System.out.println("使用数量：" + e.getNumber());
+            System.out.println("当前库存：" + e.getStock());
+            System.out.println("订单类型：" + e.getActivityType().getMessage());
+        }
 
-        CreateOrderResp createOrderResp = OrderLogic.CreateOrder(requ);
-        System.out.println(JSON.toJSONString(createOrderResp));
-
-        Assert.assertEquals(true, true);
 
     }
 
@@ -104,14 +116,14 @@ public class OrderLogicTest {
      * 创建团 订单
      */
     @Test
-    public void createTeamOrder() {
+    public void createGrouponOrder() {
 
         CreateOrderRequ requ = new CreateOrderRequ();
 
         requ.setRemarks("备注信息");
-        requ.setOrderType(OrderType.TEAM);
-        requ.setTeamOrderId(1);
-
+        requ.setActivityType(ActivityType.GROUPON);
+        requ.setActivityId(2);
+        requ.setActivityOrderId(1);
 
         CreateOrderResp createOrderResp = OrderLogic.CreateOrder(requ);
         System.out.println(JSON.toJSONString(createOrderResp));
@@ -119,4 +131,28 @@ public class OrderLogicTest {
         Assert.assertEquals(true, true);
 
     }
+
+
+    /**
+     * 创建组合订单
+     */
+    @Test
+    public void createCombinationOrder() {
+
+        CreateOrderRequ requ = new CreateOrderRequ();
+        BaseRequ baseRequ = new BaseRequ();
+        baseRequ.setOpenId("44444");
+
+        requ.setBaseRequ(baseRequ);
+        requ.setRemarks("备注信息");
+        requ.setActivityType(ActivityType.COMBINATION);
+        requ.setActivityId(3);
+
+        CreateOrderResp createOrderResp = OrderLogic.CreateOrder(requ);
+        System.out.println(JSON.toJSONString(createOrderResp));
+
+        Assert.assertEquals(true, true);
+
+    }
+
 }

@@ -58,28 +58,30 @@ public class MysqlGenerator {
     private static String packageClass = "member.ob";
     private static String projectName = "jsj";
     private static String authorName = "cc";
+
+    //select table_name from information_schema.tables where table_schema='golden_ob'
+
     private static String[] table = new String[]{
+            "_activity",
+            "_activity_order",
+            "_activity_product",
+            "_cart",
+            "_cart_product",
             "_coupon",
             "_coupon_product",
+            "_delivery",
+            "_delivery_stock",
             "_dict",
             "_gift",
             "_gift_stock",
             "_order",
             "_order_product",
-            "_pickup",
-            "_pickup_stock",
             "_product",
             "_product_img",
-            "_product_size",
-            "_seckill",
+            "_product_spec",
             "_stock",
-            "_team",
-            "_team_order",
-            "_team_product",
             "_wechat",
-            "_wechat_coupon",
-            "_cart",
-            "_cart_product"
+            "_wechat_coupon"
     };
     private static String[] prefix = new String[]{""};
     private static File file = new File(packageName);

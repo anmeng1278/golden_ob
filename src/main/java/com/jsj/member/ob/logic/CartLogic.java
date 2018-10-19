@@ -97,14 +97,14 @@ public class CartLogic {
      * @param number
      * @return
      */
-    public static void AddUpdateCartProduct(String openId, int productId, int productSizeId, int number) {
+    public static void AddUpdateCartProduct(String openId, int productId, int productSpecId, int number) {
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
         if (productId == 0) {
             throw new TipException("参数不合法，商品ID不能为空");
         }
-        if (productSizeId == 0) {
+        if (productSpecId == 0) {
             throw new TipException("参数不合法，商品规格不能为空");
         }
         if (number < 0) {
@@ -129,7 +129,7 @@ public class CartLogic {
         Wrapper<CartProduct> where = cartProductWrapper.where("cart_id={0} and product_id={1} and product_size_id={2}",
                 cart.getCartId(),
                 productId,
-                productSizeId
+                productSpecId
         );
 
         CartProduct cartProduct = cartLogic.cartProductService.selectOne(where);
@@ -140,7 +140,7 @@ public class CartLogic {
             cartProduct = new CartProduct();
             cartProduct.setCartId(cart.getCartId());
             cartProduct.setProductId(productId);
-            cartProduct.setProductSizeId(productSizeId);
+            cartProduct.setProductSpecId(productSpecId);
             cartProduct.setNumber(number);
             cartProduct.setCreateTime(DateUtils.getCurrentUnixTime());
             cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());

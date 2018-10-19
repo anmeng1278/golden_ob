@@ -1,6 +1,6 @@
 package com.jsj.member.ob.logic.order;
 
-import com.jsj.member.ob.enums.OrderType;
+import com.jsj.member.ob.enums.ActivityType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +18,12 @@ public class OrderFactory {
     @Autowired
     private List<OrderBase> orderBases;
 
-    private static final Map<OrderType, OrderBase> myServiceCache = new HashMap<>();
+    private static final Map<ActivityType, OrderBase> myServiceCache = new HashMap<>();
 
     @PostConstruct
     public void initMyServiceCache() {
         for (OrderBase ob : orderBases) {
-            myServiceCache.put(ob.getOrderType(), ob);
+            myServiceCache.put(ob.getActivityType(), ob);
         }
     }
 
@@ -31,13 +31,13 @@ public class OrderFactory {
     /**
      * 获取操作实体类
      *
-     * @param orderType
+     * @param activityType
      * @return
      */
-    public static OrderBase GetInstance(OrderType orderType) {
+    public static OrderBase GetInstance(ActivityType activityType) {
 
-        OrderBase ob = myServiceCache.get(orderType);
-        if (ob == null) throw new RuntimeException("Unknown orderType: " + orderType);
+        OrderBase ob = myServiceCache.get(activityType);
+        if (ob == null) throw new RuntimeException("Unknown orderType: " + activityType);
         return ob;
 
     }

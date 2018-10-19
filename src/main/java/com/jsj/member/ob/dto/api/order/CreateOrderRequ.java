@@ -1,7 +1,7 @@
 package com.jsj.member.ob.dto.api.order;
 
 import com.jsj.member.ob.dto.BaseRequ;
-import com.jsj.member.ob.enums.OrderType;
+import com.jsj.member.ob.enums.ActivityType;
 
 import java.util.List;
 
@@ -29,20 +29,20 @@ public class CreateOrderRequ {
     private String remarks;
 
     /**
-     * 团单号
+     * 活动订单号
      */
-    private int teamOrderId;
+    private int activityOrderId;
 
     /**
-     * 秒杀编号
+     * 活动编号
      */
-    private int secKillId;
+    private int activityId;
+
 
     /**
      * 订单类型
      */
-    private OrderType orderType;
-
+    private ActivityType activityType;
 
     public BaseRequ getBaseRequ() {
         return baseRequ;
@@ -76,27 +76,27 @@ public class CreateOrderRequ {
         this.remarks = remarks;
     }
 
-    public int getTeamOrderId() {
-        return teamOrderId;
+    public int getActivityOrderId() {
+        return activityOrderId;
     }
 
-    public void setTeamOrderId(int teamOrderId) {
-        this.teamOrderId = teamOrderId;
+    public void setActivityOrderId(int activityOrderId) {
+        this.activityOrderId = activityOrderId;
     }
 
-    public int getSecKillId() {
-        return secKillId;
+    public int getActivityId() {
+        return activityId;
     }
 
-    public void setSecKillId(int secKillId) {
-        this.secKillId = secKillId;
+    public void setActivityId(int activityId) {
+        this.activityId = activityId;
     }
 
-    public OrderType getOrderType() {
-        return orderType;
+    public ActivityType getActivityType() {
+        return activityType;
     }
 
-    public void setOrderType(OrderType orderType) {
-        this.orderType = orderType;
+    public void setActivityType(ActivityType activityType) {
+        this.activityType = activityType;
     }
 }

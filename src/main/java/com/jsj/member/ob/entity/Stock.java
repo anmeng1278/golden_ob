@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Stock 用户库存表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-16
+ *   @since 2018-10-19
  */
 @TableName("_stock")
 public class Stock implements Serializable {
@@ -34,8 +34,11 @@ public class Stock implements Serializable {
      */
 	@TableField("product_id")
 	private Integer productId;
-	@TableField("product_size_id")
-	private Integer productSizeId;
+    /**
+     * 规格编号
+     */
+	@TableField("product_spec_id")
+	private Integer productSpecId;
     /**
      * 订单编号
      */
@@ -106,12 +109,12 @@ public class Stock implements Serializable {
 		this.productId = productId;
 	}
 
-	public Integer getProductSizeId() {
-		return productSizeId;
+	public Integer getProductSpecId() {
+		return productSpecId;
 	}
 
-	public void setProductSizeId(Integer productSizeId) {
-		this.productSizeId = productSizeId;
+	public void setProductSpecId(Integer productSpecId) {
+		this.productSpecId = productSpecId;
 	}
 
 	public Integer getOrderId() {
@@ -193,7 +196,7 @@ public class Stock implements Serializable {
 			", stockId=" + stockId +
 			", openId=" + openId +
 			", productId=" + productId +
-			", productSizeId=" + productSizeId +
+			", productSpecId=" + productSpecId +
 			", orderId=" + orderId +
 			", orderProductId=" + orderProductId +
 			", typeId=" + typeId +

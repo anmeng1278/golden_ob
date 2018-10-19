@@ -29,7 +29,7 @@ public class CartProductDto extends BaseDto {
     /**
      * 商品规格
      */
-    private Integer productSizeId;
+    private Integer productSpecId;
 
     /**
      * 商品数量
@@ -41,12 +41,20 @@ public class CartProductDto extends BaseDto {
      */
     private ProductDto productDto;
 
-    public ProductDto getProductDto() {
-        return productDto;
+    public Integer getCartProductId() {
+        return cartProductId;
     }
 
-    public void setProductDto(ProductDto productDto) {
-        this.productDto = productDto;
+    public void setCartProductId(Integer cartProductId) {
+        this.cartProductId = cartProductId;
+    }
+
+    public Integer getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(Integer cartId) {
+        this.cartId = cartId;
     }
 
     public String getOpenId() {
@@ -65,12 +73,12 @@ public class CartProductDto extends BaseDto {
         this.productId = productId;
     }
 
-    public Integer getProductSizeId() {
-        return productSizeId;
+    public Integer getProductSpecId() {
+        return productSpecId;
     }
 
-    public void setProductSizeId(Integer productSizeId) {
-        this.productSizeId = productSizeId;
+    public void setProductSpecId(Integer productSpecId) {
+        this.productSpecId = productSpecId;
     }
 
     public Integer getNumber() {
@@ -81,19 +89,11 @@ public class CartProductDto extends BaseDto {
         this.number = number;
     }
 
-    public Integer getCartProductId() {
-        return cartProductId;
+    public ProductDto getProductDto() {
+        return productDto;
     }
 
-    public void setCartProductId(Integer cartProductId) {
-        this.cartProductId = cartProductId;
-    }
-
-    public Integer getCartId() {
-        return cartId;
-    }
-
-    public void setCartId(Integer cartId) {
-        this.cartId = cartId;
+    public void setProductDto(ProductDto productDto) {
+        this.productDto = productDto;
     }
 }

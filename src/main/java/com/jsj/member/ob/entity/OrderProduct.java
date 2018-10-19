@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : OrderProduct 订单商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-16
+ *   @since 2018-10-19
  */
 @TableName("_order_product")
 public class OrderProduct implements Serializable {
@@ -32,10 +32,10 @@ public class OrderProduct implements Serializable {
 	@TableField("product_id")
 	private Integer productId;
     /**
-     * 尺寸编号
+     * 规格编号
      */
-	@TableField("product_size_id")
-	private Integer productSizeId;
+	@TableField("product_spec_id")
+	private Integer productSpecId;
     /**
      * 商品数
      */
@@ -81,12 +81,12 @@ public class OrderProduct implements Serializable {
 		this.productId = productId;
 	}
 
-	public Integer getProductSizeId() {
-		return productSizeId;
+	public Integer getProductSpecId() {
+		return productSpecId;
 	}
 
-	public void setProductSizeId(Integer productSizeId) {
-		this.productSizeId = productSizeId;
+	public void setProductSpecId(Integer productSpecId) {
+		this.productSpecId = productSpecId;
 	}
 
 	public Integer getNumber() {
@@ -128,7 +128,7 @@ public class OrderProduct implements Serializable {
 			", orderProductId=" + orderProductId +
 			", orderId=" + orderId +
 			", productId=" + productId +
-			", productSizeId=" + productSizeId +
+			", productSpecId=" + productSpecId +
 			", number=" + number +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
