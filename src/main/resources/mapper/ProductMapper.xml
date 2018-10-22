@@ -9,9 +9,6 @@
         <result column="type_id" property="typeId" />
         <result column="property_type_id" property="propertyTypeId" />
         <result column="introduce" property="introduce" />
-        <result column="sale_price" property="salePrice" />
-        <result column="original_price" property="originalPrice" />
-        <result column="stock_count" property="stockCount" />
         <result column="sort" property="sort" />
         <result column="use_intro" property="useIntro" />
         <result column="unit" property="unit" />
@@ -28,7 +25,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        product_id AS productId, product_name AS productName, type_id AS typeId, property_type_id AS propertyTypeId, introduce, sale_price AS salePrice, original_price AS originalPrice, stock_count AS stockCount, sort, use_intro AS useIntro, unit, remarks, gift_copywriting AS giftCopywriting, ifpickup, ifpass, ifdistribution, opemployee_id AS opemployeeId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        product_id AS productId, product_name AS productName, type_id AS typeId, property_type_id AS propertyTypeId, introduce, sort, use_intro AS useIntro, unit, remarks, gift_copywriting AS giftCopywriting, ifpickup, ifpass, ifdistribution, opemployee_id AS opemployeeId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

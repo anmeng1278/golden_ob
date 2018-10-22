@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Product 商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-19
+ *   @since 2018-10-22
  */
 @TableName("_product")
 public class Product implements Serializable {
@@ -43,21 +43,6 @@ public class Product implements Serializable {
      * 简介
      */
 	private String introduce;
-    /**
-     * 销售单价
-     */
-	@TableField("sale_price")
-	private Double salePrice;
-    /**
-     * 原价
-     */
-	@TableField("original_price")
-	private Double originalPrice;
-    /**
-     * 库存量
-     */
-	@TableField("stock_count")
-	private Integer stockCount;
     /**
      * 排序
      */
@@ -152,30 +137,6 @@ public class Product implements Serializable {
 
 	public void setIntroduce(String introduce) {
 		this.introduce = introduce;
-	}
-
-	public Double getSalePrice() {
-		return salePrice;
-	}
-
-	public void setSalePrice(Double salePrice) {
-		this.salePrice = salePrice;
-	}
-
-	public Double getOriginalPrice() {
-		return originalPrice;
-	}
-
-	public void setOriginalPrice(Double originalPrice) {
-		this.originalPrice = originalPrice;
-	}
-
-	public Integer getStockCount() {
-		return stockCount;
-	}
-
-	public void setStockCount(Integer stockCount) {
-		this.stockCount = stockCount;
 	}
 
 	public Integer getSort() {
@@ -283,9 +244,6 @@ public class Product implements Serializable {
 			", typeId=" + typeId +
 			", propertyTypeId=" + propertyTypeId +
 			", introduce=" + introduce +
-			", salePrice=" + salePrice +
-			", originalPrice=" + originalPrice +
-			", stockCount=" + stockCount +
 			", sort=" + sort +
 			", useIntro=" + useIntro +
 			", unit=" + unit +

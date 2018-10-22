@@ -2,10 +2,12 @@ package com.jsj.member.ob.controller.admin;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.entity.Product;
+import com.jsj.member.ob.entity.ProductSpec;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DictLogic;
@@ -13,17 +15,18 @@ import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.ProductService;
 import com.jsj.member.ob.service.ProductSpecService;
 import com.jsj.member.ob.utils.CCPage;
+import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApiIgnore
 @Controller
@@ -82,47 +85,150 @@ public class AdminProductController {
         //商品规格
         List<ProductSpecDto> productSpecDtos = ProductLogic.GetProductSpecDtos(productId);
 
-        String productSpecNames = String.join("|", productSpecDtos.stream().map(x -> x.getSpecName())
-                .collect(Collectors.toList()));
+        //规格型号
+        StringBuilder productSpecs = new StringBuilder();
+        productSpecDtos.forEach(x -> {
+            productSpecs.append(String.format("%s|%.2f|%.2f|%d|%d\n", x.getSpecName(), x.getSalePrice(), x.getOriginalPrice(), x.getStockCount(), x.getSort()));
+        });
 
         request.setAttribute("info", entity);
-        request.setAttribute("productSpecNames", productSpecNames);
-
+        request.setAttribute("productSpecs", productSpecs);
         request.setAttribute("productPerproties", productPerproties);
         request.setAttribute("productTypes", productTypes);
-
 
         return "admin/Product/info";
     }
 
     @RequestMapping(value = "/{productId}", method = RequestMethod.POST)
     @ResponseBody
+    @Transactional(Constant.DBTRANSACTIONAL)
     public RestResponseBo saveInfo(@PathVariable("productId") Integer productId, HttpServletRequest request) {
 
-        Product entity = productService.selectById(productId);
+        Product product = new Product();
 
+        //商品名称
         String productName = request.getParameter("productName");
-        String typeId = request.getParameter("typeId");
-        String propertyTypeId = request.getParameter("propertyTypeId");
+        //商品类型
+        int typeId = Integer.valueOf(request.getParameter("typeId"));
+        //商品属性
+        int propertyTypeId = Integer.valueOf(request.getParameter("propertyTypeId"));
+        //简介
         String introduce = request.getParameter("introduce");
-        String salePrice = request.getParameter("salePrice");
-        String originalPrice = request.getParameter("originalPrice");
-        String stockCount = request.getParameter("stockCount");
-        String sort = request.getParameter("sort");
+        //排序
+        int sort = Integer.valueOf(request.getParameter("sort"));
+        //使用说明
         String useIntro = request.getParameter("useIntro");
+        //单位
         String unit = request.getParameter("unit");
+        //备注
         String remarks = request.getParameter("remarks");
+        //赠送方案
         String giftCopywriting = request.getParameter("giftCopywriting");
-        String ifpickup = request.getParameter("ifpickup");
-        String ifpass = request.getParameter("ifpass");
-        String ifdistribution = request.getParameter("ifdistribution");
-        String opemployeeId = request.getParameter("opemployeeId");
-        String createTime = request.getParameter("createTime");
-        String updateTime = request.getParameter("updateTime");
-        String deleteTime = request.getParameter("deleteTime");
+        //支持自提
+        boolean ifpickup = !StringUtils.isBlank(request.getParameter("ifpickup"));
+        //是否审核
+        boolean ifpass = !StringUtils.isBlank(request.getParameter("ifpass"));
+        //支持配送
+        boolean ifdistribution = !StringUtils.isBlank(request.getParameter("ifdistribution"));
+
+        if (productId > 0) {
+            product = productService.selectById(productId);
+
+            product.setProductName(productName);
+            product.setTypeId(typeId);
+            product.setPropertyTypeId(propertyTypeId);
+            product.setIntroduce(introduce);
+            product.setSort(sort);
+
+            product.setUseIntro(useIntro);
+            product.setUnit(unit);
+            product.setRemarks(remarks);
+            product.setGiftCopywriting(giftCopywriting);
+            product.setIfpickup(ifpickup);
+
+            product.setIfpass(ifpass);
+            product.setIfdistribution(ifdistribution);
+            product.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+            productService.updateById(product);
+        } else {
+            product.setProductName(productName);
+            product.setTypeId(typeId);
+            product.setPropertyTypeId(propertyTypeId);
+            product.setIntroduce(introduce);
+            product.setSort(sort);
+
+            product.setUseIntro(useIntro);
+            product.setUnit(unit);
+            product.setRemarks(remarks);
+            product.setGiftCopywriting(giftCopywriting);
+            product.setIfpickup(ifpickup);
+
+            product.setIfpass(ifpass);
+            product.setIfdistribution(ifdistribution);
+            product.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+            productService.insert(product);
+        }
+
+        //型号规格
+        EntityWrapper<ProductSpec> productSpecWrapper = new EntityWrapper<ProductSpec>();
+        productSpecWrapper.where("product_id={0}", product.getProductId());
+
+        List<ProductSpec> productSpecs = productSpecService.selectList(productSpecWrapper);
+
+        //先删除掉所有型号规格
+        productSpecs.forEach(ps -> {
+            ps.setDeleteTime(DateUtils.getCurrentUnixTime());
+            productSpecService.updateById(ps);
+        });
 
 
-        throw new TipException("方法暂未实现");
+        String productSpecss = request.getParameter("productSpecs");
+        String[] pss = productSpecss.split("[\n \r \r\n]");
+        for (String psi : pss) {
+
+            if (StringUtils.isBlank(psi)) {
+                continue;
+            }
+            String[] pssi = psi.split("[\\|]");
+            if (pssi.length != 5) {
+                continue;
+            }
+
+            String specName = pssi[0].trim();
+            Double salePrice = Double.valueOf(pssi[1].trim());
+            Double originalPrice = Double.valueOf(pssi[2].trim());
+            Integer stockCount = Integer.valueOf(pssi[3].trim());
+            Integer psSort = Integer.valueOf(pssi[4].trim());
+
+            ProductSpec productSpec = productSpecService.selectOne(new EntityWrapper<ProductSpec>().where("product_id={0} and spec_name={1}", product.getProductId(), specName));
+            if (productSpec == null) {
+
+                productSpec = new ProductSpec();
+                productSpec.setSpecName(specName);
+                productSpec.setProductId(product.getProductId());
+                productSpec.setSalePrice(salePrice);
+                productSpec.setOriginalPrice(originalPrice);
+                productSpec.setStockCount(stockCount);
+                productSpec.setSort(psSort);
+                productSpec.setUpdateTime(DateUtils.getCurrentUnixTime());
+                productSpec.setCreateTime(DateUtils.getCurrentUnixTime());
+
+                productSpecService.insert(productSpec);
+            } else {
+
+                productSpec.setUpdateTime(DateUtils.getCurrentUnixTime());
+                productSpec.setDeleteTime(null);
+                productSpec.setSalePrice(salePrice);
+                productSpec.setOriginalPrice(originalPrice);
+                productSpec.setStockCount(stockCount);
+                productSpec.setSort(psSort);
+
+                productSpecService.updateAllColumnById(productSpec);
+            }
+        }
+        return RestResponseBo.ok("保存成功");
     }
 
 }
