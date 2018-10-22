@@ -194,7 +194,7 @@ public class CartLogic {
         }
 
         EntityWrapper<CartProduct> wrapper = new EntityWrapper<>();
-        wrapper.where("cart_id={0}", cart.getCartId());
+        wrapper.where("cart_id={0} and delete_time is null", cart.getCartId());
 
         List<CartProductDto> cartProductDtoList = new ArrayList<>();
         //获取购物车中商品
