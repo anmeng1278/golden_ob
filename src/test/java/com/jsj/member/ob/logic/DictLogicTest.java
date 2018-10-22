@@ -21,7 +21,7 @@ public class DictLogicTest {
      */
     @Test
     public void getProvince() {
-        DictResp dictResp = DictLogic.GetArea(0);
+        DictResp dictResp = DictLogic.GetProvince(0);
         List<DictDto> dictDtoList = dictResp.getDictDtoList();
         for (DictDto dictDto : dictDtoList) {
             System.out.println(dictDto.getDictId() + "  " + dictDto.getDictName());
@@ -33,7 +33,7 @@ public class DictLogicTest {
      */
     @Test
     public void getCity() {
-        DictResp dictResp = DictLogic.GetArea(130100);
+        DictResp dictResp = DictLogic.GetArea(130000);
         List<DictDto> dictDtoList = dictResp.getDictDtoList();
         for (DictDto dictDto : dictDtoList) {
             System.out.println(dictDto.getDictId() + "  " + dictDto.getDictName());
