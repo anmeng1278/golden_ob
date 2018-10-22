@@ -48,7 +48,7 @@ public class DictLogic {
 
 
     /**
-     * 获得区域
+     * 获取下一级列表
      *
      * @param dictId
      * @return
@@ -56,19 +56,14 @@ public class DictLogic {
     public static DictResp GetArea(int dictId) {
         DictResp dictResp = new DictResp();
         List<DictDto> dictDtoList = new ArrayList<>();
+
         EntityWrapper<Dict> entityWrapper = new EntityWrapper<>();
         entityWrapper.where("delete_time is null and parent_dict_id=50000");
+        //获取所有数据
         List<Dict> dictList = dictLogic.dictService.selectList(entityWrapper);
         for (Dict dict : dictList) {
 
             DictDto dictDto = new DictDto();
-
-            //获得省份直辖市列表
-            if(dict.getDictId() % 10000 == 0){
-                dictDto.setDictId(dict.getDictId());
-                dictDto.setDictName(dict.getDictName());
-                dictDtoList.add(dictDto);
-            }
 
             //得到省份的下一级
             if (dictId / 10000 == dict.getDictId() / 10000 && dict.getDictId() % 10000 != 0 && dictId % 10000 == 0) {
@@ -95,8 +90,13 @@ public class DictLogic {
         return dictResp;
     }
 
+    /**
+     * 获取省份和直辖市列表
+     * @param id
+     * @return
+     */
     public  static DictResp GetProvince( int id){
-        //如果传入0获得省份
+        //如果传入0获得省份和直辖市
         DictResp dictResp = new DictResp();
         if(id == 0) {
             List<DictDto> dictDtoList = new ArrayList<>();
@@ -106,9 +106,7 @@ public class DictLogic {
             for (Dict dict : dictList) {
 
                 DictDto dictDto = new DictDto();
-
-                //得到省份的下一级
-                if (dict.getDictId() % 1000 == 0) {
+                if (dict.getDictId() % 10000 == 0) {
                     dictDto.setDictId(dict.getDictId());
                     dictDto.setDictName(dict.getDictName());
                     dictDtoList.add(dictDto);
@@ -118,4 +116,6 @@ public class DictLogic {
         }
         return dictResp;
     }
+
+
 }
