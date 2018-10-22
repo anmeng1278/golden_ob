@@ -1,6 +1,6 @@
 package com.jsj.member.ob.enums;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.jsj.member.ob.exception.FatalException;
 
 public enum StockStatus {
 
@@ -46,7 +46,7 @@ public enum StockStatus {
             case 30:
                 return SENT;
             default:
-                throw new NotImplementedException();
+                throw new FatalException("未知的枚举值");
         }
     }
 

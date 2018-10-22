@@ -1,6 +1,6 @@
 package com.jsj.member.ob.enums;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.jsj.member.ob.exception.FatalException;
 
 public enum ActivityType {
 
@@ -40,7 +40,7 @@ public enum ActivityType {
             case 30:
                 return COMBINATION;
             default:
-                throw new NotImplementedException();
+                throw new FatalException("未知的枚举值");
         }
     }
 }

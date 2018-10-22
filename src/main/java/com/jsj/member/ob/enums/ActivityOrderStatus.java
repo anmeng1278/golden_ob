@@ -1,6 +1,7 @@
 package com.jsj.member.ob.enums;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import com.jsj.member.ob.exception.FatalException;
 
 public enum ActivityOrderStatus {
 
@@ -46,7 +47,7 @@ public enum ActivityOrderStatus {
             case 60:
                 return CANCEL;
             default:
-                throw new NotImplementedException();
+                throw new FatalException("未知的枚举值");
         }
     }
 }

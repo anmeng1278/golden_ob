@@ -1,5 +1,7 @@
 package com.jsj.member.ob.enums;
 
+import com.jsj.member.ob.exception.FatalException;
+
 public enum CouponUseRange {
 
     UNSET(0, "未设置"),
@@ -27,12 +29,14 @@ public enum CouponUseRange {
 
     public static CouponUseRange valueOf(int value) {
         switch (value) {
+            case 0:
+                return UNSET;
             case 1:
                 return ALL;
             case 2:
                 return SPECIAL;
             default:
-                return UNSET;
+                throw new FatalException("未知的枚举值");
         }
     }
 }

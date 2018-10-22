@@ -6,13 +6,13 @@ import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.enums.ActivityType;
+import com.jsj.member.ob.exception.FatalException;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.service.ActivityOrderService;
 import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.service.OrderProductService;
 import com.jsj.member.ob.service.OrderService;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public abstract class OrderBase {
 
@@ -55,7 +55,7 @@ public abstract class OrderBase {
      * 订单支付成功
      */
     public void OrderPaySuccess(int orderId) {
-        throw new NotImplementedException();
+        throw new FatalException("未实现方法");
     }
 
 

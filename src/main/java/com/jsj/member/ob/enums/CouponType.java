@@ -1,5 +1,7 @@
 package com.jsj.member.ob.enums;
 
+import com.jsj.member.ob.exception.FatalException;
+
 public enum CouponType {
 
     UNSET(0, "未设置"),
@@ -27,12 +29,14 @@ public enum CouponType {
 
     public static CouponType valueOf(int value) {
         switch (value) {
+            case 0:
+                return UNSET;
             case 1:
                 return CUT;
             case 2:
                 return DISCOUNT;
             default:
-                return UNSET;
+                throw new FatalException("未知的枚举值");
         }
     }
 }

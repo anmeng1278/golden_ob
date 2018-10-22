@@ -1,6 +1,6 @@
 package com.jsj.member.ob.enums;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.jsj.member.ob.exception.FatalException;
 
 public enum DictType {
 
@@ -31,8 +31,9 @@ public enum DictType {
                 return PRODUCTPERPROTY;
             case 200:
                 return PRODUCTTYPE;
+
             default:
-                throw new NotImplementedException();
+                throw new FatalException("未知的枚举值");
         }
     }
 }

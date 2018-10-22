@@ -1,5 +1,7 @@
 package com.jsj.member.ob.enums;
 
+import com.jsj.member.ob.exception.FatalException;
+
 public enum ProductImgType {
 
     //0 封面  1 商品图片
@@ -26,10 +28,12 @@ public enum ProductImgType {
 
     public static ProductImgType valueOf(int value) {
         switch (value) {
+            case 0:
+                return COVER;
             case 1:
                 return PRODUCT;
             default:
-                return COVER;
+                throw new FatalException("未知的枚举值");
         }
     }
 }

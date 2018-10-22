@@ -1,5 +1,7 @@
 package com.jsj.member.ob.enums;
 
+import com.jsj.member.ob.exception.FatalException;
+
 public enum CouponStatus {
 
     UNUSE(0, "未使用"),
@@ -27,12 +29,14 @@ public enum CouponStatus {
 
     public static CouponStatus valueOf(int value) {
         switch (value) {
+            case 0:
+                return UNUSE;
             case 10:
                 return USED;
             case 60:
                 return EXPIRED;
             default:
-                return UNUSE;
+                throw new FatalException("未知的枚举值");
         }
     }
 }

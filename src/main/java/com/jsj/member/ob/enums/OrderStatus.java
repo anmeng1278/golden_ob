@@ -1,5 +1,7 @@
 package com.jsj.member.ob.enums;
 
+import com.jsj.member.ob.exception.FatalException;
+
 public enum OrderStatus {
 
     //订单状态，0：待支付 10：支付成功 20：支付失败 60：取消订单
@@ -31,6 +33,8 @@ public enum OrderStatus {
 
     public static OrderStatus valueOf(int value) {
         switch (value) {
+            case 0:
+                return UNPAY;
             case 10:
                 return PAYSUCCESS;
             case 20:
@@ -38,7 +42,7 @@ public enum OrderStatus {
             case 60:
                 return CANCEL;
             default:
-                return UNPAY;
+                throw new FatalException("未知的枚举值");
         }
     }
 }
