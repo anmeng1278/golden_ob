@@ -1,5 +1,6 @@
 package com.jsj.member.ob.interceptor;
 
+import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,9 @@ public class BaseInterceptor implements HandlerInterceptor {
     @Autowired
     DateUtils dateUtils;
 
+    @Autowired
+    ProductLogic productLogic;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
 
@@ -33,6 +37,7 @@ public class BaseInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o,
                            ModelAndView modelAndView) throws Exception {
         httpServletRequest.setAttribute("dateUtils", dateUtils);
+        httpServletRequest.setAttribute("productLogic", productLogic);
     }
 
     @Override

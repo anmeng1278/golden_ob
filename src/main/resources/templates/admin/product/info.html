@@ -54,46 +54,21 @@
 
             </div>
             <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
-
         </div>
-
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">售价</label>
-            <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="salePrice" lay-verify="float" th:value="${info.salePrice}"
-                       placeholder="请输入售价"
-                       title="售价"/>
-            </div>
-            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
-
-            <label class="layui-form-label">原价</label>
-            <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="originalPrice" lay-verify="float"  th:value="${info.originalPrice}"
-                       placeholder="请输入原价"
-                       title="原价"/>
-            </div>
-            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
-
-            <label class="layui-form-label">库存</label>
-            <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="stockCount" lay-verify="num"  th:value="${info.stockCount}"
-                       placeholder="请输入库存"
-                       title="库存"/>
-            </div>
-            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
-
-        </div>
-
 
         <div class="layui-form-item">
             <label class="layui-form-label">型号规格</label>
-            <div class="layui-input-inline" style="width:70%;">
-                <input type="text" class="layui-input" name="productSpecNames" lay-verify="req" th:value="${productSpecNames}"
-                       placeholder="请输入型号规格"
-                       title="型号规格"/>
+            <div class="layui-input-inline" style="width:85%;">
+                <div class="layui-form-mid layui-word-aux" style="width:100%;">名称|售价|原价|库存|排序，如：vivo手机|1300|1600|10|0
+                </div>
+                <div class="layui-form-mid layui-word-aux layui-word-aux-red" style="width:100%;">
+                    必须按固定格式填写，用|号隔开，多个回车换行。
+                </div>
+                <textarea class="layui-textarea" name="productSpecs" id="productSpecs" style="width:100%;" rows="2"
+                          lay-verify="req"
+                          placeholder="请输入型号规格" title="型号规格" th:text="${productSpecs}"
+                          autocomplete="off"></textarea>
             </div>
-            <div class="layui-form-mid layui-word-aux">必填，多个用|号隔开，如：1瓶(330ml)</div>
         </div>
 
         <div class="layui-form-item">
@@ -165,7 +140,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">排序</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="sort" lay-verify="num"  th:value="${info.sort}" placeholder="请输入排序"
+                <input type="text" class="layui-input" name="sort" lay-verify="num" th:value="${info.sort}"
+                       placeholder="请输入排序"
                        title="排序"/>
             </div>
             <div class="layui-form-mid layui-word-aux">只能输入数字</div>
@@ -195,17 +171,27 @@
         TX.INIT(function (layui) {
 
             var form = layui.form;
+
+            form.verify({
+                spec: function (value) {
+
+                    if (!/^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?$/.test(value)) {
+                        return "请输入正确网址";
+                    }
+                }
+            });
+
             form.on("submit", function (data) {
 
                 TX.CORE.p({
                     data: $("form.layui-form").serialize(),
                     success: function (resp) {
-                        if (resp.success) {
-                            TX.MSG.msg("保存成功", {time: 1500}, function () {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
                                 parent.tab.openTab("/admin/product/index", {refershType: "refersh"});
                             });
                         } else {
-                            TX.MSG.msg(resp.msg, {icon: 2});
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
                         }
                     }
                 });

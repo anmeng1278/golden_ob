@@ -22,7 +22,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProductLogic {
@@ -69,14 +71,11 @@ public class ProductLogic {
         productDto.setIfpickup(entity.getIfpickup());
         productDto.setIntroduce(entity.getIntroduce());
 
-        productDto.setOriginalPrice(entity.getOriginalPrice());
         productDto.setProductId(entity.getProductId());
         productDto.setProductName(entity.getProductName());
         productDto.setPropertyTypeId(entity.getPropertyTypeId());
         productDto.setRemarks(entity.getRemarks());
 
-        productDto.setSalePrice(entity.getSalePrice());
-        productDto.setStockCount(entity.getStockCount());
         productDto.setTypeId(entity.getTypeId());
         productDto.setUnit(entity.getUnit());
         productDto.setUseIntro(entity.getUseIntro());
@@ -88,6 +87,22 @@ public class ProductLogic {
         //商品规格
         List<ProductSpecDto> productSpecDtos = ProductLogic.GetProductSpecDtos(productId);
         productDto.setProductSpecDtos(productSpecDtos);
+
+        if(!productSpecDtos.isEmpty()){
+
+            //售价
+            Optional<ProductSpecDto> minSalePrice = productSpecDtos.stream().min(Comparator.comparing(ProductSpecDto::getSalePrice));
+            productDto.setSalePrice(minSalePrice.get().getSalePrice());
+
+            //原价
+            Optional<ProductSpecDto> minOriginalPrice = productSpecDtos.stream().min(Comparator.comparing(ProductSpecDto::getOriginalPrice));
+            productDto.setOriginalPrice(minSalePrice.get().getOriginalPrice());
+
+            //库存
+            int totalStock = productSpecDtos.stream().mapToInt(x -> x.getStockCount()).sum();
+            productDto.setStockCount(totalStock);
+
+        }
 
         //商品正在参加的活动
         List<ActivityDto> currentActivityDtos = ActivityLogic.GetProductCurrentActivityDtos(productId);
@@ -135,7 +150,7 @@ public class ProductLogic {
         //商品规格
         Wrapper<ProductSpec> productSpecWrapper = new EntityWrapper<>();
         productSpecWrapper.where("product_id={0} and delete_time is null", productId);
-        productSpecWrapper.orderBy("update_time desc");
+        productSpecWrapper.orderBy("sort asc, update_time desc");
 
         List<ProductSpec> productSpecs = productLogic.productSpecService.selectList(productSpecWrapper);
         for (ProductSpec ps : productSpecs) {
@@ -189,34 +204,6 @@ public class ProductLogic {
         return productImgDtos;
     }
 
-    /**
-     * 削减商品库存
-     *
-     * @param orderProductDtos
-     */
-    public static void ReductionProductStock(List<OrderProductDto> orderProductDtos, ActivityType activityType, Integer orderId) {
-
-        for (OrderProductDto opt : orderProductDtos) {
-
-            Product product = productLogic.productService.selectById(opt.getProductId());
-            if (product.getStockCount() < opt.getNumber()) {
-
-                ProductStockException pe = new ProductStockException("库存不足");
-                pe.setNumber(opt.getNumber());
-                pe.setStock(product.getStockCount());
-                pe.setActivityType(activityType);
-                pe.setOrderId(orderId);
-                pe.setProductId(product.getProductId());
-
-                throw pe;
-            }
-
-
-            product.setStockCount(product.getStockCount() - opt.getNumber());
-            productLogic.productService.updateById(product);
-
-        }
-    }
 
 
     /**
@@ -248,23 +235,7 @@ public class ProductLogic {
         }
     }
 
-    /**
-     * 恢复商品库存
-     *
-     * @param orderProductDtos
-     */
-    public static void RestoreProductStock(List<OrderProductDto> orderProductDtos) {
 
-        for (OrderProductDto opt : orderProductDtos) {
-
-            Product product = productLogic.productService.selectById(opt.getProductId());
-
-            product.setStockCount(product.getStockCount() + opt.getNumber());
-            productLogic.productService.updateById(product);
-
-        }
-
-    }
 
     /**
      * 恢复商品规格库存

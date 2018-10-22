@@ -2,13 +2,13 @@
 <html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
       layout:decorator="admin/layout">
 
-<div layout:fragment="content" class="admin-main layui-anim" >
+<div layout:fragment="content" class="admin-main layui-anim">
 
     <div class="admin-main layui-anim">
         <blockquote class="layui-elem-quote" style="float: left;width:100%;">
 
             <div class="layui-btn-group" style="float: left;">
-                <a  title="添加" class="layui-btn" href="/admin/product/0">
+                <a title="添加" class="layui-btn" href="/admin/product/0">
                     <i class="layui-icon">&#xe687;</i>
                     添加
                 </a>
@@ -55,25 +55,28 @@
                         <td th:text="${info.typeId}"></td>
                         <td th:text="${info.propertyTypeId}"></td>
 
-                        <td th:text="${info.salePrice}"></td>
-                        <td th:text="${info.originalPrice}"></td>
-                        <td th:text="${info.stockCount}"></td>
+                        <th:block th:with="pro=${productLogic.GetProduct(info.productId)}">
+                            <td th:text="${pro.salePrice}"></td>
+                            <td th:text="${pro.originalPrice}"></td>
+                            <td th:text="${pro.stockCount}"></td>
+                        </th:block>
+
                         <td th:text="${info.ifpass}"></td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td>
                             <a type="button" th:attr="data-method='ifpass',data-id=${info.productId}"
-                                    class="layui-btn layui-btn-small layui-btn-normal">
+                               class="layui-btn layui-btn-small layui-btn-normal">
                                 <i class="layui-icon">&#xe65e;</i>
                                 审核
                             </a>
                             <a th:title="|${info.productId} 商品详情|"
-                                    th:href="@{'/admin/product/'+${info.productId}}"
-                                    class="layui-btn layui-btn-small layui-btn-normal">
+                               th:href="@{'/admin/product/'+${info.productId}}"
+                               class="layui-btn layui-btn-small layui-btn-normal">
                                 <i class="layui-icon">&#xe691;</i>
                                 编辑
                             </a>
                             <a type="button" th:attr="data-method='delete',data-id=${info.productId}"
-                                    class="layui-btn layui-btn-small layui-btn-normal layui-btn-danger">
+                               class="layui-btn layui-btn-small layui-btn-normal layui-btn-danger">
                                 <i class="layui-icon">&#xe7ea;</i>
                                 删除
                             </a>
