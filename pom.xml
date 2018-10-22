@@ -6,7 +6,7 @@
 
     <groupId>com.jsj.member</groupId>
     <artifactId>ob</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <parent>

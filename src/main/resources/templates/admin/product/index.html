@@ -5,7 +5,7 @@
 <div layout:fragment="content" class="admin-main layui-anim">
 
     <div class="admin-main layui-anim">
-        <blockquote class="layui-elem-quote" style="float: left;width:100%;">
+        <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
             <div class="layui-btn-group" style="float: left;">
                 <a title="添加" class="layui-btn" href="/admin/product/0">
@@ -37,8 +37,8 @@
                 <tr>
                     <th style="width: 5%;">编号</th>
                     <th>商品名称</th>
-                    <th style="width: 5%;">类型</th>
-                    <th style="width: 5%;">属性</th>
+                    <th style="width: 10%;">类型</th>
+                    <th style="width: 10%;">属性</th>
                     <th style="width: 5%;">售价</th>
                     <th style="width: 5%;">原价</th>
                     <th style="width: 5%;">库存</th>
@@ -52,8 +52,12 @@
                     <tr>
                         <td th:text="${info.productId}"></td>
                         <td th:text="${info.productName}"></td>
-                        <td th:text="${info.typeId}"></td>
-                        <td th:text="${info.propertyTypeId}"></td>
+                        <td>
+                            <th:block th:text="${dictLogic.GetDict(info.typeId).dictName}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:text="${dictLogic.GetDict(info.propertyTypeId).dictName}"></th:block>
+                        </td>
 
                         <th:block th:with="pro=${productLogic.GetProduct(info.productId)}">
                             <td th:text="${pro.salePrice}"></td>
@@ -61,14 +65,16 @@
                             <td th:text="${pro.stockCount}"></td>
                         </th:block>
 
-                        <td th:text="${info.ifpass}"></td>
+                        <td>
+                            <th:block th:if="${info.ifpass}">
+                                <a class="layui-btn layui-btn-mini layui-btn-normal">已审</a>
+                            </th:block>
+                            <th:block th:if="!${info.ifpass}">
+                                <a class="layui-btn layui-btn-mini layui-btn-normal layui-btn-danger">未审</a>
+                            </th:block>
+                        </td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td>
-                            <a type="button" th:attr="data-method='ifpass',data-id=${info.productId}"
-                               class="layui-btn layui-btn-small layui-btn-normal">
-                                <i class="layui-icon">&#xe65e;</i>
-                                审核
-                            </a>
                             <a th:title="|${info.productId} 商品详情|"
                                th:href="@{'/admin/product/'+${info.productId}}"
                                class="layui-btn layui-btn-small layui-btn-normal">

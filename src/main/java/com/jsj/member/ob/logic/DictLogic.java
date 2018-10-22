@@ -28,6 +28,17 @@ public class DictLogic {
     @Autowired
     DictService dictService;
 
+
+    /**
+     * 获取字典详情信息
+     *
+     * @param dictId
+     * @return
+     */
+    public static Dict GetDict(int dictId) {
+        return dictLogic.dictService.selectById(dictId);
+    }
+
     /**
      * 权益父编号获取分类列表
      *
@@ -92,13 +103,14 @@ public class DictLogic {
 
     /**
      * 获取省份和直辖市列表
+     *
      * @param id
      * @return
      */
-    public  static DictResp GetProvince( int id){
+    public static DictResp GetProvince(int id) {
         //如果传入0获得省份和直辖市
         DictResp dictResp = new DictResp();
-        if(id == 0) {
+        if (id == 0) {
             List<DictDto> dictDtoList = new ArrayList<>();
             EntityWrapper<Dict> entityWrapper = new EntityWrapper<>();
             entityWrapper.where("delete_time is null and parent_dict_id=50000");

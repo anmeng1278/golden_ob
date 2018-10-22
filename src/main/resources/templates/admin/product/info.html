@@ -65,7 +65,7 @@
                     必须按固定格式填写，用|号隔开，多个回车换行。
                 </div>
                 <textarea class="layui-textarea" name="productSpecs" id="productSpecs" style="width:100%;" rows="2"
-                          lay-verify="req"
+                          lay-verify="req|spec"
                           placeholder="请输入型号规格" title="型号规格" th:text="${productSpecs}"
                           autocomplete="off"></textarea>
             </div>
@@ -175,8 +175,8 @@
             form.verify({
                 spec: function (value) {
 
-                    if (!/^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?$/.test(value)) {
-                        return "请输入正确网址";
+                    if (!/^(\w+\|\d+(\.\d+)[0,1]\|\d+(\.\d+)[0,1]\|\d+\|\d+[\s]*)+$/.test(value)) {
+                        return "规格型号格式输入错误";
                     }
                 }
             });
@@ -188,7 +188,8 @@
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                parent.tab.openTab("/admin/product/index", {refershType: "refersh"});
+                                // parent.tab.openTab("/admin/product/index", {refershType: "refersh"});
+                                location.href = "/admin/product";
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});

@@ -104,6 +104,7 @@ public class AdminProductController {
     @Transactional(Constant.DBTRANSACTIONAL)
     public RestResponseBo saveInfo(@PathVariable("productId") Integer productId, HttpServletRequest request) {
 
+
         Product product = new Product();
 
         //商品名称

@@ -3,6 +3,7 @@ runmode: dev
 server:
   port: 8000
 
+
 #spring
 spring:
   profiles:
