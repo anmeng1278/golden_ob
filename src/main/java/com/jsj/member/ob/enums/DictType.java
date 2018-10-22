@@ -6,10 +6,11 @@ public enum DictType {
 
     PRODUCTPERPROTY(100, "商品属性"),
 
-    PRODUCTTYPE(200, "商品分类");
+    PRODUCTTYPE(200, "商品分类"),
+
+    AREA(50000, "省市地区");
 
     private Integer value;
-
     private String message;
 
     DictType(Integer value, String message) {
@@ -31,7 +32,8 @@ public enum DictType {
                 return PRODUCTPERPROTY;
             case 200:
                 return PRODUCTTYPE;
-
+            case 50000:
+                return AREA;
             default:
                 throw new FatalException("未知的枚举值");
         }
