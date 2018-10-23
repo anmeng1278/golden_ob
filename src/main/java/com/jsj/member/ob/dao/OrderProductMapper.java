@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : OrderProduct Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-19
+ *   @since 2018-10-23
  */
 @Repository
 public interface OrderProductMapper extends BaseMapper<OrderProduct> {

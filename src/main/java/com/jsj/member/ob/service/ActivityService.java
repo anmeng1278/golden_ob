@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.service.IService;
  *   @description : Activity 服务接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-19
+ *   @since 2018-10-23
  */
 public interface ActivityService extends IService<Activity> {
 	

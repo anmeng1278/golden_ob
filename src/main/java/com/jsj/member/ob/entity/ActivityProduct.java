@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : ActivityProduct 活动商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-22
+ *   @since 2018-10-23
  */
 @TableName("_activity_product")
 public class ActivityProduct implements Serializable {

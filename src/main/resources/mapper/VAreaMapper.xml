@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsj.member.ob.dao.VAreaMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.VArea">
+        <result column="dict_id" property="dictId" />
+        <result column="province_id" property="provinceId" />
+        <result column="city_id" property="cityId" />
+        <result column="area_id" property="areaId" />
+        <result column="dict_name" property="dictName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        dict_id AS dictId, province_id AS provinceId, city_id AS cityId, area_id AS areaId, dict_name AS dictName
+    </sql>
+
+</mapper>

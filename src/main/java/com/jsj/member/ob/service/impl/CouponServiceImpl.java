@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : Coupon 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-19
+ *   @since 2018-10-23
  */
 @Service
 public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implements CouponService {

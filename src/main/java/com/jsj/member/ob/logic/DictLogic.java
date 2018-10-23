@@ -2,15 +2,17 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.dto.api.dict.DictDto;
-import com.jsj.member.ob.dto.api.dict.DictResp;
+import com.jsj.member.ob.dto.api.dict.GetAreasRequ;
+import com.jsj.member.ob.dto.api.dict.GetAreasResp;
 import com.jsj.member.ob.entity.Dict;
+import com.jsj.member.ob.entity.VArea;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.service.DictService;
+import com.jsj.member.ob.service.VAreaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -23,10 +25,14 @@ public class DictLogic {
     public void init() {
         dictLogic = this;
         dictLogic.dictService = this.dictService;
+        dictLogic.vAreaService = this.vAreaService;
     }
 
     @Autowired
     DictService dictService;
+
+    @Autowired
+    VAreaService vAreaService;
 
 
     /**
@@ -59,75 +65,48 @@ public class DictLogic {
 
 
     /**
-     * 获取下一级列表
+     * 获取省市区
      *
-     * @param dictId
      * @return
      */
-    public static DictResp GetArea(int dictId) {
-        DictResp dictResp = new DictResp();
-        List<DictDto> dictDtoList = new ArrayList<>();
+    public static GetAreasResp GetAreas(GetAreasRequ requ) {
 
-        EntityWrapper<Dict> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where("delete_time is null and parent_dict_id=50000");
-        //获取所有数据
-        List<Dict> dictList = dictLogic.dictService.selectList(entityWrapper);
-        for (Dict dict : dictList) {
+        //-- 一级省市
+        //select * from _v_area where city_id = 0 and area_id = 0;
+        //
+        //-- 二级城市（方式1）
+        //select * from _v_area as a left join _v_area as b on a.city_id = b.dict_id
+        //where a.province_id  in (110000, 130000 ) and
+        //        ( a.city_id = a.dict_id or ( a.area_id = a.dict_id and b.dict_id is null ))
+        //
+        //-- 二级城市（方式2）
+        //select *
+        //        from _v_area
+        //where province_id  in (110000, 130000 ) and
+        //        ( city_id = dict_id or ( area_id = dict_id and  not exists( select * from _dict where _dict.dict_id = _v_area.city_id ) ))
+        //
+        //        -- 三级地址
+        //select * from _v_area where city_id in (130300) and area_id <> 0
 
-            DictDto dictDto = new DictDto();
+        GetAreasResp resp = new GetAreasResp();
+        int parentAreaId = requ.getParentAreaId();
 
-            //得到省份的下一级
-            if (dictId / 10000 == dict.getDictId() / 10000 && dict.getDictId() % 10000 != 0 && dictId % 10000 == 0) {
-                if (dict.getDictId() % 100 == 0) { //省份下的市
-                    dictDto.setDictId(dict.getDictId());
-                    dictDto.setDictName(dict.getDictName());
-                    dictDtoList.add(dictDto);
+        EntityWrapper<VArea> entityWrapper = new EntityWrapper<>();
 
-                } else if (dict.getDictId() % 100 != 0) { //直辖市的区
-                    dictDto.setDictId(dict.getDictId());
-                    dictDto.setDictName(dict.getDictName());
-                    dictDtoList.add(dictDto);
-                }
-            }
+        entityWrapper.where(parentAreaId == 0, "city_id = 0 and area_id = 0");
+        entityWrapper.where(parentAreaId > 0 && parentAreaId % 10000 == 0, "province_id  = {0} and ( city_id = dict_id or ( area_id = dict_id and  not exists( select * from _dict where _dict.dict_id = _v_area.city_id ) ))", parentAreaId);
+        entityWrapper.where(parentAreaId > 0 && parentAreaId % 100 == 0 && parentAreaId % 10000 != 0, "city_id = {0} and area_id <> 0", parentAreaId);
 
-            //得到市下边的区
-            if (dict.getDictId() / 100 == dictId / 100 && dictId % 100 == 0 && dict.getDictId() % 100 != 0) {
-                dictDto.setDictId(dict.getDictId());
-                dictDto.setDictName(dict.getDictName());
-                dictDtoList.add(dictDto);
-            }
-            dictResp.setDictDtoList(dictDtoList);
-        }
-        return dictResp;
+        List<VArea> vAreas = dictLogic.vAreaService.selectList(entityWrapper);
+
+        vAreas.forEach(va -> {
+            DictDto dto = new DictDto();
+            dto.setDictId(va.getDictId());
+            dto.setDictName(va.getDictName());
+            resp.getAreas().add(dto);
+        });
+        return resp;
+
     }
-
-    /**
-     * 获取省份和直辖市列表
-     *
-     * @param id
-     * @return
-     */
-    public static DictResp GetProvince(int id) {
-        //如果传入0获得省份和直辖市
-        DictResp dictResp = new DictResp();
-        if (id == 0) {
-            List<DictDto> dictDtoList = new ArrayList<>();
-            EntityWrapper<Dict> entityWrapper = new EntityWrapper<>();
-            entityWrapper.where("delete_time is null and parent_dict_id=50000");
-            List<Dict> dictList = dictLogic.dictService.selectList(entityWrapper);
-            for (Dict dict : dictList) {
-
-                DictDto dictDto = new DictDto();
-                if (dict.getDictId() % 10000 == 0) {
-                    dictDto.setDictId(dict.getDictId());
-                    dictDto.setDictName(dict.getDictName());
-                    dictDtoList.add(dictDto);
-                }
-                dictResp.setDictDtoList(dictDtoList);
-            }
-        }
-        return dictResp;
-    }
-
 
 }

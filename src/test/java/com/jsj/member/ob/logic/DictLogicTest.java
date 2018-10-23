@@ -1,15 +1,14 @@
 package com.jsj.member.ob.logic;
 
+import com.alibaba.fastjson.JSON;
 import com.jsj.member.ob.App;
-import com.jsj.member.ob.dto.api.dict.DictDto;
-import com.jsj.member.ob.dto.api.dict.DictResp;
+import com.jsj.member.ob.dto.api.dict.GetAreasRequ;
+import com.jsj.member.ob.dto.api.dict.GetAreasResp;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-
-import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = App.class)
@@ -21,11 +20,14 @@ public class DictLogicTest {
      */
     @Test
     public void getProvince() {
-        DictResp dictResp = DictLogic.GetProvince(0);
-        List<DictDto> dictDtoList = dictResp.getDictDtoList();
-        for (DictDto dictDto : dictDtoList) {
-            System.out.println(dictDto.getDictId() + "  " + dictDto.getDictName());
-        }
+
+        GetAreasRequ requ = new GetAreasRequ();
+        requ.setParentAreaId(0);
+
+        GetAreasResp resp = DictLogic.GetAreas(requ);
+        System.out.println(JSON.toJSONString(resp));
+
+
     }
 
     /**
@@ -33,11 +35,18 @@ public class DictLogicTest {
      */
     @Test
     public void getCity() {
-        DictResp dictResp = DictLogic.GetArea(130000);
-        List<DictDto> dictDtoList = dictResp.getDictDtoList();
-        for (DictDto dictDto : dictDtoList) {
-            System.out.println(dictDto.getDictId() + "  " + dictDto.getDictName());
-        }
+
+        GetAreasRequ requ = new GetAreasRequ();
+        requ.setParentAreaId(110000);
+
+        GetAreasResp resp = DictLogic.GetAreas(requ);
+        System.out.println(JSON.toJSONString(resp));
+
+        requ.setParentAreaId(130000);
+
+        resp = DictLogic.GetAreas(requ);
+        System.out.println(JSON.toJSONString(resp));
+
     }
 
     /**
@@ -45,11 +54,13 @@ public class DictLogicTest {
      */
     @Test
     public void getArea() {
-        DictResp dictResp = DictLogic.GetArea(130100);
-        List<DictDto> dictDtoList = dictResp.getDictDtoList();
-        for (DictDto dictDto : dictDtoList) {
-            System.out.println(dictDto.getDictId() + "  " + dictDto.getDictName());
-        }
+
+        GetAreasRequ requ = new GetAreasRequ();
+        requ.setParentAreaId(210700);
+
+        GetAreasResp resp = DictLogic.GetAreas(requ);
+        System.out.println(JSON.toJSONString(resp));
     }
+
 
 }
