@@ -15,7 +15,7 @@
             </div>
 
 
-            <form class="layui-form" method="get" style="float:right;" action="/admin/dict/getByCondition">
+            <form class="layui-form" method="get" style="float:right;">
                 <div class="layui-form-item" style="margin:0;">
 
                     <label class="layui-form-label">所属类型</label>
@@ -47,7 +47,7 @@
                 <thead>
                 <tr>
                     <th style="width: 5%;">编号</th>
-                    <th style="width: 10%;">名称</th>
+                    <th >名称</th>
                     <th style="width: 10%;">所属类型</th>
                     <th style="width: 12%;">创建时间</th>
                     <th style="width: 12%;">修改时间</th>
@@ -60,7 +60,7 @@
                         <td th:text="${info.dictId}"></td>
                         <td th:text="${info.dictName}"></td>
                         <td>
-                            <th:block th:text="${dictLogic.GetDict(info.parentDictId).dictName}"></th:block>
+                            <th:block th:text="${enumLogic.GetDictType(info.parentDictId).message}"></th:block>
                         </td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.updateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
@@ -71,12 +71,11 @@
                                 <i class="layui-icon">&#xe691;</i>
                                 编辑
                             </a>
-                            <a type="button" th:attr="data-method='delete',data-id=${info.dictId}"
-                               th:href="@{'/admin/dict/delete/'+${info.dictId}}"
+                            <button type="button" th:attr="data-method='delete',data-id=${info.dictId}"
                                class="layui-btn layui-btn-small layui-btn-normal layui-btn-danger">
                                 <i class="layui-icon">&#xe7ea;</i>
                                 删除
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 </th:block>
@@ -99,25 +98,13 @@
                 var id = $(this).attr("data-id");
                 var method = $(this).attr("data-method");
 
-                if (method == "open") {
-                    window.TX.TEMP.LAYERINDEX = window.layer.open({
-                        title: "",
-                        type: 2,
-                        content: "/admin/dict/" + id + "?&" + Math.random(),
-                        area: ["650px", "330px"]
-                    });
-                }
-
                 if (method == "delete") {
                     layer.confirm('确定删除该信息吗?', {icon: 3}, function (index) {
                         layer.close(index);
                         modifyStatus(method, id);
                     });
                 }
-
             });
-
-
         });
 
         function modifyStatus(method, id) {
@@ -126,12 +113,12 @@
                 data: {method: method, id: id},
                 url: "/admin/dict/status",
                 success: function (resp) {
-                    if (resp.success) {
-                        TX.MSG.msg(resp.msg, {time: 1500}, function () {
+                    if (resp.baseResp.success) {
+                        TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
                             location.href = location.href;
                         });
                     } else {
-                        TX.MSG.msg(resp.msg, {icon: 2});
+                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
                     }
                 }
             });

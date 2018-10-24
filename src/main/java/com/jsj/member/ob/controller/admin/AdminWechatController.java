@@ -2,14 +2,10 @@ package com.jsj.member.ob.controller.admin;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.jsj.member.ob.dto.api.wechat.WechatDto;
-import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.entity.Wechat;
-import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.enums.WechatType;
 import com.jsj.member.ob.service.WechatService;
 import com.jsj.member.ob.utils.CCPage;
-import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

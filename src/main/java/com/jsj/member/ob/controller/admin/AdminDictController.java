@@ -1,13 +1,10 @@
 package com.jsj.member.ob.controller.admin;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.google.common.base.Supplier;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.entity.Dict;
-import com.jsj.member.ob.entity.Product;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.form.DictForm;
@@ -49,16 +46,30 @@ public class AdminDictController {
     @GetMapping(value = {"", "/index"})
     public String index(@RequestParam(value = "page", defaultValue = "1") Integer page,
                         @RequestParam(value = "limit", defaultValue = "10") Integer limit,
-                        @RequestParam(value = "keys", defaultValue = " ") String keys,
+                        @RequestParam(value = "keys", defaultValue = "") String keys,
+                        @RequestParam(value = "dictTypeId", defaultValue = "0") Integer dictTypeId,
                         Model model) {
+        EntityWrapper<Dict> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null");
+
+        if (dictTypeId > 0) {
+            wrapper.where("parent_dict_id={0}", dictTypeId);
+        }
+        wrapper.where(!StringUtils.isBlank(keys), "(dict_name LIKE concat(concat('%',{0}),'%') )", keys);
+        wrapper.orderBy("create_time desc");
+
         Page<Dict> pageInfo = new Page<>(page, limit);
-        Page<Dict> pp = dictService.selectPage(pageInfo, new EntityWrapper<Dict>().where("parent_dict_id is not null and delete_time is null"));
+        Page<Dict> pp = dictService.selectPage(pageInfo, wrapper);
+
 
         //所属类型
         List<DictType> dictTypes = Arrays.asList(DictType.values());
+
         model.addAttribute("infos", new CCPage<Dict>(pp, limit));
-        model.addAttribute("keys", keys);
         model.addAttribute("dictTypes", dictTypes);
+
+        model.addAttribute("keys", keys);
+        model.addAttribute("dictTypeId", dictTypeId);
 
         return "admin/dict/index";
     }
@@ -134,61 +145,34 @@ public class AdminDictController {
         return RestResponseBo.ok("保存成功");
     }
 
-    /**
-     * 根据下拉框所属类型和关键字搜索
-     *
-     * @param keys
-     * @param dictTypeId
-     * @param model
-     * @return
-     */
-    @GetMapping("/getByCondition")
-    public String getByCondition(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                 @RequestParam(value = "limit", defaultValue = "10") Integer limit,
-                                 @RequestParam("keys") String keys, @RequestParam("dictTypeId") Integer dictTypeId, Model model) {
-
-        EntityWrapper<Dict> wrapper = new EntityWrapper<>();
-        //根据所属类型进行搜索
-        if (!StringUtils.isBlank(dictTypeId + "") && StringUtils.isBlank(keys)) {
-            wrapper.where("parent_dict_id={0} and delete_time is null", dictTypeId);
-        } else if (dictTypeId == null && !StringUtils.isBlank(keys)) {  //根据关键字进行搜索
-            wrapper.where("delete_time is null").like("dict_name", "keys");
-        } else {
-            wrapper.where("parent_dict_id={0} and delete_time is null", dictTypeId).like("dict_name", "keys");
-        }
-
-        Page<Dict> pageInfo = new Page<>(page, limit);
-        Page<Dict> pp = dictService.selectPage(pageInfo, wrapper);
-
-        /*List<Dict> dicts = dictService.selectList(wrapper);*/
-
-        //所属类型
-        List<DictType> dictTypes = Arrays.asList(DictType.values());
-
-        model.addAttribute("infos", new CCPage<Dict>(pp,limit));
-        model.addAttribute("dictTypes", dictTypes);
-        return "admin/dict/index";
-    }
 
     /**
      * 修改状态
      *
-     * @param dictId
+     * @param id
      * @param request
      * @return
      */
     @RequestMapping(value = "/status", method = RequestMethod.POST)
     @ResponseBody
-    public RestResponseBo modifyStatus(@RequestParam(value = "dictId", defaultValue = "0") Integer dictId,
+    public RestResponseBo modifyStatus(@RequestParam(value = "id", defaultValue = "0") Integer id,
                                        HttpServletRequest request) {
 
         String method = request.getParameter("method");
         if (StringUtils.isBlank(method)) {
             throw new TipException("方法名不能为空");
         }
-        Dict dict = dictService.selectById(dictId);
-        dict.setUpdateTime(DateUtils.getCurrentUnixTime());
-        return RestResponseBo.ok("修改成功");
+
+        switch (method) {
+            case "delete": {
+                Dict dict = dictService.selectById(id);
+                dict.setDeleteTime(DateUtils.getCurrentUnixTime());
+                dictService.updateById(dict);
+            }
+            break;
+        }
+
+        return RestResponseBo.ok("操作成功");
 
     }
 

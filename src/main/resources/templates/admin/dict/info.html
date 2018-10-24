@@ -5,8 +5,8 @@
 <div layout:fragment="content" class="admin-main layui-anim" style="margin: 15px;">
 
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend th:text="|${info.dictName} 信息编辑|"></legend>
-        <!--<legend th:if="${info.dictId} gt '0'"  th:text="|${info.dictName} 信息编辑|"></legend>-->
+        <legend th:if="${info.dictId == null}"  th:text="信息编辑"></legend>
+        <legend th:if="${info.dictId > 0}"  th:text="|${info.dictName} 信息编辑|"></legend>
     </fieldset>
 
     <form class="layui-form" method="post" action="">
@@ -26,13 +26,11 @@
         <div class="layui-form-item">
             <label class="layui-form-label">所属类型</label>
             <div class="layui-input-inline">
-                <select name="parentDictId" lay-verify="req" title="所属类型" >
-                    <!--<option value="">所属类型</option>-->
+                <select name="parentDictId" lay-verify="req" title="所属类型" th:disabled="${info.dictId>0}" >
+                    <option value="">请选择</option>
                     <th:block th:each="pps : ${dictTypes}">
                         <option th:value="${pps.value}" th:selected="${info.parentDictId==pps.value}"
-                                th:text="${pps.message}" th:if="${dictId} gt '0'" disabled="disabled"></option>
-                        <option th:value="${pps.value}" th:selected="${info.parentDictId==pps.value}"
-                                th:text="${pps.message}" th:if="${dictId} eq '0'"></option>
+                                th:text="${pps.message}"></option>
                     </th:block>
                 </select>
             </div>
