@@ -25,7 +25,7 @@
                         <input type="text" name="keys" placeholder="关键字……" th:value="${keys}" autocomplete="off" class="layui-input" />
                     </div>
                     <div class="layui-form-mid layui-word-aux" style="padding:0;">
-                        <button lay-filter="search" class="layui-btn" lay-submit="lay-submit">
+                        <button lay-filter="search" class="layui-btn" type="submit">
                             <i class="layui-icon">&#xe701;</i> 查询
                         </button>
                     </div>
@@ -53,32 +53,20 @@
                         <tr>
                             <td th:text="${info.openId}"></td>
                             <td th:text="${info.nickname}"></td>
-                            <td th:text="${info.sex} eq 1 ? '男':'女'"></td>
+                            <td th:text="${enumLogic.GetSexType(info.sex).message}"></td>
                             <td th:text="${info.subscribeTime}"></td>
-                            <!--<th:block th:each="wechatType : ${wechatTypes}" th:if="${wechatType.value==source}">-->
                             <td th:text="${enumLogic.GetWechatType(info.source).message}"></td>
                             <td th:text="${info.unsubscribeTime}"></td>
                             <td th:text="${info.createTime}"></td>
                             <td th:text="${info.updateTime}"></td>
                             <td>
-                                <button type="button" th:attr="data-method='ifpass',data-id=${info.openId}" class="layui-btn layui-btn-mini layui-btn-normal">
-                                    <i class="layui-icon">&#xe65e;</i>
-                                    审核
-                                </button>
+
                                 <button type="button"  th:attr="data-method='open',data-id=${info.openId}"
                                     class="layui-btn layui-btn-mini layui-btn-normal">
                                     <i class="layui-icon">&#xe776;</i>
-                                    弹窗
+                                    赠送优惠券
                                 </button> 
-                                <button type="button" th:title="|${info.openId} 消息详情|" th:attr="data-tab-href=@{'/admin/twechat/'+${info.openId}}"
-                                    class="layui-btn layui-btn-mini layui-btn-normal">
-                                    <i class="layui-icon">&#xe691;</i>
-                                    编辑
-                                </button>
-                                <button type="button" th:attr="data-method='delete',data-id=${info.openId}" class="layui-btn layui-btn-mini layui-btn-normal layui-btn-danger">
-                                    <i class="layui-icon">&#xe7ea;</i>
-                                    删除
-                                </button>
+
                             </td>
                         </tr>
                     </th:block>
@@ -117,13 +105,6 @@
                     });
                 }
 
-                if(method == "delete"){
-                    layer.confirm('确定删除该信息吗?', { icon: 3 }, function (index) {
-                        layer.close(index);
-                        modifyStatus(method,openId );
-                    });
-                }
-
             });
 
 
@@ -145,7 +126,6 @@
                 }
             });
         }
-
 
     </script>
 </th:block>
