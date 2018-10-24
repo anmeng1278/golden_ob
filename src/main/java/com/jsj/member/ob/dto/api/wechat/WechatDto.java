@@ -1,11 +1,6 @@
 package com.jsj.member.ob.dto.api.wechat;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jsj.member.ob.enums.WechatType;
-import com.jsj.member.ob.utils.EnumUtil;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
