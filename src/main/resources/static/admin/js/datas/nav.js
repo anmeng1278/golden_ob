@@ -5,6 +5,20 @@ var navs = [
         "spread": true,
         "href": "/admin/index",
     },
+
+    {
+        "title": "用户管理",
+        "icon": "fa-wpforms",
+        "spread": true,
+        "children": [
+            {
+                "title": "用户列表",
+                "icon": "fa-angle-right",
+                "href": "/admin/wechat"
+            }
+        ]
+    },
+
     {
         "title": "商品管理",
         "icon": "fa-wpforms",
@@ -37,6 +51,19 @@ var navs = [
                 "title": "提货列表",
                 "icon": "fa-angle-right",
                 "href": "/admin/"
+            }
+        ]
+    },
+
+    {
+        "title": "字典管理",
+        "icon": "fa-wpforms",
+        "spread": true,
+        "children": [
+            {
+                "title": "字典列表",
+                "icon": "fa-angle-right",
+                "href": "/admin/dict"
             }
         ]
     }
