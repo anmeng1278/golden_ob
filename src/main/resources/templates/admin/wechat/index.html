@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="admin/layout">
+
+<div layout:fragment="content" class="admin-main layui-anim layui-anim-upbit" style="margin: 15px;">
+
+    <div class="admin-main layui-anim layui-anim-upbit">
+        <blockquote class="layui-elem-quote">
+
+            <div class="layui-btn-group">
+                <button type="button" title="添加" class="layui-btn" th:attr="data-tab-href=@{'/admin/twechat/0'}">
+                    <i class="layui-icon">&#xe687;</i>
+                    添加
+                </button>
+            </div>
+            <button type="button" style="visibility:hidden;" class="layui-btn layui-btn-small" id="getAll">
+                <i class="fa fa-plus" aria-hidden="true"></i> 审核
+            </button>
+
+            <form class="layui-form" style="float:right;">
+
+                <div class="layui-form-item" style="margin:0;">
+
+                    <label class="layui-form-label">关键字</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="keys" placeholder="关键字……" th:value="${keys}" autocomplete="off" class="layui-input" />
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" style="padding:0;">
+                        <button lay-filter="search" class="layui-btn" lay-submit="lay-submit">
+                            <i class="layui-icon">&#xe701;</i> 查询
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </blockquote>
+        <div class="layui-field-box layui-form">
+            <table class="layui-table admin-table">
+                <thead>
+                    <tr>
+                        <th>用户openId</th>
+                        <th>昵称</th>
+                        <th>性别</th>
+                        <th>关注时间</th>
+                        <th>来源</th>
+                        <th>取消关注时间</th>
+                        <th>创建时间</th>
+                        <th>更新时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="content">
+                    <th:block th:each="info : ${infos.list}">
+                        <tr>
+                            <td th:text="${info.openId}"></td>
+                            <td th:text="${info.nickname}"></td>
+                            <td th:text="${info.sex} eq 1 ? '男':'女'"></td>
+                            <td th:text="${info.subscribeTime}"></td>
+                            <!--<th:block th:each="wechatType : ${wechatTypes}" th:if="${wechatType.value==source}">-->
+                            <td th:text="${info.source}"></td>
+                            <td th:text="${info.unsubscribeTime}"></td>
+                            <td th:text="${info.createTime}"></td>
+                            <td th:text="${info.updateTime}"></td>
+                            <td>
+                                <button type="button" th:attr="data-method='ifpass',data-id=${info.openId}" class="layui-btn layui-btn-mini layui-btn-normal">
+                                    <i class="layui-icon">&#xe65e;</i>
+                                    审核
+                                </button>
+                                <button type="button"  th:attr="data-method='open',data-id=${info.openId}"
+                                    class="layui-btn layui-btn-mini layui-btn-normal">
+                                    <i class="layui-icon">&#xe776;</i>
+                                    弹窗
+                                </button> 
+                                <button type="button" th:title="|${info.openId} 消息详情|" th:attr="data-tab-href=@{'/admin/twechat/'+${info.openId}}"
+                                    class="layui-btn layui-btn-mini layui-btn-normal">
+                                    <i class="layui-icon">&#xe691;</i>
+                                    编辑
+                                </button>
+                                <button type="button" th:attr="data-method='delete',data-id=${info.openId}" class="layui-btn layui-btn-mini layui-btn-normal layui-btn-danger">
+                                    <i class="layui-icon">&#xe7ea;</i>
+                                    删除
+                                </button>
+                            </td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+        </div>
+        <div th:replace="comm/macros :: pageAdminNav(${infos})"></div>
+    </div>
+
+</div>
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        TX.INIT(function () {
+
+            $("button[data-method]").click(function () {
+
+                var id = $(this).attr("data-id");
+                var method = $(this).attr("data-method");
+
+                if (method == "open") {
+                    window.TX.TEMP.LAYERINDEX = window.layer.open({
+                        title: "",
+                        type: 2,
+                        content: "/admin/wechat/" + openId + "?&" + Math.random(),
+                        area: ["650px", "330px"]
+                    });
+                }
+
+                if(method == "ifpass"){
+                    layer.confirm('确定审核该信息吗?', { icon: 3 }, function (index) {
+                        layer.close(index);
+                        modifyStatus(method,openId );
+                    });
+                }
+
+                if(method == "delete"){
+                    layer.confirm('确定删除该信息吗?', { icon: 3 }, function (index) {
+                        layer.close(index);
+                        modifyStatus(method,openId );
+                    });
+                }
+
+            });
+
+
+        });
+
+        function modifyStatus(method, id) {
+
+            TX.CORE.p({
+                data: { method: method, id: id },
+                url: "/admin/twechat/status",
+                success: function (resp) {
+                    if (resp.success) {
+                        TX.MSG.msg(resp.msg, { time: 1500 }, function () {
+                            location.href = location.href;
+                        });
+                    } else {
+                        TX.MSG.msg(resp.msg, { icon: 2 });
+                    }
+                }
+            });
+        }
+
+
+    </script>
+</th:block>
+
+</html>
