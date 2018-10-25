@@ -2,6 +2,7 @@ package com.jsj.member.ob.logic;
 
 import com.alibaba.fastjson.JSON;
 import com.jsj.member.ob.App;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,13 @@ public class ProductLogicTest {
 
         ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(2);
         System.out.println(JSON.toJSONString(productSpecDto));
+
+    }
+    @Test
+    public void getProduct(){
+
+        ProductDto dto = ProductLogic.GetProduct(3);
+        System.out.println(JSON.toJSONString(dto));
 
     }
 }

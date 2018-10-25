@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : ActivityProduct 活动商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-23
+ *   @since 2018-10-25
  */
 @TableName("_activity_product")
 public class ActivityProduct implements Serializable {
@@ -27,6 +26,11 @@ public class ActivityProduct implements Serializable {
 	private Integer productId;
 	@TableField("product_spec_id")
 	private Integer productSpecId;
+    /**
+     * 售价(秒杀时使用)
+     */
+	@TableField("sale_price")
+	private Double salePrice;
     /**
      * 创建时间
      */
@@ -76,6 +80,14 @@ public class ActivityProduct implements Serializable {
 		this.productSpecId = productSpecId;
 	}
 
+	public Double getSalePrice() {
+		return salePrice;
+	}
+
+	public void setSalePrice(Double salePrice) {
+		this.salePrice = salePrice;
+	}
+
 	public Integer getCreateTime() {
 		return createTime;
 	}
@@ -108,6 +120,7 @@ public class ActivityProduct implements Serializable {
 			", activityId=" + activityId +
 			", productId=" + productId +
 			", productSpecId=" + productSpecId +
+			", salePrice=" + salePrice +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +

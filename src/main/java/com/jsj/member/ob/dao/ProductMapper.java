@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : Product Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-23
+ *   @since 2018-10-25
  */
 @Repository
 public interface ProductMapper extends BaseMapper<Product> {

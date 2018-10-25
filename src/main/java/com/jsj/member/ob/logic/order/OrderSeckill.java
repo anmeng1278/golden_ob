@@ -98,15 +98,6 @@ public class OrderSeckill extends OrderBase {
             throw new TipException("当前活动非秒杀活动");
         }
 
-        //重复购买判断
-        EntityWrapper<Order> orderWrapper = new EntityWrapper<>();
-        orderWrapper.where("open_id = {0}", requ.getBaseRequ().getOpenId());
-        orderWrapper.where("type_id = {0}", ActivityType.SECKILL.getValue());
-        orderWrapper.where("activity_id = {0}", activityDto.getActivityId());
-
-        if (orderService.selectCount(orderWrapper) > 0) {
-            throw new TipException("该活动只能参与一次");
-        }
 
         //组织订单实体
         Order order = new Order();
@@ -130,7 +121,21 @@ public class OrderSeckill extends OrderBase {
         //购买份数
         int number = 1;
 
+        //订单金额
+        double orderAmount = 0d;
+
         for (ActivityProductDto apd : activityProductDtos) {
+
+            //重复购买判断
+            EntityWrapper<Order> orderWrapper = new EntityWrapper<>();
+            orderWrapper.where("open_id = {0}", requ.getBaseRequ().getOpenId());
+            orderWrapper.where("type_id = {0}", ActivityType.SECKILL.getValue());
+            orderWrapper.where("activity_id = {0}", activityDto.getActivityId());
+            orderWrapper.where("exists( select * from _order_product where order_id = _order.order_id and product_id = {0} )", apd.getProductId());
+
+            if (orderService.selectCount(orderWrapper) > 0) {
+                throw new TipException("秒杀商品只能购买一次");
+            }
 
             //用于创建商品订单
             OrderProduct orderProduct = new OrderProduct();
@@ -150,6 +155,8 @@ public class OrderSeckill extends OrderBase {
             orderProductDto.setNumber(number);
 
             orderProductDtos.add(orderProductDto);
+
+            orderAmount += apd.getSalePrice() * number;
         }
 
         //消减活动库存
@@ -158,8 +165,6 @@ public class OrderSeckill extends OrderBase {
         //削减规格库存
         ProductLogic.ReductionProductSpecStock(orderProductDtos, this.getActivityType(), null);
 
-        //订单金额
-        double orderAmount = activityDto.getSalePrice() * number;
         //使用优惠券后的支付金额
         double payAmount = super.UseCoupon(requ.getWechatCouponId(), orderAmount, order);
         //支付金额
@@ -173,7 +178,6 @@ public class OrderSeckill extends OrderBase {
             op.setOrderId(order.getOrderId());
             orderProductService.insert(op);
         });
-
 
         if (payAmount == 0) {
             this.OrderPaySuccess(order.getOrderId());

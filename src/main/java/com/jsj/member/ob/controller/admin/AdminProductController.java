@@ -7,11 +7,14 @@ import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.entity.Product;
+import com.jsj.member.ob.entity.ProductImg;
 import com.jsj.member.ob.entity.ProductSpec;
 import com.jsj.member.ob.enums.DictType;
+import com.jsj.member.ob.enums.ProductImgType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.logic.ProductLogic;
+import com.jsj.member.ob.service.ProductImgService;
 import com.jsj.member.ob.service.ProductService;
 import com.jsj.member.ob.service.ProductSpecService;
 import com.jsj.member.ob.utils.CCPage;
@@ -41,6 +44,18 @@ public class AdminProductController {
     @Autowired
     ProductSpecService productSpecService;
 
+    @Autowired
+    ProductImgService productImgService;
+
+    /**
+     * 商品列表
+     *
+     * @param page
+     * @param limit
+     * @param keys
+     * @param request
+     * @return
+     */
     @GetMapping(value = {"", "/index"})
     public String index(@RequestParam(value = "page", defaultValue = "1") int page,
                         @RequestParam(value = "limit", defaultValue = "20") int limit,
@@ -73,6 +88,13 @@ public class AdminProductController {
     }
 
 
+    /**
+     * 商品详情
+     *
+     * @param productId
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/{productId}", method = RequestMethod.GET)
     public String info(@PathVariable("productId") Integer productId, HttpServletRequest request) {
 
@@ -99,6 +121,13 @@ public class AdminProductController {
         return "admin/Product/info";
     }
 
+    /**
+     * 保存提交商品
+     *
+     * @param productId
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/{productId}", method = RequestMethod.POST)
     @ResponseBody
     @Transactional(Constant.DBTRANSACTIONAL)
@@ -232,4 +261,75 @@ public class AdminProductController {
         return RestResponseBo.ok("保存成功");
     }
 
+
+    /**
+     * 商品图片
+     *
+     * @param productId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/{productId}/productImgs", method = RequestMethod.GET)
+    public String productImgs(@PathVariable("productId") Integer productId, HttpServletRequest request) {
+
+        //商品信息
+        Product entity = productService.selectById(productId);
+
+        EntityWrapper<ProductImg> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where("product_id = {0}", productId);
+        entityWrapper.orderBy("type_id asc, product_img_id asc");
+        List<ProductImg> productImgs = productImgService.selectList(entityWrapper);
+
+        request.setAttribute("info", entity);
+        request.setAttribute("productImgs", productImgs);
+
+        return "admin/Product/productImgs";
+    }
+
+
+    /**
+     * 商品图片
+     *
+     * @param productId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/{productId}/productImgs", method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional(Constant.DBTRANSACTIONAL)
+    public RestResponseBo saveProductImgs(@PathVariable("productId") Integer productId, HttpServletRequest request) {
+
+        //删除所有图片
+        productImgService.delete(new EntityWrapper<ProductImg>().where("product_id={0}", productId));
+
+        //添加图片
+        String[] imgPaths = request.getParameterValues("imgpath");
+        if (imgPaths != null && imgPaths.length > 0) {
+
+
+            int index = 0;
+            for (String imgPath : imgPaths) {
+
+                ProductImgType productImgType = ProductImgType.COVER;
+                if (index > 0) {
+                    productImgType = ProductImgType.PRODUCT;
+                }
+
+                ProductImg productImg = new ProductImg();
+                productImg.setCreateTime(DateUtils.getCurrentUnixTime());
+                productImg.setImgPath(imgPath);
+                productImg.setProductId(productId);
+                productImg.setTypeId(productImgType.getValue());
+                productImg.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+                productImgService.insert(productImg);
+
+                index++;
+            }
+
+        }
+
+        return RestResponseBo.ok("操作成功");
+
+    }
 }

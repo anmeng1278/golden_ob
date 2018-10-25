@@ -1,7 +1,15 @@
 package com.jsj.member.ob.dto.api.product;
 
+import com.jsj.member.ob.dto.api.activity.ActivityDto;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProductSpecDto {
 
+    public ProductSpecDto(){
+        this.activityDtos = new ArrayList<>();
+    }
     /**
      * 主键
      */
@@ -31,6 +39,12 @@ public class ProductSpecDto {
      * 排序
      */
     private Integer sort;
+
+
+    /**
+     * 正在参与的活动
+     */
+    private List<ActivityDto> activityDtos;
 
     public Integer getProductSpecId() {
         return productSpecId;
@@ -86,5 +100,13 @@ public class ProductSpecDto {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public List<ActivityDto> getActivityDtos() {
+        return activityDtos;
+    }
+
+    public void setActivityDtos(List<ActivityDto> activityDtos) {
+        this.activityDtos = activityDtos;
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Dict 字典表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-23
+ *   @since 2018-10-25
  */
 @TableName("_dict")
 public class Dict implements Serializable {
