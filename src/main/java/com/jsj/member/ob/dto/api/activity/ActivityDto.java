@@ -19,6 +19,16 @@ public class ActivityDto {
      */
     private ActivityType activityType;
 
+    /**
+     * 活动类型ID
+     */
+    private Integer typeId;
+
+    /**
+     * 团购活动参与人数
+     */
+    private Integer number;
+
 
     /**
      * 开始时间
@@ -59,6 +69,22 @@ public class ActivityDto {
      */
     private Integer deleteTime;
 
+
+    public Integer getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
 
     public Integer getActivityId() {
         return activityId;
