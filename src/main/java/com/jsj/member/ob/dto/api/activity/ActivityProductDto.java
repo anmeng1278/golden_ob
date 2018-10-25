@@ -18,6 +18,11 @@ public class ActivityProductDto {
     private Integer productId;
 
     /**
+     * 售价(秒杀价)
+     */
+    private double salePrice;
+
+    /**
      * 规格编号
      */
     private Integer productSpecId;
@@ -88,5 +93,13 @@ public class ActivityProductDto {
 
     public void setDeleteTime(Integer deleteTime) {
         this.deleteTime = deleteTime;
+    }
+
+    public double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
     }
 }

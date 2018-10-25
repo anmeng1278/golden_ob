@@ -40,13 +40,15 @@ public class ActivityLogic {
      * 获取商品正在参加的活动
      *
      * @param productId
+     * @param productSpecId
      * @return
      */
-    public static List<ActivityDto> GetProductCurrentActivityDtos(int productId) {
+    public static List<ActivityDto> GetProductCurrentActivityDtos(int productId, int productSpecId) {
 
         List<ActivityDto> activityDtos = new ArrayList<>();
 
         EntityWrapper<ActivityProduct> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where("product_id={0} and product_spec_id = {1}", productId, productSpecId);
         entityWrapper.where("delete_time is null");
         entityWrapper.where("exists( select * from _activity where _activity.activity_id = _activity_product.activity_id and  _activity.delete_time is null and _activity.ifpass = 1 and ( UNIX_TIMESTAMP() between _activity.begin_time and _activity.end_time )  )");
 
@@ -123,6 +125,7 @@ public class ActivityLogic {
 
     /**
      * 获取活动商品列表
+     *
      * @param activityId
      * @return
      */
@@ -144,6 +147,7 @@ public class ActivityLogic {
             dto.setDeleteTime(ap.getDeleteTime());
             dto.setProductId(ap.getProductId());
 
+            dto.setSalePrice(ap.getSalePrice());
             dto.setProductSpecId(ap.getProductSpecId());
             dto.setUpdateTime(ap.getUpdateTime());
 

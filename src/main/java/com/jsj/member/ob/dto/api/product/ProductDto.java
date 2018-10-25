@@ -1,7 +1,5 @@
 package com.jsj.member.ob.dto.api.product;
 
-import com.jsj.member.ob.dto.api.activity.ActivityDto;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,11 +54,6 @@ public class ProductDto {
      * 秒杀价(0时不支持秒杀 >0时支持秒杀)
      */
     private double secPrice;
-
-    /**
-     * 正在参与的活动
-     */
-    private List<ActivityDto> currentActivityDtos;
 
     /**
      * 父编号(组团商品使用)
@@ -183,14 +176,6 @@ public class ProductDto {
 
     public void setSecPrice(double secPrice) {
         this.secPrice = secPrice;
-    }
-
-    public List<ActivityDto> getCurrentActivityDtos() {
-        return currentActivityDtos;
-    }
-
-    public void setCurrentActivityDtos(List<ActivityDto> currentActivityDtos) {
-        this.currentActivityDtos = currentActivityDtos;
     }
 
     public int getParentProductId() {

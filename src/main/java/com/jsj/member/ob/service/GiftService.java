@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.service.IService;
  *   @description : Gift 服务接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-23
+ *   @since 2018-10-25
  */
 public interface GiftService extends IService<Gift> {
 	

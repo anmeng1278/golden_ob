@@ -104,9 +104,6 @@ public class ProductLogic {
 
         }
 
-        //商品正在参加的活动
-        List<ActivityDto> currentActivityDtos = ActivityLogic.GetProductCurrentActivityDtos(productId);
-        productDto.setCurrentActivityDtos(currentActivityDtos);
 
         return productDto;
 
@@ -155,6 +152,11 @@ public class ProductLogic {
         List<ProductSpec> productSpecs = productLogic.productSpecService.selectList(productSpecWrapper);
         for (ProductSpec ps : productSpecs) {
 
+
+            //商品正在参加的活动
+            List<ActivityDto> activityDtos = ActivityLogic.GetProductCurrentActivityDtos(productId, ps.getProductSpecId());
+
+
             ProductSpecDto productSpecDto = new ProductSpecDto();
 
             productSpecDto.setProductId(ps.getProductId());
@@ -165,6 +167,7 @@ public class ProductLogic {
 
             productSpecDto.setStockCount(ps.getStockCount());
             productSpecDto.setSort(ps.getSort());
+            productSpecDto.setActivityDtos(activityDtos);
 
             productSpecDtos.add(productSpecDto);
         }

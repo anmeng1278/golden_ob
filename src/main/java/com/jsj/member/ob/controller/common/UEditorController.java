@@ -100,7 +100,7 @@ public class UEditorController {
                 obj.addProperty("url", map.get("Url").toString());
                 obj.addProperty("title", "");
                 obj.addProperty("original", fname);
-                obj.addProperty("fkey", map.get("MD5").toString());
+                obj.addProperty("fkey", map.get("Url").toString());
             } else {
                 obj.addProperty("state", map.get("ErrorMessage").toString());
             }

@@ -8,6 +8,7 @@
         <result column="activity_id" property="activityId" />
         <result column="product_id" property="productId" />
         <result column="product_spec_id" property="productSpecId" />
+        <result column="sale_price" property="salePrice" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="delete_time" property="deleteTime" />
@@ -15,7 +16,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        activity_product_id AS activityProductId, activity_id AS activityId, product_id AS productId, product_spec_id AS productSpecId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        activity_product_id AS activityProductId, activity_id AS activityId, product_id AS productId, product_spec_id AS productSpecId, sale_price AS salePrice, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>
