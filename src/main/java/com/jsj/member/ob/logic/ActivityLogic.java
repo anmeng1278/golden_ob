@@ -87,6 +87,7 @@ public class ActivityLogic {
 
         dto.setStockCount(entity.getStockCount());
         dto.setUpdateTime(entity.getUpdateTime());
+        dto.setNumber(0);
 
         return dto;
 
