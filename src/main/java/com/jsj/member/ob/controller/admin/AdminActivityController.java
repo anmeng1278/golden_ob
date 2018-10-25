@@ -43,9 +43,8 @@ public class AdminActivityController {
     @Autowired
     private ProductService productService;
 
-    //活动活动列表
     /**
-     * 查询所有字典列表
+     * 查询所有活动列表
      *
      * @param page  当前页
      * @param limit 每页显示条数
@@ -72,7 +71,7 @@ public class AdminActivityController {
         Page<Activity> pp = activityService.selectPage(pageInfo, wrapper);
 
 
-        //所属类型
+        //活动类型
         List<ActivityType> activityTypes =Arrays.asList(ActivityType.values());
 
         model.addAttribute("infos", new CCPage<Dict>(pp, limit));
