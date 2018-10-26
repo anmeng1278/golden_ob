@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="admin/layout">
+
+<div layout:fragment="content" class="admin-main layui-anim">
+
+    <div class="admin-main layui-anim">
+        <blockquote class="layui-elem-quote" style="float: left;width:97%;">
+
+            <div class="layui-btn-group" style="float: left;">
+                <a title="添加" class="layui-btn" href="/admin/order/0">
+                    <i class="layui-icon">&#xe687;</i>
+                    添加
+                </a>
+            </div>
+
+
+            <form class="layui-form" method="get" style="float:right;">
+                <div class="layui-form-item" style="margin:0;">
+
+                    <label class="layui-form-label">订单类型</label>
+                    <div class="layui-input-inline">
+                        <select name="typeId" title="活动类型">
+                            <option value="">订单类型</option>
+                            <th:block th:each="activityType : ${activityTypes}">
+                                <option th:value="${activityType.value}" th:text="${activityType.message}"
+                                        th:selected="${activityType.value == typeId}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label">订单状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status" title="订单状态">
+                            <option value="">订单状态</option>
+                            <th:block th:each="orderStatus : ${orderStatuses}">
+                                <option th:value="${orderStatus.value}" th:text="${orderStatus.message}"
+                                        th:selected="${orderStatus.value == status}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="layui-form-mid layui-word-aux" style="padding:0;margin-left: 10px;">
+                        <button lay-filter="search" class="layui-btn" type="submit">
+                            <i class="layui-icon">&#xe701;</i> 查询
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </blockquote>
+        <div class="layui-field-box layui-form">
+            <table class="layui-table admin-table">
+                <thead>
+                <tr>
+                    <th style="width: 10%;">订单编号</th>
+                    <th style="width: 5%;">订单金额</th>
+                    <th style="width: 5%;">支付金额</th>
+                    <th style="width: 5%;">订单状态</th>
+                    <th style="width: 10%;">微信的支付订单号</th>
+                    <th style="width: 10%;">优惠券使用金额</th>
+                    <th style="width: 5%;">订单类型</th>
+                    <th style="width: 10%;">支付时间</th>
+                    <th style="width: 10%;">删除时间</th>
+                    <th style="width: 10%;">操作</th>
+                </tr>
+                </thead>
+                <tbody id="content">
+                <th:block th:each="info : ${infos.list}">
+                    <tr>
+                        <td th:text="${info.orderId}"></td>
+                        <td th:text="${info.amount}"></td>
+                        <td th:text="${info.payAmount}"></td>
+                        <td th:text="${enumLogic.GetOrderStatus(info.status).message}"></td>
+                        <td th:text="${transactionId}"></td>
+                        <td th:text="${couponPrice}"></td>
+                        <td th:text="${enumLogic.GetActivityType(info.typeId).message}"></td>
+                        <td th:text="${payTime}"></td>
+                        <td th:text="${dateUtils.formatDateByUnixTime(info.deleteTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td>
+                            <a th:title="|${info.orderId} 订单详情|"
+                               th:href="@{'/admin/order/'+${info.orderId}}"
+                               class="layui-btn layui-btn-small layui-btn-normal">
+                                <i class="layui-icon">&#xe691;</i>
+                                订单详情
+                            </a>
+                            <button type="button" th:attr="data-method='delete',data-id=${info.orderId}"
+                                    class="layui-btn layui-btn-small layui-btn-normal layui-btn-danger">
+                                <i class="layui-icon">&#xe7ea;</i>
+                                删除
+                            </button>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+        <div th:replace="comm/macros :: pageAdminNav(${infos})"></div>
+    </div>
+
+</div>
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        TX.INIT(function () {
+
+            $("button[data-method]").click(function () {
+
+                var id = $(this).attr("data-id");
+                var method = $(this).attr("data-method");
+
+                if (method == "delete") {
+                    layer.confirm('确定删除该信息吗?', {icon: 3}, function (index) {
+                        layer.close(index);
+                        modifyStatus(method, id);
+                    });
+                }
+            });
+        });
+
+        function modifyStatus(method, id) {
+
+            TX.CORE.p({
+                data: {method: method, id: id},
+                url: "/admin/order/status",
+                success: function (resp) {
+                    if (resp.baseResp.success) {
+                        TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                            location.href = location.href;
+                        });
+                    } else {
+                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                    }
+                }
+            });
+        }
+
+
+    </script>
+</th:block>
+
+</html>
