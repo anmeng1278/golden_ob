@@ -87,9 +87,10 @@ public class ActivityLogic {
         dto.setOriginalPrice(entity.getOriginalPrice());
         dto.setSalePrice(entity.getSalePrice());
 
+        dto.setTypeId(entity.getTypeId());
         dto.setStockCount(entity.getStockCount());
         dto.setUpdateTime(entity.getUpdateTime());
-        dto.setNumber(0);
+        dto.setNumber(entity.getNumber());
 
         return dto;
 

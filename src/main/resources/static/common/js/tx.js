@@ -291,6 +291,17 @@ Namespace.register("TX.TEMP");
                         return title;
                     }
                 },
+                num2: function (value, input) {
+                    var title = $(input).attr("title");
+                    if (title) {
+                        title = "\"" + title + "\"必须大于0的数字";
+                    } else {
+                        title = "必须大于0的数字";
+                    }
+                    if (!/^[1-9]([0-9])*$/.test(value)) {
+                        return title;
+                    }
+                },
                 float: function (value, input) {
                     var title = $(input).attr("title");
                     if (title) {
@@ -328,6 +339,20 @@ Namespace.register("TX.TEMP");
                     }
                     if(parseFloat(value) == 0){
                         return "输入格式错误（0或小于0的最多四位小数，如：0.0002）";
+                    }
+                },
+                float4: function (value, input) {
+                    var title = $(input).attr("title");
+                    if (title) {
+                        title = "\"" + title + "\"必须大于0的小数或整数";
+                    } else {
+                        title = "必须大于0的小数或整数";
+                    }
+                    if (!/^\d+(\.\d+)?$/.test(value)) {
+                        return title;
+                    }
+                    if(parseFloat(value) <= 0){
+                        return "必须大于0的小数或整数";
                     }
                 }
             });

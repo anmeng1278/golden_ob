@@ -149,7 +149,7 @@ layui.define(['element', 'common'], function (exports) {
             }
             title += '<cite>' + data.title + '</cite>';
             if (_config.closed) {
-                title += '<i class="layui-icon layui-unselect layui-tab-close" data-id="' + globalTabIdIndex + '">&#xe68d;</i>';
+                title += '<i class="layui-icon layui-unselect layui-tab-close" data-id="' + globalTabIdIndex + '">&#x1006;</i>';
             }
             //添加tab
             element.tabAdd(ELEM.tabFilter, {
