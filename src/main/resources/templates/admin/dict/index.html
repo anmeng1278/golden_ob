@@ -8,8 +8,8 @@
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
             <div class="layui-btn-group" style="float: left;">
-                <a title="添加" class="layui-btn" href="/admin/dict/0">
-                    <i class="layui-icon">&#xe687;</i>
+                <a title="添加" class="layui-btn" th:attr="data-tab-href=@{'/admin/dict/0'}">
+                    <i class="layui-icon">&#xe654;</i>
                     添加
                 </a>
             </div>
@@ -65,17 +65,18 @@
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.updateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td>
-                            <a th:title="|${info.dictId} 商品详情|"
-                               th:href="@{'/admin/dict/'+${info.dictId}}"
-                               class="layui-btn layui-btn-small layui-btn-normal">
-                                <i class="layui-icon">&#xe691;</i>
+                            <a th:title="|${info.dictId}字典详情|"
+                               th:attr="data-tab-href=@{'/admin/dict/'+${info.dictId}}"
+                               class="layui-btn layui-btn-normal layui-btn-xs">
+                                <i class="layui-icon">&#xe642;</i>
                                 编辑
                             </a>
                             <button type="button" th:attr="data-method='delete',data-id=${info.dictId}"
-                               class="layui-btn layui-btn-small layui-btn-normal layui-btn-danger">
-                                <i class="layui-icon">&#xe7ea;</i>
+                                    class="layui-btn layui-btn-xs layui-btn-danger">
+                                <i class="layui-icon">&#xe640;</i>
                                 删除
                             </button>
+
                         </td>
                     </tr>
                 </th:block>

@@ -1,9 +1,6 @@
 package com.jsj.member.ob.logic;
 
-import com.jsj.member.ob.enums.ActivityType;
-import com.jsj.member.ob.enums.DictType;
-import com.jsj.member.ob.enums.SexType;
-import com.jsj.member.ob.enums.WechatType;
+import com.jsj.member.ob.enums.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -44,6 +41,15 @@ public class EnumLogic {
      */
     public static ActivityType GetActivityType(Integer value) {
         return ActivityType.valueOf(value);
+    }
+
+    /**
+     * 订单状态
+     * @param value
+     * @return
+     */
+    public static OrderStatus GetOrderStatus(Integer value) {
+        return OrderStatus.valueOf(value);
     }
 
 

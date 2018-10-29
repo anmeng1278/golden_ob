@@ -11,7 +11,6 @@ import com.jsj.member.ob.entity.ProductImg;
 import com.jsj.member.ob.entity.ProductSpec;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.enums.ProductImgType;
-import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.ProductImgService;
@@ -29,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @ApiIgnore
@@ -72,22 +72,6 @@ public class AdminProductController {
     }
 
 
-    @RequestMapping(value = "/status", method = RequestMethod.POST)
-    @ResponseBody
-    public RestResponseBo modifyStatus(@RequestParam(value = "productId", defaultValue = "0") Integer productId,
-                                       HttpServletRequest request) {
-
-        String method = request.getParameter("method");
-        if (StringUtils.isBlank(method)) {
-            throw new TipException("方法名不能为空");
-        }
-
-        Product entity = productService.selectById(productId);
-
-        throw new TipException("方法暂未实现");
-    }
-
-
     /**
      * 商品详情
      *
@@ -98,22 +82,23 @@ public class AdminProductController {
     @RequestMapping(value = "/{productId}", method = RequestMethod.GET)
     public String info(@PathVariable("productId") Integer productId, HttpServletRequest request) {
 
-        //商品信息
-        Product entity = productService.selectById(productId);
         //属性
         List<Dict> productPerproties = DictLogic.GetDicts(DictType.PRODUCTPERPROTY);
         //商品分类
         List<Dict> productTypes = DictLogic.GetDicts(DictType.PRODUCTTYPE);
+
+        //商品信息
+        Product info = new Product();
+
         //商品规格
-        List<ProductSpecDto> productSpecDtos = ProductLogic.GetProductSpecDtos(productId);
+        List<ProductSpecDto> productSpecs = new ArrayList<>();
 
-        //规格型号
-        StringBuilder productSpecs = new StringBuilder();
-        productSpecDtos.forEach(x -> {
-            productSpecs.append(String.format("%s|%.2f|%.2f|%d|%d\n", x.getSpecName(), x.getSalePrice(), x.getOriginalPrice(), x.getStockCount(), x.getSort()));
-        });
+        if (productId > 0) {
+            info = productService.selectById(productId);
+            productSpecs = ProductLogic.GetProductSpecDtos(productId);
+        }
 
-        request.setAttribute("info", entity);
+        request.setAttribute("info", info);
         request.setAttribute("productSpecs", productSpecs);
         request.setAttribute("productPerproties", productPerproties);
         request.setAttribute("productTypes", productTypes);
@@ -196,6 +181,7 @@ public class AdminProductController {
 
             product.setIfpass(ifpass);
             product.setIfdistribution(ifdistribution);
+            product.setCreateTime(DateUtils.getCurrentUnixTime());
             product.setUpdateTime(DateUtils.getCurrentUnixTime());
 
             productService.insert(product);
@@ -214,50 +200,57 @@ public class AdminProductController {
         });
 
 
-        String productSpecss = request.getParameter("productSpecs");
-        String[] pss = productSpecss.split("[\n \r \r\n]");
-        for (String psi : pss) {
+        String[] specIds = request.getParameterValues("specId");
+        String[] specNames = request.getParameterValues("specName");
+        String[] specSalePrices = request.getParameterValues("specSalePrice");
+        String[] specOriginalPrices = request.getParameterValues("specOriginalPrice");
 
-            if (StringUtils.isBlank(psi)) {
-                continue;
+        String[] specstockCounts = request.getParameterValues("specstockCount");
+        String[] specstockSorts = request.getParameterValues("specstockSort");
+
+        if (specIds != null) {
+
+            for (int i = 0; i < specIds.length; i++) {
+
+                int specId = Integer.parseInt(specIds[i]);
+                String specName = specNames[i].trim();
+                Double salePrice = Double.valueOf(specSalePrices[i].trim());
+                Double originalPrice = Double.valueOf(specOriginalPrices[i].trim());
+                Integer stockCount = Integer.valueOf(specstockCounts[i].trim());
+                Integer psSort = Integer.valueOf(specstockSorts[i].trim());
+
+                if (specId == 0) {
+                    //添加
+                    ProductSpec productSpec = new ProductSpec();
+                    productSpec.setSpecName(specName);
+                    productSpec.setProductId(product.getProductId());
+                    productSpec.setSalePrice(salePrice);
+                    productSpec.setOriginalPrice(originalPrice);
+                    productSpec.setStockCount(stockCount);
+                    productSpec.setSort(psSort);
+                    productSpec.setUpdateTime(DateUtils.getCurrentUnixTime());
+                    productSpec.setCreateTime(DateUtils.getCurrentUnixTime());
+
+                    productSpecService.insert(productSpec);
+                } else {
+                    ProductSpec productSpec = productSpecService.selectById(specId);
+
+                    productSpec.setUpdateTime(DateUtils.getCurrentUnixTime());
+                    productSpec.setDeleteTime(null);
+                    productSpec.setSalePrice(salePrice);
+                    productSpec.setOriginalPrice(originalPrice);
+                    productSpec.setStockCount(stockCount);
+                    productSpec.setSort(psSort);
+
+                    productSpecService.updateAllColumnById(productSpec);
+
+                }
+
             }
-            String[] pssi = psi.split("[\\|]");
-            if (pssi.length != 5) {
-                continue;
-            }
 
-            String specName = pssi[0].trim();
-            Double salePrice = Double.valueOf(pssi[1].trim());
-            Double originalPrice = Double.valueOf(pssi[2].trim());
-            Integer stockCount = Integer.valueOf(pssi[3].trim());
-            Integer psSort = Integer.valueOf(pssi[4].trim());
-
-            ProductSpec productSpec = productSpecService.selectOne(new EntityWrapper<ProductSpec>().where("product_id={0} and spec_name={1}", product.getProductId(), specName));
-            if (productSpec == null) {
-
-                productSpec = new ProductSpec();
-                productSpec.setSpecName(specName);
-                productSpec.setProductId(product.getProductId());
-                productSpec.setSalePrice(salePrice);
-                productSpec.setOriginalPrice(originalPrice);
-                productSpec.setStockCount(stockCount);
-                productSpec.setSort(psSort);
-                productSpec.setUpdateTime(DateUtils.getCurrentUnixTime());
-                productSpec.setCreateTime(DateUtils.getCurrentUnixTime());
-
-                productSpecService.insert(productSpec);
-            } else {
-
-                productSpec.setUpdateTime(DateUtils.getCurrentUnixTime());
-                productSpec.setDeleteTime(null);
-                productSpec.setSalePrice(salePrice);
-                productSpec.setOriginalPrice(originalPrice);
-                productSpec.setStockCount(stockCount);
-                productSpec.setSort(psSort);
-
-                productSpecService.updateAllColumnById(productSpec);
-            }
         }
+
+
         return RestResponseBo.ok("保存成功");
     }
 
@@ -327,6 +320,37 @@ public class AdminProductController {
                 index++;
             }
 
+        }
+
+        return RestResponseBo.ok("操作成功");
+
+    }
+
+
+    /**
+     * 修改状态
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/status", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResponseBo status(HttpServletRequest request) {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        String method = request.getParameter("method");
+
+        Product product = productService.selectById(id);
+
+        if (method.equals("ifpass")) {
+            product.setIfpass(!product.getIfpass());
+            product.setUpdateTime(DateUtils.getCurrentUnixTime());
+            productService.updateById(product);
+        }
+        if (method.equals("delete")) {
+            product.setUpdateTime(DateUtils.getCurrentUnixTime());
+            product.setDeleteTime(DateUtils.getCurrentUnixTime());
+            productService.updateById(product);
         }
 
         return RestResponseBo.ok("操作成功");

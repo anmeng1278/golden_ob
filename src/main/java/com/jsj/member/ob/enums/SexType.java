@@ -3,11 +3,11 @@ package com.jsj.member.ob.enums;
 import com.jsj.member.ob.exception.FatalException;
 
 public enum SexType {
-    UNKNOWED(0, "未知性别"),
+    UNKNOWED(0, "未知"),
 
-    MAN(1, "男性"),
+    MAN(1, "男"),
 
-    WOMAN(2, "女性");
+    WOMAN(2, "女");
 
     private Integer value;
     private String message;

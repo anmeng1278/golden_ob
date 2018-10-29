@@ -45,12 +45,12 @@ var navs = [
             {
                 "title": "订单列表",
                 "icon": "fa-angle-right",
-                "href": "/admin/orders"
+                "href": "/admin/order"
             },
             {
                 "title": "提货列表",
                 "icon": "fa-angle-right",
-                "href": "/admin/"
+                "href": "/admin/ddd"
             }
         ]
     },

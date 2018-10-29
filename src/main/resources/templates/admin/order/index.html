@@ -8,8 +8,8 @@
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
             <div class="layui-btn-group" style="float: left;">
-                <a title="添加" class="layui-btn" href="/admin/order/0">
-                    <i class="layui-icon">&#xe687;</i>
+                <a title="添加" class="layui-btn" th:attr="data-tab-href=@{'/admin/order/0'}">
+                    <i class="layui-icon">&#xe654;</i>
                     添加
                 </a>
             </div>
@@ -40,9 +40,9 @@
                         </select>
                     </div>
 
-                    <div class="layui-form-mid layui-word-aux" style="padding:0;margin-left: 10px;">
-                        <button lay-filter="search" class="layui-btn" type="submit">
-                            <i class="layui-icon">&#xe701;</i> 查询
+                    <div class="layui-input-inline">
+                        <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
+                            <i class="layui-icon">&#xe615;</i> 查询
                         </button>
                     </div>
 
@@ -79,14 +79,15 @@
                         <td th:text="${dateUtils.formatDateByUnixTime(info.deleteTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td>
                             <a th:title="|${info.orderId} 订单详情|"
-                               th:href="@{'/admin/order/'+${info.orderId}}"
-                               class="layui-btn layui-btn-small layui-btn-normal">
-                                <i class="layui-icon">&#xe691;</i>
+                               th:attr="data-tab-href=@{'/admin/order/'+${info.orderId}}"
+                               class="layui-btn layui-btn-normal layui-btn-xs">
+                                <i class="layui-icon">&#xe642;</i>
                                 订单详情
                             </a>
-                            <button type="button" th:attr="data-method='delete',data-id=${info.orderId}"
-                                    class="layui-btn layui-btn-small layui-btn-normal layui-btn-danger">
-                                <i class="layui-icon">&#xe7ea;</i>
+
+                             <button type="button" th:attr="data-method='delete',data-id=${info.orderId}"
+                                    class="layui-btn layui-btn-xs layui-btn-danger">
+                                <i class="layui-icon">&#xe640;</i>
                                 删除
                             </button>
                         </td>

@@ -1,32 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="admin/layout">
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="admin/layout">
+<div layout:fragment="content" class="admin-main layui-anim">
+    <div class="admin-main layui-anim">
+        <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
-<div layout:fragment="content" class="admin-main layui-anim layui-anim-upbit" style="margin: 15px;">
-
-    <div class="admin-main layui-anim layui-anim-upbit">
-        <blockquote class="layui-elem-quote">
-
-            <div class="layui-btn-group">
-                <button type="button" title="添加" class="layui-btn" th:attr="data-tab-href=@{'/admin/twechat/0'}">
-                    <i class="layui-icon">&#xe687;</i>
+            <div class="layui-btn-group" style="float: left;">
+                <a title="添加" class="layui-btn" th:attr="data-tab-href=@{'/admin/wechat/0'}">
+                    <i class="layui-icon">&#xe654;</i>
                     添加
-                </button>
+                </a>
             </div>
-            <button type="button" style="visibility:hidden;" class="layui-btn layui-btn-small" id="getAll">
-                <i class="fa fa-plus" aria-hidden="true"></i> 审核
-            </button>
+            
 
-            <form class="layui-form" style="float:right;">
+            <form class="layui-form" method="get" style="float:right;">
 
                 <div class="layui-form-item" style="margin:0;">
 
                     <label class="layui-form-label">关键字</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="keys" placeholder="关键字……" th:value="${keys}" autocomplete="off" class="layui-input" />
+                        <input type="text" name="keys" placeholder="关键字……" th:value="${keys}" autocomplete="off"
+                               class="layui-input"/>
                     </div>
-                    <div class="layui-form-mid layui-word-aux" style="padding:0;">
-                        <button lay-filter="search" class="layui-btn" type="submit">
-                            <i class="layui-icon">&#xe701;</i> 查询
+                    <div class="layui-input-inline">
+                        <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
+                            <i class="layui-icon">&#xe615;</i> 查询
                         </button>
                     </div>
 
@@ -62,8 +60,8 @@
                             <td>
 
                                 <button type="button"  th:attr="data-method='open',data-id=${info.openId}"
-                                    class="layui-btn layui-btn-mini layui-btn-normal">
-                                    <i class="layui-icon">&#xe776;</i>
+                                    class="layui-btn layui-btn-small layui-btn-normal">
+                                    <i class="layui-icon">&#xe641;</i>
                                     赠送优惠券
                                 </button> 
 
@@ -89,39 +87,28 @@
                 var id = $(this).attr("data-id");
                 var method = $(this).attr("data-method");
 
-                if (method == "open") {
-                    window.TX.TEMP.LAYERINDEX = window.layer.open({
-                        title: "",
-                        type: 2,
-                        content: "/admin/wechat/" + openId + "?&" + Math.random(),
-                        area: ["650px", "330px"]
-                    });
-                }
-
-                if(method == "ifpass"){
-                    layer.confirm('确定审核该信息吗?', { icon: 3 }, function (index) {
+                if (method == "delete") {
+                    layer.confirm('确定删除该信息吗?', {icon: 3}, function (index) {
                         layer.close(index);
-                        modifyStatus(method,openId );
+                        modifyStatus(method, id);
                     });
                 }
-
             });
-
 
         });
 
         function modifyStatus(method, id) {
 
             TX.CORE.p({
-                data: { method: method, id: id },
-                url: "/admin/twechat/status",
+                data: {method: method, id: id},
+                url: "/admin/wechat/status",
                 success: function (resp) {
-                    if (resp.success) {
-                        TX.MSG.msg(resp.msg, { time: 1500 }, function () {
+                    if (resp.baseResp.success) {
+                        TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
                             location.href = location.href;
                         });
                     } else {
-                        TX.MSG.msg(resp.msg, { icon: 2 });
+                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
                     }
                 }
             });
