@@ -8,19 +8,17 @@
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
             <div class="layui-btn-group" style="float: left;">
-                <a title="添加" class="layui-btn" th:attr="data-tab-href=@{'/admin/dict/0'}">
+                <a title="添加活动" class="layui-btn" th:attr="data-tab-href=@{'/admin/dict/0'}">
                     <i class="layui-icon">&#xe654;</i>
                     添加
                 </a>
             </div>
-
-
             <form class="layui-form" method="get" style="float:right;">
                 <div class="layui-form-item" style="margin:0;">
 
                     <label class="layui-form-label">所属类型</label>
                     <div class="layui-input-inline">
-                        <select name="dictTypeId" title="所属类型">
+                        <select name="typeId" title="所属类型">
                             <option value="">所属类型</option>
                             <th:block th:each="dictType : ${dictTypes}">
                                 <option th:value="${dictType.value}" th:text="${dictType.message}" th:selected="${dictType.value == dictTypeId}"></option>
@@ -33,9 +31,9 @@
                         <input type="text" name="keys" placeholder="关键字……" th:value="${keys}" autocomplete="off"
                                class="layui-input"/>
                     </div>
-                    <div class="layui-form-mid layui-word-aux" style="padding:0;margin-left: 10px;">
-                        <button lay-filter="search" class="layui-btn" type="submit">
-                            <i class="layui-icon">&#xe701;</i> 查询
+                    <div class="layui-input-inline">
+                        <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
+                            <i class="layui-icon">&#xe615;</i> 查询
                         </button>
                     </div>
 
@@ -49,8 +47,8 @@
                     <th style="width: 5%;">编号</th>
                     <th >名称</th>
                     <th style="width: 10%;">所属类型</th>
-                    <th style="width: 12%;">创建时间</th>
-                    <th style="width: 12%;">修改时间</th>
+                    <th style="width: 15%;">创建时间</th>
+                    <th style="width: 15%;">修改时间</th>
                     <th style="width: 20%;">操作</th>
                 </tr>
                 </thead>
