@@ -124,7 +124,7 @@ public class OrderNormal extends OrderBase {
         });
 
         if (payAmount == 0) {
-            this.OrderPaySuccess(order.getOrderId());
+            this.PaySuccessed(order.getOrderId(), null);
         }
 
         CreateOrderResp resp = new CreateOrderResp();
@@ -135,20 +135,6 @@ public class OrderNormal extends OrderBase {
         resp.setSuccess(true);
 
         return resp;
-
-    }
-
-    /**
-     * 订单支付成功
-     *
-     * @param orderId
-     */
-    @Override
-    public void OrderPaySuccess(int orderId) {
-
-        //修改订单状态
-        //添加库存
-        //发送短信等
 
     }
 

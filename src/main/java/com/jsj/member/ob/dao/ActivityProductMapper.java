@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : ActivityProduct Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-25
+ *   @since 2018-10-29
  */
 @Repository
 public interface ActivityProductMapper extends BaseMapper<ActivityProduct> {

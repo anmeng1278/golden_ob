@@ -7,8 +7,10 @@ import com.jsj.member.ob.dto.api.stock.GetMyStockResp;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Stock;
 import com.jsj.member.ob.enums.StockStatus;
+import com.jsj.member.ob.enums.StockType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.StockService;
+import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -78,6 +80,39 @@ public class StockLogic {
             resp.setStockDtos(stockDtoList);
         }
         return resp;
+    }
+
+    /**
+     * 订单支付成功添加库存
+     *
+     * @param stocks
+     */
+    public static void AddOrderStock(List<Stock> stocks) {
+
+        stocks.forEach(st -> {
+            st.setTypeId(StockType.BUY.getValue());
+            st.setStatus(StockStatus.UNUSE.getValue());
+            st.setCreateTime(DateUtils.getCurrentUnixTime());
+            st.setUpdateTime(DateUtils.getCurrentUnixTime());
+        });
+        stockLogic.stockService.insertBatch(stocks);
+    }
+
+    /**
+     * 领取成功添加库存
+     *
+     * @param stocks
+     */
+    public static void AddGiftStock(List<Stock> stocks) {
+
+        stocks.forEach(st -> {
+            st.setTypeId(StockType.GIFT.getValue());
+            st.setStatus(StockStatus.UNUSE.getValue());
+            st.setCreateTime(DateUtils.getCurrentUnixTime());
+            st.setUpdateTime(DateUtils.getCurrentUnixTime());
+        });
+        stockLogic.stockService.insertBatch(stocks);
+
     }
 
 }

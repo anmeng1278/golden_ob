@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Gift 赠送表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-25
+ *   @since 2018-10-29
  */
 @TableName("_gift")
 public class Gift implements Serializable {
@@ -25,6 +24,11 @@ public class Gift implements Serializable {
 	@TableId(value="gift_id", type= IdType.AUTO)
 	private Integer giftId;
     /**
+     * 赠送唯一码，由系统生成
+     */
+	@TableField("gift_unique_code")
+	private String giftUniqueCode;
+    /**
      * 公众号open_id
      */
 	@TableField("open_id")
@@ -34,7 +38,7 @@ public class Gift implements Serializable {
      */
 	private String blessings;
     /**
-     * 赠送状态，0：未分享，10：已分享  60：取消赠送
+     * 赠送状态，0：未分享，10：已分享 30：领取中  40：已领完  60：取消赠送
      */
 	private Integer status;
     /**
@@ -46,6 +50,11 @@ public class Gift implements Serializable {
      */
 	@TableField("share_type")
 	private Integer shareType;
+    /**
+     * 领取有效时间
+     */
+	@TableField("expired_time")
+	private Integer expiredTime;
     /**
      * 创建时间
      */
@@ -69,6 +78,14 @@ public class Gift implements Serializable {
 
 	public void setGiftId(Integer giftId) {
 		this.giftId = giftId;
+	}
+
+	public String getGiftUniqueCode() {
+		return giftUniqueCode;
+	}
+
+	public void setGiftUniqueCode(String giftUniqueCode) {
+		this.giftUniqueCode = giftUniqueCode;
 	}
 
 	public String getOpenId() {
@@ -111,6 +128,14 @@ public class Gift implements Serializable {
 		this.shareType = shareType;
 	}
 
+	public Integer getExpiredTime() {
+		return expiredTime;
+	}
+
+	public void setExpiredTime(Integer expiredTime) {
+		this.expiredTime = expiredTime;
+	}
+
 	public Integer getCreateTime() {
 		return createTime;
 	}
@@ -140,11 +165,13 @@ public class Gift implements Serializable {
 	public String toString() {
 		return "Gift{" +
 			", giftId=" + giftId +
+			", giftUniqueCode=" + giftUniqueCode +
 			", openId=" + openId +
 			", blessings=" + blessings +
 			", status=" + status +
 			", remarks=" + remarks +
 			", shareType=" + shareType +
+			", expiredTime=" + expiredTime +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +

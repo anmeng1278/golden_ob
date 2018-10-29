@@ -11,7 +11,7 @@ public class ProductStockException extends RuntimeException {
     private Integer productSpecId;
 
     private ActivityType activityType;
-    private int orderId;
+    private Integer orderId;
 
     private int number;
     private int stock;
@@ -75,11 +75,11 @@ public class ProductStockException extends RuntimeException {
         this.activityType = activityType;
     }
 
-    public int getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 }

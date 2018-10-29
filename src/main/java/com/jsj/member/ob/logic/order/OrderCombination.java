@@ -118,7 +118,7 @@ public class OrderCombination extends OrderBase {
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
 
         //购买份数
-        int number = 1;
+        int number = 2;
 
         for (ActivityProductDto apd : activityProductDtos) {
 
@@ -169,7 +169,7 @@ public class OrderCombination extends OrderBase {
 
 
         if (payAmount == 0) {
-            this.OrderPaySuccess(order.getOrderId());
+            this.PaySuccessed(order.getOrderId(), null);
         }
 
         CreateOrderResp resp = new CreateOrderResp();

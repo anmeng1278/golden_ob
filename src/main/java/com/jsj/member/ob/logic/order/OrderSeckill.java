@@ -180,7 +180,7 @@ public class OrderSeckill extends OrderBase {
         });
 
         if (payAmount == 0) {
-            this.OrderPaySuccess(order.getOrderId());
+            this.PaySuccessed(order.getOrderId(), null);
         }
 
         CreateOrderResp resp = new CreateOrderResp();

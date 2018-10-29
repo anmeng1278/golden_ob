@@ -135,6 +135,7 @@ public class ActivityLogic {
 
         EntityWrapper<ActivityProduct> entityWrapper = new EntityWrapper<>();
         entityWrapper.where("delete_time is null");
+        entityWrapper.where("activity_id={0}", activityId);
 
         List<ActivityProductDto> activityProductDtos = new ArrayList<>();
         List<ActivityProduct> activityProducts = activityLogic.activityProductService.selectList(entityWrapper);

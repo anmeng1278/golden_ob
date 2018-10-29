@@ -6,8 +6,11 @@ import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
+import com.jsj.member.ob.dto.proto.NotifyModelOuterClass;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.exception.ProductStockException;
+import com.jsj.member.ob.logic.order.OrderBase;
+import com.jsj.member.ob.logic.order.OrderFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -139,19 +142,49 @@ public class OrderLogicTest {
     @Test
     public void createCombinationOrder() {
 
-        CreateOrderRequ requ = new CreateOrderRequ();
-        BaseRequ baseRequ = new BaseRequ();
-        baseRequ.setOpenId("44444");
 
-        requ.setBaseRequ(baseRequ);
-        requ.setRemarks("备注信息");
-        requ.setActivityType(ActivityType.COMBINATION);
-        requ.setActivityId(3);
+        try {
 
-        CreateOrderResp createOrderResp = OrderLogic.CreateOrder(requ);
-        System.out.println(JSON.toJSONString(createOrderResp));
+            CreateOrderRequ requ = new CreateOrderRequ();
+            BaseRequ baseRequ = new BaseRequ();
+            baseRequ.setOpenId("44444");
 
-        Assert.assertEquals(true, true);
+            requ.setBaseRequ(baseRequ);
+            requ.setRemarks("备注信息");
+            requ.setActivityType(ActivityType.COMBINATION);
+            requ.setActivityId(3);
+
+
+            CreateOrderResp createOrderResp = OrderLogic.CreateOrder(requ);
+            System.out.println(JSON.toJSONString(createOrderResp));
+
+            Assert.assertEquals(true, true);
+
+        } catch (ProductStockException e) {
+            e.printStackTrace();
+            System.out.println("商品编号：" + e.getProductId());
+            System.out.println("规格编号：" + e.getProductSpecId());
+            System.out.println("订单编号：" + e.getOrderId());
+            System.out.println("使用数量：" + e.getNumber());
+            System.out.println("当前库存：" + e.getStock());
+            System.out.println("订单类型：" + e.getActivityType().getMessage());
+        }
+
+    }
+
+
+    /**
+     * 支付订单
+     */
+    @Test
+    public void payOrder() {
+
+        NotifyModelOuterClass.NotifyModel notifyModel = NotifyModelOuterClass.NotifyModel.getDefaultInstance();
+
+        int orderId = 10023;
+
+       OrderBase orderBase = OrderFactory.GetInstance(orderId);
+        orderBase.PaySuccessed(orderId, notifyModel);
 
     }
 
