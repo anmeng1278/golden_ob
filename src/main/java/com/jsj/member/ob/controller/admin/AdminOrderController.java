@@ -137,14 +137,6 @@ public class AdminOrderController {
             dto.setCouponName(coupon.getCouponName());
         }
 
-        //根据订单中的活动编号查找出活动名称
-        Activity activity = activityService.selectById(order.getActivityId());
-        if(activity == null){
-            dto.setActivityName("");
-        }else {
-            dto.setActivityName(activity.getActivityName());
-        }
-
         //根据订单Id查找商品信息
         List<ProductDto> productDtos = new ArrayList<>();
         List<ProductSpecDto> productSpecDtos = new ArrayList<>();
