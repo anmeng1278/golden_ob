@@ -106,7 +106,7 @@
                         <input type="text" class="layui-input" name="activityName"
                                lay-verify="req"
                                title="所参与活动"
-                               th:value="${info.activityName}" style="border: 0px;" readonly="readonly "/>
+                               th:value="${enumLogic.GetActivityType(info.typeId).message}" style="border: 0px;" readonly="readonly "/>
                     </div>
                 </div>
 
