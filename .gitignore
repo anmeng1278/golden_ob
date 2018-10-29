@@ -33,3 +33,8 @@ generator
 
 upload
 *.iml
+
+.classpath
+.factorypath
+.project
+.settings
