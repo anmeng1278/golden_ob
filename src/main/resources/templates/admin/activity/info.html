@@ -240,7 +240,7 @@
             form.on("submit", function (data) {
 
                 if ($("tr #content").length == 0) {
-                    layer.msg("至少为此活动添加一个商品", {icon: 2});
+                    layer.alert("至少为此活动添加一个商品");
                     return false;
                 }
 
@@ -358,7 +358,7 @@
                                 return true;
                             }
                             html.push('<tr>');
-                            html.push('    <td>' + item.productSpecId + '</td>');
+                            html.push('    <td>' + item.productName + '</td>');
                             html.push('    <td>' + item.specName + '</td>');
                             html.push('    <td>' + item.salePrice + '</td>');
                             html.push('    <td>' + item.originalPrice + '</td>');
