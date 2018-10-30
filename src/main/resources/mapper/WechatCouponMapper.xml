@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.WechatCoupon">
         <id column="wechat_coupon_id" property="wechatCouponId" />
+        <result column="order_redpacket_coupon_id" property="orderRedpacketCouponId" />
         <result column="open_id" property="openId" />
         <result column="coupon_id" property="couponId" />
         <result column="expired_time" property="expiredTime" />
@@ -18,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        wechat_coupon_id AS wechatCouponId, open_id AS openId, coupon_id AS couponId, expired_time AS expiredTime, status, amount, type_id AS typeId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        wechat_coupon_id AS wechatCouponId, order_redpacket_coupon_id AS orderRedpacketCouponId, open_id AS openId, coupon_id AS couponId, expired_time AS expiredTime, status, amount, type_id AS typeId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

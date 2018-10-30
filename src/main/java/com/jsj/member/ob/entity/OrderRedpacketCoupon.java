@@ -1,6 +1,5 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -9,51 +8,32 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- *   @description : WechatCoupon 用户领取优惠券表实体类
+ *   @description : OrderRedpacketCoupon 实体类
  *   ---------------------------------
  * 	 @author cc
  *   @since 2018-10-30
  */
-@TableName("_wechat_coupon")
-public class WechatCoupon implements Serializable {
+@TableName("_order_redpacket_coupon")
+public class OrderRedpacketCoupon implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
-	@TableId(value="wechat_coupon_id", type= IdType.AUTO)
-	private Integer wechatCouponId;
-	@TableField("order_redpacket_coupon_id")
+    @TableId("order_redpacket_coupon_id")
 	private Integer orderRedpacketCouponId;
-    /**
-     * 微信openid
-     */
-	@TableField("open_id")
-	private String openId;
-    /**
-     * 优惠券编号
-     */
+	@TableField("order_id")
+	private Integer orderId;
+	@TableField("redpacket_coupon_id")
+	private Integer redpacketCouponId;
 	@TableField("coupon_id")
 	private Integer couponId;
-    /**
-     * 过期时间
-     */
-	@TableField("expired_time")
-	private Integer expiredTime;
-    /**
-     * 0未使用 10已使用 60已过期
-     */
-	private Integer status;
-    /**
-     * 券的金额, 单位元
-     */
-	private Double amount;
-    /**
-     * 类型 1直减券  2折扣券 (值为2时折扣使用amount字段)
-     */
 	@TableField("type_id")
 	private Integer typeId;
+	private Double amount;
+	@TableField("open_id")
+	private Integer openId;
+	private Boolean ifreceived;
+	@TableField("received_time")
+	private Integer receivedTime;
     /**
      * 创建时间
      */
@@ -71,14 +51,6 @@ public class WechatCoupon implements Serializable {
 	private Integer deleteTime;
 
 
-	public Integer getWechatCouponId() {
-		return wechatCouponId;
-	}
-
-	public void setWechatCouponId(Integer wechatCouponId) {
-		this.wechatCouponId = wechatCouponId;
-	}
-
 	public Integer getOrderRedpacketCouponId() {
 		return orderRedpacketCouponId;
 	}
@@ -87,12 +59,20 @@ public class WechatCoupon implements Serializable {
 		this.orderRedpacketCouponId = orderRedpacketCouponId;
 	}
 
-	public String getOpenId() {
-		return openId;
+	public Integer getOrderId() {
+		return orderId;
 	}
 
-	public void setOpenId(String openId) {
-		this.openId = openId;
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
+	}
+
+	public Integer getRedpacketCouponId() {
+		return redpacketCouponId;
+	}
+
+	public void setRedpacketCouponId(Integer redpacketCouponId) {
+		this.redpacketCouponId = redpacketCouponId;
 	}
 
 	public Integer getCouponId() {
@@ -103,20 +83,12 @@ public class WechatCoupon implements Serializable {
 		this.couponId = couponId;
 	}
 
-	public Integer getExpiredTime() {
-		return expiredTime;
+	public Integer getTypeId() {
+		return typeId;
 	}
 
-	public void setExpiredTime(Integer expiredTime) {
-		this.expiredTime = expiredTime;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
 	}
 
 	public Double getAmount() {
@@ -127,12 +99,28 @@ public class WechatCoupon implements Serializable {
 		this.amount = amount;
 	}
 
-	public Integer getTypeId() {
-		return typeId;
+	public Integer getOpenId() {
+		return openId;
 	}
 
-	public void setTypeId(Integer typeId) {
-		this.typeId = typeId;
+	public void setOpenId(Integer openId) {
+		this.openId = openId;
+	}
+
+	public Boolean getIfreceived() {
+		return ifreceived;
+	}
+
+	public void setIfreceived(Boolean ifreceived) {
+		this.ifreceived = ifreceived;
+	}
+
+	public Integer getReceivedTime() {
+		return receivedTime;
+	}
+
+	public void setReceivedTime(Integer receivedTime) {
+		this.receivedTime = receivedTime;
 	}
 
 	public Integer getCreateTime() {
@@ -162,15 +150,16 @@ public class WechatCoupon implements Serializable {
 
 	@Override
 	public String toString() {
-		return "WechatCoupon{" +
-			", wechatCouponId=" + wechatCouponId +
+		return "OrderRedpacketCoupon{" +
 			", orderRedpacketCouponId=" + orderRedpacketCouponId +
-			", openId=" + openId +
+			", orderId=" + orderId +
+			", redpacketCouponId=" + redpacketCouponId +
 			", couponId=" + couponId +
-			", expiredTime=" + expiredTime +
-			", status=" + status +
-			", amount=" + amount +
 			", typeId=" + typeId +
+			", amount=" + amount +
+			", openId=" + openId +
+			", ifreceived=" + ifreceived +
+			", receivedTime=" + receivedTime +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +

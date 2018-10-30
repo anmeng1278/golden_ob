@@ -72,18 +72,22 @@ public class MysqlGenerator {
             "_delivery",
             "_delivery_stock",
             "_dict",
+            "_dict_copy",
             "_gift",
             "_gift_stock",
             "_order",
             "_order_product",
+            "_order_redpacket_coupon",
             "_product",
             "_product_img",
             "_product_spec",
+            "_redpacket",
+            "_redpacket_coupon",
             "_stock",
-            "_wechat",
-            "_wechat_coupon",
             "_stock_flow",
-            "_v_area"
+            "_v_area",
+            "_wechat",
+            "_wechat_coupon"
     };
     private static String[] prefix = new String[]{""};
     private static File file = new File(packageName);
