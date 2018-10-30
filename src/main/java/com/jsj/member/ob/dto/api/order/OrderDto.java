@@ -55,8 +55,6 @@ public class OrderDto {
      */
     private Integer activityId;
 
-    private String activityName;
-
     /**
      * 活动订单编号(团购时不为空)
      */
@@ -111,14 +109,6 @@ public class OrderDto {
 
     public void setCouponName(String couponName) {
         this.couponName = couponName;
-    }
-
-    public String getActivityName() {
-        return activityName;
-    }
-
-    public void setActivityName(String activityName) {
-        this.activityName = activityName;
     }
 
     public Integer getOrderId() {

@@ -50,7 +50,7 @@ var navs = [
             {
                 "title": "提货列表",
                 "icon": "fa-angle-right",
-                "href": "/admin/ddd"
+                "href": "/admin/delivery"
             }
         ]
     },

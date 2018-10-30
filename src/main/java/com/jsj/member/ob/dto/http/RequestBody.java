@@ -12,9 +12,9 @@ public class RequestBody {
 
     private String PlatformToken;
 
-    private String SourceWay ="20" ;
-    private String SourceApp ="600";
-    private String PayMethod ="22" ;
+    private String SourceWay;
+    private String SourceApp;
+    private String PayMethod ;
     private String OutTradeId ;
     private String PayAmount;
     private String OpenId ;
