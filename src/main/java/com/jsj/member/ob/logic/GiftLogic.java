@@ -7,8 +7,10 @@ import com.jsj.member.ob.dto.api.gift.*;
 import com.jsj.member.ob.entity.Gift;
 import com.jsj.member.ob.entity.GiftStock;
 import com.jsj.member.ob.entity.Stock;
+import com.jsj.member.ob.entity.StockFlow;
 import com.jsj.member.ob.enums.GiftShareType;
 import com.jsj.member.ob.enums.GiftStatus;
+import com.jsj.member.ob.enums.StockFlowType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.FatalException;
 import com.jsj.member.ob.exception.TipException;
@@ -136,6 +138,16 @@ public class GiftLogic {
             st.setUpdateTime(DateUtils.getCurrentUnixTime());
             giftLogic.stockService.updateById(st);
 
+
+            //库存日志
+            StockFlow stockFlow = new StockFlow();
+            stockFlow.setOpenId(st.getOpenId());
+            stockFlow.setCreateTime(DateUtils.getCurrentUnixTime());
+            stockFlow.setUpdateTime(DateUtils.getCurrentUnixTime());
+            stockFlow.setStockId(st.getStockId());
+            StockLogic.AddStockFlow(stockFlow, StockFlowType.GIVING);
+
+
         }
 
         resp.setGiftId(gift.getGiftId());
@@ -260,6 +272,15 @@ public class GiftLogic {
 
             giftLogic.stockService.updateById(stock);
 
+            //库存日志
+            StockFlow stockFlow = new StockFlow();
+            stockFlow.setOpenId(stock.getOpenId());
+            stockFlow.setCreateTime(DateUtils.getCurrentUnixTime());
+            stockFlow.setUpdateTime(DateUtils.getCurrentUnixTime());
+            stockFlow.setStockId(stock.getStockId());
+            StockLogic.AddStockFlow(stockFlow, StockFlowType.GIVED);
+
+
             //添加领取人的库存记录
             Stock getStock = new Stock();
 
@@ -328,7 +349,7 @@ public class GiftLogic {
 
         CancelGiftResp resp = new CancelGiftResp();
 
-        if (requ.getGiftId() <= 0) {
+        if (StringUtils.isBlank(requ.getGiftUniqueCode())) {
             throw new TipException("赠送编号不能为空");
         }
         if (StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
@@ -338,7 +359,9 @@ public class GiftLogic {
         //当前操作人
         String openId = requ.getBaseRequ().getOpenId();
 
-        Gift gift = giftLogic.giftService.selectById(requ.getGiftId());
+        Gift gift = GiftLogic.selectByUniqueCode(requ.getGiftUniqueCode());
+        int giftId = gift.getGiftId();
+
         if (gift == null) {
             throw new TipException("没有找到赠送信息");
         }
@@ -353,7 +376,7 @@ public class GiftLogic {
             throw new TipException("没有找到赠送信息");
         }
 
-        List<GiftStock> giftStocks = GiftLogic.GetUnReceivedGiftstocks(requ.getGiftId());
+        List<GiftStock> giftStocks = GiftLogic.GetUnReceivedGiftstocks(giftId);
         if (giftStocks.isEmpty()) {
             throw new TipException("礼物被领完啦");
         }
@@ -364,6 +387,15 @@ public class GiftLogic {
             stock.setUpdateTime(DateUtils.getCurrentUnixTime());
 
             giftLogic.stockService.updateById(stock);
+
+            //库存日志
+            StockFlow stockFlow = new StockFlow();
+            stockFlow.setOpenId(stock.getOpenId());
+            stockFlow.setCreateTime(DateUtils.getCurrentUnixTime());
+            stockFlow.setUpdateTime(DateUtils.getCurrentUnixTime());
+            stockFlow.setStockId(stock.getStockId());
+            StockLogic.AddStockFlow(stockFlow, StockFlowType.CANCEL);
+
         });
 
         gift.setUpdateTime(DateUtils.getCurrentUnixTime());

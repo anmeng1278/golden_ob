@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : WechatCoupon 用户领取优惠券表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-29
+ *   @since 2018-10-30
  */
 @TableName("_wechat_coupon")
 public class WechatCoupon implements Serializable {
@@ -24,6 +24,11 @@ public class WechatCoupon implements Serializable {
      */
 	@TableId(value="wechat_coupon_id", type= IdType.AUTO)
 	private Integer wechatCouponId;
+    /**
+     * 订单红包表主键
+     */
+	@TableField("order_redpacket_coupon_id")
+	private Integer orderRedpacketCouponId;
     /**
      * 微信openid
      */
@@ -75,6 +80,14 @@ public class WechatCoupon implements Serializable {
 
 	public void setWechatCouponId(Integer wechatCouponId) {
 		this.wechatCouponId = wechatCouponId;
+	}
+
+	public Integer getOrderRedpacketCouponId() {
+		return orderRedpacketCouponId;
+	}
+
+	public void setOrderRedpacketCouponId(Integer orderRedpacketCouponId) {
+		this.orderRedpacketCouponId = orderRedpacketCouponId;
 	}
 
 	public String getOpenId() {
@@ -154,6 +167,7 @@ public class WechatCoupon implements Serializable {
 	public String toString() {
 		return "WechatCoupon{" +
 			", wechatCouponId=" + wechatCouponId +
+			", orderRedpacketCouponId=" + orderRedpacketCouponId +
 			", openId=" + openId +
 			", couponId=" + couponId +
 			", expiredTime=" + expiredTime +
