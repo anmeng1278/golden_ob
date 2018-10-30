@@ -52,7 +52,23 @@ public class EnumLogic {
         return OrderStatus.valueOf(value);
     }
 
+    /**
+     * 配送状态
+     * @param value
+     * @return
+     */
+    public static DeliveryStatus GetDeliveryStatus(Integer value) {
+        return DeliveryStatus.valueOf(value);
+    }
 
+    /**
+     * 配送方式
+     * @param value
+     * @return
+     */
+    public static DeliveryType GetDeliveryType(Integer value) {
+        return DeliveryType.valueOf(value);
+    }
 
 
 }
