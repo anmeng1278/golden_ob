@@ -73,3 +73,24 @@ webconfig:
   imgServerURL: http://img.jsjinfo.cn/upload
   # 是否上传到图片服务器 (true为上传到图片服务器 false为上传到本地服务器)
   imgServerSwitch: false
+  #获取 access_token
+  accessTokenUrl: http://s5.jsjinfo.cn/awkmanage/v3/ktapi/GetAccessToken
+  #获取 jsapi_ticket
+  jsApiTicketUrl: http://s5.jsjinfo.cn/awkmanage/v3/ktapi/GetJsApiTicket
+  #通过code获取网页授权access_token
+  weChatAccessTokenUrl: http://s5.jsjinfo.cn/awkmanage/v3/ktapi/GetWeChatAccessToken
+  #微信公众号支付
+  payTradeUrl: http://zs5.jsjinfo.cn/v5/ParTrade.ashx
+
+
+api:
+  TimeStamp: 1111
+  SourceFrom: JSJ
+  PlatformAppId: wssccaf9-2341-1234-87c1-6ababc10aab3
+  PlatformToken: wsscr6zfppd8v46b5678f8fxh2xdhv0d22xlx08h8btn6ttxxx4aab3
+  SourceWay: 20
+  SourceApp: 600
+  PayMethod: 20
+  token: #wugf543sxcv5*$#
+  AccessToken: 8_3vsXBiKJmPaceCK4vf2byiMmS86yDj__jYlLCsyNtluQ0RaFND-pITIu3gRtSBBnXlcUuvUT3A0RRRjjLO5jIvHZm1UdZ4NPbPO7uN9KDFaC4C3bQNXuKumOtpWmdCgc21-drAjqXFFHlqo6YZNdACASTH
+  Code: 021AxV5w1vUDw90vTY5w991I2S5w1AxV5x
