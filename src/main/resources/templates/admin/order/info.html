@@ -13,20 +13,21 @@
     <form class="layui-form" method="post" action="">
 
         <div class="layui-form-item">
-            <div class="layui-inline" style=" width: 40%;display: inline;float: left" >
+            <div class="layui-inline" style=" width: 40%;display: inline;float: left">
                 <div class="layui-form-item">
                     <label class="layui-form-label">订单编号：</label>
-                    <div class="layui-input-inline"  >
+                    <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="order_id"
                                lay-verify="req"
                                title="订单编号"
-                               th:value="${info.orderId}" style="border: 0px;" readonly="readonly " background-color="#F2F2F2;"/>
+                               th:value="${info.orderId}" style="border: 0px;" readonly="readonly "
+                               background-color="#F2F2F2;"/>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">订单状态：</label>
-                    <div class="layui-input-inline"  >
+                    <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="status"
                                lay-verify="req"
                                title="订单状态"
@@ -37,7 +38,7 @@
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">订单类型：</label>
-                    <div class="layui-input-inline"  >
+                    <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="typeId"
                                lay-verify="req"
                                title="订单类型"
@@ -83,7 +84,7 @@
             <div class="layui-inline" style=" width: 40%;display: inline;float: right">
                 <div class="layui-form-item">
                     <label class="layui-form-label">买家昵称：</label>
-                    <div class="layui-input-inline"  >
+                    <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="nickname"
                                lay-verify="req"
                                title="买家昵称"
@@ -92,8 +93,8 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label"  style="width: auto">微信支付单号：</label>
-                    <div class="layui-input-inline"  >
+                    <label class="layui-form-label" style="width: auto">微信支付单号：</label>
+                    <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="transactionId"
                                lay-verify="req"
                                title="微信的支付订单号"
@@ -102,17 +103,18 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="width: auto">所参与活动：</label>
-                    <div class="layui-input-inline"  >
+                    <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="activityName"
                                lay-verify="req"
                                title="所参与活动"
-                               th:value="${enumLogic.GetActivityType(info.typeId).message}" style="border: 0px;" readonly="readonly "/>
+                               th:value="${enumLogic.GetActivityType(info.typeId).message}" style="border: 0px;"
+                               readonly="readonly "/>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="width: auto">活动订单号：</label>
-                    <div class="layui-input-inline" >
+                    <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="activityOrderId"
                                lay-verify="req"
                                title="活动订单号"
@@ -123,7 +125,7 @@
 
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="width: auto">领取的优惠券：</label>
-                    <div class="layui-input-inline"  >
+                    <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="couponName"
                                lay-verify="req"
                                title="领取的优惠券"
@@ -134,7 +136,7 @@
 
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="width: auto">使用优惠券金额：</label>
-                    <div class="layui-input-inline"  >
+                    <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="couponPrice"
                                lay-verify="req"
                                title="使用优惠券金额"
@@ -159,25 +161,16 @@
             </tr>
             </thead>
             <tbody id="content">
-            <th:block th:each="product : ${productDtos}">
+            <th:block th:each="orderProduct : ${orderProducts}">
                 <tr>
-                    <td th:text="${product.productName}"></td>
-                    <td th:each="spec : ${product.productSpecDtos}"
-                        th:if="${product.productId == spec.productId}"
-                        th:text="${spec.specName}"></td>
-                    <!-- <td th:text="${product.productSpecDtos.stream().forEach(p -> p.getSpecName();}"></td>-->
-                    <td>
-                        <th:block th:text="${dictLogic.GetDict(product.typeId).dictName}"></th:block>
-                    </td>
-                    <td>
-                        <th:block th:text="${dictLogic.GetDict(product.propertyTypeId).dictName}"></th:block>
-                    </td>
-                    <th:block th:with="pro=${productLogic.GetProduct(product.productId)}">
+                    <th:block th:with="pro=${productLogic.GetProduct(orderProduct.productId)}">
+                        <td th:text="${pro.productName}"></td>
+                        <td th:text="${productLogic.GetProductSpec(orderProduct.productSpecId).specName}"></td>
+                        <td th:text="${dictLogic.GetDict(pro.typeId).dictName}"></td>
+                        <td th:text="${dictLogic.GetDict(pro.propertyTypeId).dictName}"></td>
                         <td th:text="${pro.salePrice}"></td>
                     </th:block>
-                    <th:block th:each="orderProduct: ${orderProducts}" th:if="${product.productId == orderProduct.productId}">
-                        <td th:text="${orderProduct.number}"></td>
-                    </th:block>
+                    <td th:text="${orderProduct.number}"></td>
                 </tr>
             </th:block>
             </tbody>
@@ -186,7 +179,7 @@
         <div class="layui-form-item" style="display: block;float: right;width: 25%">
             <div class="layui-form-item">
                 <label class="layui-form-label">订单金额：</label>
-                <div class="layui-input-inline"  >
+                <div class="layui-input-inline">
                     <input type="text" class="layui-input" name="amount"
                            lay-verify="req"
                            title="订单金额"
@@ -195,13 +188,13 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label"  style="width: auto">实际支付金额：</label>
-                <div class="layui-input-inline"  >
-                    <i class="layui-icon">&#xe65e;</i>
+                <label class="layui-form-label" style="width: auto">实际支付金额：<i class="layui-icon">&#xe65e;</i></label>
+                <div class="layui-input-inline">
                     <input type="text" class="layui-input" name="payAmount"
                            lay-verify="req"
                            title="实际支付金额"
-                           th:value="${info.payAmount}" style="border: 0px;color: red;font-size: 18px" readonly="readonly "/>
+                           th:value="${info.payAmount}" style="border: 0px;color: red;font-size: 18px"
+                           readonly="readonly "/>
                 </div>
             </div>
 
