@@ -11,6 +11,50 @@ public class Webconfig {
 
     private String imgServerURL;
 
+    //获取 access_token
+    private String accessTokenUrl;
+
+    //获取 jsapi_ticket
+    private String jsApiTicketUrl;
+
+    //通过code获取网页授权access_token
+    private String weChatAccessTokenUrl;
+
+    //微信公众号支付
+    private String payTradeUrl;
+
+    public String getAccessTokenUrl() {
+        return accessTokenUrl;
+    }
+
+    public void setAccessTokenUrl(String accessTokenUrl) {
+        this.accessTokenUrl = accessTokenUrl;
+    }
+
+    public String getJsApiTicketUrl() {
+        return jsApiTicketUrl;
+    }
+
+    public void setJsApiTicketUrl(String jsApiTicketUrl) {
+        this.jsApiTicketUrl = jsApiTicketUrl;
+    }
+
+    public String getWeChatAccessTokenUrl() {
+        return weChatAccessTokenUrl;
+    }
+
+    public void setWeChatAccessTokenUrl(String weChatAccessTokenUrl) {
+        this.weChatAccessTokenUrl = weChatAccessTokenUrl;
+    }
+
+    public String getPayTradeUrl() {
+        return payTradeUrl;
+    }
+
+    public void setPayTradeUrl(String payTradeUrl) {
+        this.payTradeUrl = payTradeUrl;
+    }
+
     public boolean isImgServerSwitch() {
         return imgServerSwitch;
     }
