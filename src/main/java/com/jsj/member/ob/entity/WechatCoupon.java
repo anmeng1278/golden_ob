@@ -24,6 +24,9 @@ public class WechatCoupon implements Serializable {
      */
 	@TableId(value="wechat_coupon_id", type= IdType.AUTO)
 	private Integer wechatCouponId;
+    /**
+     * 订单红包表主键
+     */
 	@TableField("order_redpacket_coupon_id")
 	private Integer orderRedpacketCouponId;
     /**

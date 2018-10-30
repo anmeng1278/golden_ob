@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- *   @description : StockFlow 实体类
+ *   @description : StockFlow 库存流转表实体类
  *   ---------------------------------
  * 	 @author cc
  *   @since 2018-10-30
@@ -21,14 +21,29 @@ public class StockFlow implements Serializable {
 
 	@TableId(value="stock_flow_id", type= IdType.AUTO)
 	private Integer stockFlowId;
+    /**
+     * 库存编号
+     */
 	@TableField("stock_id")
 	private Integer stockId;
+    /**
+     * 用户openid
+     */
 	@TableField("open_id")
 	private String openId;
+    /**
+     * 流转名称
+     */
 	@TableField("flow_name")
 	private String flowName;
+    /**
+     * 父库存编号
+     */
 	@TableField("parent_stock_id")
 	private Integer parentStockId;
+    /**
+     * 备注
+     */
 	private String remark;
     /**
      * 创建时间

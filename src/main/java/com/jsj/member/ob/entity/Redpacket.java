@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- *   @description : Redpacket 实体类
+ *   @description : Redpacket 礼包表实体类
  *   ---------------------------------
  * 	 @author cc
  *   @since 2018-10-30
@@ -20,9 +20,23 @@ public class Redpacket implements Serializable {
 
     @TableId("redpacket_id")
 	private Integer redpacketId;
+    /**
+     * 礼包名称
+     */
 	@TableField("redpacket_name")
 	private String redpacketName;
+    /**
+     * 礼包类型 1.券类红包
+     */
+	@TableField("type_id")
+	private Integer typeId;
+    /**
+     * 是否审核
+     */
 	private Boolean ifpass;
+    /**
+     * 排序
+     */
 	private Integer sort;
     /**
      * 创建时间
@@ -55,6 +69,14 @@ public class Redpacket implements Serializable {
 
 	public void setRedpacketName(String redpacketName) {
 		this.redpacketName = redpacketName;
+	}
+
+	public Integer getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
 	}
 
 	public Boolean getIfpass() {
@@ -103,6 +125,7 @@ public class Redpacket implements Serializable {
 		return "Redpacket{" +
 			", redpacketId=" + redpacketId +
 			", redpacketName=" + redpacketName +
+			", typeId=" + typeId +
 			", ifpass=" + ifpass +
 			", sort=" + sort +
 			", createTime=" + createTime +

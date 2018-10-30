@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- *   @description : OrderRedpacketCoupon 实体类
+ *   @description : OrderRedpacketCoupon 订单礼包代金券表实体类
  *   ---------------------------------
  * 	 @author cc
  *   @since 2018-10-30
@@ -20,18 +20,42 @@ public class OrderRedpacketCoupon implements Serializable {
 
     @TableId("order_redpacket_coupon_id")
 	private Integer orderRedpacketCouponId;
+    /**
+     * 订单表主键
+     */
 	@TableField("order_id")
 	private Integer orderId;
+    /**
+     * 礼包代金券表主键
+     */
 	@TableField("redpacket_coupon_id")
 	private Integer redpacketCouponId;
+    /**
+     * 代金券表主键
+     */
 	@TableField("coupon_id")
 	private Integer couponId;
+    /**
+     * 类型 1直减券  2折扣券 (值为2时折扣使用amount字段)
+     */
 	@TableField("type_id")
 	private Integer typeId;
+    /**
+     * 代金券金额
+     */
 	private Double amount;
+    /**
+     * 领取人编号
+     */
 	@TableField("open_id")
 	private Integer openId;
+    /**
+     * 是否领取
+     */
 	private Boolean ifreceived;
+    /**
+     * 领取时间
+     */
 	@TableField("received_time")
 	private Integer receivedTime;
     /**

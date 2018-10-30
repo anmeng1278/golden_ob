@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- *   @description : RedpacketCoupon 实体类
+ *   @description : RedpacketCoupon 礼包代金券表实体类
  *   ---------------------------------
  * 	 @author cc
  *   @since 2018-10-30
@@ -21,10 +21,19 @@ public class RedpacketCoupon implements Serializable {
 
 	@TableId(value="redpacket_coupon_id", type= IdType.AUTO)
 	private Integer redpacketCouponId;
+    /**
+     * 代金券表主键
+     */
 	@TableField("coupon_id")
 	private Integer couponId;
+    /**
+     * 礼包表主键
+     */
 	@TableField("redpacket_id")
 	private Integer redpacketId;
+    /**
+     * 数量 ,最小1个
+     */
 	private Integer number;
     /**
      * 创建时间
