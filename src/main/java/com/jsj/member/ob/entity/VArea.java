@@ -10,7 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : VArea VIEW实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-29
+ *   @since 2018-10-30
  */
 @TableName("_v_area")
 public class VArea implements Serializable {

@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : WechatCoupon 用户领取优惠券表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-29
+ *   @since 2018-10-30
  */
 @TableName("_wechat_coupon")
 public class WechatCoupon implements Serializable {

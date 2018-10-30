@@ -82,7 +82,7 @@ public class MysqlGenerator {
             "_stock",
             "_wechat",
             "_wechat_coupon",
-
+            "_stock_flow",
             "_v_area"
     };
     private static String[] prefix = new String[]{""};

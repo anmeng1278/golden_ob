@@ -1,9 +1,11 @@
 package com.jsj.member.ob.logic;
 
+import com.alibaba.fastjson.JSON;
 import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.dto.api.stock.GetMyStockRequ;
 import com.jsj.member.ob.dto.api.stock.StockDto;
+import com.jsj.member.ob.dto.api.stock.StockFlowDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,5 +43,13 @@ public class StockLogicTest {
         resp.setStockDtoList(stockDtoList);*/
 
         StockLogic.GetMyStock(requ);
+    }
+
+    @Test
+    public void getStockFlows() {
+
+        List<StockFlowDto> dtos = StockLogic.GetStockFlows(26, true);
+        System.out.println(JSON.toJSONString(dtos));
+
     }
 }

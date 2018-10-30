@@ -181,7 +181,7 @@ public class OrderLogicTest {
 
         NotifyModelOuterClass.NotifyModel notifyModel = NotifyModelOuterClass.NotifyModel.getDefaultInstance();
 
-        int orderId = 10023;
+        int orderId = 10024;
 
        OrderBase orderBase = OrderFactory.GetInstance(orderId);
         orderBase.PaySuccessed(orderId, notifyModel);

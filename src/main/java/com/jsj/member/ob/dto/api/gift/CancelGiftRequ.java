@@ -20,14 +20,15 @@ public class CancelGiftRequ {
 
     /*
     赠送编号
+    此编号用于url上使用，以防止网址被刷
      */
-    private int giftId;
+    private String giftUniqueCode;
 
-    public int getGiftId() {
-        return giftId;
+    public String getGiftUniqueCode() {
+        return giftUniqueCode;
     }
 
-    public void setGiftId(int giftId) {
-        this.giftId = giftId;
+    public void setGiftUniqueCode(String giftUniqueCode) {
+        this.giftUniqueCode = giftUniqueCode;
     }
 }

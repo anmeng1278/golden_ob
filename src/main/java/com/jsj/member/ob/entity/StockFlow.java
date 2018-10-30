@@ -9,26 +9,27 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- *   @description : Cart 购物车实体类
+ *   @description : StockFlow 实体类
  *   ---------------------------------
  * 	 @author cc
  *   @since 2018-10-30
  */
-@TableName("_cart")
-public class Cart implements Serializable {
+@TableName("_stock_flow")
+public class StockFlow implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
-	@TableId(value="cart_id", type= IdType.AUTO)
-	private Integer cartId;
-    /**
-     * 微信openid
-     */
+	@TableId(value="stock_flow_id", type= IdType.AUTO)
+	private Integer stockFlowId;
+	@TableField("stock_id")
+	private Integer stockId;
 	@TableField("open_id")
 	private String openId;
+	@TableField("flow_name")
+	private String flowName;
+	@TableField("parent_stock_id")
+	private Integer parentStockId;
+	private String remark;
     /**
      * 创建时间
      */
@@ -46,12 +47,20 @@ public class Cart implements Serializable {
 	private Integer deleteTime;
 
 
-	public Integer getCartId() {
-		return cartId;
+	public Integer getStockFlowId() {
+		return stockFlowId;
 	}
 
-	public void setCartId(Integer cartId) {
-		this.cartId = cartId;
+	public void setStockFlowId(Integer stockFlowId) {
+		this.stockFlowId = stockFlowId;
+	}
+
+	public Integer getStockId() {
+		return stockId;
+	}
+
+	public void setStockId(Integer stockId) {
+		this.stockId = stockId;
 	}
 
 	public String getOpenId() {
@@ -60,6 +69,30 @@ public class Cart implements Serializable {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public String getFlowName() {
+		return flowName;
+	}
+
+	public void setFlowName(String flowName) {
+		this.flowName = flowName;
+	}
+
+	public Integer getParentStockId() {
+		return parentStockId;
+	}
+
+	public void setParentStockId(Integer parentStockId) {
+		this.parentStockId = parentStockId;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	public Integer getCreateTime() {
@@ -89,9 +122,13 @@ public class Cart implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Cart{" +
-			", cartId=" + cartId +
+		return "StockFlow{" +
+			", stockFlowId=" + stockFlowId +
+			", stockId=" + stockId +
 			", openId=" + openId +
+			", flowName=" + flowName +
+			", parentStockId=" + parentStockId +
+			", remark=" + remark +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +

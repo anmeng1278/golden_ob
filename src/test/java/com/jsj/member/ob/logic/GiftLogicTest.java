@@ -26,33 +26,33 @@ public class GiftLogicTest {
     public void createGift() {
 
         BaseRequ baseRequ = new BaseRequ();
-        baseRequ.setOpenId("44444");
+        baseRequ.setOpenId("777777");
 
         CreateGiftRequ requ = new CreateGiftRequ();
 
         requ.setBlessings("祝你平安");
         requ.setBaseRequ(baseRequ);
-        requ.setGiftShareType(GiftShareType.FRIEND);
+        requ.setGiftShareType(GiftShareType.GROUP);
+
+        List<GiftProductDto> dtos = new ArrayList<>();
 
         GiftProductDto dto1 = new GiftProductDto();
         dto1.setNumber(1);
         dto1.setProductId(1);
         dto1.setProductSpecId(1);
-
-        GiftProductDto dto2 = new GiftProductDto();
-        dto2.setNumber(2);
-        dto2.setProductId(1);
-        dto2.setProductSpecId(2);
-
-        GiftProductDto dto3 = new GiftProductDto();
-        dto3.setNumber(1);
-        dto3.setProductId(1);
-        dto3.setProductSpecId(3);
-
-        List<GiftProductDto> dtos = new ArrayList<>();
         dtos.add(dto1);
-        dtos.add(dto2);
-        dtos.add(dto3);
+
+        //GiftProductDto dto2 = new GiftProductDto();
+        //dto2.setNumber(2);
+        //dto2.setProductId(1);
+        //dto2.setProductSpecId(2);
+        //dtos.add(dto2);
+        //
+        //GiftProductDto dto3 = new GiftProductDto();
+        //dto3.setNumber(1);
+        //dto3.setProductId(1);
+        //dto3.setProductSpecId(3);
+        //dtos.add(dto3);
 
         requ.setGiftProductDtos(dtos);
 
@@ -67,18 +67,39 @@ public class GiftLogicTest {
     @Rollback(false)
     public void getGift() {
 
+
         BaseRequ baseRequ = new BaseRequ();
-        baseRequ.setOpenId("777777");
+        baseRequ.setOpenId("888888");
+
 
         ReceivedGiftRequ requ = new ReceivedGiftRequ();
 
         requ.setBaseRequ(baseRequ);
-        requ.setGiftUniqueCode("c77d529393864220b3ba67a6bf9c8170");
+        requ.setGiftUniqueCode("25fc37e43a984016912dc3cac01fd89f");
 
         ReceivedGiftResp resp = GiftLogic.ReceivedGift(requ);
         System.out.println(JSON.toJSONString(resp));
 
     }
+
+
+    @Test
+    @Transactional(Constant.DBTRANSACTIONAL)
+    @Rollback(false)
+    public void cancelGift() {
+        BaseRequ baseRequ = new BaseRequ();
+        baseRequ.setOpenId("44444");
+
+        CancelGiftRequ requ = new CancelGiftRequ();
+        requ.setGiftUniqueCode("25fc37e43a984016912dc3cac01fd89f");
+        requ.setBaseRequ(baseRequ);
+
+        CancelGiftResp resp = GiftLogic.CancelGift(requ);
+        System.out.println(JSON.toJSONString(resp));
+
+    }
+
+
 
 
 }
