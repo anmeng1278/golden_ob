@@ -7,7 +7,7 @@ server:
 #spring
 spring:
   profiles:
-      active: dev
+    active: dev
   http:
     multipart:
       max-file-size: 10MB
@@ -82,15 +82,9 @@ webconfig:
   #微信公众号支付
   payTradeUrl: http://zs5.jsjinfo.cn/v5/ParTrade.ashx
 
-
-api:
-  TimeStamp: 1111
-  SourceFrom: JSJ
+  #授权码
   PlatformAppId: wssccaf9-2341-1234-87c1-6ababc10aab3
   PlatformToken: wsscr6zfppd8v46b5678f8fxh2xdhv0d22xlx08h8btn6ttxxx4aab3
-  SourceWay: 20
-  SourceApp: 600
-  PayMethod: 20
+  #密钥
   token: #wugf543sxcv5*$#
-  AccessToken: 8_3vsXBiKJmPaceCK4vf2byiMmS86yDj__jYlLCsyNtluQ0RaFND-pITIu3gRtSBBnXlcUuvUT3A0RRRjjLO5jIvHZm1UdZ4NPbPO7uN9KDFaC4C3bQNXuKumOtpWmdCgc21-drAjqXFFHlqo6YZNdACASTH
-  Code: 021AxV5w1vUDw90vTY5w991I2S5w1AxV5x
+

@@ -1,9 +1,14 @@
 package com.jsj.member.ob.dto.wechatApi;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class ResponseHead {
 
-     private String Code;
-     private String Message;
+    @JSONField(name = "Code")
+    private String Code;
+
+    @JSONField(name = "Message")
+    private String Message;
 
     public String getCode() {
         return Code;

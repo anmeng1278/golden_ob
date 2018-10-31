@@ -23,6 +23,38 @@ public class Webconfig {
     //微信公众号支付
     private String payTradeUrl;
 
+     //授权码
+    private String PlatformAppId;
+
+    private String PlatformToken;
+
+    //密钥
+    private String token;
+
+    public String getPlatformAppId() {
+        return PlatformAppId;
+    }
+
+    public void setPlatformAppId(String platformAppId) {
+        PlatformAppId = platformAppId;
+    }
+
+    public String getPlatformToken() {
+        return PlatformToken;
+    }
+
+    public void setPlatformToken(String platformToken) {
+        PlatformToken = platformToken;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public String getAccessTokenUrl() {
         return accessTokenUrl;
     }
