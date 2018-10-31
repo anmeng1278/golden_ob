@@ -32,14 +32,15 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">买家：</label>
-            <div class="layui-input-inline layui-form-label-col">
+            <label class="layui-form-label">用户：</label>
+            <div class="layui-input-block layui-form-label-col">
                 <th:block th:with="wechat=${wechatLogic.GetWechat(info.openId)}">
-                    <th:block th:text="${wechat.nickname}"></th:block>
-                    <th:block th:text="|[${info.openId}]|"></th:block>
+                    <th:block th:text="|【${wechat.nickname}】|"></th:block>
+                    <th:block th:text="${info.openId}"></th:block>
                 </th:block>
             </div>
-
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">创建时间：</label>
             <div class="layui-input-inline layui-form-label-col">
                 <th:block
