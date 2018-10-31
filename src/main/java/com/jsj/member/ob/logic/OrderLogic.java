@@ -12,6 +12,7 @@ import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
 import com.jsj.member.ob.service.OrderProductService;
 import com.jsj.member.ob.service.OrderService;
+import com.jsj.member.ob.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -111,4 +112,53 @@ public class OrderLogic {
         return orders.stream().map(o -> o.getOrderId()).collect(Collectors.toList());
 
     }
+
+    /**
+     * 取消订单
+     *
+     * @param orderId
+     */
+    public static void CancelOrder(int orderId) {
+
+        Order order = orderLogic.orderService.selectById(orderId);
+        if (OrderStatus.valueOf(order.getStatus()) != OrderStatus.UNPAY) {
+            throw new TipException("当前订单不允许取消");
+        }
+
+        //修改状态
+        order.setStatus(OrderStatus.CANCEL.getValue());
+
+        //恢复库存
+        List<OrderProductDto> orderProductDtos = OrderLogic.GetOrderProducts(order.getOrderId());
+        ProductLogic.RestoreProductSpecStock(orderProductDtos);
+
+        //取消订单
+        orderLogic.orderService.updateById(order);
+
+    }
+
+    /**
+     * 删除订单
+     * 订单状态为未支付时，恢复库存
+     *
+     * @param orderId
+     */
+    public static void DeleteOrder(int orderId) {
+
+        Order order = orderLogic.orderService.selectById(orderId);
+        OrderStatus orderStatus = OrderStatus.valueOf(order.getStatus());
+
+        if (orderStatus == OrderStatus.UNPAY) {
+            //修改状态
+            order.setStatus(OrderStatus.CANCEL.getValue());
+            //恢复库存
+            List<OrderProductDto> orderProductDtos = OrderLogic.GetOrderProducts(order.getOrderId());
+            ProductLogic.RestoreProductSpecStock(orderProductDtos);
+        }
+        order.setDeleteTime(DateUtils.getCurrentUnixTime());
+        //取消订单
+        orderLogic.orderService.updateById(order);
+
+    }
+
 }

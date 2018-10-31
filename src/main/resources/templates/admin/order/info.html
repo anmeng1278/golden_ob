@@ -12,209 +12,147 @@
 
     <form class="layui-form" method="post" action="">
 
+
         <div class="layui-form-item">
-            <div class="layui-inline" style=" width: 40%;display: inline;float: left">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">订单编号：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="order_id"
-                               lay-verify="req"
-                               title="订单编号"
-                               th:value="${info.orderId}" style="border: 0px;" readonly="readonly "
-                               background-color="#F2F2F2;"/>
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">订单状态：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="status"
-                               lay-verify="req"
-                               title="订单状态"
-                               th:value="${enumLogic.GetOrderStatus(info.status).message}"
-                               style="border: 0px;" readonly="readonly "/>
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">订单类型：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="typeId"
-                               lay-verify="req"
-                               title="订单类型"
-                               th:value="${enumLogic.GetActivityType(info.typeId).message}"
-                               style="border: 0px;" readonly="readonly "/>
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">创建时间：</label>
-                    <div class="layui-input-inline" style="width: 25%;">
-                        <input type="text" class="layui-input" name="createTime"
-                               lay-verify="req"
-                               title="创建时间"
-                               th:value="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"
-                               style="border: 0px;" readonly="readonly "/>
-                    </div>
-                </div>
-
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">支付时间：</label>
-                    <div class="layui-input-inline" style="width: 25%;">
-                        <input type="text" class="layui-input" name="payTime"
-                               lay-verify="req"
-                               title="支付时间"
-                               th:value="${info.payTime}" style="border: 0px;" readonly="readonly "/>
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">删除时间：</label>
-                    <div class="layui-input-inline" style="width: 25%;">
-                        <input type="text" class="layui-input" name="deleteTime"
-                               lay-verify="req"
-                               title="删除时间"
-                               th:value="${dateUtils.formatDateByUnixTime(info.deleteTime, 'yyyy-MM-dd HH:mm:ss')}"
-                               style="border: 0px;" readonly="readonly "/>
-                    </div>
-                </div>
+            <label class="layui-form-label">订单编号：</label>
+            <div class="layui-input-inline layui-form-label-col"
+                 style="color: blue; font-size: large; font-weight: bold;">
+                <th:block th:text="${info.orderId}"></th:block>
             </div>
 
-            <div class="layui-inline" style=" width: 40%;display: inline;float: right">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">买家昵称：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="nickname"
-                               lay-verify="req"
-                               title="买家昵称"
-                               th:value="${info.nickname}" style="border: 0px;" readonly="readonly "/>
-                    </div>
-                </div>
+            <label class="layui-form-label">订单类型：</label>
+            <div class="layui-input-inline layui-form-label-col">
+                <th:block th:text="${enumLogic.GetActivityType(info.typeId).message}"></th:block>
+            </div>
 
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: auto">微信支付单号：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="transactionId"
-                               lay-verify="req"
-                               title="微信的支付订单号"
-                               th:value="${info.transactionId}" style="border: 0px;" readonly="readonly "/>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: auto">所参与活动：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="activityName"
-                               lay-verify="req"
-                               title="所参与活动"
-                               th:value="${enumLogic.GetActivityType(info.typeId).message}" style="border: 0px;"
-                               readonly="readonly "/>
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: auto">活动订单号：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="activityOrderId"
-                               lay-verify="req"
-                               title="活动订单号"
-                               th:value="${info.activityOrderId}" th:hidden="${info.typeId} != 10"
-                               style="border: 0px;" readonly="readonly "/>
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: auto">领取的优惠券：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="couponName"
-                               lay-verify="req"
-                               title="领取的优惠券"
-                               th:value="${info.couponName}" style="border: 0px;" readonly="readonly "/>
-                    </div>
-                </div>
-
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: auto">使用优惠券金额：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="couponPrice"
-                               lay-verify="req"
-                               title="使用优惠券金额"
-                               th:value="${info.couponPrice}" style="border: 0px;" readonly="readonly "/>
-                    </div>
-                </div>
+            <label class="layui-form-label">订单状态：</label>
+            <div class="layui-input-inline layui-form-label-col">
+                <th:block th:utext="${enumLogic.GetOrderStatus(info.status).getFormat()}"></th:block>
             </div>
         </div>
-        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">买家：</label>
+            <div class="layui-input-inline layui-form-label-col">
+                <th:block th:with="wechat=${wechatLogic.GetWechat(info.openId)}">
+                    <th:block th:text="${wechat.nickname}"></th:block>
+                    <th:block th:text="|[${info.openId}]|"></th:block>
+                </th:block>
+            </div>
+
+            <label class="layui-form-label">创建时间：</label>
+            <div class="layui-input-inline layui-form-label-col">
+                <th:block
+                        th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+            </div>
+
+            <th:block th:if="${info.deleteTime != null}">
+                <label class="layui-form-label" style="color: red; font-weight: bold;">删除时间：</label>
+                <div class="layui-input-inline layui-form-label-col" style="color: red;font-weight: bold;">
+                    <th:block
+                            th:text="${dateUtils.formatDateByUnixTime(info.deleteTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+                </div>
+            </th:block>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注：</label>
+            <div class="layui-input-inline layui-form-label-col">
+                <th:block th:text="${info.remarks}"></th:block>
+            </div>
+        </div>
+
+
+        <th:block th:if="${info.activityId != null }">
+            <div class="layui-form-item">
+                <label class="layui-form-label">活动编号：</label>
+                <div class="layui-input-inline layui-form-label-col">
+                    <th:block th:text="${info.activityId}"></th:block>
+                </div>
+
+                <label class="layui-form-label">活动名称：</label>
+                <div class="layui-input-inline layui-form-label-col">
+                    <th:block th:text="${activityLogic.GetActivity(info.activityId).activityName}"></th:block>
+                </div>
+            </div>
+        </th:block>
+
+        <th:block>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                <legend th:text="支付信息"></legend>
+            </fieldset>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">支付时间：</label>
+                <div class="layui-input-inline layui-form-label-col">
+                    <th:block
+                            th:text="${dateUtils.formatDateByUnixTime(info.payTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+                </div>
+                <label class="layui-form-label">流水号：</label>
+                <div class="layui-input-inline layui-form-label-col">
+                    <th:block th:text="${info.transactionId}"></th:block>
+                </div>
+            </div>
+        </th:block>
+
+        <fieldset class="layui-elem-field layui-field-title">
             <legend th:text="订单商品"></legend>
         </fieldset>
 
-        <table class="layui-table admin-table">
-            <thead>
+        <table style="width:100%;">
             <tr>
-                <th style="width: 10%;">商品名称</th>
-                <th style="width: 10%;">型号规格</th>
-                <th style="width: 10%;">类型</th>
-                <th style="width: 10%;">属性</th>
-                <th style="width: 10%;">售价</th>
-                <th style="width: 10%;">购买数量</th>
+                <td style="width: 40%" valign="top">
+                    <table class="layui-table" lay-size="sm" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>商品名称</th>
+                            <th style="width: 30%;">规格 x 数量</th>
+                        </tr>
+                        </thead>
+                        <tbody id="content">
+                        <th:block th:each="orderProduct : ${orderProducts}">
+                            <tr>
+                                <td>
+                                    <th:block
+                                            th:each="img:${productLogic.GetProductImgDtos(orderProduct.productId)}">
+                                        <img th:src="${img.imgPath}" style="width:20px;height:20px;"/>
+                                    </th:block>
+                                </td>
+                                <th:block th:with="pro=${productLogic.GetProduct(orderProduct.productId)}">
+                                    <td th:text="${pro.productName}"></td>
+                                    <td th:text="|${productLogic.GetProductSpec(orderProduct.productSpecId).specName} x ${orderProduct.number}|"></td>
+                                </th:block>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </td>
+                <td valign="bottom" style="text-align: right;">
+                    <div class="layui-form-item" style="margin: 0px;float: right;">
+                        <label class="layui-form-label">订单金额：</label>
+                        <div class="layui-input-inline layui-form-label-col">
+                            <th:block th:text="${info.amount}"></th:block>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin: 0px;float: right;">
+                        <label class="layui-form-label">优惠券：</label>
+                        <div class="layui-input-inline layui-form-label-col">
+                            <th:block th:text="${info.couponPrice*-1}"></th:block>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin: 0px;float: right;">
+                        <label class="layui-form-label">实付金额：</label>
+                        <div class="layui-input-inline layui-form-label-col"
+                             style="font-size:30px;color: red; font-weight: bold;">
+                            <th:block th:text="${info.payAmount}"></th:block>
+                        </div>
+                    </div>
+                </td>
             </tr>
-            </thead>
-            <tbody id="content">
-            <th:block th:each="orderProduct : ${orderProducts}">
-                <tr>
-                    <th:block th:with="pro=${productLogic.GetProduct(orderProduct.productId)}">
-                        <td th:text="${pro.productName}"></td>
-                        <td th:text="${productLogic.GetProductSpec(orderProduct.productSpecId).specName}"></td>
-                        <td th:text="${dictLogic.GetDict(pro.typeId).dictName}"></td>
-                        <td th:text="${dictLogic.GetDict(pro.propertyTypeId).dictName}"></td>
-                        <td th:text="${pro.salePrice}"></td>
-                    </th:block>
-                    <td th:text="${orderProduct.number}"></td>
-                </tr>
-            </th:block>
-            </tbody>
         </table>
 
-        <div class="layui-form-item" style="display: block;float: right;width: 25%">
-            <div class="layui-form-item">
-                <label class="layui-form-label">订单金额：</label>
-                <div class="layui-input-inline">
-                    <input type="text" class="layui-input" name="amount"
-                           lay-verify="req"
-                           title="订单金额"
-                           th:value="${info.amount}" style="border: 0px;" readonly="readonly "/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: auto">实际支付金额：<i class="layui-icon">&#xe65e;</i></label>
-                <div class="layui-input-inline">
-                    <input type="text" class="layui-input" name="payAmount"
-                           lay-verify="req"
-                           title="实际支付金额"
-                           th:value="${info.payAmount}" style="border: 0px;color: red;font-size: 18px"
-                           readonly="readonly "/>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button type="button" class="layui-btn" lay-submit="">
-                    <i class="layui-icon">&#xea97;</i>
-                    完结订单
-                </button>
-
-                <button type="button" th:attr="data-method='cancel',data-id=${info.orderId}"
-                        class="layui-btn layui-btn-small layui-btn-normal layui-btn-danger">
-                    <i class="layui-icon">&#xe640;</i>
-                    取消订单
-                </button>
-
-            </div>
-        </div>
     </form>
 </div>
 

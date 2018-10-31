@@ -11,7 +11,7 @@
                     添加
                 </a>
             </div>
-            
+
 
             <form class="layui-form" method="get" style="float:right;">
 
@@ -19,7 +19,7 @@
 
                     <label class="layui-form-label">关键字</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="keys" placeholder="关键字……" th:value="${keys}" autocomplete="off"
+                        <input type="text" name="keys" placeholder="昵称、OpenId……" th:value="${keys}" autocomplete="off"
                                class="layui-input"/>
                     </div>
                     <div class="layui-input-inline">
@@ -34,40 +34,48 @@
         <div class="layui-field-box layui-form">
             <table class="layui-table admin-table">
                 <thead>
-                    <tr>
-                        <th>用户openId</th>
-                        <th>昵称</th>
-                        <th>性别</th>
-                        <th>关注时间</th>
-                        <th>来源</th>
-                        <th>取消关注时间</th>
-                        <th>创建时间</th>
-                        <th>更新时间</th>
-                        <th>操作</th>
-                    </tr>
+                <tr>
+                    <th style="width: 5%;"></th>
+                    <th>OpenId</th>
+                    <th style="width: 10%;">昵称</th>
+                    <th style="width: 5%;">性别</th>
+                    <th style="width: 15%;">关注时间</th>
+                    <th style="width: 15%;">创建时间</th>
+                    <th style="width: 20%;">操作</th>
+                </tr>
                 </thead>
                 <tbody id="content">
-                    <th:block th:each="info : ${infos.list}">
-                        <tr>
-                            <td th:text="${info.openId}"></td>
-                            <td th:text="${info.nickname}"></td>
-                            <td th:text="${enumLogic.GetSexType(info.sex).message}"></td>
-                            <td th:text="${info.subscribeTime}"></td>
-                            <td th:text="${enumLogic.GetWechatType(info.source).message}"></td>
-                            <td th:text="${info.unsubscribeTime}"></td>
-                            <td th:text="${info.createTime}"></td>
-                            <td th:text="${info.updateTime}"></td>
-                            <td>
+                <th:block th:each="info : ${infos.list}">
+                    <tr>
+                        <td>
+                            <img th:src="${info.headimgurl}" style="width:50px;height: 50px;"/>
+                        </td>
+                        <td>
+                            <th:block th:text="${info.openId}"></th:block>
+                        </td>
+                        <td th:text="${info.nickname}"></td>
+                        <td th:text="${enumLogic.GetSexType(info.sex).message}"></td>
+                        <td th:text="${dateUtils.formatDateByUnixTime(info.subscribeTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td>
 
-                                <button type="button"  th:attr="data-method='open',data-id=${info.openId}"
-                                    class="layui-btn layui-btn-small layui-btn-normal">
-                                    <i class="layui-icon">&#xe641;</i>
-                                    赠送优惠券
-                                </button> 
+                            <button type="button" th:title="|${info.nickname}订单列表|"
+                                    th:attr="data-tab-href=@{'/admin/order?keys='+${info.openId}}"
+                                    class="layui-btn layui-btn-xs layui-btn-normal">订单
+                            </button>
 
-                            </td>
-                        </tr>
-                    </th:block>
+                            <button type="button" class="layui-btn layui-btn-xs layui-btn-normal">
+                                库存
+                            </button>
+
+                            <button type="button" class="layui-btn layui-btn-xs layui-btn-normal">
+                                <i class="layui-icon">&#xe658;</i>
+                                赠券
+                            </button>
+
+                        </td>
+                    </tr>
+                </th:block>
                 </tbody>
             </table>
         </div>

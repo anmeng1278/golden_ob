@@ -1,18 +1,16 @@
 package com.jsj.member.ob.entity;
 
-import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Wechat 微信用户实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-30
+ *   @since 2018-10-31
  */
 @TableName("_wechat")
 public class Wechat implements Serializable {
@@ -55,9 +53,7 @@ public class Wechat implements Serializable {
      * 关注时间
      */
 	@TableField("subscribe_time")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date subscribeTime;
+	private Integer subscribeTime;
     /**
      * 用户所在城市
      */
@@ -168,11 +164,11 @@ public class Wechat implements Serializable {
 		this.headimgurl = headimgurl;
 	}
 
-	public Date getSubscribeTime() {
+	public Integer getSubscribeTime() {
 		return subscribeTime;
 	}
 
-	public void setSubscribeTime(Date subscribeTime) {
+	public void setSubscribeTime(Integer subscribeTime) {
 		this.subscribeTime = subscribeTime;
 	}
 

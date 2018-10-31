@@ -7,14 +7,6 @@
     <div class="admin-main layui-anim">
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
-            <div class="layui-btn-group" style="float: left;">
-                <a title="添加" class="layui-btn" th:attr="data-tab-href=@{'/admin/order/0'}">
-                    <i class="layui-icon">&#xe654;</i>
-                    添加
-                </a>
-            </div>
-
-
             <form class="layui-form" method="get" style="float:right;">
                 <div class="layui-form-item" style="margin:0;">
 
@@ -40,6 +32,12 @@
                         </select>
                     </div>
 
+                    <label class="layui-form-label">关键字</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="keys" style="width:280px;" placeholder="订单号、OpenId……" th:value="${keys}" autocomplete="off"
+                               class="layui-input"/>
+                    </div>
+
                     <div class="layui-input-inline">
                         <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
                             <i class="layui-icon">&#xe615;</i> 查询
@@ -53,43 +51,55 @@
             <table class="layui-table admin-table">
                 <thead>
                 <tr>
-                    <th style="width: 10%;">订单编号</th>
-                    <th style="width: 5%;">订单金额</th>
-                    <th style="width: 5%;">支付金额</th>
-                    <th style="width: 5%;">订单状态</th>
-                    <th style="width: 10%;">微信的支付订单号</th>
-                    <th style="width: 5%;">优惠券使用金额</th>
-                    <th style="width: 5%;">订单类型</th>
-                    <th style="width: 15%;">支付时间</th>
-                    <th style="width: 15%;">删除时间</th>
-                    <th style="width: 10%;">操作</th>
+                    <th style="width: 5%;">编号</th>
+                    <th style="width: 5%;">类型</th>
+                    <th>用户</th>
+                    <th style="width: 10%;">商品数量</th>
+                    <th style="width: 5%;">金额</th>
+                    <th style="width: 10%;">状态</th>
+                    <th style="width: 15%;">创建时间</th>
+                    <th style="width: 20%;">操作</th>
                 </tr>
                 </thead>
                 <tbody id="content">
                 <th:block th:each="info : ${infos.list}">
                     <tr>
                         <td th:text="${info.orderId}"></td>
-                        <td th:text="${info.amount}"></td>
+                        <td th:text="${enumLogic.GetActivityType(info.typeId).message}"></td>
+                        <td>
+                            <th:block th:with="wechat=${wechatLogic.GetWechat(info.openId)}">
+                                <th:block th:text="${wechat.nickname}"></th:block>
+                            </th:block>
+                        </td>
+                        <td th:text="${#lists.size(orderLogic.GetOrderProducts(info.orderId))}"></td>
                         <td th:text="${info.payAmount}"></td>
                         <td th:text="${enumLogic.GetOrderStatus(info.status).message}"></td>
-                        <td th:text="${transactionId}"></td>
-                        <td th:text="${couponPrice}"></td>
-                        <td th:text="${enumLogic.GetActivityType(info.typeId).message}"></td>
-                        <td th:text="${payTime}"></td>
-                        <td th:text="${dateUtils.formatDateByUnixTime(info.deleteTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td>
-                            <a th:title="|${info.orderId} 订单详情|"
+                            <a th:title="|${info.orderId} 详情|"
                                th:attr="data-tab-href=@{'/admin/order/'+${info.orderId}}"
                                class="layui-btn layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe642;</i>
-                                订单详情
+                                详情
                             </a>
 
-                             <button type="button" th:attr="data-method='delete',data-id=${info.orderId}"
+                            <button type="button" th:if="${info.status==0}" th:attr="data-method='cancel',data-id=${info.orderId}"
+                                    class="layui-btn layui-btn-xs layui-btn-warm">
+                                <i class="layui-icon">&#x1007;</i>
+                                取消
+                            </button>
+
+                            <button th:if="${info.deleteTime == null }" type="button" th:attr="data-method='delete',data-id=${info.orderId}"
                                     class="layui-btn layui-btn-xs layui-btn-danger">
                                 <i class="layui-icon">&#xe640;</i>
                                 删除
                             </button>
+                            <button disabled="true" th:if="${info.deleteTime != null }" type="button" th:attr="data-id=${info.orderId}"
+                                    class="layui-btn layui-btn-xs layui-btn-danger layui-btn-disabled">
+                                <i class="layui-icon">&#xe640;</i>
+                                已删
+                            </button>
+
                         </td>
                     </tr>
                 </th:block>
@@ -113,11 +123,19 @@
                 var method = $(this).attr("data-method");
 
                 if (method == "delete") {
-                    layer.confirm('确定删除该信息吗?', {icon: 3}, function (index) {
+                    layer.confirm('确定删除订单吗?', {icon: 3}, function (index) {
                         layer.close(index);
                         modifyStatus(method, id);
                     });
                 }
+
+                if (method == "cancel") {
+                    layer.confirm('确定取消订单吗?', {icon: 3}, function (index) {
+                        layer.close(index);
+                        modifyStatus(method, id);
+                    });
+                }
+
             });
         });
 

@@ -18,6 +18,8 @@ public enum OrderStatus {
 
     private String message;
 
+    private String format;
+
     OrderStatus(Integer value, String message) {
         this.value = value;
         this.message = message;
@@ -29,6 +31,27 @@ public enum OrderStatus {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getFormat() {
+        String format = "%s";
+        switch (this) {
+            case UNPAY:
+                format = "<span class=\"layui-badge layui-bg-cyan\">%s</span>";
+                break;
+            case PAYSUCCESS:
+                format = "<span class=\"layui-badge layui-bg-green\">%s</span>";
+                break;
+            case PAYFAIL:
+                format = "<span class=\"layui-badge layui-bg-orange\">%s</span>";
+                break;
+            case CANCEL:
+                format = "<span class=\"layui-badge\">%s</span>";
+                break;
+        }
+
+        this.format = String.format(format, this.message);
+        return this.format;
     }
 
     public static OrderStatus valueOf(int value) {
@@ -43,6 +66,7 @@ public enum OrderStatus {
                 return CANCEL;
             default:
                 throw new FatalException("未知的枚举值");
+
         }
     }
 }

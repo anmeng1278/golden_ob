@@ -2,8 +2,6 @@ package com.jsj.member.ob.dto.api.wechat;
 
 import com.jsj.member.ob.enums.WechatType;
 
-import java.util.Date;
-
 public class WechatDto {
 
     /**
@@ -42,7 +40,7 @@ public class WechatDto {
     /**
      * 关注时间
      */
-    private Date subscribeTime;
+    private Integer subscribeTime;
     /**
      * 用户所在城市
      */
@@ -151,11 +149,11 @@ public class WechatDto {
         this.headimgurl = headimgurl;
     }
 
-    public Date getSubscribeTime() {
+    public Integer getSubscribeTime() {
         return subscribeTime;
     }
 
-    public void setSubscribeTime(Date subscribeTime) {
+    public void setSubscribeTime(Integer subscribeTime) {
         this.subscribeTime = subscribeTime;
     }
 

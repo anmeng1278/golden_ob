@@ -1,8 +1,6 @@
 package com.jsj.member.ob.interceptor;
 
-import com.jsj.member.ob.logic.DictLogic;
-import com.jsj.member.ob.logic.EnumLogic;
-import com.jsj.member.ob.logic.ProductLogic;
+import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +33,15 @@ public class BaseInterceptor implements HandlerInterceptor {
     @Autowired
     EnumLogic enumLogic;
 
+    @Autowired
+    OrderLogic orderLogic;
+
+    @Autowired
+    WechatLogic wechatLogic;
+
+    @Autowired
+    ActivityLogic activityLogic;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
 
@@ -48,6 +55,10 @@ public class BaseInterceptor implements HandlerInterceptor {
         httpServletRequest.setAttribute("productLogic", productLogic);
         httpServletRequest.setAttribute("dictLogic", dictLogic);
         httpServletRequest.setAttribute("enumLogic", enumLogic);
+
+        httpServletRequest.setAttribute("orderLogic", orderLogic);
+        httpServletRequest.setAttribute("wechatLogic", wechatLogic);
+        httpServletRequest.setAttribute("activityLogic", activityLogic);
 
     }
 

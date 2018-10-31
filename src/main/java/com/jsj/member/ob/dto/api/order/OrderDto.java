@@ -1,10 +1,6 @@
 package com.jsj.member.ob.dto.api.order;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.enums.IdType;
 import com.jsj.member.ob.dto.api.product.ProductDto;
-import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 
 import java.util.List;
 
@@ -17,8 +13,6 @@ public class OrderDto {
      * 公众号open_id
      */
     private String openId;
-
-    private String nickname;
 
     /**
      * 订单金额
@@ -93,14 +87,6 @@ public class OrderDto {
 
     public void setProductDtos(List<ProductDto> productDtos) {
         this.productDtos = productDtos;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public String getCouponName() {

@@ -2,10 +2,7 @@ package com.jsj.member.ob.controller.admin;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.entity.Wechat;
-import com.jsj.member.ob.enums.DictType;
-import com.jsj.member.ob.enums.WechatType;
 import com.jsj.member.ob.service.WechatService;
 import com.jsj.member.ob.utils.CCPage;
 import org.apache.commons.lang3.StringUtils;
@@ -16,9 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.Arrays;
-import java.util.List;
 
 @ApiIgnore
 @Controller
@@ -43,7 +37,7 @@ public class AdminWechatController {
 
         EntityWrapper<Wechat> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
-        wrapper.where(!StringUtils.isBlank(keys), "(nickname LIKE concat(concat('%',{0}),'%') )", keys);
+        wrapper.where(!StringUtils.isBlank(keys), "(nickname LIKE concat(concat('%',{0}),'%') or open_id like concat(concat('%',{0}),'%') )", keys);
         wrapper.orderBy("create_time desc");
 
         Page<Wechat> pageInfo = new Page<>(page, limit);
