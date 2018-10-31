@@ -88,7 +88,7 @@ public class ProductLogic {
         List<ProductSpecDto> productSpecDtos = ProductLogic.GetProductSpecDtos(productId);
         productDto.setProductSpecDtos(productSpecDtos);
 
-        if(!productSpecDtos.isEmpty()){
+        if (!productSpecDtos.isEmpty()) {
 
             //售价
             Optional<ProductSpecDto> minSalePrice = productSpecDtos.stream().min(Comparator.comparing(ProductSpecDto::getSalePrice));
@@ -119,6 +119,8 @@ public class ProductLogic {
     public static ProductSpecDto GetProductSpec(int productSpecId) {
 
         ProductSpec productSpec = productLogic.productSpecService.selectById(productSpecId);
+        Product product = productLogic.productService.selectById(productSpec.getProductId());
+
         ProductSpecDto productSpecDto = new ProductSpecDto();
 
         productSpecDto.setProductId(productSpec.getProductId());
@@ -129,6 +131,30 @@ public class ProductLogic {
 
         productSpecDto.setStockCount(productSpec.getStockCount());
         productSpecDto.setSort(productSpec.getSort());
+
+        //商品实体
+        ProductDto productDto = new ProductDto();
+
+        productDto.setGiftCopywriting(product.getGiftCopywriting());
+        productDto.setIfdistribution(product.getIfdistribution());
+        productDto.setIfpass(product.getIfpass());
+        productDto.setIfpickup(product.getIfpickup());
+        productDto.setIntroduce(product.getIntroduce());
+
+        productDto.setProductId(product.getProductId());
+        productDto.setProductName(product.getProductName());
+        productDto.setPropertyTypeId(product.getPropertyTypeId());
+        productDto.setRemarks(product.getRemarks());
+
+        productDto.setTypeId(product.getTypeId());
+        productDto.setUnit(product.getUnit());
+        productDto.setUseIntro(product.getUseIntro());
+
+        //商品图片
+        List<ProductImgDto> productImgDtos = ProductLogic.GetProductImgDtos(product.getProductId());
+        productDto.setProductImgDtos(productImgDtos);
+
+        productSpecDto.setProductDto(productDto);
 
         return productSpecDto;
 
@@ -208,7 +234,6 @@ public class ProductLogic {
     }
 
 
-
     /**
      * 削减商品规格库存
      *
@@ -237,7 +262,6 @@ public class ProductLogic {
 
         }
     }
-
 
 
     /**

@@ -5,14 +5,6 @@
     <div class="admin-main layui-anim">
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
-            <div class="layui-btn-group" style="float: left;">
-                <a title="添加" class="layui-btn" th:attr="data-tab-href=@{'/admin/wechat/0'}">
-                    <i class="layui-icon">&#xe654;</i>
-                    添加
-                </a>
-            </div>
-
-
             <form class="layui-form" method="get" style="float:right;">
 
                 <div class="layui-form-item" style="margin:0;">
@@ -64,7 +56,9 @@
                                     class="layui-btn layui-btn-xs layui-btn-normal">订单
                             </button>
 
-                            <button type="button" class="layui-btn layui-btn-xs layui-btn-normal">
+                            <button type="button" th:title="|${info.nickname}库存列表|"
+                                    th:attr="data-tab-href=@{'/admin/wechat/'+${info.openId}+'/stock'}"
+                                    class="layui-btn layui-btn-xs layui-btn-normal">
                                 库存
                             </button>
 

@@ -239,8 +239,8 @@
             //数据提交
             form.on("submit", function (data) {
 
-                if ($("tr #content").length == 0) {
-                    layer.alert("至少为此活动添加一个商品");
+                if ($("tr", $("#content")).length == 0) {
+                    layer.msg("至少为此活动添加一个商品", {icon: 2});
                     return false;
                 }
 
@@ -318,6 +318,10 @@
 
         });
 
+        function clickCurrentActivityType() {
+            $(":checkbox[name='typeId']:checked").next("div.layui-form-checkbox").trigger("click");
+        }
+
 
         /**
          * 获取所选规格编号
@@ -358,8 +362,8 @@
                                 return true;
                             }
                             html.push('<tr>');
-                            html.push('    <td>' + item.productName + '</td>');
-                            html.push('    <td>' + item.specName + '</td>');
+                            html.push('    <td></td>');
+                            html.push('    <td>' + item.productName + item.specName + '</td>');
                             html.push('    <td>' + item.salePrice + '</td>');
                             html.push('    <td>' + item.originalPrice + '</td>');
                             html.push('    <td>' + item.stockCount + '</td> ');
@@ -378,6 +382,7 @@
                         });
 
                         $(html.join('')).appendTo($("#content"));
+                        clickCurrentActivityType();
 
                     } else {
                         TX.MSG.msg(resp.baseResp.message, {icon: 2});

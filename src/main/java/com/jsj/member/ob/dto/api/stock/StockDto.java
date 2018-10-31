@@ -1,6 +1,9 @@
 package com.jsj.member.ob.dto.api.stock;
 
-import com.jsj.member.ob.dto.api.product.ProductDto;
+import com.jsj.member.ob.dto.api.gift.GiftDto;
+import com.jsj.member.ob.dto.api.product.ProductSpecDto;
+import com.jsj.member.ob.enums.StockStatus;
+import com.jsj.member.ob.enums.StockType;
 
 public class StockDto {
 
@@ -35,9 +38,30 @@ public class StockDto {
     private Integer number;
 
     /**
-     * 商品信息
+     * 规格
      */
-    private ProductDto productDto;
+    private ProductSpecDto productSpecDto;
+
+    /**
+     * 赠送详情
+     */
+    private GiftDto giftDto;
+
+
+    /**
+     * 库存状态
+     */
+    private StockStatus stockStatus;
+
+    /**
+     * 获取方式
+     */
+    private StockType stockType;
+
+    /**
+     * 创建时间
+     */
+    private Integer createTime;
 
     public Integer getStockId() {
         return stockId;
@@ -87,11 +111,44 @@ public class StockDto {
         this.number = number;
     }
 
-    public ProductDto getProductDto() {
-        return productDto;
+    public ProductSpecDto getProductSpecDto() {
+        return productSpecDto;
     }
 
-    public void setProductDto(ProductDto productDto) {
-        this.productDto = productDto;
+    public void setProductSpecDto(ProductSpecDto productSpecDto) {
+        this.productSpecDto = productSpecDto;
     }
+
+    public GiftDto getGiftDto() {
+        return giftDto;
+    }
+
+    public void setGiftDto(GiftDto giftDto) {
+        this.giftDto = giftDto;
+    }
+
+    public StockStatus getStockStatus() {
+        return stockStatus;
+    }
+
+    public void setStockStatus(StockStatus stockStatus) {
+        this.stockStatus = stockStatus;
+    }
+
+    public StockType getStockType() {
+        return stockType;
+    }
+
+    public void setStockType(StockType stockType) {
+        this.stockType = stockType;
+    }
+
+    public Integer getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
+    }
+
 }

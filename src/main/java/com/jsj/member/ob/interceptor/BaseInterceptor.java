@@ -42,6 +42,9 @@ public class BaseInterceptor implements HandlerInterceptor {
     @Autowired
     ActivityLogic activityLogic;
 
+    @Autowired
+    StockLogic stockLogic;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
 
@@ -59,6 +62,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         httpServletRequest.setAttribute("orderLogic", orderLogic);
         httpServletRequest.setAttribute("wechatLogic", wechatLogic);
         httpServletRequest.setAttribute("activityLogic", activityLogic);
+        httpServletRequest.setAttribute("stockLogic", stockLogic);
 
     }
 

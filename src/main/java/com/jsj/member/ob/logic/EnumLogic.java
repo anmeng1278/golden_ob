@@ -71,4 +71,41 @@ public class EnumLogic {
     }
 
 
+    /**
+     * 库存获取方式
+     * @param value
+     * @return
+     */
+    public static StockType GetStockType(Integer value) {
+        return StockType.valueOf(value);
+    }
+
+    /**
+     * 库存状态
+     * @param value
+     * @return
+     */
+    public static StockStatus GetStockStatus(Integer value) {
+        return StockStatus.valueOf(value);
+    }
+
+    /**
+     * 赠送状态
+     * @param value
+     * @return
+     */
+    public static GiftStatus GetGiftStatus(Integer value) {
+        return GiftStatus.valueOf(value);
+    }
+
+
+    /**
+     * 获取分享方式
+     * @param value
+     * @return
+     */
+    public static GiftShareType GetGiftShareType(Integer value) {
+        return GiftShareType.valueOf(value);
+    }
+
 }

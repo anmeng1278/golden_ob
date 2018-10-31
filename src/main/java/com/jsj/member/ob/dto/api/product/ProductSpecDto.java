@@ -40,6 +40,10 @@ public class ProductSpecDto {
      */
     private Integer sort;
 
+    /**
+     * 商品信息
+     */
+    private ProductDto productDto;
 
     /**
      * 正在参与的活动
@@ -108,5 +112,13 @@ public class ProductSpecDto {
 
     public void setActivityDtos(List<ActivityDto> activityDtos) {
         this.activityDtos = activityDtos;
+    }
+
+    public ProductDto getProductDto() {
+        return productDto;
+    }
+
+    public void setProductDto(ProductDto productDto) {
+        this.productDto = productDto;
     }
 }

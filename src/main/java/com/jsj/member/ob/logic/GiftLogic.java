@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.gift.*;
+import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Gift;
 import com.jsj.member.ob.entity.GiftStock;
 import com.jsj.member.ob.entity.Stock;
@@ -134,7 +135,7 @@ public class GiftLogic {
             giftLogic.giftStockService.insert(gs);
 
             //更新库存状态
-            st.setStatus(StockStatus.GIVED.getValue());
+            st.setStatus(StockStatus.GIVING.getValue());
             st.setUpdateTime(DateUtils.getCurrentUnixTime());
             giftLogic.stockService.updateById(st);
 
@@ -329,7 +330,7 @@ public class GiftLogic {
 
         Wrapper<GiftStock> wrapper = new EntityWrapper<GiftStock>().where("gift_id={0}", giftId);
         wrapper.where("not exists( select * from _stock where gift_stock_id = _gift_stock.gift_stock_id )");
-        wrapper.where("exists( select * from _stock where stock_id = _gift_stock.stock_id and status = {0} )", StockStatus.GIVED.getValue());
+        wrapper.where("exists( select * from _stock where stock_id = _gift_stock.stock_id and status = {0} )", StockStatus.GIVING.getValue());
 
         List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
 
@@ -405,6 +406,59 @@ public class GiftLogic {
 
         resp.setGiftId(gift.getGiftId());
         return resp;
+    }
+
+    /**
+     * 获取赠送库存列表
+     *
+     * @param giftId
+     * @return
+     */
+    public static List<StockDto> GetGiftStocks(int giftId) {
+
+        EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
+        wrapper.where("gift_id={0}", giftId);
+
+        List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
+        List<StockDto> stockDtos = new ArrayList<>();
+
+        for (GiftStock giftStock : giftStocks) {
+            StockDto stockDto = StockLogic.GetStock(giftStock.getStockId());
+            stockDtos.add(stockDto);
+        }
+
+        return stockDtos;
+
+    }
+
+
+    /**
+     * 获取赠送详情
+     *
+     * @param giftId
+     * @return
+     */
+    public static GiftDto GetGift(int giftId) {
+
+        GiftDto dto = new GiftDto();
+        Gift gift = giftLogic.giftService.selectById(giftId);
+
+        dto.setBlessings(gift.getBlessings());
+        dto.setCreateTime(gift.getCreateTime());
+        dto.setDeleteTime(gift.getDeleteTime());
+        dto.setExpiredTime(gift.getExpiredTime());
+        dto.setGiftId(gift.getGiftId());
+
+        dto.setGiftShareType(GiftShareType.valueOf(gift.getShareType()));
+        dto.setGiftStatus(GiftStatus.valueOf(gift.getStatus()));
+        dto.setGiftUniqueCode(gift.getGiftUniqueCode());
+        dto.setOpenId(gift.getOpenId());
+
+        dto.setRemarks(gift.getRemarks());
+        dto.setUpdateTime(gift.getUpdateTime());
+
+        return dto;
+
     }
 
 }

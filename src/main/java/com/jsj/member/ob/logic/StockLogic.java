@@ -2,11 +2,14 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.jsj.member.ob.dto.api.product.ProductDto;
+import com.jsj.member.ob.dto.api.gift.GiftDto;
+import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.GetMyStockRequ;
 import com.jsj.member.ob.dto.api.stock.GetMyStockResp;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.stock.StockFlowDto;
+import com.jsj.member.ob.dto.api.wechat.WechatDto;
+import com.jsj.member.ob.entity.GiftStock;
 import com.jsj.member.ob.entity.Stock;
 import com.jsj.member.ob.entity.StockFlow;
 import com.jsj.member.ob.enums.StockFlowType;
@@ -45,6 +48,7 @@ public class StockLogic {
     @Autowired
     StockService stockService;
 
+
     @Autowired
     GiftStockService giftStockService;
 
@@ -52,6 +56,7 @@ public class StockLogic {
     StockFlowService stockFlowService;
 
     //region (public) 获取我的库存 GetMyStock
+
     /**
      * 获取我的库存
      *
@@ -83,8 +88,8 @@ public class StockLogic {
             productWrapper.where("product_id={0} and open_id={1}", stock.getProductId(), stock.getOpenId());
             int number = stockLogic.stockService.selectCount(productWrapper);
 
-            ProductDto productDto = ProductLogic.GetProduct(stock.getProductId());
-            stockDto.setProductDto(productDto);
+            ProductSpecDto dto = ProductLogic.GetProductSpec(stock.getProductSpecId());
+            stockDto.setProductSpecDto(dto);
             stockDto.setOpenId(requ.getBaseRequ().getOpenId());
             stockDto.setOrderId(stock.getOrderId());
             stockDto.setProductId(stock.getProductId());
@@ -163,6 +168,7 @@ public class StockLogic {
 
     /**
      * 添加库存流转
+     *
      * @param stockFlow
      * @param stockFlowType
      */
@@ -177,8 +183,10 @@ public class StockLogic {
     //endregion
 
     //region (public) 获取父编号 GetParentStockIds
+
     /**
      * 获取父编号
+     *
      * @param stockId
      * @return
      */
@@ -199,6 +207,7 @@ public class StockLogic {
 
     /**
      * 获取库存子编号
+     *
      * @param stockId
      * @return
      */
@@ -217,10 +226,24 @@ public class StockLogic {
     }
     //endregion
 
+    /**
+     * 获库存取领取信
+     * @param stockId
+     * @return
+     */
+    public static StockDto GetChild(int stockId) {
+        Stock stock = stockLogic.stockService.selectOne(new EntityWrapper<Stock>().where("parent_stock_id={0}", stockId));
+        if (stock != null) {
+            return StockLogic.GetStock(stock.getStockId());
+        }
+        return null;
+    }
+
     //region (public) 获取库存流转 GetStockFlows
 
     /**
      * 获取库存流转
+     *
      * @param stockId
      * @param getAll
      * @return
@@ -242,13 +265,14 @@ public class StockLogic {
         List<StockFlow> stockFlows = stockLogic.stockFlowService.selectList(wrapper);
         stockFlows.forEach(sf -> {
 
+            WechatDto wechatDto = WechatLogic.GetWechat(sf.getOpenId());
             StockFlowDto dto = new StockFlowDto();
 
             dto.setStockId(sf.getStockId());
             dto.setParentStockId(sf.getParentStockId());
             dto.setOpenId(sf.getOpenId());
             dto.setCreateTime(sf.getCreateTime());
-            dto.setNickName("");
+            dto.setNickName(wechatDto.getNickname());
             dto.setFlowName(sf.getFlowName());
             dto.setRemark(sf.getRemark());
 
@@ -260,5 +284,45 @@ public class StockLogic {
 
     }
     //endregion
+
+
+    /**
+     * 获取库存详情
+     *
+     * @param stockId
+     * @return
+     */
+    public static StockDto GetStock(int stockId) {
+
+        StockDto stockDto = new StockDto();
+        Stock stock = stockLogic.stockService.selectById(stockId);
+
+        ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(stock.getProductSpecId());
+
+        EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
+        wrapper.where("stock_id={0}", stockId);
+        wrapper.orderBy("create_time desc");
+
+        GiftStock giftStock = stockLogic.giftStockService.selectOne(wrapper);
+
+        stockDto.setProductSpecDto(productSpecDto);
+        stockDto.setNumber(1);
+        stockDto.setOpenId(stock.getOpenId());
+        stockDto.setOrderId(stock.getOrderId());
+        stockDto.setProductId(stock.getProductId());
+
+        stockDto.setStockId(stock.getStockId());
+        stockDto.setProductSpecId(stock.getProductSpecId());
+        stockDto.setStockStatus(StockStatus.valueOf(stock.getStatus()));
+        stockDto.setStockType(StockType.valueOf(stock.getTypeId()));
+        stockDto.setCreateTime(stock.getCreateTime());
+
+        if (giftStock != null) {
+            GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
+            stockDto.setGiftDto(giftDto);
+        }
+        return stockDto;
+
+    }
 
 }
