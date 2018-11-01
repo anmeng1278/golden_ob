@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="admin/layout">
+<div layout:fragment="content" class="admin-main layui-anim">
+    <div class="admin-main layui-anim">
+        <blockquote class="layui-elem-quote" style="float: left;width:97%;">
+            <form class="layui-form" method="get" style="float:left;">
+                <div class="layui-form-item" style="margin:0;">
+
+                    <label class="layui-form-label">赠送日期</label>
+                    <div class="layui-input-inline width100">
+                        <input type="text" name="startDate" id="startDate" th:value="${startDate}" class="layui-input"
+                               autocomplete="off"
+                               onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+
+                    </div>
+                    <label class="layui-form-label width10" style="width:10px;"> 至</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="endDate" th:value="${endDate}" id="endDate"
+                               autocomplete="off"
+                               onClick="WdatePicker({minDate:'#F{\$dp.$D(\'startDate\')}'})">
+                    </div>
+
+                    <label class="layui-form-label">分享类型</label>
+                    <div class="layui-input-inline">
+                        <select name="giftShareType" title="分享类型">
+                            <option value="">分享类型</option>
+                            <th:block th:each="gf : ${giftShareTypes}">
+                                <option th:value="${gf.value}" th:text="${gf.message}"
+                                        th:selected="${gf.value == giftShareType}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label">赠送状态</label>
+                    <div class="layui-input-inline">
+                        <select name="giftStatus" title="赠送状态">
+                            <option value="">赠送状态</option>
+                            <th:block th:each="gs : ${giftStatuses}">
+                                <option th:value="${gs.value}" th:text="${gs.message}"
+                                        th:selected="${gs.value == giftStatus}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width:100px;">
+                        <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
+                            <i class="layui-icon">&#xe615;</i> 查询
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </blockquote>
+        <div class="layui-field-box layui-form">
+            <table class="layui-table admin-table">
+                <thead>
+                <tr>
+                    <th style="width: 5%;">编号</th>
+                    <th style="width: 10%;">赠送码</th>
+                    <th style="width: 5%;">数量</th>
+                    <th style="width: 10%;">赠送人</th>
+                    <th style="width: 10%;">赠送状态<br/>分享类型</th>
+                    <th>祝福语</th>
+                    <th style="width: 15%;">创建时间<br/>过期时间</th>
+                    <th style="width: 5%;">操作</th>
+                </tr>
+                </thead>
+                <tbody id="content">
+                <th:block th:each="info : ${infos.list}" th:with="wechat=${wechatLogic.GetWechat(info.openId)}">
+                    <tr>
+                        <td>
+                            <th:block th:text="${info.giftId}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:text="${info.giftUniqueCode}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:text="${giftLogic.GetGiftStockCount(info.giftId)}"></th:block>
+                        </td>
+                        <td>
+                            <img th:src="${wechat.headimgurl}" style="width:50px;height: 50px;"/>
+                            <th:block th:text="${wechat.nickname}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:text="${enumLogic.GetGiftStatus(info.status).message}"></th:block>
+                            <br/>
+                            <th:block th:text="${enumLogic.GetGiftShareType(info.shareType).message}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:text="${info.blessings}"></th:block>
+                        </td>
+                        <td>
+                            <th:block
+                                    th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+                            <th:block
+                                    th:text="${dateUtils.formatDateByUnixTime(info.expiredTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+                        </td>
+                        <td>
+
+                            <button type="button"
+                                    th:title="|${wechat.nickname} 赠送详情|"
+                                    th:attr="data-tab-href=@{/admin/gift/{giftId}(giftId=${info.giftId})}"
+                                    class="layui-btn layui-btn-xs">详情
+                            </button>
+
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+        <div th:replace="comm/macros :: pageAdminNav(${infos})"></div>
+    </div>
+
+</div>
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        TX.INIT(function () {
+
+            $("button[data-method]").click(function () {
+
+                var id = $(this).attr("data-id");
+                var method = $(this).attr("data-method");
+
+                if (method == "delete") {
+                    layer.confirm('确定删除该信息吗?', {icon: 3}, function (index) {
+                        layer.close(index);
+                        modifyStatus(method, id);
+                    });
+                }
+            });
+
+        });
+
+        function modifyStatus(method, id) {
+
+            TX.CORE.p({
+                data: {method: method, id: id},
+                url: "/admin/wechat/status",
+                success: function (resp) {
+                    if (resp.baseResp.success) {
+                        TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                            location.href = location.href;
+                        });
+                    } else {
+                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                    }
+                }
+            });
+        }
+
+    </script>
+</th:block>
+
+</html>

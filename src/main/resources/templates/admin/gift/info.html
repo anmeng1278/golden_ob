@@ -4,7 +4,7 @@
 <div layout:fragment="content" class="admin-main layui-anim">
 
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend th:text="|${info.giftId} 赠送详情|"></legend>
+        <legend th:text="|${info.wechatDto.nickname} 赠送详情|"></legend>
     </fieldset>
 
     <div class="layui-form-item">
@@ -30,16 +30,15 @@
     <div class="layui-form-item">
         <label class="layui-form-label">赠送人：</label>
         <div class="layui-input-block layui-form-label-col">
-            <th:block th:with="wechat=${wechatLogic.GetWechat(info.openId)}">
-                <th:block th:text="|【${wechat.nickname}】|"></th:block>
-                <th:block th:text="${wechat.openId}"></th:block>
-            </th:block>
+            <img th:src="${info.wechatDto.headimgurl}" style="width:50px;height: 50px;"/>
+            <th:block th:text="|【${info.wechatDto.nickname}】|"></th:block>
+            <th:block th:text="${info.wechatDto.openId}"></th:block>
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">祝福语：</label>
-        <div class="layui-input-inline layui-form-label-col">
+        <div class="layui-input-block layui-form-label-col">
             <th:block th:text="${info.blessings}"></th:block>
         </div>
     </div>
@@ -85,10 +84,8 @@
                         <th:block th:with="child=${stockLogic.GetChild(spec.stockId)}">
                             <th:block th:if="${child != null}">
                                 <td>
-                                    <th:block th:with="wechat=${wechatLogic.GetWechat(child.openId)}">
-                                        <th:block th:text="|【${wechat.nickname}】|"></th:block>
-                                        <th:block th:text="${wechat.openId}"></th:block>
-                                    </th:block>
+                                    <th:block th:text="|【${child.wechatDto.nickname}】|"></th:block>
+                                    <th:block th:text="${child.wechatDto.openId}"></th:block>
                                 </td>
                                 <td>
                                     <th:block

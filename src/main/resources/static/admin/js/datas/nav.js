@@ -15,6 +15,11 @@ var navs = [
                 "title": "用户列表",
                 "icon": "fa-angle-right",
                 "href": "/admin/wechat"
+            },
+            {
+                "title": "赠送列表",
+                "icon": "fa-angle-right",
+                "href": "/admin/gift"
             }
         ]
     },

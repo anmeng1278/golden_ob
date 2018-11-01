@@ -1,5 +1,6 @@
 package com.jsj.member.ob.dto.api.gift;
 
+import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.enums.GiftShareType;
 import com.jsj.member.ob.enums.GiftStatus;
 
@@ -53,6 +54,10 @@ public class GiftDto {
      */
     private Integer deleteTime;
 
+    /**
+     * 赠送用户
+     */
+    private WechatDto wechatDto;
 
     public Integer getGiftId() {
         return giftId;
@@ -142,5 +147,11 @@ public class GiftDto {
         this.deleteTime = deleteTime;
     }
 
+    public WechatDto getWechatDto() {
+        return wechatDto;
+    }
 
+    public void setWechatDto(WechatDto wechatDto) {
+        this.wechatDto = wechatDto;
+    }
 }

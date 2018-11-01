@@ -9,6 +9,8 @@ import com.jsj.member.ob.dto.api.stock.StockFlowDto;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.entity.Stock;
 import com.jsj.member.ob.entity.Wechat;
+import com.jsj.member.ob.enums.StockStatus;
+import com.jsj.member.ob.enums.StockType;
 import com.jsj.member.ob.logic.GiftLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.logic.WechatLogic;
@@ -84,8 +86,10 @@ public class AdminWechatController {
     @RequestMapping(value = "/{openId}/stock", method = RequestMethod.GET)
     public String stock(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
-            @RequestParam(value = "limit", defaultValue = "30") Integer limit,
+            @RequestParam(value = "limit", defaultValue = "10") Integer limit,
             @PathVariable("openId") String openId,
+            @RequestParam(value = "stockStatus", defaultValue = "-1") Integer stockStatus,
+            @RequestParam(value = "stockType", defaultValue = "-1") Integer stockType,
             HttpServletRequest request) {
 
         WechatDto wechat = WechatLogic.GetWechat(openId);
@@ -93,13 +97,25 @@ public class AdminWechatController {
         EntityWrapper<Stock> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
         wrapper.where("open_id={0}", openId);
-        wrapper.orderBy("status asc, create_time desc");
+        wrapper.where(stockStatus > -1, "status={0}", stockStatus);
+        wrapper.where(stockType > -1, "type_id={0}", stockType);
+
+        wrapper.orderBy("create_time desc");
 
         Page<Stock> pageInfo = new Page<>(page, limit);
         Page<Stock> pp = stockService.selectPage(pageInfo, wrapper);
 
+        StockStatus[] stockStatuses = StockStatus.values();
+        StockType[] stockTypes = StockType.values();
+
         request.setAttribute("wechat", wechat);
         request.setAttribute("infos", new CCPage<Stock>(pp, limit));
+        request.setAttribute("stockStatuses", stockStatuses);
+        request.setAttribute("stockTypes", stockTypes);
+
+        request.setAttribute("stockType", stockType);
+        request.setAttribute("stockStatus", stockStatus);
+
         return "admin/wechat/wechatStock";
 
     }

@@ -5,10 +5,8 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.gift.*;
 import com.jsj.member.ob.dto.api.stock.StockDto;
-import com.jsj.member.ob.entity.Gift;
-import com.jsj.member.ob.entity.GiftStock;
-import com.jsj.member.ob.entity.Stock;
-import com.jsj.member.ob.entity.StockFlow;
+import com.jsj.member.ob.dto.api.wechat.WechatDto;
+import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.GiftShareType;
 import com.jsj.member.ob.enums.GiftStatus;
 import com.jsj.member.ob.enums.StockFlowType;
@@ -442,6 +440,7 @@ public class GiftLogic {
 
         GiftDto dto = new GiftDto();
         Gift gift = giftLogic.giftService.selectById(giftId);
+        WechatDto wechatDto = WechatLogic.GetWechat(gift.getOpenId());
 
         dto.setBlessings(gift.getBlessings());
         dto.setCreateTime(gift.getCreateTime());
@@ -456,9 +455,28 @@ public class GiftLogic {
 
         dto.setRemarks(gift.getRemarks());
         dto.setUpdateTime(gift.getUpdateTime());
+        dto.setWechatDto(wechatDto);
 
         return dto;
 
     }
+
+
+    //region (public) 获取赠送商品数量 GetGiftStockCount
+
+    /**
+     * 获取赠送商品数量
+     * @param giftId
+     * @return
+     */
+    public static Integer GetGiftStockCount(int giftId){
+
+        EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
+        wrapper.where("gift_id={0}", giftId);
+
+        return giftLogic.giftStockService.selectCount(wrapper);
+
+    }
+    //endregion
 
 }

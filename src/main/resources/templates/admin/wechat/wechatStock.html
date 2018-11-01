@@ -4,10 +4,49 @@
 <div layout:fragment="content" class="admin-main layui-anim">
 
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend th:text="|${wechat.nickname}库存列表|"></legend>
+        <legend th:text="|${wechat.nickname} 库存列表|"></legend>
     </fieldset>
 
     <div class="admin-main layui-anim">
+
+        <blockquote class="layui-elem-quote" style="float: left;width:97%;">
+
+
+            <form class="layui-form" method="get" style="float:right;">
+                <div class="layui-form-item" style="margin:0;">
+
+                    <label class="layui-form-label">获取方式</label>
+                    <div class="layui-input-inline">
+                        <select name="stockType" title="获取方式">
+                            <option value="">获取方式</option>
+                            <th:block th:each="ss : ${stockTypes}">
+                                <option th:value="${ss.value}" th:text="${ss.message}"
+                                        th:selected="${ss.value == stockType}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="stockStatus" title="状态">
+                            <option value="">状态</option>
+                            <th:block th:each="ss : ${stockStatuses}">
+                                <option th:value="${ss.value}" th:text="${ss.message}"
+                                        th:selected="${ss.value == stockStatus}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
+                            <i class="layui-icon">&#xe615;</i> 查询
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </blockquote>
+
         <div class="layui-field-box layui-form">
             <table class="layui-table admin-table">
                 <thead>
@@ -40,9 +79,9 @@
                             <th:block th:with="stock=${stockLogic.GetStock(info.stockId)}">
                                 <th:block th:if="${stock.giftDto!=null}">
                                     <button type="button"
-                                            th:title="|库存${stock.stockId}赠送记录|"
-                                            th:attr="data-tab-href=@{'/admin/wechat/giftStock/'+${stock.giftDto.giftId}+'/'+${stock.stockId}}"
-                                            class="layui-btn layui-btn-xs">赠送记录
+                                            th:title="|${stock.giftDto.wechatDto.nickname} 赠送详情|"
+                                            th:attr="data-tab-href=@{/admin/gift/{giftId}(giftId=${stock.giftDto.giftId},stockId=${stock.stockId})}"
+                                            class="layui-btn layui-btn-xs">赠送详情
                                     </button>
                                 </th:block>
                             </th:block>
@@ -51,8 +90,8 @@
                                       th:with="stock=${stockLogic.GetStock(info.parentStockId)}">
                                 <th:block th:if="${stock.giftDto!=null}">
                                     <button type="button"
-                                            th:title="|库存${stock.stockId}获赠记录|"
-                                            th:attr="data-tab-href=@{'/admin/wechat/giftStock/'+${stock.giftDto.giftId}+'/'+${stock.stockId}}"
+                                            th:title="|${stock.giftDto.wechatDto.nickname} 赠送详情|"
+                                            th:attr="data-tab-href=@{/admin/gift/{giftId}(giftId=${stock.giftDto.giftId},stockId=${stock.stockId})}"
                                             class="layui-btn layui-btn-xs">获赠记录
                                     </button>
                                 </th:block>

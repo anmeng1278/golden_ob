@@ -8,7 +8,7 @@ public enum DeliveryStatus {
 
     UNDELIVERY(0, "未发货"),
 
-    Delivered(10, "已发货"),
+    DELIVERED(10, "已发货"),
 
     SIGNED(20, "已签收");
 
@@ -33,7 +33,7 @@ public enum DeliveryStatus {
             case 0:
                 return UNDELIVERY;
             case 10:
-                return Delivered;
+                return DELIVERED;
             case 20:
                 return SIGNED;
             default:

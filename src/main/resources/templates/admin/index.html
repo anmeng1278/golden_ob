@@ -53,7 +53,25 @@
                     <i class="fa fa-life-bouy" aria-hidden="true"></i>
                 </div>
             </div>
-            <ul class="layui-nav admin-header-item">
+            <ul class="layui-nav admin-header-item"
+                th:with="unDeliveryCount=${deliveryLogic.GetUnDeliveryCount()},sellOutCount=${productLogic.GetSellOutCount()}">
+                <li class="layui-nav-item layui-hide-xs">
+                    <a href="javascript:;">
+                        消息中心
+                        <span th:if="${unDeliveryCount > 0 or sellOutCount > 0 }" class="layui-badge-dot"
+                              style="margin: -4px -15px 0;"></span>
+                        <span class="layui-nav-more"></span></a>
+
+                    <dl class="layui-nav-child layui-anim layui-anim-upbit">
+                        <dd><a title="提货列表" data-tab-href="/admin/delivery"><span
+                                th:text="|待发货：${unDeliveryCount}|"></span><span th:if="${unDeliveryCount > 0}"
+                                                                                class="layui-badge-dot"></span></a></dd>
+                        <dd><a title="商品列表" data-tab-href="/admin/product"><span th:text="|已售罄：${sellOutCount}|"></span><span
+                                th:if="${sellOutCount > 0}" class="layui-badge-dot"></span></a></dd>
+                        <hr>
+                    </dl>
+
+                </li>
 
                 <li class="layui-nav-item">
                     <a href="javascript:;" class="admin-header-user">
@@ -70,6 +88,7 @@
                         </dd>
                     </dl>
                 </li>
+
             </ul>
             <ul class="layui-nav admin-header-item-mobile">
                 <li class="layui-nav-item">

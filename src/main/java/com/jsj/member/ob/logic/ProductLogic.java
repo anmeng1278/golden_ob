@@ -234,6 +234,8 @@ public class ProductLogic {
     }
 
 
+    //region (public) 削减商品规格库存 ReductionProductSpecStock
+
     /**
      * 削减商品规格库存
      *
@@ -262,7 +264,9 @@ public class ProductLogic {
 
         }
     }
+    //endregion
 
+    //region (public) 恢复商品规格库存 RestoreProductSpecStock
 
     /**
      * 恢复商品规格库存
@@ -281,5 +285,21 @@ public class ProductLogic {
         }
 
     }
+    //endregion
 
+    /**
+     * 获取已售罄商品
+     *
+     * @return
+     */
+    public static Integer GetSellOutCount() {
+
+        EntityWrapper<Product> wrapper = new EntityWrapper<>();
+
+        wrapper.where("delete_time is null");
+        wrapper.where("( select sum(_product_spec.stock_count) from _product_spec where _product_spec.product_id = _product.product_id) = 0");
+
+        return productLogic.productService.selectCount(wrapper);
+
+    }
 }

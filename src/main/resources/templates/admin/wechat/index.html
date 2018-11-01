@@ -4,11 +4,8 @@
 <div layout:fragment="content" class="admin-main layui-anim">
     <div class="admin-main layui-anim">
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
-
             <form class="layui-form" method="get" style="float:right;">
-
                 <div class="layui-form-item" style="margin:0;">
-
                     <label class="layui-form-label">关键字</label>
                     <div class="layui-input-inline">
                         <input type="text" name="keys" placeholder="昵称、OpenId……" th:value="${keys}" autocomplete="off"
@@ -19,7 +16,6 @@
                             <i class="layui-icon">&#xe615;</i> 查询
                         </button>
                     </div>
-
                 </div>
             </form>
         </blockquote>
@@ -30,6 +26,7 @@
                     <th style="width: 5%;"></th>
                     <th>OpenId</th>
                     <th style="width: 10%;">昵称</th>
+                    <th style="width: 10%;">订单<br/>库存</th>
                     <th style="width: 5%;">性别</th>
                     <th style="width: 15%;">关注时间</th>
                     <th style="width: 15%;">创建时间</th>
@@ -46,26 +43,32 @@
                             <th:block th:text="${info.openId}"></th:block>
                         </td>
                         <td th:text="${info.nickname}"></td>
+                        <td>
+
+                            <button type="button" th:title="|${info.nickname} 订单列表|"
+                                    th:attr="data-tab-href=@{'/admin/order?keys='+${info.openId}}"
+                                    class="layui-btn layui-btn-xs layui-btn-normal"
+                                    th:text="|订单：${orderLogic.GetOrderCount(info.openId)}|" style="float: left;margin-bottom: 5px;">
+                                <i class="layui-icon">&#xe63c;</i>
+                            </button>
+<br/>
+                            <button type="button" th:title="|${info.nickname} 库存列表|"
+                                    th:attr="data-tab-href=@{'/admin/wechat/'+${info.openId}+'/stock'}"
+                                    class="layui-btn layui-btn-xs layui-btn-normal"
+                                    th:text="|库存：${stockLogic.GetStockCount(info.openId)}|"  style="float: left;">
+                                <i class="layui-icon">&#xe610;</i>
+                                库存
+                            </button>
+                        </td>
                         <td th:text="${enumLogic.GetSexType(info.sex).message}"></td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.subscribeTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td>
 
-                            <button type="button" th:title="|${info.nickname}订单列表|"
-                                    th:attr="data-tab-href=@{'/admin/order?keys='+${info.openId}}"
-                                    class="layui-btn layui-btn-xs layui-btn-normal">订单
-                            </button>
-
-                            <button type="button" th:title="|${info.nickname}库存列表|"
-                                    th:attr="data-tab-href=@{'/admin/wechat/'+${info.openId}+'/stock'}"
-                                    class="layui-btn layui-btn-xs layui-btn-normal">
-                                库存
-                            </button>
-
-                            <button type="button" class="layui-btn layui-btn-xs layui-btn-normal">
-                                <i class="layui-icon">&#xe658;</i>
-                                赠券
-                            </button>
+                            <!--<button type="button" class="layui-btn layui-btn-xs layui-btn-normal">-->
+                            <!--<i class="layui-icon">&#xe658;</i>-->
+                            <!--赠券-->
+                            <!--</button>-->
 
                         </td>
                     </tr>

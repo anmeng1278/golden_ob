@@ -13,6 +13,7 @@ import com.jsj.member.ob.logic.order.OrderFactory;
 import com.jsj.member.ob.service.OrderProductService;
 import com.jsj.member.ob.service.OrderService;
 import com.jsj.member.ob.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -81,6 +82,25 @@ public class OrderLogic {
         });
 
         return orderProductDtos;
+    }
+
+    /**
+     * 获取订单数
+     *
+     * @param opendId
+     * @return
+     */
+    public static Integer GetOrderCount(String opendId) {
+
+        if (StringUtils.isBlank(opendId)) {
+            return 0;
+        }
+
+        EntityWrapper<Order> wrapper = new EntityWrapper<>();
+        wrapper.where("open_id={0}", opendId);
+
+        return orderLogic.orderService.selectCount(wrapper);
+
     }
 
     /**

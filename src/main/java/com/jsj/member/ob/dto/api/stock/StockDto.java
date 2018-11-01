@@ -2,6 +2,7 @@ package com.jsj.member.ob.dto.api.stock;
 
 import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
+import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.enums.StockType;
 
@@ -62,6 +63,11 @@ public class StockDto {
      * 创建时间
      */
     private Integer createTime;
+
+    /**
+     * 用户
+     */
+    private WechatDto wechatDto;
 
     public Integer getStockId() {
         return stockId;
@@ -151,4 +157,11 @@ public class StockDto {
         this.createTime = createTime;
     }
 
+    public WechatDto getWechatDto() {
+        return wechatDto;
+    }
+
+    public void setWechatDto(WechatDto wechatDto) {
+        this.wechatDto = wechatDto;
+    }
 }

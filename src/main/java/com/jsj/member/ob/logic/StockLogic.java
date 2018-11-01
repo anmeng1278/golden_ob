@@ -228,6 +228,7 @@ public class StockLogic {
 
     /**
      * 获库存取领取信
+     *
      * @param stockId
      * @return
      */
@@ -298,6 +299,7 @@ public class StockLogic {
         Stock stock = stockLogic.stockService.selectById(stockId);
 
         ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(stock.getProductSpecId());
+        WechatDto wechatDto = WechatLogic.GetWechat(stock.getOpenId());
 
         EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
         wrapper.where("stock_id={0}", stockId);
@@ -317,11 +319,31 @@ public class StockLogic {
         stockDto.setStockType(StockType.valueOf(stock.getTypeId()));
         stockDto.setCreateTime(stock.getCreateTime());
 
+        stockDto.setWechatDto(wechatDto);
+
         if (giftStock != null) {
             GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
             stockDto.setGiftDto(giftDto);
         }
         return stockDto;
+
+    }
+
+    /**
+     * 获取库存数
+     * @param openId
+     * @return
+     */
+    public static Integer GetStockCount(String openId) {
+
+        if (StringUtils.isBlank(openId)) {
+            return 0;
+        }
+
+        EntityWrapper<Stock> wrapper = new EntityWrapper<>();
+        wrapper.where("open_id={0}", openId);
+
+        return stockLogic.stockService.selectCount(wrapper);
 
     }
 
