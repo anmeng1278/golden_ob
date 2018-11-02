@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="admin/layout">
+<script src="static/common/plugins/layui/layui.js" charset="utf-8"></script>
+<link rel="stylesheet" href="static/common/plugins/layui/css/layui.css" media="all">
+<div layout:fragment="content" class="admin-main layui-anim" style="margin: 15px;">
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend th:if="${info.couponId == null}" th:text="信息编辑"></legend>
+        <legend th:if="${info.couponId > 0}" th:text="|${info.couponName} 信息编辑|"></legend>
+    </fieldset>
+
+    <form class="layui-form" method="post" action="">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-inline" style="width: 85%;">
+                <input type="text" class="layui-input" name="couponName"
+                       lay-verify="req"
+                       title="名称"
+                       th:value="${info.couponName}" placeholder="请输入名称"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-inline">
+                <select name="typeId" lay-verify="req" title="类型" th:disabled="${info.couponId>0}">
+                    <option value="">请选择</option>
+                    <th:block th:each="pps : ${couponTypes}">
+                        <option th:value="${pps.value}" th:selected="${info.typeId==pps.value}"
+                                th:text="${pps.message}"></option>
+                    </th:block>
+                </select>
+            </div>
+
+            <label class="layui-form-label">金额</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="amount"
+                       lay-verify="float4"
+                       title="金额"
+                       th:value="${info.amount}" placeholder="金额"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+
+            <label class="layui-form-label">有效天数</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="validDays"
+                       lay-verify="num2"
+                       title="有效天数"
+                       th:value="${info.validDays}" placeholder="有效天数"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">使用范围</label>
+            <div class="layui-input-block">
+                <th:block th:each="range : ${couponUseRanges}">
+                    <input type="checkbox" name="userRange"
+                           style="width:20px;height:20px;"
+                           lay-filter="userRange"
+                           th:title="${range.message}" th:value="${range.value}"
+                           th:checked="${info.userRange == range.value}">
+                </th:block>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item" id="chooseHiden" style="width: auto">
+
+            <div class="layui-form-item" style="float: top;">
+                <div class="layui-input-inline">
+                    <button lay-filter="search" class="layui-btn layui-btn-normal layui-btn-xs" type="button"
+                            id="btnChooseProducts"
+                            style="float: right;">
+                        <i class="layui-icon">&#xe654;</i> 添加商品
+                    </button>
+                </div>
+            </div>
+
+            <label class="layui-form-label">指定商品</label>
+            <div class="layui-input-block">
+                <blockquote id="content" class="layui-elem-quote layui-quote-nm" style="width: 88%;">
+                    <th:block th:each="couponProduct:${couponProducts}">
+                        <div class="layui-badge" style="cursor:pointer;">
+                            <th:block
+                                    th:text="${productLogic.GetProduct(couponProduct.productId).productName}"></th:block>
+                            <input type="hidden" name="productId" th:value="${couponProduct.productId}">
+                        </div>
+                    </th:block>
+                </blockquote>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-inline" style="width: 85%;">
+                <textarea class="layui-textarea" name="remarks" id="remarks" style="width:100%;height:30px;"
+                          placeholder="请输入备注" title="备注" th:text="${info.remarks}"
+                          autocomplete="off"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">使用说明</label>
+            <div class="layui-input-inline" style="width:85%;">
+                <textarea class="layui-textarea" name="instruction" id="instruction"
+                          placeholder="请输入使用说明" title="使用说明" th:text="${info.instruction}"
+                          autocomplete="off"></textarea>
+
+                <script type="text/javascript">
+                    UE.getEditor('instruction', {
+                        initialFrameWidth: "100%",//设置编辑器宽度
+                        initialFrameHeight: 300,
+                        scaleEnabled: true
+                    });
+                </script>
+
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit="">
+                    <i class="layui-icon">&#xe621;</i>
+                    保存
+                </button>
+                <button type="button" class="layui-btn" id="btnClose">
+                    <i class="layui-icon">&#x1006;</i>
+                    关闭
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        TX.INIT(function (layui) {
+
+            var form = layui.form;
+
+            //监听指定开关
+            form.on('checkbox(userRange)', function (data) {
+
+                $("#chooseHiden").hide();
+
+                //使用范围
+                var userRange = data.value;
+
+                $(":checkbox[name='userRange']").not($(data.elem)).removeAttr("checked");
+                $(data.elem).attr("checked", "checked");
+
+                if (userRange == 2) {
+                    $("#chooseHiden").show();
+                }
+                form.render();
+            });
+
+            //触发点击使用范围事件
+            var userRange = [[${info.userRange}]];
+            if (userRange) {
+                $(":checkbox[name='userRange'][value='" + userRange + "']").next("div.layui-form-checkbox").trigger("click");
+            }
+
+
+            //选择商品
+            $("#btnChooseProducts").click(function () {
+                var productIds = getChoosedProduct();
+                window.TX.TEMP.LAYERINDEX = window.layer.open({
+                    title: "",
+                    type: 2,
+                    btn: ['选择', '关闭'],
+                    content: "/admin/coupon/chooseProducts?productIds=" + productIds.join(',') + "&" + Math.random(),
+                    area: ["800px", "600px"],
+                    yes: function (index, layero) {
+                        var iframe = layero.find('iframe');
+                        iframe.contents().find("button[lay-submit]").click();
+                    }
+                });
+            });
+
+            //删除商品
+            $(document).on("click", "#content div.layui-badge", function () {
+                var self = this;
+                layer.confirm('确定删除该信息吗?', {icon: 3}, function (index) {
+                    layer.close(index);
+                    $(self).remove();
+                });
+
+            });
+
+            form.on("submit", function (data) {
+
+                //移除下拉框disable状态
+                $("select[name='typeId']").each(function () {
+                    if (parseInt($(this).val()) != -1) {
+                        $(this).attr("disabled", false);
+                    }
+                });
+
+                TX.CORE.p({
+                    data: $("form.layui-form").serialize(),
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                // parent.tab.openTab("/admin/product/index", {refershType: "refersh"});
+                                location.href = "/admin/coupon";
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
+
+            });
+
+
+            $("#btnClose").click(function () {
+                if (parent.window.TX.TEMP.LAYERINDEX) {
+                    parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
+                } else {
+                    var currentTabId = parent.tab.getCurrentTabId();
+                    parent.tab.deleteTab(currentTabId);
+                }
+            });
+
+        });
+
+        /**
+         * 获取所选商品
+         */
+        function getChoosedProduct() {
+            var productIds = [];
+            $(":hidden[name='productId']").each(function () {
+                productIds.push(parseInt(this.value, 10));
+            });
+            return productIds;
+        }
+
+
+        /**
+         * 选择商品
+         * @param pss
+         */
+        function chooseProducts(productIds) {
+            var type = 1;
+
+            if (productIds.length == 0) {
+                return;
+            }
+
+            var choosed = getChoosedProduct();
+
+            //判断是否存在
+            $("input[type='hidden'][name='productId']").each(function (j) {
+                var value = this.value;
+                var self = this;
+                for (var i = 0; i < productIds.length; i++) {
+                    if (value == productIds[i]) {
+                        layer.msg("优惠券已存在,请重新选择!", {icon: 2});
+                        type = 2;
+                        return false;
+                    }
+                }
+            });
+
+            if (type == 1) {
+                TX.CORE.p({
+                    data: {productIds: productIds.join(',')},
+                    url: "/admin/coupon/couponProducts",
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+
+                            if (!resp.datas || resp.datas.length == 0) {
+                                return;
+                            }
+                            console.log("响应数据", resp.datas);
+                            var html = [];
+                            $.each(resp.datas, function (i, item) {
+                                if ($.inArray(item.product, choosed) != -1) {
+                                    return true;
+                                }
+                                html.push('<div class="layui-badge" style="cursor:pointer;">');
+                                html.push(item.productName);
+                                html.push('    <input type="hidden" name="productId" value="' + item.productId + '">');
+                                html.push('</div> ');
+                            });
+
+                            $("#content").append(html.join(''));
+
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
+            }
+        }
+
+    </script>
+</th:block>
+</html>

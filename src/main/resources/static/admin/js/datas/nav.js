@@ -71,6 +71,23 @@ var navs = [
                 "href": "/admin/dict"
             }
         ]
+    },
+    {
+        "title": "优惠券管理",
+        "icon": "fa-wpforms",
+        "spread": true,
+        "children": [
+            {
+                "title": "优惠券列表",
+                "icon": "fa-angle-right",
+                "href": "/admin/coupon"
+            },
+            {
+                "title": "礼包管理",
+                "icon": "fa-angle-right",
+                "href": "/admin/redpacket"
+            }
+        ]
     }
 
 ];

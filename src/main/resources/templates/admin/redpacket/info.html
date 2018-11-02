@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="admin/layout">
+<script src="static/common/plugins/layui/layui.js" charset="utf-8"></script>
+<link rel="stylesheet" href="static/common/plugins/layui/css/layui.css" media="all">
+<div layout:fragment="content" class="admin-main layui-anim" style="margin: 15px;">
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend th:if="${info.redpacketId == null}" th:text="信息编辑"></legend>
+        <legend th:if="${info.redpacketId > 0}" th:text="|${info.redpacketName} 信息编辑|"></legend>
+    </fieldset>
+
+    <form class="layui-form" method="post" action="">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">礼包名称</label>
+            <div class="layui-input-inline" style="width: 85%;">
+                <input type="text" class="layui-input" name="redpacketName"
+                       lay-verify="req"
+                       title="名称"
+                       th:value="${info.redpacketName}" placeholder="请输入名称"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">礼包类型</label>
+            <div class="layui-input-block">
+                <th:block th:each="type : ${redpacketTypes}">
+                    <input type="checkbox" name="typeId"
+                           style="width:20px;height:20px;"
+                           lay-filter="typeId"
+                           th:title="${type.message}" th:value="${type.value}"
+                           th:checked="${info.typeId == type.value}">
+                </th:block>
+            </div>
+        </div>
+
+        <!-- 现金红包类型的礼包-->
+        <!--<div class="layui-form-item" id="chooseHiden" style="width: auto">
+            <label class="layui-form-label">请输入红包金额及数量:</label>
+            <div class="layui-input-inline" style="width: 85%;">
+                <input type="text" class="layui-input" name="money"
+                       lay-verify="req"
+                       title="金额"
+                       th:value="${xxx}" placeholder="请输入金额"/>
+                <input type="text" class="layui-input" name="number"
+                       lay-verify="req"
+                       title="数量"
+                       th:value="${xxx}" placeholder="请输入数量"/>
+            </div>
+        </div>-->
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否审核</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" th:checked="${info.ifpass}" name="ifpass" lay-skin="switch" lay-text="已审|未审">
+            </div>
+
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="sort" lay-verify="num" th:value="${info.sort}"
+                       placeholder="请输入排序"
+                       title="排序"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux">只能输入数字</div>
+        </div>
+
+
+        <div id="couponManager">
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                <legend th:text="礼包优惠券管理"></legend>
+            </fieldset>
+
+            <div class="layui-form-item" style="float: right;">
+                <div class="layui-input-inline">
+                    <button lay-filter="search" class="layui-btn layui-btn-normal layui-btn-xs" type="button"
+                            id="btnChooseCoupons"
+                            style="float: right;">
+                        <i class="layui-icon">&#xe654;</i> 添加优惠券
+                    </button>
+                </div>
+            </div>
+
+            <table class="layui-table" lay-size="sm">
+                <thead>
+                <tr>
+                    <th>名称</th>
+                    <th style="width: 15%;">金额</th>
+                    <th style="width: 15%;">类型</th>
+                    <th style="width: 15%;">使用范围</th>
+                    <th style="width: 15%;">有效天数</th>
+                    <th style="width: 15%;">数量</th>
+                    <th style="width: 10%;">操作</th>
+                </tr>
+                </thead>
+                <tbody id="content">
+                <th:block th:each="info : ${redpacketCoupons}">
+                    <tr>
+                        <th:block th:with="pro=${couponLogic.GetCoupon(info.couponId)}">
+                            <td>
+                                <th:block th:text="${pro.couponName}"></th:block>
+                            </td>
+                            <td>
+                                <th:block th:text="${pro.amount}"></th:block>
+                            </td>
+                            <td>
+                                <th:block th:text="${enumLogic.GetCouponType(pro.couponType.value).message}"></th:block>
+                            </td>
+                            <td>
+                                <th:block
+                                        th:text="${enumLogic.GetCouponUseRange(pro.couponUseRange.value).message}"></th:block>
+                            </td>
+                            <td th:text="${pro.validDays}"></td>
+                            <td>
+                                <button type="button" data-method="reduce" class="layui-btn layui-btn-xs"><i
+                                        class="layui-icon">&#xe61a;</i></button>
+                                <input type="text" th:value="${info.number}" name="number"
+                                       style="width: 40%; text-align: center; border-color: darkgreen">
+                                <button type="button" data-method="add" class="layui-btn layui-btn-xs"><i
+                                        class="layui-icon">&#xe619;</i></button>
+                            </td>
+
+                            <td>
+                                <input type="hidden" name="couponIds" th:value="${info.couponId}"/>
+                                <button type="button" th:attr="data-method='delete',data-id=${info.couponId}"
+                                        class="layui-btn layui-btn-xs layui-btn-danger">
+                                    <i class="layui-icon">&#xe640;</i>
+                                    删除
+                                </button>
+                            </td>
+                        </th:block>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit="">
+                    <i class="layui-icon">&#xe621;</i>
+                    保存
+                </button>
+                <button type="button" class="layui-btn" id="btnClose">
+                    <i class="layui-icon">&#x1006;</i>
+                    关闭
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        TX.INIT(function (layui) {
+
+            var form = layui.form;
+
+            //监听指定开关
+            form.on('checkbox(typeId)', function (data) {
+
+                $("#chooseHiden").hide();
+
+                //使用范围
+                var typeId = data.value;
+
+                $(":checkbox[name='typeId']").not($(data.elem)).removeAttr("checked");
+                $(data.elem).attr("checked", "checked");
+                switch (typeId) {
+                    //券类红包
+                    case "1":
+                        $("#couponManager").show();
+                        break;
+                    //现金红包
+                    case "2":
+                        $("#chooseHiden").show();
+                        $("#couponManager").hide();
+                        break;
+                }
+                form.render();
+            });
+
+            //触发点击使用范围事件
+            var typeId = [[${info.typeId}]];
+            if (typeId) {
+                $(":checkbox[name='typeId'][value='" + typeId + "']").next("div.layui-form-checkbox").trigger("click");
+            }
+
+
+            //选择优惠券
+            $("#btnChooseCoupons").click(function () {
+                var couponIds = getChoosedCoupon();
+                window.TX.TEMP.LAYERINDEX = window.layer.open({
+                    title: "",
+                    type: 2,
+                    btn: ['选择', '关闭'],
+                    content: "/admin/redpacket/chooseCoupons?couponIds=" + couponIds.join(',') + "&" + Math.random(),
+                    area: ["800px", "600px"],
+                    yes: function (index, layero) {
+                        var iframe = layero.find('iframe');
+                        iframe.contents().find("button[lay-submit]").click();
+                    }
+                });
+            });
+
+            /**
+             * 删除所选优惠券
+             */
+            $(document).on("click", "button[data-method='delete']", function () {
+
+                var self = this;
+                layer.confirm('确定删除优惠券吗?', {icon: 3}, function (index) {
+                    layer.close(index);
+                    $(self).parents("tr:first").remove();
+                });
+
+            });
+
+            form.on("submit", function (data) {
+
+                //移除下拉框disable状态
+                $("select[name='typeId']").each(function () {
+                    if (parseInt($(this).val()) != -1) {
+                        $(this).attr("disabled", false);
+                    }
+                });
+
+                TX.CORE.p({
+                    data: $("form.layui-form").serialize(),
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                // parent.tab.openTab("/admin/product/index", {refershType: "refersh"});
+                                location.href = "/admin/redpacket";
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
+
+            });
+
+            $("#btnClose").click(function () {
+                if (parent.window.TX.TEMP.LAYERINDEX) {
+                    parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
+                } else {
+                    var currentTabId = parent.tab.getCurrentTabId();
+                    parent.tab.deleteTab(currentTabId);
+                }
+            });
+
+        });
+
+        /**
+         * 获取所选优惠券编号
+         */
+        function getChoosedCoupon() {
+            var couponIds = [];
+            $(":hidden[name='typeId']").each(function () {
+                couponIds.push(parseInt(this.value, 10));
+            });
+            return couponIds;
+        }
+
+
+        /**
+         * 选择优惠券
+         * @param pss
+         */
+
+        function chooseCoupons(couponIds) {
+            var type = 1;
+
+            if (couponIds.length == 0) {
+                return;
+            }
+            var choosed = getChoosedCoupon();
+
+            //判断是否存在
+            $("input[type='hidden'][name='couponIds']").each(function (j) {
+                var value = this.value;
+                var self = this;
+                for (var i = 0; i < couponIds.length; i++) {
+                    if (value == couponIds[i]) {
+                        layer.msg("优惠券已存在,请重新选择!", {icon: 2});
+                        type = 2;
+                        return false;
+                    }
+                }
+            });
+
+            if (type == 1) {
+                TX.CORE.p({
+                    data: {couponIds: couponIds.join(',')},
+                    url: "/admin/redpacket/redpacketCoupons",
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+
+                            if (!resp.datas || resp.datas.length == 0) {
+                                return;
+                            }
+                            console.log("响应数据", resp.datas);
+                            var html = [];
+                            $.each(resp.datas, function (i, item) {
+                                if ($.inArray(item.coupon, choosed) != -1) {
+                                    return true;
+                                }
+                                html.push('<tr>');
+                                html.push('    <td>' + item.couponName + '</td>');
+                                html.push('    <td>' + item.amount + '</td>');
+                                html.push('    <td>' + item.typeId + '</td>');
+                                html.push('    <td>' + item.userRange + '</td> ');
+                                html.push('    <td>' + item.validDays + '</td> ');
+
+                                html.push(' <td>');
+                                html.push('  <button type="button" data-method="reduce" class="layui-btn layui-btn-xs"><i class="layui-icon">&#xe61a;</i></button>');
+                                html.push('   <input type="text" value="' + item.number + '" name="number" style="width: 40%; text-align: center; border-color: darkgreen">');
+                                html.push(' <button type="button" data-method="add" class="layui-btn layui-btn-xs"><i class="layui-icon">&#xe619;</i></button>');
+                                html.push('  </td>');
+
+                                html.push('   <td>');
+                                html.push('   <input type="hidden" name="couponIds" value="' + item.couponId + '"/>');
+                                html.push('     <button type="button" data-method="delete" data-id="' + item.couponId + '" class="layui-btn layui-btn-xs layui-btn-danger">');
+                                html.push('     <i class="layui-icon">&#xe640;</i>删除</button>');
+                                html.push('    </td>');
+                                html.push('</tr>');
+                            });
+                            $("#content").append(html.join(''));
+
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
+            }
+        }
+
+
+        //优惠券的加减
+        $(function () {
+            $(document).on("click", "button[data-method='reduce']", function () {
+                var number = parseInt($(this).next(":text").val(), 10);
+                if (number <= 0) {
+                    return;
+                }
+                number--;
+                $(this).next(":text").val(number)
+            });
+
+            $(document).on("click", "button[data-method='add']", function () {
+                var number = parseInt($(this).prev(":text").val(), 10);
+                number++;
+                $(this).prev(":text").val(number)
+            });
+
+        });
+
+    </script>
+</th:block>
+</html>
