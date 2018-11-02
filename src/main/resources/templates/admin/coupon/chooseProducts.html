@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:td="http://www.w3.org/1999/html"
+      layout:decorator="admin/layout">
+<script src="static/common/plugins/layui/layui.js" charset="utf-8"></script>
+<link rel="stylesheet" href="static/common/plugins/layui/css/layui.css" media="all">
+<div layout:fragment="content" class="admin-main layui-anim" style="margin: 15px;">
+
+    <div class="admin-main layui-anim">
+        <blockquote class="layui-elem-quote" style="float: left;width:97%;">
+
+            <form class="layui-form" method="get" style="float:right;">
+                <div class="layui-form-item" style="margin:0;">
+
+                    <label class="layui-form-label">商品名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="keys" placeholder="输入商品名搜索……" th:value="${keys}" autocomplete="off"
+                               class="layui-input"/>
+                    </div>
+                    <div class="layui-input-inline">
+                        <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
+                            <i class="layui-icon">&#xe615;</i> 查询
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </blockquote>
+        <div class="layui-field-box layui-form">
+            <table style="width:100%;">
+                    <tr>
+                        <td>
+                            <table class="layui-table" style="margin: 3px 0;" lay-size="sm">
+                                <thead>
+                                <tr>
+                                    <th style="width:5%;"></th>
+                                    <th>名称</th>
+                                    <th>售价</th>
+                                    <th>原价</th>
+                                    <th>库存</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:block th:each="info : ${infos.list}">
+                                <th:block th:with="pro=${productLogic.GetProduct(info.productId)}">
+                                    <td>
+                                        <input th:disabled="${pro.stockCount <= 0}"
+                                               type="checkbox" lay-ignore style="width:20px;height:20px;"
+                                               th:value="${pro.productId}"
+                                               name="product">
+                                    </td>
+                                    <td th:text="${pro.productName}"></td>
+                                    <td th:text="${pro.salePrice}"></td>
+                                    <td th:text="${pro.originalPrice}"></td>
+                                    <td th:text="${pro.stockCount}"></td>
+                                </th:block>
+                                </th:block>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+            </table>
+
+            <div th:replace="comm/macros :: pageAdminNav(${infos})"></div>
+
+        </div>
+
+        <div class="layui-form-item" style="display: none;">
+            <div class="layui-input-block" style="margin-left: 15px;">
+                <button type="button" class="layui-btn" lay-submit id="btnChooseProducts">
+                    <i class="layui-icon">&#xea97;</i>
+                    添加
+                </button>
+                <button type="button" class="layui-btn" id="btnClose">
+                    <i class="layui-icon">&#xe68d;</i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        TX.INIT(function (layui) {
+
+            $("table.layui-table tr").each(function (obj) {
+                $("td:gt(0)", $(this)).click(function () {
+                    var ck = $(":checkbox", $(this).parent("tr:first"));
+                    if (ck.length) {
+                        if (ck.attr("checked")) {
+                            ck.removeAttr("checked");
+                        } else {
+                            ck.attr("checked", "checked");
+                        }
+                    }
+                });
+            });
+
+            $("#btnChooseProducts").click(function () {
+
+                var productIds = [];
+                $(":checkbox[name='product']:checked").each(function () {
+                    productIds.push(this.value);
+                });
+
+                if (productIds.length == 0) {
+                    layer.msg('请选择商品', {icon: 2});
+                    return false;
+                }
+                parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
+                parent.chooseProducts(productIds);
+            });
+
+        });
+
+    </script>
+</th:block>
+</html>
