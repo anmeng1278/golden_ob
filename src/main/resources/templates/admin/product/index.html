@@ -22,7 +22,12 @@
                         <input type="text" name="keys" placeholder="关键字……" th:value="${keys}" autocomplete="off"
                                class="layui-input"/>
                     </div>
-                    <div class="layui-input-inline">
+
+                    <div class="layui-input-inline" style="width:100px;">
+                        <input type="checkbox" name="isSellout" th:checked="${isSellout=='on'}" lay-skin="primary" title="已售罄">
+                    </div>
+
+                    <div class="layui-input-inline" style="width: 100px;">
                         <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
                             <i class="layui-icon">&#xe615;</i> 查询
                         </button>

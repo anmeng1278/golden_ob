@@ -45,11 +45,6 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
-
-    <!-- 资源访问拦截 -->
-    <mvc:resources mapping="/upload/**" location="/upload/"></mvc:resources>
-
-
     <!-- 事务管理器 -->
     <bean id="txManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -58,5 +53,10 @@
 
     <!-- 事务注解驱动，标注@Transactional的类和方法将具有事务性 -->
     <tx:annotation-driven transaction-manager="txManager"/>
+
+
+    <!-- 资源访问拦截 -->
+    <mvc:resources mapping="/upload/**" location="/upload/"></mvc:resources>
+
 
 </beans>

@@ -87,6 +87,7 @@ public class ProductLogic {
         //商品规格
         List<ProductSpecDto> productSpecDtos = ProductLogic.GetProductSpecDtos(productId);
         productDto.setProductSpecDtos(productSpecDtos);
+        productDto.setStockCount(0);
 
         if (!productSpecDtos.isEmpty()) {
 

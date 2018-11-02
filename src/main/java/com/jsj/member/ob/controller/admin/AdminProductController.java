@@ -53,22 +53,30 @@ public class AdminProductController {
      * @param page
      * @param limit
      * @param keys
+     * @param isSellout
      * @param request
      * @return
      */
     @GetMapping(value = {"", "/index"})
     public String index(@RequestParam(value = "page", defaultValue = "1") int page,
                         @RequestParam(value = "limit", defaultValue = "20") int limit,
+                        @RequestParam(value = "isSellout", defaultValue = "") String isSellout,
                         @RequestParam(value = "keys", defaultValue = "") String keys,
                         HttpServletRequest request) {
 
+
+        EntityWrapper<Product> wrapper = new EntityWrapper<Product>();
+        wrapper.where(!StringUtils.isBlank(keys), "(product_name LIKE concat(concat('%',{0}),'%') )", keys);
+        wrapper.where(!StringUtils.isBlank(isSellout), "ifnull(( select sum(_product_spec.stock_count) from _product_spec where _product_spec.product_id = _product.product_id), 0) = 0");
+
         Page<Product> pageInfo = new Page<>(page, limit);
-        Page<Product> pp = productService.selectPage(pageInfo, new EntityWrapper<Product>());
+        Page<Product> pp = productService.selectPage(pageInfo, wrapper);
 
         request.setAttribute("infos", new CCPage<Product>(pp, limit));
         request.setAttribute("keys", keys);
+        request.setAttribute("isSellout", isSellout);
 
-        return "admin/Product/index";
+        return "admin/product/index";
     }
 
 
@@ -103,7 +111,7 @@ public class AdminProductController {
         request.setAttribute("productPerproties", productPerproties);
         request.setAttribute("productTypes", productTypes);
 
-        return "admin/Product/info";
+        return "admin/product/info";
     }
 
     /**
@@ -276,7 +284,7 @@ public class AdminProductController {
         request.setAttribute("info", entity);
         request.setAttribute("productImgs", productImgs);
 
-        return "admin/Product/productImgs";
+        return "admin/product/productImgs";
     }
 
 

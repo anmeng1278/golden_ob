@@ -63,10 +63,10 @@
                         <span class="layui-nav-more"></span></a>
 
                     <dl class="layui-nav-child layui-anim layui-anim-upbit">
-                        <dd><a title="提货列表" data-tab-href="/admin/delivery"><span
+                        <dd><a href="javascript:;" title="提货列表" data-tab-href="/admin/delivery"><span
                                 th:text="|待发货：${unDeliveryCount}|"></span><span th:if="${unDeliveryCount > 0}"
                                                                                 class="layui-badge-dot"></span></a></dd>
-                        <dd><a title="商品列表" data-tab-href="/admin/product"><span th:text="|已售罄：${sellOutCount}|"></span><span
+                        <dd><a href="javascript:;" title="商品列表" data-tab-href="/admin/product?isSellout=on"><span th:text="|已售罄：${sellOutCount}|"></span><span
                                 th:if="${sellOutCount > 0}" class="layui-badge-dot"></span></a></dd>
                         <hr>
                     </dl>

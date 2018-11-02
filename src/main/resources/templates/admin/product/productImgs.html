@@ -29,16 +29,16 @@
                 <th:block th:each="info : ${productImgs}">
                     <label style="position: relative; float: left;margin-right: 10px;">
                         <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>
-                        <img class="layui-upload-img" style="width:115px;height:115px;" th:src="${info.imgPath}" />
-                        <input type="hidden" name="imgpath" th:value="${info.imgPath}" />
+                        <img class="layui-upload-img" style="width:115px;height:115px;" th:src="${info.imgPath}"/>
+                        <input type="hidden" name="imgpath" th:value="${info.imgPath}"/>
                     </label>
                 </th:block>
 
-                <th:block  th:if="${#lists.isEmpty(productImgs)}">
+                <th:block th:if="${#lists.isEmpty(productImgs)}">
                     <label style="position: relative; float: left;margin-right: 10px;">
                         <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>
-                        <img class="layui-upload-img" style="width:115px;height:115px;"  />
-                        <input type="hidden" name="imgpath" />
+                        <img class="layui-upload-img" style="width:115px;height:115px;"/>
+                        <input type="hidden" name="imgpath"/>
                     </label>
                 </th:block>
 
@@ -156,8 +156,8 @@
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                // parent.tab.openTab("/admin/product/index", {refershType: "refersh"});
-                                location.href = "/admin/product";
+                                parent.tab.openTab("/admin/product", {refershType: "refersh"});
+                                // location.href = "/admin/product";
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
