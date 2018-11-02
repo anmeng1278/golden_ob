@@ -1,4 +1,4 @@
-package com.jsj.member.ob.dto.wechatApi;
+package com.jsj.member.ob.dto.thirdParty;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;

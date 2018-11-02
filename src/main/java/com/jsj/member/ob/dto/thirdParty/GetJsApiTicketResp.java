@@ -1,17 +1,17 @@
-package com.jsj.member.ob.dto.wechatApi;
+package com.jsj.member.ob.dto.thirdParty;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class GetAccessTokenResp {
+public class GetJsApiTicketResp {
 
-    public GetAccessTokenResp(){
+    public GetJsApiTicketResp(){
         this.responseHead = new ResponseHead();
     }
 
     @JSONField(name = "ResponseHead")
     private ResponseHead responseHead;
 
-    @JSONField(name = "RequestBody")
+    @JSONField(name = "ResponseBody")
     private ResponseBody responseBody;
 
     public ResponseHead getResponseHead() {
@@ -32,15 +32,15 @@ public class GetAccessTokenResp {
 
     public class ResponseBody{
 
-        @JSONField(name = "AccessToken")
-        private String AccessToken;
-
-        public String getAccessToken() {
-            return AccessToken;
+        public String getJsApiTicket() {
+            return JsApiTicket;
         }
 
-        public void setAccessToken(String accessToken) {
-            AccessToken = accessToken;
+        public void setJsApiTicket(String jsApiTicket) {
+            JsApiTicket = jsApiTicket;
         }
+
+        private String JsApiTicket;
+
     }
 }
