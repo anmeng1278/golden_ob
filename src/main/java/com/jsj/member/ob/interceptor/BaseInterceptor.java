@@ -49,6 +49,9 @@ public class BaseInterceptor implements HandlerInterceptor {
     GiftLogic giftLogic;
 
     @Autowired
+    CouponLogic couponLogic;
+
+    @Autowired
     DeliveryLogic deliveryLogic;
 
     @Override
@@ -70,7 +73,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         httpServletRequest.setAttribute("activityLogic", activityLogic);
         httpServletRequest.setAttribute("stockLogic", stockLogic);
         httpServletRequest.setAttribute("giftLogic", giftLogic);
-
+        httpServletRequest.setAttribute("couponLogic", couponLogic);
         httpServletRequest.setAttribute("deliveryLogic", deliveryLogic);
     }
 
