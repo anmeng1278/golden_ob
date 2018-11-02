@@ -108,4 +108,32 @@ public class EnumLogic {
         return GiftShareType.valueOf(value);
     }
 
+    /**
+     * 优惠券类型
+     * @param value
+     * @return
+     */
+    public static CouponType GetCouponType(Integer value) {
+        return CouponType.valueOf(value);
+    }
+
+
+    /**
+     * 优惠券使用范围
+     * @param value
+     * @return
+     */
+    public static CouponUseRange GetCouponUseRange(Integer value) {
+        return CouponUseRange.valueOf(value);
+    }
+
+    /**
+     * 礼包类型
+     * @param value
+     * @return
+     */
+    public static RedpacketType GetRedpacketType(Integer value) {
+        return RedpacketType.valueOf(value);
+    }
+
 }
