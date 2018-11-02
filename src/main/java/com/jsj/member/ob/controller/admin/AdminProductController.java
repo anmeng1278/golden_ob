@@ -68,7 +68,7 @@ public class AdminProductController {
         request.setAttribute("infos", new CCPage<Product>(pp, limit));
         request.setAttribute("keys", keys);
 
-        return "admin/Product/index";
+        return "admin/product/index";
     }
 
 
@@ -103,7 +103,7 @@ public class AdminProductController {
         request.setAttribute("productPerproties", productPerproties);
         request.setAttribute("productTypes", productTypes);
 
-        return "admin/Product/info";
+        return "admin/product/info";
     }
 
     /**
@@ -276,7 +276,7 @@ public class AdminProductController {
         request.setAttribute("info", entity);
         request.setAttribute("productImgs", productImgs);
 
-        return "admin/Product/productImgs";
+        return "admin/product/productImgs";
     }
 
 
