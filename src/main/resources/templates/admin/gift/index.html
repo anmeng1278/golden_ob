@@ -10,15 +10,13 @@
                     <label class="layui-form-label">赠送日期</label>
                     <div class="layui-input-inline width100">
                         <input type="text" name="startDate" id="startDate" th:value="${startDate}" class="layui-input"
-                               autocomplete="off"
-                               onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                               autocomplete="off">
 
                     </div>
                     <label class="layui-form-label width10" style="width:10px;"> 至</label>
                     <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="endDate" th:value="${endDate}" id="endDate"
-                               autocomplete="off"
-                               onClick="WdatePicker({minDate:'#F{\$dp.$D(\'startDate\')}'})">
+                               autocomplete="off">
                     </div>
 
                     <label class="layui-form-label">分享类型</label>
@@ -131,6 +129,17 @@
                     });
                 }
             });
+
+            //日期
+            laydate.render({
+                elem: '#startDate',
+                type: 'date'
+            });
+            laydate.render({
+                elem: '#endDate',
+                type: 'date'
+            });
+
 
         });
 

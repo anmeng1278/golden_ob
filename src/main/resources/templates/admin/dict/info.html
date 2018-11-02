@@ -80,8 +80,8 @@
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                // parent.tab.openTab("/admin/product/index", {refershType: "refersh"});
-                                location.href = "/admin/dict";
+                                parent.tab.openTab("/admin/dict", {refershType: "refersh"});
+                                //location.href = "/admin/dict";
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
