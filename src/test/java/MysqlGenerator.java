@@ -81,12 +81,12 @@ public class MysqlGenerator {
             //"_product",
             //"_product_img",
             //"_product_spec",
-            //"_redpacket",
+            "_redpacket",
             //"_redpacket_coupon",
             //"_stock",
             //"_stock_flow",
             //"_v_area",
-            "_wechat"
+            //"_wechat"
             //"_wechat_coupon"
     };
     private static String[] prefix = new String[]{""};
