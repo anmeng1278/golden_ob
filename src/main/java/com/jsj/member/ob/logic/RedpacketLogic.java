@@ -10,6 +10,7 @@ import com.jsj.member.ob.entity.RedpacketCoupon;
 import com.jsj.member.ob.entity.WechatCoupon;
 import com.jsj.member.ob.enums.CouponStatus;
 import com.jsj.member.ob.enums.RedpacketType;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.OrderRedpacketCouponService;
 import com.jsj.member.ob.service.RedpacketCouponService;
 import com.jsj.member.ob.service.RedpacketService;
@@ -126,22 +127,25 @@ public class RedpacketLogic {
      * @param orderId
      * @return
      */
-    public static List<OrderRedpacketCoupon> GetOrderRedpacket(int orderId) {
+    public static void CreateOrderRedpacket(int orderId) {
+
         //判断当前订单是否已经分配红包
         EntityWrapper<OrderRedpacketCoupon> entityWrapper = new EntityWrapper();
-        entityWrapper.where("order_id={0} and delete_time is null", orderId);
+        entityWrapper.where("order_id={0}", orderId);
         List<OrderRedpacketCoupon> orderRedpacketCoupons = redpacketLogic.orderRedpacketCouponService.selectList(entityWrapper);
         if (orderRedpacketCoupons.size() != 0) {
-            return orderRedpacketCoupons;
+            return;
         }
 
         //如没有分配红包则查询出一个排名最优，在有效期内的红包
         EntityWrapper<Redpacket> redpacketWrapper = new EntityWrapper<>();
-        redpacketWrapper.where("exists( select min(sort) from _redpacket where _redpacket.redpacket_id = redpacket_id and  _redpacket.delete_time is null and _redpacket.ifpass = 1 and ( UNIX_TIMESTAMP() between _redpacket.begin_time and _redpacket.end_time ) )");
+        redpacketWrapper.where("delete_time is null");
+        redpacketWrapper.where("ifpass=1");
+        redpacketWrapper.where("UNIX_TIMESTAMP() between begin_time and end_time");
         redpacketWrapper.orderBy("sort asc");
         Redpacket redpacket = redpacketLogic.redpacketService.selectOne(redpacketWrapper);
         if (redpacket == null) {
-            return orderRedpacketCoupons;
+            return;
         }
 
         //获取红包中的优惠券
@@ -151,6 +155,7 @@ public class RedpacketLogic {
         OrderRedpacketCoupon orderRedpacketCoupon = new OrderRedpacketCoupon();
         for (RedpacketCouponDto redpacketCouponDto : redpacketCouponDtos) {
 
+            //TODO 添加number循环
             orderRedpacketCoupon.setOrderId(orderId);
             orderRedpacketCoupon.setCouponId(redpacketCouponDto.getCouponId());
             orderRedpacketCoupon.setAmount(redpacketCouponDto.getCouponDto().getAmount());
@@ -162,13 +167,12 @@ public class RedpacketLogic {
             orderRedpacketCoupons.add(orderRedpacketCoupon);
 
         }
-
-        return orderRedpacketCoupons;
     }
 
 
     public static WechatCoupon DistributeRedpacket(String openId, int orderId) {
 
+        //TODO 每个人只能领取一次
         //这个订单发送一个红包，用户去领取，把优惠券分配给某人，状态未使用，过期时间为当前时间+优惠券有效时间,订单中的ifreceived改为已领取，领取时间
 
         //获得订单的礼包
@@ -177,12 +181,13 @@ public class RedpacketLogic {
         //去为这个用户随机分配一个未被领取的优惠券
         List<OrderRedpacketCoupon> collect = orderRedpacketCoupons.stream().filter(item -> item.getIfreceived() == false).collect(Collectors.toList());
 
+
         //产生一个小于集合大小的随机数，根据这个随机数查找第i条数据给用户
         WechatCoupon wechatCoupon = new WechatCoupon();
 
         Random random = new Random();
         if (collect.size() == 0) {
-            return wechatCoupon;
+            throw new TipException("已被领完啦");
         }
         int i = random.nextInt(collect.size());
 
@@ -202,9 +207,13 @@ public class RedpacketLogic {
         wechatCoupon.setCreateTime(DateUtils.getCurrentUnixTime());
         wechatCoupon.setUpdateTime(DateUtils.getCurrentUnixTime());
 
+        //TODO INSERT
+
         orderRedpacketCoupon.setIfreceived(true);
         orderRedpacketCoupon.setOrderId(Integer.valueOf(openId));
         orderRedpacketCoupon.setReceivedTime(DateUtils.getCurrentUnixTime());
+
+        //TODO UPDATE
         return wechatCoupon;
     }
 }
