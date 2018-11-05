@@ -200,8 +200,9 @@ public class CartLogic {
         //获取购物车中商品
         List<CartProduct> cartProductList = cartLogic.cartProductService.selectList(wrapper);
 
-        CartProductDto cartProductDto = new CartProductDto();
         for (CartProduct cp : cartProductList) {
+            CartProductDto cartProductDto = new CartProductDto();
+
             //获取商品详情
             ProductDto productDto = ProductLogic.GetProduct(cp.getProductId());
             cartProductDto.setCartProductId(cp.getCartProductId());
