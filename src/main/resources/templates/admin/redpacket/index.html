@@ -49,7 +49,7 @@
                     <th style="width: 10%;">排序</th>
                     <th style="width: 10%;">是否审核</th>
                     <th style="width: 15%;">创建时间</th>
-                    <th style="width: 15%;">修改时间</th>
+                    <th style="width: 15%;">有效时间</th>
                     <th style="width: 20%;">操作</th>
                 </tr>
                 </thead>
@@ -78,7 +78,13 @@
                         </td>
 
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                        <td th:text="${dateUtils.formatDateByUnixTime(info.updateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td>
+                            <th:block
+                                    th:text="${dateUtils.formatDateByUnixTime(info.beginTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+                            <br/>
+                            <th:block
+                                    th:text="${dateUtils.formatDateByUnixTime(info.endTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+                        </td>
                         <td>
                             <a th:title="|${info.redpacketName}详情|"
                                th:attr="data-tab-href=@{'/admin/redpacket/'+${info.redpacketId}}"
