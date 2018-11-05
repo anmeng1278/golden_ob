@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.service.IService;
  *   @description : Redpacket 服务接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-02
+ *   @since 2018-11-05
  */
 public interface RedpacketService extends IService<Redpacket> {
 	

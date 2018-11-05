@@ -117,7 +117,7 @@
                                 <button type="button" data-method="reduce" class="layui-btn layui-btn-xs"><i
                                         class="layui-icon">&#xe61a;</i></button>
                                 <input type="text" th:value="${info.number}" name="number"
-                                       style="width: 40%; text-align: center; border-color: darkgreen">
+                                       style="width: 40%; text-align: center;">
                                 <button type="button" data-method="add" class="layui-btn layui-btn-xs"><i
                                         class="layui-icon">&#xe619;</i></button>
                             </td>
@@ -235,8 +235,8 @@
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                // parent.tab.openTab("/admin/product/index", {refershType: "refersh"});
-                                location.href = "/admin/redpacket";
+                                parent.tab.openTab("/admin/redpacket", {refershType: "refersh"});
+                                // location.href = "/admin/redpacket";
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
@@ -262,7 +262,7 @@
          */
         function getChoosedCoupon() {
             var couponIds = [];
-            $(":hidden[name='typeId']").each(function () {
+            $(":hidden[name='couponIds']").each(function () {
                 couponIds.push(parseInt(this.value, 10));
             });
             return couponIds;
@@ -280,20 +280,20 @@
             if (couponIds.length == 0) {
                 return;
             }
-            var choosed = getChoosedCoupon();
+            var chooseCoupons = getChoosedCoupon();
 
             //判断是否存在
-            $("input[type='hidden'][name='couponIds']").each(function (j) {
-                var value = this.value;
-                var self = this;
-                for (var i = 0; i < couponIds.length; i++) {
-                    if (value == couponIds[i]) {
-                        layer.msg("优惠券已存在,请重新选择!", {icon: 2});
-                        type = 2;
-                        return false;
-                    }
-                }
-            });
+            // $("input[type='hidden'][name='couponIds']").each(function (j) {
+            //     var value = this.value;
+            //     var self = this;
+            //     for (var i = 0; i < couponIds.length; i++) {
+            //         if (value == couponIds[i]) {
+            //             layer.msg("优惠券已存在,请重新选择!", {icon: 2});
+            //             type = 2;
+            //             return false;
+            //         }
+            //     }
+            // });
 
             if (type == 1) {
                 TX.CORE.p({
@@ -308,7 +308,7 @@
                             console.log("响应数据", resp.datas);
                             var html = [];
                             $.each(resp.datas, function (i, item) {
-                                if ($.inArray(item.coupon, choosed) != -1) {
+                                if ($.inArray(item.couponId, chooseCoupons) != -1) {
                                     return true;
                                 }
                                 html.push('<tr>');
@@ -320,7 +320,7 @@
 
                                 html.push(' <td>');
                                 html.push('  <button type="button" data-method="reduce" class="layui-btn layui-btn-xs"><i class="layui-icon">&#xe61a;</i></button>');
-                                html.push('   <input type="text" value="' + item.number + '" name="number" style="width: 40%; text-align: center; border-color: darkgreen">');
+                                html.push('   <input type="text" value="' + item.number + '" name="number" style="width: 40%; text-align: center; ">');
                                 html.push(' <button type="button" data-method="add" class="layui-btn layui-btn-xs"><i class="layui-icon">&#xe619;</i></button>');
                                 html.push('  </td>');
 
@@ -346,7 +346,7 @@
         $(function () {
             $(document).on("click", "button[data-method='reduce']", function () {
                 var number = parseInt($(this).next(":text").val(), 10);
-                if (number <= 0) {
+                if (number <= 1) {
                     return;
                 }
                 number--;

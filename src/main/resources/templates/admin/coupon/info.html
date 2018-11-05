@@ -69,7 +69,7 @@
         </div>
 
 
-        <div class="layui-form-item" id="chooseHiden" style="width: auto">
+        <div class="layui-form-item" id="chooseProducts" style="width: auto;display:none;">
 
             <div class="layui-form-item" style="float: top;">
                 <div class="layui-input-inline">
@@ -92,6 +92,7 @@
                         </div>
                     </th:block>
                 </blockquote>
+                <div class="layui-form-mid layui-word-aux">双击删除所选商品</div>
             </div>
         </div>
 
@@ -149,7 +150,7 @@
             //监听指定开关
             form.on('checkbox(userRange)', function (data) {
 
-                $("#chooseHiden").hide();
+                $("#chooseProducts").hide();
 
                 //使用范围
                 var userRange = data.value;
@@ -158,7 +159,7 @@
                 $(data.elem).attr("checked", "checked");
 
                 if (userRange == 2) {
-                    $("#chooseHiden").show();
+                    $("#chooseProducts").show();
                 }
                 form.render();
             });
@@ -186,8 +187,8 @@
                 });
             });
 
-            //删除商品
-            $(document).on("click", "#content div.layui-badge", function () {
+            //双击删除
+            $(document).on("dblclick", "#content div.layui-badge", function () {
                 var self = this;
                 layer.confirm('确定删除该信息吗?', {icon: 3}, function (index) {
                     layer.close(index);
@@ -210,8 +211,8 @@
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                // parent.tab.openTab("/admin/product/index", {refershType: "refersh"});
-                                location.href = "/admin/coupon";
+                                parent.tab.openTab("/admin/coupon", {refershType: "refersh"});
+                                //location.href = "/admin/coupon";
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
@@ -256,20 +257,20 @@
                 return;
             }
 
-            var choosed = getChoosedProduct();
+            var choosedProducts = getChoosedProduct();
 
             //判断是否存在
-            $("input[type='hidden'][name='productId']").each(function (j) {
-                var value = this.value;
-                var self = this;
-                for (var i = 0; i < productIds.length; i++) {
-                    if (value == productIds[i]) {
-                        layer.msg("优惠券已存在,请重新选择!", {icon: 2});
-                        type = 2;
-                        return false;
-                    }
-                }
-            });
+            // $("input[type='hidden'][name='productId']").each(function (j) {
+            //     var value = this.value;
+            //     var self = this;
+            //     for (var i = 0; i < productIds.length; i++) {
+            //         if (value == productIds[i]) {
+            //             layer.msg("优惠券已存在,请重新选择!", {icon: 2});
+            //             type = 2;
+            //             return false;
+            //         }
+            //     }
+            // });
 
             if (type == 1) {
                 TX.CORE.p({
@@ -284,7 +285,7 @@
                             console.log("响应数据", resp.datas);
                             var html = [];
                             $.each(resp.datas, function (i, item) {
-                                if ($.inArray(item.product, choosed) != -1) {
+                                if ($.inArray(item.productId, choosedProducts) != -1) {
                                     return true;
                                 }
                                 html.push('<div class="layui-badge" style="cursor:pointer;">');

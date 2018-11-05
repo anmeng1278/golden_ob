@@ -5,15 +5,12 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.coupon.CouponDto;
-import com.jsj.member.ob.dto.api.product.ProductDto;
-import com.jsj.member.ob.entity.*;
-import com.jsj.member.ob.enums.CouponType;
-import com.jsj.member.ob.enums.CouponUseRange;
+import com.jsj.member.ob.entity.Coupon;
+import com.jsj.member.ob.entity.Redpacket;
+import com.jsj.member.ob.entity.RedpacketCoupon;
 import com.jsj.member.ob.enums.RedpacketType;
 import com.jsj.member.ob.logic.CouponLogic;
-import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.CouponService;
-import com.jsj.member.ob.service.ProductSpecService;
 import com.jsj.member.ob.service.RedpacketCouponService;
 import com.jsj.member.ob.service.RedpacketService;
 import com.jsj.member.ob.utils.CCPage;
@@ -66,7 +63,7 @@ public class AdminRedpacketController {
             wrapper.where("type_id={0}", typeId);
         }
         wrapper.where(!StringUtils.isBlank(keys), "(redpacket_name LIKE concat(concat('%',{0}),'%') )", keys);
-        wrapper.orderBy("create_time desc");
+        wrapper.orderBy("sort asc, create_time desc");
 
         Page<Redpacket> pageInfo = new Page<>(page, limit);
         Page<Redpacket> pp = redpacketService.selectPage(pageInfo, wrapper);

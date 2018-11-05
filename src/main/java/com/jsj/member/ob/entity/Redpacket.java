@@ -1,17 +1,18 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Redpacket 礼包表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-02
+ *   @since 2018-11-05
  */
 @TableName("_redpacket")
 public class Redpacket implements Serializable {
@@ -30,6 +31,10 @@ public class Redpacket implements Serializable {
      */
 	@TableField("type_id")
 	private Integer typeId;
+	@TableField("begin_time")
+	private Integer beginTime;
+	@TableField("end_time")
+	private Integer endTime;
     /**
      * 是否审核
      */
@@ -79,6 +84,22 @@ public class Redpacket implements Serializable {
 		this.typeId = typeId;
 	}
 
+	public Integer getBeginTime() {
+		return beginTime;
+	}
+
+	public void setBeginTime(Integer beginTime) {
+		this.beginTime = beginTime;
+	}
+
+	public Integer getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Integer endTime) {
+		this.endTime = endTime;
+	}
+
 	public Boolean getIfpass() {
 		return ifpass;
 	}
@@ -126,6 +147,8 @@ public class Redpacket implements Serializable {
 			", redpacketId=" + redpacketId +
 			", redpacketName=" + redpacketName +
 			", typeId=" + typeId +
+			", beginTime=" + beginTime +
+			", endTime=" + endTime +
 			", ifpass=" + ifpass +
 			", sort=" + sort +
 			", createTime=" + createTime +

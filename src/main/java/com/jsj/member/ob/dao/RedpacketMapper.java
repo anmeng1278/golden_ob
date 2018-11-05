@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
  *   @description : Redpacket Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-02
+ *   @since 2018-11-05
  */
 @Repository
 public interface RedpacketMapper extends BaseMapper<Redpacket> {

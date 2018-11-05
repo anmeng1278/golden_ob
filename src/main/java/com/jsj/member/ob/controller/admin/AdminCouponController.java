@@ -5,14 +5,15 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.product.ProductDto;
-import com.jsj.member.ob.entity.*;
+import com.jsj.member.ob.entity.Coupon;
+import com.jsj.member.ob.entity.CouponProduct;
+import com.jsj.member.ob.entity.Product;
 import com.jsj.member.ob.enums.CouponType;
 import com.jsj.member.ob.enums.CouponUseRange;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.CouponProductService;
 import com.jsj.member.ob.service.CouponService;
 import com.jsj.member.ob.service.ProductService;
-import com.jsj.member.ob.service.ProductSpecService;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -105,6 +106,7 @@ public class AdminCouponController {
 
         } else {
             coupon.setTypeId(CouponType.DISCOUNT.getValue());
+            coupon.setUserRange(CouponUseRange.ALL.getValue());
         }
         //获取优惠券类型
         List<CouponType> couponTypes = Arrays.asList(CouponType.values()).stream().filter(x -> !x.equals(CouponType.UNSET)).collect(Collectors.toList());
