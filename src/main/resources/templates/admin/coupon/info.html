@@ -86,8 +86,7 @@
                 <blockquote id="content" class="layui-elem-quote layui-quote-nm" style="width: 88%;">
                     <th:block th:each="couponProduct:${couponProducts}">
                         <div class="layui-badge" style="cursor:pointer;">
-                            <th:block
-                                    th:text="${productLogic.GetProduct(couponProduct.productId).productName}"></th:block>
+                            <label th:text="${productLogic.GetProduct(couponProduct.productId).productName}"></label>
                             <input type="hidden" name="productId" th:value="${couponProduct.productId}">
                         </div>
                     </th:block>
@@ -190,7 +189,8 @@
             //双击删除
             $(document).on("dblclick", "#content div.layui-badge", function () {
                 var self = this;
-                layer.confirm('确定删除该信息吗?', {icon: 3}, function (index) {
+                var productName = $("label", $(this)).html();
+                layer.confirm('确定删除所选商品"'+productName+'"吗?', {icon: 3}, function (index) {
                     layer.close(index);
                     $(self).remove();
                 });
@@ -289,7 +289,7 @@
                                     return true;
                                 }
                                 html.push('<div class="layui-badge" style="cursor:pointer;">');
-                                html.push(item.productName);
+                                html.push('    <label>' + item.productName + '</label>');
                                 html.push('    <input type="hidden" name="productId" value="' + item.productId + '">');
                                 html.push('</div> ');
                             });
