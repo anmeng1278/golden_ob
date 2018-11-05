@@ -1,47 +1,284 @@
-
 <!DOCTYPE html>
 <html xmlns:layout="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="admin/layout">
+      xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="admin/layout">
 
-<div layout:fragment="content"
-	class="admin-main layui-anim" style="margin: 15px;">
-	<div class="table-responsive">
-		<table class="layui-table" lay-even="" lay-skin="line">
-			<colgroup>
-			</colgroup>
-			<thead>
-				<tr>
-					<th class="text-center" colspan="2">系统信息</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>网站域名</td>
-					<td th:text="${domain}"></td>
-				</tr>
-				<tr>
-					<td>网站目录</td>
-					<td th:text="${root}"></td>
-				</tr>
-				<tr>
-					<td>服务器操作系统</td>
-					<td th:text="${os}"></td>
-				</tr>
-				<tr>
-					<td>服务器端口</td>
-					<td th:text="${port}"></td>
-				</tr>
-				<tr>
-					<td>服务器IP</td>
-					<td th:text="${ip}"></td>
-				</tr>
-				<tr>
-					<td>Java的运行环境</td>
-					<td th:text="${version}"></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+<div layout:fragment="content">
+
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md8">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header">快捷方式</div>
+                            <div class="layui-card-body">
+
+                                <div class="layui-carousel layadmin-carousel layadmin-shortcut">
+                                    <div>
+                                        <ul class="layui-row layui-col-space10">
+                                            <li class="layui-col-xs3">
+                                                <a data-tab-href="/admin/product" title="商品列表">
+                                                    <i class="layui-icon layui-icon-console"></i>
+                                                    <cite>商品</cite>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs3">
+                                                <a data-tab-href="/admin/activity" title="活动管理">
+                                                    <i class="layui-icon layui-icon-chart"></i>
+                                                    <cite>活动</cite>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs3">
+                                                <a data-tab-href="/admin/wechat" title="用户列表">
+                                                    <i class="layui-icon layui-icon-user"></i>
+                                                    <cite>用户</cite>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs3">
+                                                <a data-tab-href="/admin/order" title="订单列表">
+                                                    <i class="layui-icon layui-icon-chat"></i>
+                                                    <cite>订单</cite>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs3">
+                                                <a data-tab-href="/admin/coupon" title="优惠券列表">
+                                                    <i class="layui-icon layui-icon-find-fill"></i>
+                                                    <cite>优惠券</cite>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs3">
+                                                <a data-tab-href="/admin/redpacket" title="礼包管理">
+                                                    <i class="layui-icon layui-icon-survey"></i>
+                                                    <cite>礼包</cite>
+                                                </a>
+                                            </li>
+
+
+                                        </ul>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header">待办事项</div>
+                            <div class="layui-card-body">
+
+                                <div class="layui-carousel layadmin-carousel layadmin-backlog">
+                                    <div>
+                                        <ul class="layui-row layui-col-space10">
+                                            <li class="layui-col-xs6">
+                                                <a lay-href="app/content/comment.html" style="height:60px;"
+                                                   class="layadmin-backlog-body">
+                                                    <h3>等待发货</h3>
+                                                    <span style="font-style: normal;
+                                                        font-size: 30px;
+                                                        font-weight: 300;
+                                                        color: #009688;">18</span>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs6">
+                                                <a lay-href="app/forum/list.html" style="height:60px;"
+                                                   class="layadmin-backlog-body">
+                                                    <h3>待审商品</h3>
+                                                    <span style="font-style: normal;
+                                                        font-size: 30px;
+                                                        font-weight: 300;
+                                                        color: #009688;">18</span>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs6">
+                                                <a lay-href="template/goodslist.html" style="height:60px;"
+                                                   class="layadmin-backlog-body">
+                                                    <h3>待审活动</h3>
+                                                    <span style="font-style: normal;
+                                                        font-size: 30px;
+                                                        font-weight: 300;
+                                                        color: #009688;">18</span>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs6">
+                                                <a href="javascript:;" style="height:60px;"
+                                                   onclick="layer.tips('不跳转', this, {tips: 3});"
+                                                   class="layadmin-backlog-body">
+                                                    <h3>新增用户</h3>
+                                                    <span style="font-style: normal;
+                                                        font-size: 30px;
+                                                        font-weight: 300;
+                                                        color: #009688;">18</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-card">
+                            <div class="layui-card-header">数据概览</div>
+                            <div class="layui-card-body">
+
+                                <div class="layui-carousel" id="test1" >
+                                    <div carousel-item="">
+                                        <div id="LAY-index-dataview" style="height:300px;">
+
+                                        </div>
+                                        <!--<div>条目2</div>-->
+                                        <!--<div>条目3</div>-->
+                                        <!--<div>条目4</div>-->
+                                        <!--<div>条目5</div>-->
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-col-md4">
+                <div class="layui-card">
+                    <div class="layui-card-header">版本信息</div>
+                    <div class="layui-card-body layui-text">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="100">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <td>网站域名</td>
+                                <td th:text="${domain}"></td>
+                            </tr>
+                            <tr>
+                                <td>网站目录</td>
+                                <td th:text="${root}"></td>
+                            </tr>
+                            <tr>
+                                <td>操作系统</td>
+                                <td th:text="${os}"></td>
+                            </tr>
+                            <tr>
+                                <td>端口</td>
+                                <td th:text="${port}"></td>
+                            </tr>
+                            <tr>
+                                <td>IP地址</td>
+                                <td th:text="${ip}"></td>
+                            </tr>
+                            <tr>
+                                <td>Java版本</td>
+                                <td th:text="${version}"></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
 </div>
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/admin/layuiadmin.css}"></link>
+</th:block>
 
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        TX.INIT(function (layui) {
+
+            var carousel = layui.carousel;
+
+            //常规轮播
+            carousel.render({
+                elem: '#test1'
+                ,arrow: 'none'
+                ,width:'100%'
+                ,anim:'updown'
+            });
+
+            //指定图标的配置和数据
+            var option = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+                },
+                // toolbox: {
+                //     show: true,
+                //     feature: {
+                //         mark: {show: true},
+                //         dataView: {show: true, readOnly: false},
+                //         magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                //         restore: {show: true},
+                //         saveAsImage: {show: true}
+                //     }
+                // },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: '邮件营销',
+                        type: 'line',
+                        stack: '总量',
+                        data: [120, 132, 101, 134, 90, 230, 210]
+                    },
+                    {
+                        name: '联盟广告',
+                        type: 'line',
+                        stack: '总量',
+                        data: [220, 182, 191, 234, 290, 330, 310]
+                    },
+                    {
+                        name: '视频广告',
+                        type: 'line',
+                        stack: '总量',
+                        data: [150, 232, 201, 154, 190, 330, 410]
+                    },
+                    {
+                        name: '直接访问',
+                        type: 'line',
+                        stack: '总量',
+                        data: [320, 332, 301, 334, 390, 330, 320]
+                    },
+                    {
+                        name: '搜索引擎',
+                        type: 'line',
+                        stack: '总量',
+                        data: [820, 932, 901, 934, 1290, 1330, 1320]
+                    }
+                ]
+            };
+            //初始化echarts实例
+            var myChart = echarts.init(document.getElementById('LAY-index-dataview'));
+
+            //使用制定的配置项和数据显示图表
+            myChart.setOption(option);
+
+        });
+    </script>
+</th:block>
 </html>

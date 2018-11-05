@@ -20,6 +20,8 @@
     <link th:href="@{/common/img/favicon.ico}" rel="SHORTCUT ICON"/>
     <script type="text/javascript" th:src="@{/common/js/jquery-1.8.1.min.js}"></script>
 
+    <script type="text/javascript" th:src="@{/common/plugins/echarts/echarts.common.min.js}"></script>
+
     <link rel="stylesheet" th:href="@{/common/plugins/layui/css/layui.css}"></link>
     <link rel="stylesheet" th:href="@{/admin/css/pagination.css}"></link>
 
@@ -35,7 +37,7 @@
 
     <script type="text/javascript">
         UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
-        UE.Editor.prototype.getActionUrl = function(action) {
+        UE.Editor.prototype.getActionUrl = function (action) {
             if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
                 return '/ueditor/uploadimage';
             } else {

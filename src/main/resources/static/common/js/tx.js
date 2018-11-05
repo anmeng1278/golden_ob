@@ -239,7 +239,7 @@ Namespace.register("TX.TEMP");
 
 
         //我们强烈推荐你在代码最外层把需要用到的模块先加载
-        layui.use(['layer', 'form', 'element', 'jquery', 'laydate', 'upload'], function () {
+        layui.use(['layer', 'form', 'element', 'jquery', 'laydate', 'upload', 'carousel'], function () {
 
             // var layer = layui.layer,
             //     element = layui.element,
