@@ -37,6 +37,27 @@
             </div>
         </div>
 
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">开始时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="beginTime" id="beginTime" placeholder="yyyy-MM-dd HH:mm:ss"
+                           th:value="${dateUtils.formatDateByUnixTime(info.beginTime, 'yyyy-MM-dd HH:mm:ss')}"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">结束时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="endTime" id="endTime" placeholder="yyyy-MM-dd HH:mm:ss"
+                           th:value="${dateUtils.formatDateByUnixTime(info.endTime, 'yyyy-MM-dd HH:mm:ss')}"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+        </div>
+
         <!-- 现金红包类型的礼包-->
         <!--<div class="layui-form-item" id="chooseHiden" style="width: auto">
             <label class="layui-form-label">请输入红包金额及数量:</label>
@@ -53,11 +74,6 @@
         </div>-->
 
         <div class="layui-form-item">
-            <label class="layui-form-label">是否审核</label>
-            <div class="layui-input-inline">
-                <input type="checkbox" th:checked="${info.ifpass}" name="ifpass" lay-skin="switch" lay-text="已审|未审">
-            </div>
-
             <label class="layui-form-label">排序</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" name="sort" lay-verify="num" th:value="${info.sort}"
@@ -66,6 +82,14 @@
             </div>
             <div class="layui-form-mid layui-word-aux">只能输入数字</div>
         </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">审核</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" th:checked="${info.ifpass}" name="ifpass" lay-skin="switch" lay-text="已审|未审">
+            </div>
+        </div>
+
 
 
         <div id="couponManager">
@@ -190,6 +214,16 @@
             if (typeId) {
                 $(":checkbox[name='typeId'][value='" + typeId + "']").next("div.layui-form-checkbox").trigger("click");
             }
+
+            //日期
+            laydate.render({
+                elem: '#beginTime',
+                type: 'datetime'
+            });
+            laydate.render({
+                elem: '#endTime',
+                type: 'datetime'
+            });
 
 
             //选择优惠券
