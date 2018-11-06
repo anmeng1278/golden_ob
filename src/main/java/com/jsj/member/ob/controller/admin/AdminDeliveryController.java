@@ -50,7 +50,7 @@ public class AdminDeliveryController {
         if (typeId > 0) {
             wrapper.where("type_id={0}", typeId);
         }
-        if (status > 0) {
+        if (status >= 0) {
             wrapper.where("status={0}", status);
         }
         wrapper.orderBy("create_time desc");
