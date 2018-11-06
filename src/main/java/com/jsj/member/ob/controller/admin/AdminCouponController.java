@@ -143,7 +143,7 @@ public class AdminCouponController {
         int typeId = Integer.parseInt(request.getParameter("typeId"));
         String instruction = request.getParameter("instruction");
         String remarks = request.getParameter("remarks");
-        String userRange = request.getParameter("userRange");
+        int userRange = Integer.parseInt(request.getParameter("userRange"));
         int validDays = Integer.parseInt(request.getParameter("validDays"));
 
         if (couponId > 0) {
@@ -154,6 +154,7 @@ public class AdminCouponController {
             coupon.setTypeId(typeId);
             coupon.setInstruction(instruction);
             coupon.setRemarks(remarks);
+            coupon.setUserRange(userRange);
             coupon.setValidDays(validDays);
             coupon.setUpdateTime(DateUtils.getCurrentUnixTime());
             couponService.updateById(coupon);
@@ -163,6 +164,7 @@ public class AdminCouponController {
             coupon.setCouponName(couponName);
             coupon.setAmount(amount);
             coupon.setTypeId(typeId);
+            coupon.setUserRange(userRange);
             coupon.setInstruction(instruction);
             coupon.setRemarks(remarks);
             coupon.setValidDays(validDays);

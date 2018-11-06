@@ -1,8 +1,10 @@
 package com.jsj.member.ob.logic;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.entity.Wechat;
 import com.jsj.member.ob.service.WechatService;
+import com.jsj.member.ob.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -70,4 +72,19 @@ public class WechatLogic {
 
     }
     //endregion
+
+
+    /**
+     * 获取新增用户
+     * @return
+     */
+    public static Integer GetNewUsers(){
+        EntityWrapper<Wechat> wechatWrapper = new EntityWrapper<>();
+
+        wechatWrapper.where("delete_time is null and unsubscribe_time is null and create_time={0}", DateUtils.getCurrentUnixTime());
+
+        return wechatLogic.wechatService.selectCount(wechatWrapper);
+    }
+
+
 }

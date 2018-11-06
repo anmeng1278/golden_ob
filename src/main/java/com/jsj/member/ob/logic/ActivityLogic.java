@@ -161,4 +161,16 @@ public class ActivityLogic {
 
     }
 
+    /**
+     * 获得未审核的商品
+     * @return
+     */
+    public static Integer GetUnPassActivity(){
+        EntityWrapper<Activity> activityWrapper = new EntityWrapper<>();
+
+        activityWrapper.where("ifpass is false and delete_time is null");
+
+        return  activityLogic.activityService.selectCount(activityWrapper);
+    }
+
 }

@@ -303,4 +303,19 @@ public class ProductLogic {
         return productLogic.productService.selectCount(wrapper);
 
     }
+
+    /**
+     * 获取已售罄商品
+     *
+     * @return
+     */
+    public static Integer GetUnPassProduct() {
+
+        EntityWrapper<Product> productWrapper = new EntityWrapper<>();
+
+        productWrapper.where("ifpass is false and delete_time is null");
+
+        return productLogic.productService.selectCount(productWrapper);
+
+    }
 }

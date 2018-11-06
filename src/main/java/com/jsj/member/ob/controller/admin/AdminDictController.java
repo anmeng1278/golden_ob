@@ -116,30 +116,36 @@ public class AdminDictController {
     }
 
     /**
-     * 修改或添加
-     *
-     * @param form
+     * 添加或者修改
+     * @param dictId
+     * @param request
      * @param model
      * @return
      */
     @PostMapping("/{dictId}")
     @ResponseBody
     @Transactional(Constant.DBTRANSACTIONAL)
-    public RestResponseBo saveOrUpdate(@PathVariable("dictId") Integer dictId, @Valid DictForm form, Model model) {
+    public RestResponseBo saveOrUpdate(@PathVariable("dictId") Integer dictId, HttpServletRequest request, Model model) {
+
+        String dictName = request.getParameter("dictName");
+        Integer parentDictId = Integer.parseInt(request.getParameter("parentDictId"));
+        Integer sort = Integer.valueOf(request.getParameter("sort"));
 
         Dict dict = new Dict();
 
         if (dictId > 0) { //修改
             dict = DictLogic.GetDict(dictId);
+            dict.setDictName(dictName);
+            dict.setSort(sort);
             dict.setUpdateTime(DateUtils.getCurrentUnixTime());
-            form.setDictType(dict.getDictType());
-            BeanUtils.copyProperties(form, dict);
             dictService.updateById(dict);
         } else { //添加
-            form.setDictType("0");
+            dict.setDictName(dictName);
+            dict.setSort(sort);
+            dict.setParentDictId(parentDictId);
+            dict.setDictType(" ");
             dict.setCreateTime(DateUtils.getCurrentUnixTime());
             dict.setUpdateTime(DateUtils.getCurrentUnixTime());
-            BeanUtils.copyProperties(form, dict);
             dictService.insert(dict);
         }
         return RestResponseBo.ok("保存成功");

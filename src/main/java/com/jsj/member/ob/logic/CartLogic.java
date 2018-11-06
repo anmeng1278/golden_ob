@@ -82,7 +82,7 @@ public class CartLogic {
      * @param cartProductId
      */
     public static void DeleteCartProduct(int cartProductId) {
-        if (cartProductId == 0) {
+        if (cartProductId <= 0) {
             throw new TipException("参数不合法，cartProductId为空");
         }
         cartLogic.cartProductService.deleteById(cartProductId);
@@ -101,13 +101,13 @@ public class CartLogic {
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
-        if (productId == 0) {
+        if (productId <= 0) {
             throw new TipException("参数不合法，商品ID不能为空");
         }
-        if (productSpecId == 0) {
+        if (productSpecId <= 0) {
             throw new TipException("参数不合法，商品规格不能为空");
         }
-        if (number < 0) {
+        if (number <= 0) {
             number = 0;
         }
 
@@ -125,6 +125,7 @@ public class CartLogic {
 
         }
 
+        //查询购物车中的商品信息
         EntityWrapper<CartProduct> cartProductWrapper = new EntityWrapper<CartProduct>();
         Wrapper<CartProduct> where = cartProductWrapper.where("cart_id={0} and product_id={1} and product_size_id={2}",
                 cart.getCartId(),

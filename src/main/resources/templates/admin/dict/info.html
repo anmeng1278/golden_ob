@@ -75,6 +75,13 @@
 
             form.on("submit", function (data) {
 
+                //移除下拉框disable状态
+                $("select[name='parentDictId']").each(function () {
+                    if (parseInt($(this).val()) != -1) {
+                        $(this).attr("disabled", false);
+                    }
+                });
+
                 TX.CORE.p({
                     data: $("form.layui-form").serialize(),
                     success: function (resp) {
