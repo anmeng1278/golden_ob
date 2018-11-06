@@ -35,7 +35,7 @@ layui.config({
 
     //设置navbar
     navbar.set({
-        spreadOne: true,
+        spreadOne: false,
         elem: '#admin-navbar-side',
         cached: true,
         data: navs
