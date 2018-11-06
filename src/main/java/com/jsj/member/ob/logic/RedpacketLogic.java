@@ -14,7 +14,9 @@ import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.OrderRedpacketCouponService;
 import com.jsj.member.ob.service.RedpacketCouponService;
 import com.jsj.member.ob.service.RedpacketService;
+import com.jsj.member.ob.service.WechatCouponService;
 import com.jsj.member.ob.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +38,7 @@ public class RedpacketLogic {
         redpacketLogic.redpacketService = this.redpacketService;
         redpacketLogic.redpacketCouponService = this.redpacketCouponService;
         redpacketLogic.orderRedpacketCouponService = this.orderRedpacketCouponService;
+        redpacketLogic.wechatCouponService = this.wechatCouponService;
     }
 
     @Autowired
@@ -47,58 +50,22 @@ public class RedpacketLogic {
     @Autowired
     OrderRedpacketCouponService orderRedpacketCouponService;
 
+    @Autowired
+    WechatCouponService wechatCouponService;
 
-    /**
-     * 礼包优惠券信息
-     *
-     * @param redpacketId
-     * @return
-     */
-    public static List<RedpacketCouponDto> GetRedpacketCoupon(int redpacketId) {
-
-        EntityWrapper<RedpacketCoupon> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where("redpacket_id={0}", redpacketId);
-        entityWrapper.where("delete_time is null");
-        //entityWrapper.where("exists( select * from _redpacket where _redpacket.redpacket_id = _redpacket_coupon.redpacket_id and  _redpacket.delete_time is null and _redpacket.ifpass = 1 and ( UNIX_TIMESTAMP() between _redpacket.begin_time and _redpacket.end_time )  )");
-
-        List<RedpacketCoupon> redpacketCoupons = redpacketLogic.redpacketCouponService.selectList(entityWrapper);
-
-        List<RedpacketCouponDto> redpacketCouponDtos = new ArrayList<>();
-        if (redpacketCoupons.size() == 0) {
-            return redpacketCouponDtos;
-        }
-
-        for (RedpacketCoupon redpacketCoupon : redpacketCoupons) {
-            RedpacketCouponDto redpacketCouponDto = new RedpacketCouponDto();
-
-            //获得优惠券信息
-            CouponDto couponDto = CouponLogic.GetCoupon(redpacketCoupon.getCouponId());
-
-            redpacketCouponDto.setCouponDto(couponDto);
-            redpacketCouponDto.setCouponId(redpacketCoupon.getCouponId());
-            redpacketCouponDto.setRedpacketId(redpacketCoupon.getRedpacketId());
-            redpacketCouponDto.setNumber(redpacketCoupon.getNumber());
-            redpacketCouponDto.setRedpacketCouponId(redpacketCoupon.getRedpacketCouponId());
-            redpacketCouponDto.setCreateTime(redpacketCoupon.getCreateTime());
-            redpacketCouponDto.setDeleteTime(redpacketCoupon.getDeleteTime());
-            redpacketCouponDto.setUpdateTime(redpacketCoupon.getUpdateTime());
-
-            redpacketCouponDtos.add(redpacketCouponDto);
-
-        }
-        return redpacketCouponDtos;
-
-
-    }
 
 
     /**
-     * 获取红包信息
+     * 获取礼包信息
      *
      * @param redpacketId
      * @return
      */
     public static RedpacketDto GetRedpacket(int redpacketId) {
+
+        if (redpacketId <= 0) {
+            throw new TipException("参数不合法，红包ID不能为空");
+        }
 
         RedpacketDto dto = new RedpacketDto();
 
@@ -120,6 +87,54 @@ public class RedpacketLogic {
 
     }
 
+    /**
+     * 礼包优惠券信息
+     *
+     * @param redpacketId
+     * @return
+     */
+    public static List<RedpacketCouponDto> GetRedpacketCoupon(int redpacketId) {
+
+        if (redpacketId <= 0) {
+            throw new TipException("参数不合法，红包ID不能为空");
+        }
+
+        EntityWrapper<RedpacketCoupon> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where("redpacket_id={0}", redpacketId);
+        entityWrapper.where("delete_time is null");
+
+        List<RedpacketCoupon> redpacketCoupons = redpacketLogic.redpacketCouponService.selectList(entityWrapper);
+
+        List<RedpacketCouponDto> redpacketCouponDtos = new ArrayList<>();
+        //如果礼包中优惠券为空直接返回
+        if (redpacketCoupons.size() == 0) {
+            return redpacketCouponDtos;
+        }
+
+        for (RedpacketCoupon redpacketCoupon : redpacketCoupons) {
+
+            RedpacketCouponDto redpacketCouponDto = new RedpacketCouponDto();
+
+            //获得优惠券信息
+            CouponDto couponDto = CouponLogic.GetCoupon(redpacketCoupon.getCouponId());
+
+            redpacketCouponDto.setCouponDto(couponDto);
+            redpacketCouponDto.setCouponId(redpacketCoupon.getCouponId());
+            redpacketCouponDto.setRedpacketId(redpacketCoupon.getRedpacketId());
+            redpacketCouponDto.setNumber(redpacketCoupon.getNumber());
+            redpacketCouponDto.setRedpacketCouponId(redpacketCoupon.getRedpacketCouponId());
+            redpacketCouponDto.setCreateTime(redpacketCoupon.getCreateTime());
+            redpacketCouponDto.setUpdateTime(redpacketCoupon.getUpdateTime());
+
+            redpacketCouponDtos.add(redpacketCouponDto);
+
+        }
+        return redpacketCouponDtos;
+
+    }
+
+
+
 
     /**
      * 给订单创建一个礼包
@@ -128,6 +143,10 @@ public class RedpacketLogic {
      * @return
      */
     public static void CreateOrderRedpacket(int orderId) {
+
+        if (orderId <= 0) {
+            throw new TipException("参数不合法，订单ID不能为空");
+        }
 
         //判断当前订单是否已经分配红包
         EntityWrapper<OrderRedpacketCoupon> entityWrapper = new EntityWrapper();
@@ -150,37 +169,66 @@ public class RedpacketLogic {
 
         //获取红包中的优惠券
         List<RedpacketCouponDto> redpacketCouponDtos = RedpacketLogic.GetRedpacketCoupon(redpacket.getRedpacketId());
+        if(redpacketCouponDtos.size() == 0){
+            return;
+        }
 
         //将红包中的优惠券插入到订单红包优惠券表中
-        OrderRedpacketCoupon orderRedpacketCoupon = new OrderRedpacketCoupon();
         for (RedpacketCouponDto redpacketCouponDto : redpacketCouponDtos) {
 
-            //TODO 添加number循环
-            orderRedpacketCoupon.setOrderId(orderId);
-            orderRedpacketCoupon.setCouponId(redpacketCouponDto.getCouponId());
-            orderRedpacketCoupon.setAmount(redpacketCouponDto.getCouponDto().getAmount());
-            orderRedpacketCoupon.setRedpacketCouponId(redpacketCouponDto.getRedpacketCouponId());
-            orderRedpacketCoupon.setTypeId(redpacketCouponDto.getCouponDto().getCouponType().getValue());
-            orderRedpacketCoupon.setCreateTime(DateUtils.getCurrentUnixTime());
-            orderRedpacketCoupon.setUpdateTime(DateUtils.getCurrentUnixTime());
+            for (int i = 0; i < redpacketCouponDto.getNumber(); i++) {
 
-            orderRedpacketCoupons.add(orderRedpacketCoupon);
+                OrderRedpacketCoupon orderRedpacketCoupon = new OrderRedpacketCoupon();
 
+                orderRedpacketCoupon.setOrderId(orderId);
+                orderRedpacketCoupon.setCouponId(redpacketCouponDto.getCouponId());
+                orderRedpacketCoupon.setAmount(redpacketCouponDto.getCouponDto().getAmount());
+                orderRedpacketCoupon.setRedpacketCouponId(redpacketCouponDto.getRedpacketCouponId());
+                orderRedpacketCoupon.setRedpacketCouponId(redpacketCouponDto.getRedpacketCouponId());
+                orderRedpacketCoupon.setTypeId(redpacketCouponDto.getCouponDto().getCouponType().getValue());
+                orderRedpacketCoupon.setCreateTime(DateUtils.getCurrentUnixTime());
+                orderRedpacketCoupon.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+                redpacketLogic.orderRedpacketCouponService.insert(orderRedpacketCoupon);
+
+            }
         }
     }
 
 
+    /**
+     * 发送礼包
+     * @param openId
+     * @param orderId
+     * @return
+     */
     public static WechatCoupon DistributeRedpacket(String openId, int orderId) {
+        if (orderId <= 0) {
+            throw new TipException("参数不合法，订单ID不能为空");
+        }
 
-        //TODO 每个人只能领取一次
-        //这个订单发送一个红包，用户去领取，把优惠券分配给某人，状态未使用，过期时间为当前时间+优惠券有效时间,订单中的ifreceived改为已领取，领取时间
+        if (StringUtils.isBlank(openId)) {
+            throw new TipException("参数不合法，用户openId为空");
+        }
+
+        //每个人只能领取一次
+        EntityWrapper<OrderRedpacketCoupon> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where("open_id={0} and order_id={1}",openId,orderId);
+        entityWrapper.where( "ifreceived is true and delete_time is null ");
+        List<OrderRedpacketCoupon> orderRedpacketCouponList = redpacketLogic.orderRedpacketCouponService.selectList(entityWrapper);
+        if(orderRedpacketCouponList.size() != 0){
+            throw new TipException("您已经领过啦！");
+        }
 
         //获得订单的礼包
         List<OrderRedpacketCoupon> orderRedpacketCoupons = RedpacketLogic.GetOrderRedpacket(orderId);
+        //如果该订单下没有礼包创建一个礼包
+        /*if(orderRedpacketCoupons.size() == 0){
+            RedpacketLogic.CreateOrderRedpacket(orderId);
+        }*/
 
         //去为这个用户随机分配一个未被领取的优惠券
         List<OrderRedpacketCoupon> collect = orderRedpacketCoupons.stream().filter(item -> item.getIfreceived() == false).collect(Collectors.toList());
-
 
         //产生一个小于集合大小的随机数，根据这个随机数查找第i条数据给用户
         WechatCoupon wechatCoupon = new WechatCoupon();
@@ -200,20 +248,39 @@ public class RedpacketLogic {
         wechatCoupon.setOpenId(openId);
         wechatCoupon.setOrderRedpacketCouponId(orderRedpacketCoupon.getOrderRedpacketCouponId());
         wechatCoupon.setCouponId(orderRedpacketCoupon.getCouponId());
-        wechatCoupon.setExpiredTime(couponDto.getValidDays() + DateUtils.getCurrentUnixTime());
+        wechatCoupon.setExpiredTime((couponDto.getValidDays())*86400 + DateUtils.getCurrentUnixTime());
         wechatCoupon.setStatus(CouponStatus.UNUSE.getValue());
         wechatCoupon.setAmount(couponDto.getAmount());
         wechatCoupon.setTypeId(couponDto.getCouponType().getValue());
         wechatCoupon.setCreateTime(DateUtils.getCurrentUnixTime());
         wechatCoupon.setUpdateTime(DateUtils.getCurrentUnixTime());
 
-        //TODO INSERT
+        redpacketLogic.wechatCouponService.insert(wechatCoupon);
 
         orderRedpacketCoupon.setIfreceived(true);
-        orderRedpacketCoupon.setOrderId(Integer.valueOf(openId));
+        orderRedpacketCoupon.setOpenId(Integer.valueOf(openId));
         orderRedpacketCoupon.setReceivedTime(DateUtils.getCurrentUnixTime());
 
-        //TODO UPDATE
+        redpacketLogic.orderRedpacketCouponService.updateById(orderRedpacketCoupon);
         return wechatCoupon;
+    }
+
+    /**
+     * 获得订单红包
+     *
+     * @param orderId
+     * @return
+     */
+    private static List<OrderRedpacketCoupon> GetOrderRedpacket(int orderId) {
+        if (orderId <= 0) {
+            throw new TipException("参数不合法，订单ID不能为空");
+        }
+        EntityWrapper<OrderRedpacketCoupon> wrapper = new EntityWrapper();
+        wrapper.where("delete_time is null and order_id = {0}", orderId);
+        List<OrderRedpacketCoupon> orderRedpacketCoupons = redpacketLogic.orderRedpacketCouponService.selectList(wrapper);
+        if(orderRedpacketCoupons.size() == 0){
+            throw new TipException("该订单没有礼包诶！");
+        }
+        return orderRedpacketCoupons;
     }
 }
