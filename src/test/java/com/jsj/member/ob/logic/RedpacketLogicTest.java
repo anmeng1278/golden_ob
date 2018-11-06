@@ -21,7 +21,7 @@ public class RedpacketLogicTest {
 
     @Test
     public void getRedpacketCoupon() {
-        List<RedpacketCouponDto> redpacketCouponDtos = RedpacketLogic.GetRedpacketCoupon(7);
+        List<RedpacketCouponDto> redpacketCouponDtos = RedpacketLogic.GetRedpacketCoupon(8);
         for (RedpacketCouponDto redpacketCouponDto : redpacketCouponDtos) {
             System.out.println(redpacketCouponDto);
         }
@@ -34,13 +34,21 @@ public class RedpacketLogicTest {
     }
 
     @Test
-    public void getOrderRedpacket() {
-        RedpacketLogic.GetOrderRedpacket(10024);
+    public void createOrderRedpacket() {
+        RedpacketLogic.CreateOrderRedpacket(10023);
     }
 
     @Test
     public void distributeRedpacket() {
-        WechatCoupon wechatCoupon = RedpacketLogic.DistributeRedpacket("11", 10023);
-        System.out.println(wechatCoupon);
+        RedpacketLogic.DistributeRedpacket("12",10023);
+        RedpacketLogic.DistributeRedpacket("13",10023);
+        RedpacketLogic.DistributeRedpacket("14",10023);
+        RedpacketLogic.DistributeRedpacket("15",10023);
+        RedpacketLogic.DistributeRedpacket("16",10023);
+        RedpacketLogic.DistributeRedpacket("17",10023);
+        RedpacketLogic.DistributeRedpacket("18",10023);
+        RedpacketLogic.DistributeRedpacket("19",10023);
+        RedpacketLogic.DistributeRedpacket("19",10024);
+
     }
 }
