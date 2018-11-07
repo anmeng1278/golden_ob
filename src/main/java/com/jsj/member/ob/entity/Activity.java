@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Activity 活动表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-30
+ *   @since 2018-11-07
  */
 @TableName("_activity")
 public class Activity implements Serializable {
@@ -43,6 +43,7 @@ public class Activity implements Serializable {
      * 是否审核
      */
 	private Boolean ifpass;
+	private Boolean iftop;
     /**
      * 销售单价
      */
@@ -121,6 +122,14 @@ public class Activity implements Serializable {
 		this.ifpass = ifpass;
 	}
 
+	public Boolean getIftop() {
+		return iftop;
+	}
+
+	public void setIftop(Boolean iftop) {
+		this.iftop = iftop;
+	}
+
 	public Double getSalePrice() {
 		return salePrice;
 	}
@@ -194,6 +203,7 @@ public class Activity implements Serializable {
 			", beginTime=" + beginTime +
 			", endTime=" + endTime +
 			", ifpass=" + ifpass +
+			", iftop=" + iftop +
 			", salePrice=" + salePrice +
 			", originalPrice=" + originalPrice +
 			", stockCount=" + stockCount +

@@ -28,10 +28,7 @@ public class RedpacketDto {
      * 是否审核
      */
     private Boolean ifpass;
-    /**
-     * 排序
-     */
-    private Integer sort;
+
     /**
      * 创建时间
      */
@@ -103,13 +100,6 @@ public class RedpacketDto {
         this.ifpass = ifpass;
     }
 
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
 
     public Integer getCreateTime() {
         return createTime;

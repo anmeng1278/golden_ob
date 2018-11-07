@@ -133,7 +133,6 @@ public class AdminRedpacketController {
         String redpacketName = request.getParameter("redpacketName");
         int typeId = Integer.parseInt(request.getParameter("typeId"));
         boolean ifpass = !StringUtils.isBlank(request.getParameter("ifpass"));
-        int sort = Integer.parseInt(request.getParameter("sort"));
         String beginTime = request.getParameter("beginTime");
         String endTime = request.getParameter("endTime");
         int beginTimeUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(beginTime, "yyyy-MM-dd HH:mm:ss"));
@@ -145,7 +144,6 @@ public class AdminRedpacketController {
             redpacket.setRedpacketName(redpacketName);
             redpacket.setTypeId(typeId);
             redpacket.setIfpass(ifpass);
-            redpacket.setSort(sort);
             redpacket.setBeginTime(beginTimeUnix);
             redpacket.setEndTime(endTimeUnix);
             redpacket.setUpdateTime(DateUtils.getCurrentUnixTime());
@@ -158,7 +156,6 @@ public class AdminRedpacketController {
             redpacket.setIfpass(ifpass);
             redpacket.setBeginTime(beginTimeUnix);
             redpacket.setEndTime(endTimeUnix);
-            redpacket.setSort(sort);
             redpacket.setCreateTime(DateUtils.getCurrentUnixTime());
             redpacket.setUpdateTime(DateUtils.getCurrentUnixTime());
             redpacketService.insert(redpacket);

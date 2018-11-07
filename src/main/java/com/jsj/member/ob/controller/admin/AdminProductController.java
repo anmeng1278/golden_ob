@@ -68,6 +68,7 @@ public class AdminProductController {
         EntityWrapper<Product> wrapper = new EntityWrapper<Product>();
         wrapper.where(!StringUtils.isBlank(keys), "(product_name LIKE concat(concat('%',{0}),'%') )", keys);
         wrapper.where(!StringUtils.isBlank(isSellout), "ifnull(( select sum(_product_spec.stock_count) from _product_spec where _product_spec.product_id = _product.product_id), 0) = 0");
+        wrapper.orderBy("iftop desc, update_time desc");
 
         Page<Product> pageInfo = new Page<>(page, limit);
         Page<Product> pp = productService.selectPage(pageInfo, wrapper);
@@ -104,6 +105,8 @@ public class AdminProductController {
         if (productId > 0) {
             info = productService.selectById(productId);
             productSpecs = ProductLogic.GetProductSpecDtos(productId);
+        } else {
+            info.setIfdistribution(true);
         }
 
         request.setAttribute("info", info);
@@ -137,8 +140,6 @@ public class AdminProductController {
         int propertyTypeId = Integer.valueOf(request.getParameter("propertyTypeId"));
         //简介
         String introduce = request.getParameter("introduce");
-        //排序
-        int sort = Integer.valueOf(request.getParameter("sort"));
         //使用说明
         String useIntro = request.getParameter("useIntro");
         //单位
@@ -153,6 +154,9 @@ public class AdminProductController {
         boolean ifpass = !StringUtils.isBlank(request.getParameter("ifpass"));
         //支持配送
         boolean ifdistribution = !StringUtils.isBlank(request.getParameter("ifdistribution"));
+        //是否置顶
+        boolean iftop = !StringUtils.isBlank(request.getParameter("iftop"));
+
 
         if (productId > 0) {
             product = productService.selectById(productId);
@@ -161,7 +165,6 @@ public class AdminProductController {
             product.setTypeId(typeId);
             product.setPropertyTypeId(propertyTypeId);
             product.setIntroduce(introduce);
-            product.setSort(sort);
 
             product.setUseIntro(useIntro);
             product.setUnit(unit);
@@ -169,6 +172,7 @@ public class AdminProductController {
             product.setGiftCopywriting(giftCopywriting);
             product.setIfpickup(ifpickup);
 
+            product.setIftop(iftop);
             product.setIfpass(ifpass);
             product.setIfdistribution(ifdistribution);
             product.setUpdateTime(DateUtils.getCurrentUnixTime());
@@ -179,7 +183,6 @@ public class AdminProductController {
             product.setTypeId(typeId);
             product.setPropertyTypeId(propertyTypeId);
             product.setIntroduce(introduce);
-            product.setSort(sort);
 
             product.setUseIntro(useIntro);
             product.setUnit(unit);
@@ -187,6 +190,7 @@ public class AdminProductController {
             product.setGiftCopywriting(giftCopywriting);
             product.setIfpickup(ifpickup);
 
+            product.setIftop(iftop);
             product.setIfpass(ifpass);
             product.setIfdistribution(ifdistribution);
             product.setCreateTime(DateUtils.getCurrentUnixTime());
@@ -204,6 +208,7 @@ public class AdminProductController {
         //先删除掉所有型号规格
         productSpecs.forEach(ps -> {
             ps.setDeleteTime(DateUtils.getCurrentUnixTime());
+            ps.setSort(9999);
             productSpecService.updateById(ps);
         });
 
@@ -212,9 +217,7 @@ public class AdminProductController {
         String[] specNames = request.getParameterValues("specName");
         String[] specSalePrices = request.getParameterValues("specSalePrice");
         String[] specOriginalPrices = request.getParameterValues("specOriginalPrice");
-
         String[] specstockCounts = request.getParameterValues("specstockCount");
-        String[] specstockSorts = request.getParameterValues("specstockSort");
 
         if (specIds != null) {
 
@@ -225,7 +228,6 @@ public class AdminProductController {
                 Double salePrice = Double.valueOf(specSalePrices[i].trim());
                 Double originalPrice = Double.valueOf(specOriginalPrices[i].trim());
                 Integer stockCount = Integer.valueOf(specstockCounts[i].trim());
-                Integer psSort = Integer.valueOf(specstockSorts[i].trim());
 
                 if (specId == 0) {
                     //添加
@@ -235,7 +237,7 @@ public class AdminProductController {
                     productSpec.setSalePrice(salePrice);
                     productSpec.setOriginalPrice(originalPrice);
                     productSpec.setStockCount(stockCount);
-                    productSpec.setSort(psSort);
+                    productSpec.setSort(i);
                     productSpec.setUpdateTime(DateUtils.getCurrentUnixTime());
                     productSpec.setCreateTime(DateUtils.getCurrentUnixTime());
 
@@ -248,7 +250,7 @@ public class AdminProductController {
                     productSpec.setSalePrice(salePrice);
                     productSpec.setOriginalPrice(originalPrice);
                     productSpec.setStockCount(stockCount);
-                    productSpec.setSort(psSort);
+                    productSpec.setSort(i);
 
                     productSpecService.updateAllColumnById(productSpec);
 
@@ -352,11 +354,18 @@ public class AdminProductController {
 
         if (method.equals("ifpass")) {
             product.setIfpass(!product.getIfpass());
+            productService.updateById(product);
+        }
+        if (method.equals("iftop")) {
+            product.setIftop(!product.getIftop());
+            product.setUpdateTime(DateUtils.getCurrentUnixTime());
+            productService.updateById(product);
+        }
+        if (method.equals("update")) {
             product.setUpdateTime(DateUtils.getCurrentUnixTime());
             productService.updateById(product);
         }
         if (method.equals("delete")) {
-            product.setUpdateTime(DateUtils.getCurrentUnixTime());
             product.setDeleteTime(DateUtils.getCurrentUnixTime());
             productService.updateById(product);
         }

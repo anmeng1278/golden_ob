@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Product 商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-30
+ *   @since 2018-11-07
  */
 @TableName("_product")
 public class Product implements Serializable {
@@ -44,10 +44,6 @@ public class Product implements Serializable {
      */
 	private String introduce;
     /**
-     * 排序
-     */
-	private Integer sort;
-    /**
      * 使用说明
      */
 	@TableField("use_intro")
@@ -77,6 +73,7 @@ public class Product implements Serializable {
      * 是否支持配送
      */
 	private Boolean ifdistribution;
+	private Boolean iftop;
     /**
      * 操作人编号
      */
@@ -139,14 +136,6 @@ public class Product implements Serializable {
 		this.introduce = introduce;
 	}
 
-	public Integer getSort() {
-		return sort;
-	}
-
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
-
 	public String getUseIntro() {
 		return useIntro;
 	}
@@ -203,6 +192,14 @@ public class Product implements Serializable {
 		this.ifdistribution = ifdistribution;
 	}
 
+	public Boolean getIftop() {
+		return iftop;
+	}
+
+	public void setIftop(Boolean iftop) {
+		this.iftop = iftop;
+	}
+
 	public Integer getOpemployeeId() {
 		return opemployeeId;
 	}
@@ -244,7 +241,6 @@ public class Product implements Serializable {
 			", typeId=" + typeId +
 			", propertyTypeId=" + propertyTypeId +
 			", introduce=" + introduce +
-			", sort=" + sort +
 			", useIntro=" + useIntro +
 			", unit=" + unit +
 			", remarks=" + remarks +
@@ -252,6 +248,7 @@ public class Product implements Serializable {
 			", ifpickup=" + ifpickup +
 			", ifpass=" + ifpass +
 			", ifdistribution=" + ifdistribution +
+			", iftop=" + iftop +
 			", opemployeeId=" + opemployeeId +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +

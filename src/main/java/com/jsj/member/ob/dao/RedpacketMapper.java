@@ -1,14 +1,17 @@
 package com.jsj.member.ob.dao;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.jsj.member.ob.entity.Redpacket;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
+import com.baomidou.mybatisplus.plugins.Page;
+
+import java.util.List;
 
 /**
  *   @description : Redpacket Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-05
+ *   @since 2018-11-07
  */
 @Repository
 public interface RedpacketMapper extends BaseMapper<Redpacket> {

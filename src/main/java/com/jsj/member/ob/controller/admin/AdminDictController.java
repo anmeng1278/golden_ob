@@ -7,13 +7,11 @@ import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.form.DictForm;
 import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.service.DictService;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 

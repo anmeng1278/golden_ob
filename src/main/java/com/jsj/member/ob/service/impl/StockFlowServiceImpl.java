@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : StockFlow 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-30
+ *   @since 2018-11-07
  */
 @Service
 public class StockFlowServiceImpl extends ServiceImpl<StockFlowMapper, StockFlow> implements StockFlowService {

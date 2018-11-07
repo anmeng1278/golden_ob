@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : VArea 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-30
+ *   @since 2018-11-07
  */
 @Service
 public class VAreaServiceImpl extends ServiceImpl<VAreaMapper, VArea> implements VAreaService {

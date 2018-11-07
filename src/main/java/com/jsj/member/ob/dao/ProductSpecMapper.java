@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : ProductSpec Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-30
+ *   @since 2018-11-07
  */
 @Repository
 public interface ProductSpecMapper extends BaseMapper<ProductSpec> {

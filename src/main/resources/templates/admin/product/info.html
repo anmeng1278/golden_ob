@@ -69,13 +69,12 @@
                 <table class="layui-table" lay-size="sm" style="width: 70%;">
                     <thead>
                     <tr>
-                        <th style="width: 10%;">编号</th>
+                        <th style="width: 8%;">编号</th>
                         <th>商品规格</th>
                         <th style="width: 15%;">售价</th>
                         <th style="width: 15%;">原价</th>
                         <th style="width: 10%;">库存</th>
-                        <th style="width: 10%;">排序</th>
-                        <th style="width: 10%;">操作</th>
+                        <th style="width: 5%;">操作</th>
                     </tr>
                     </thead>
                     <tbody id="content">
@@ -89,7 +88,7 @@
                                        style="height:20px;"
                                        readonly="readonly"
                                        th:value="${spec.specName}"
-                                       placeholder="请输入商品规格"/>
+                                       placeholder="商品规格"/>
                             </td>
                             <td>
                                 <input type="text" class="layui-input" name="specSalePrice"
@@ -97,7 +96,7 @@
                                        title="售价"
                                        style="height:20px;"
                                        th:value="${spec.salePrice}"
-                                       placeholder="请输入售价"/>
+                                       placeholder="售价"/>
                             </td>
                             <td>
                                 <input type="text" class="layui-input" name="specOriginalPrice"
@@ -105,7 +104,7 @@
                                        title="原价"
                                        style="height:20px;"
                                        th:value="${spec.originalPrice}"
-                                       placeholder="请输入原价"/>
+                                       placeholder="原价"/>
                             </td>
                             <td>
                                 <input type="text" class="layui-input" name="specstockCount"
@@ -113,22 +112,13 @@
                                        title="库存"
                                        style="height:20px;"
                                        th:value="${spec.stockCount}"
-                                       placeholder="请输入库存"/>
-                            </td>
-                            <td>
-                                <input type="text" class="layui-input" name="specstockSort"
-                                       lay-verify="num"
-                                       title="排序"
-                                       style="height:20px;"
-                                       th:value="${spec.sort}"
-                                       placeholder="请输入排序"/>
+                                       placeholder="库存"/>
                             </td>
                             <td>
                                 <input type="hidden" name="specId" th:value="${spec.productSpecId}"/>
                                 <button type="button" th:attr="data-method='delete',data-id=${spec.productSpecId}"
                                         class="layui-btn layui-btn-xs layui-btn-danger">
                                     <i class="layui-icon">&#xe640;</i>
-                                    删除
                                 </button>
                             </td>
                         </tr>
@@ -167,13 +157,6 @@
                                        placeholder="请输入库存"/>
                             </td>
                             <td>
-                                <input type="text" class="layui-input" name="specstockSort"
-                                       lay-verify="num"
-                                       title="排序"
-                                       style="height:20px;"
-                                       placeholder="请输入排序"/>
-                            </td>
-                            <td>
                                 <input type="hidden" name="specId" value="0"/>
                                 <button type="button" th:attr="data-method='delete'"
                                         class="layui-btn layui-btn-xs layui-btn-danger">
@@ -186,7 +169,7 @@
 
                     </tbody>
                 </table>
-
+                <div class="layui-form-mid layui-word-aux">双击表格调整顺序。</div>
             </div>
         </div>
 
@@ -243,7 +226,10 @@
             <div class="layui-input-inline">
                 <input type="checkbox" th:checked="${info.ifpass}" name="ifpass" lay-skin="switch" lay-text="已审|未审">
             </div>
-
+            <label class="layui-form-label">置顶</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" th:checked="${info.iftop}" name="iftop" lay-skin="switch" lay-text="是|否">
+            </div>
             <label class="layui-form-label">支持自提</label>
             <div class="layui-input-inline">
                 <input type="checkbox" th:checked="${info.ifpickup}" name="ifpickup" lay-skin="switch" lay-text="是|否">
@@ -254,16 +240,6 @@
                 <input type="checkbox" th:checked="${info.ifdistribution}" name="ifdistribution" lay-skin="switch"
                        lay-text="是|否">
             </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">排序</label>
-            <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="sort" lay-verify="num" th:value="${info.sort}"
-                       placeholder="请输入排序"
-                       title="排序"/>
-            </div>
-            <div class="layui-form-mid layui-word-aux">只能输入数字</div>
         </div>
 
         <div class="layui-form-item">
@@ -318,7 +294,7 @@
                 }
 
                 var self = this;
-                layer.confirm('确定所选规格吗?', {icon: 3}, function (index) {
+                layer.confirm('确定删除所选规格吗?', {icon: 3}, function (index) {
                     layer.close(index);
                     $(self).parents("tr:first").remove();
                 });
@@ -344,6 +320,17 @@
                     var currentTabId = parent.tab.getCurrentTabId();
                     parent.tab.deleteTab(currentTabId);
                 }
+            });
+
+            $(document).on("dblclick", "#content tr", function (e) {
+                if($(this).index() == 0){
+                    return;
+                }
+                if (e.target.tagName.toUpperCase() == "INPUT") {
+                    return;
+                }
+                var prev = $(this).prev();
+                $(this).insertBefore(prev);
             });
 
         });
