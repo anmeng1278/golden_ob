@@ -1,14 +1,23 @@
 package com.jsj.member.ob.controller.admin;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.dto.RestResponseBo;
+import com.jsj.member.ob.dto.api.dict.DictDto;
+import com.jsj.member.ob.dto.api.dict.GetAreasRequ;
+import com.jsj.member.ob.dto.api.dict.GetAreasResp;
+import com.jsj.member.ob.dto.api.express.ExpressRequ;
+import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.*;
 import com.jsj.member.ob.logic.DictLogic;
+import com.jsj.member.ob.logic.ExpressApiLogic;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 @ApiIgnore
 @Controller
@@ -74,15 +83,41 @@ public class AdminDeliveryController {
         return "admin/delivery/index";
     }
 
-    @GetMapping("/send/{deliveryId}")
-    public String sendInfo(@PathVariable("deliveryId") Integer deliveryId, Model model){
-            Delivery delivery = new Delivery();
-            if (deliveryId > 0) {
-                delivery = deliveryService.selectById(deliveryId);
+    @GetMapping("/sendInfo/{deliveryId}")
+    public String sendInfo(@PathVariable("deliveryId") Integer deliveryId, Model model) throws IOException {
+
+        if(deliveryId <= 0 ){
+            GetAreasRequ requ = new GetAreasRequ();
+            requ.setParentAreaId(0);
+            GetAreasResp getAreasResp = DictLogic.GetAreas(requ);
+            List<DictDto> areas = getAreasResp.getAreas();
+            model.addAttribute("areas",areas);
+            return "admin/delivery/send";
+        }
+
+        Delivery delivery = new Delivery();
+        delivery = deliveryService.selectById(deliveryId);
+
+        ExpressRequ requ = new ExpressRequ();
+        List<Map<String, String>> resps = null;
+        if (!StringUtils.isBlank(delivery.getExpressNumber())) {
+            //查询配送的物流信息
+            requ.setText(delivery.getExpressNumber());
+            ExpressResp resp = ExpressApiLogic.GetExpress(requ);
+            resps = new ArrayList<Map<String, String>>();
+            List data = resp.getData();
+            for (int i = 0; i < data.size(); i++) {
+                Map<String, String> tempMap = new HashMap<String, String>();
+                JSONObject temp = (JSONObject) data.get(i);
+                tempMap.put("time", (String) temp.get("time"));
+                tempMap.put("content", (String) temp.get("context"));
+                resps.add(tempMap);
             }
-            model.addAttribute("info", delivery);
-            model.addAttribute("deliveryId", deliveryId);
-            return "admin/delivery/info";
+        }
+        model.addAttribute("resps", resps);
+        model.addAttribute("info", delivery);
+        model.addAttribute("deliveryId", deliveryId);
+        return "admin/delivery/info";
 
     }
 
