@@ -1,7 +1,5 @@
 package com.jsj.member.ob.dto.api.express;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.jsj.member.ob.dto.thirdParty.ResponseHead;
 import org.apache.poi.ss.formula.functions.T;
 
 import java.util.ArrayList;
@@ -9,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ExpressTypeResp {
+
     public ExpressTypeResp(){
         this.auto = new ArrayList<>();
     }

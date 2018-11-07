@@ -1,8 +1,8 @@
 package com.jsj.member.ob.dto.api.express;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import com.alibaba.fastjson.annotation.JSONField;
+
 
 public class RequestHeaders {
     public RequestHeaders(){
@@ -12,12 +12,16 @@ public class RequestHeaders {
         this.Transport = new Transport();
     }
 
+    @JSONField(name="Client")
     private Client Client;
 
+    @JSONField(name="Cookies")
     private Cookies Cookies;
 
+    @JSONField(name="MisCellaneous")
     private MisCellaneous MisCellaneous;
 
+    @JSONField(name="Transport")
     private Transport Transport;
 
     public RequestHeaders.Client getClient() {
@@ -53,14 +57,20 @@ public class RequestHeaders {
     }
 
     public class Client{
+
+        @JSONField(name="Accept")
         private String Accept;
 
+        @JSONField(name="Accept-Encoding")
         private String AcceptEncoding;
 
+        @JSONField(name="Accept-Language")
         private String AcceptLanguage;
 
+        @JSONField(name="User-Agent")
         private String UserAgent;
 
+        @JSONField(name="X-Requested-With")
         private String XRequestedWith;
 
         public Client(){
@@ -117,6 +127,7 @@ public class RequestHeaders {
             this.Cookie = new Cookie();
         }
 
+        @JSONField(name="Cookie")
         public Cookie Cookie;
 
 
@@ -130,10 +141,13 @@ public class RequestHeaders {
 
         public class Cookie {
 
+            @JSONField(name="WWWID")
             private String WWWID;
 
+            @JSONField(name="Hm_lvt_22ea01af58ba2be0fec7c11b25e88e6c")
             private String Hm_lvt_22ea01af58ba2be0fec7c11b25e88e6c;
 
+            @JSONField(name="Hm_lpvt_22ea01af58ba2be0fec7c11b25e88e6c")
             private String Hm_lpvt_22ea01af58ba2be0fec7c11b25e88e6c;
 
             public String getWWWID() {
@@ -171,6 +185,8 @@ public class RequestHeaders {
     }
 
     public class MisCellaneous{
+
+        @JSONField(name="Referer")
         private String Referer;
 
         public String getReferer() {
@@ -187,8 +203,10 @@ public class RequestHeaders {
     }
 
     public class Transport{
+        @JSONField(name="Connection")
         private String Connection;
 
+        @JSONField(name="Host")
         private String Host;
 
         public String getConnection() {
