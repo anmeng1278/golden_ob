@@ -21,7 +21,8 @@
                         <select name="typeId" title="所属类型">
                             <option value="">礼包类型</option>
                             <th:block th:each="redpacketType : ${redpacketTypes}">
-                                <option th:value="${redpacketType.value}" th:text="${redpacketType.message}" th:selected="${redpacketType.value == typeId}"></option>
+                                <option th:value="${redpacketType.value}" th:text="${redpacketType.message}"
+                                        th:selected="${redpacketType.value == typeId}"></option>
                             </th:block>
                         </select>
                     </div>
@@ -44,9 +45,9 @@
             <table class="layui-table admin-table">
                 <thead>
                 <tr>
-                    <th >礼包名称</th>
+                    <th>礼包名称</th>
                     <th style="width: 10%;">类型</th>
-                    <th style="width: 10%;">排序</th>
+                    <!--<th style="width: 10%;">排序</th>-->
                     <th style="width: 10%;">是否审核</th>
                     <th style="width: 15%;">创建时间</th>
                     <th style="width: 15%;">有效时间</th>
@@ -60,7 +61,7 @@
                         <td>
                             <th:block th:text="${enumLogic.GetRedpacketType(info.typeId).message}"></th:block>
                         </td>
-                        <td th:text="${info.sort}"></td>
+                        <!--<td th:text="${info.sort}"></td>-->
 
                         <td>
                             <th:block th:if="${info.ifpass}">
@@ -86,6 +87,11 @@
                                     th:text="${dateUtils.formatDateByUnixTime(info.endTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
                         </td>
                         <td>
+                            <button data-method='up' class="layui-btn layui-btn-normal layui-btn-xs"><i
+                                    class="layui-icon">&#xe619;</i></button>
+                            <button data-method='down' class="layui-btn layui-btn-normal layui-btn-xs"><i
+                                    class="layui-icon">&#xe61a;</i></button>
+
                             <a th:title="|${info.redpacketName}详情|"
                                th:attr="data-tab-href=@{'/admin/redpacket/'+${info.redpacketId}}"
                                class="layui-btn layui-btn-normal layui-btn-xs">
@@ -149,6 +155,25 @@
             });
         }
 
+        $(function () {
+            //上移
+            $(document).on("click", "button[data-method='up']", function () {
+                var $tr = $(this).parents("tr");
+                if ($tr.index() != 0) {
+                    $tr.fadeOut().fadeIn();
+                    $tr.prev().before($tr);
+                }
+            });
+
+            $(document).on("click", "button[data-method='down']", function () {
+                var len = this.length;
+                var $tr = $(this).parents("tr");
+                if ($tr.index() != len - 1) {
+                    $tr.fadeOut().fadeIn();
+                    $tr.next().after($tr);
+                }
+            });
+        });
 
     </script>
 </th:block>

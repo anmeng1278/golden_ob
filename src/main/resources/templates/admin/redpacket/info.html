@@ -73,7 +73,7 @@
             </div>
         </div>-->
 
-        <div class="layui-form-item">
+      <!--  <div class="layui-form-item">
             <label class="layui-form-label">排序</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" name="sort" lay-verify="num" th:value="${info.sort}"
@@ -81,7 +81,7 @@
                        title="排序"/>
             </div>
             <div class="layui-form-mid layui-word-aux">只能输入数字</div>
-        </div>
+        </div>-->
 
         <div class="layui-form-item">
             <label class="layui-form-label">审核</label>
@@ -309,7 +309,6 @@
          */
 
         function chooseCoupons(couponIds) {
-            var type = 1;
 
             if (couponIds.length == 0) {
                 return;
@@ -329,7 +328,6 @@
             //     }
             // });
 
-            if (type == 1) {
                 TX.CORE.p({
                     data: {couponIds: couponIds.join(',')},
                     url: "/admin/redpacket/redpacketCoupons",
@@ -372,7 +370,6 @@
                         }
                     }
                 });
-            }
         }
 
 
