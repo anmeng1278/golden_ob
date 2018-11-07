@@ -63,7 +63,7 @@ public class AdminRedpacketController {
             wrapper.where("type_id={0}", typeId);
         }
         wrapper.where(!StringUtils.isBlank(keys), "(redpacket_name LIKE concat(concat('%',{0}),'%') )", keys);
-        wrapper.orderBy("sort asc, create_time desc");
+        wrapper.orderBy("create_time desc");
 
         Page<Redpacket> pageInfo = new Page<>(page, limit);
         Page<Redpacket> pp = redpacketService.selectPage(pageInfo, wrapper);
