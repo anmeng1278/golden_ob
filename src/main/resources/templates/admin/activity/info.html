@@ -107,68 +107,70 @@
             <div class="layui-input-inline">
                 <input type="checkbox" th:checked="${info.ifpass}" name="ifpass" lay-skin="switch" lay-text="已审|未审">
             </div>
+
+            <label class="layui-form-label">置顶</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" th:checked="${info.iftop}" name="iftop" lay-skin="switch" lay-text="是|否">
+            </div>
+            
         </div>
 
-        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend th:text="活动商品管理"></legend>
-        </fieldset>
-        <div class="layui-form-item" style="float: right;">
-            <div class="layui-input-inline">
-                <button lay-filter="search" class="layui-btn layui-btn-normal layui-btn-xs" type="button"
-                        id="btnChooseProducts"
-                        style="float: right;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">活动商品</label>
+            <div class="layui-input-block" style="width:85%;">
+                <button class="layui-btn layui-btn-normal layui-btn-xs" type="button" id="btnChooseProducts"
+                        style="margin-top: 10px;">
                     <i class="layui-icon">&#xe654;</i> 添加商品
                 </button>
-            </div>
 
-        </div>
-
-
-        <table class="layui-table" lay-size="sm">
-            <thead>
-            <tr>
-                <th style="width: 5%;">编号</th>
-                <th>商品规格</th>
-                <th style="width: 5%;">售价</th>
-                <th style="width: 5%;">原价</th>
-                <th style="width: 5%;">库存</th>
-                <th style="width: 10%; display: none;" skillprice>秒杀价</th>
-                <th style="width: 5%;">操作</th>
-            </tr>
-            </thead>
-            <tbody id="content">
-            <th:block th:each="info : ${activityProducts}">
-                <tr>
-                    <th:block th:with="pro=${productLogic.GetProduct(info.productId)}">
-                        <td th:text="${info.productSpecId}"></td>
-                        <td>
-                            <th:block th:text="${pro.productName}"></th:block>
-                            <th:block th:text="${productLogic.GetProductSpec(info.productSpecId).specName}"></th:block>
-                        </td>
-                        <td th:text="${pro.salePrice}"></td>
-                        <td th:text="${pro.originalPrice}"></td>
-                        <td th:text="${pro.stockCount}"></td>
-                        <td style="display: none;" skillprice>
-                            <input type="text" class="layui-input" name="productSpecSalePrice"
-                                   lay-verify="float4"
-                                   title="秒杀价"
-                                   style="height:20px;"
-                                   th:value="${info.salePrice}" placeholder="请输入秒杀价"/>
-                        </td>
+                <table class="layui-table" lay-size="sm" style="width: 70%;">
+                    <thead>
+                    <tr>
+                        <th style="width: 8%;">编号</th>
+                        <th>商品规格</th>
+                        <th style="width: 8%;">售价</th>
+                        <th style="width: 8%;">原价</th>
+                        <th style="width: 8%;">库存</th>
+                        <th style="width: 10%; display: none;" skillprice>秒杀价</th>
+                        <th style="width: 8%;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="content">
+                    <th:block th:each="info : ${activityProducts}">
+                        <tr>
+                            <th:block th:with="pro=${productLogic.GetProduct(info.productId)}">
+                                <td th:text="${info.productSpecId}"></td>
+                                <td>
+                                    <th:block th:text="${pro.productName}"></th:block>
+                                    <th:block
+                                            th:text="${productLogic.GetProductSpec(info.productSpecId).specName}"></th:block>
+                                </td>
+                                <td th:text="${pro.salePrice}"></td>
+                                <td th:text="${pro.originalPrice}"></td>
+                                <td th:text="${pro.stockCount}"></td>
+                                <td style="display: none;" skillprice>
+                                    <input type="text" class="layui-input" name="productSpecSalePrice"
+                                           lay-verify="float4"
+                                           title="秒杀价"
+                                           style="height:20px;"
+                                           th:value="${info.salePrice}" placeholder="请输入秒杀价"/>
+                                </td>
+                            </th:block>
+                            <td>
+                                <input type="hidden" name="productSpecId" th:value="${info.productSpecId}"/>
+                                <button type="button" th:attr="data-method='delete',data-id=${info.productSpecId}"
+                                        class="layui-btn layui-btn-xs layui-btn-danger">
+                                    <i class="layui-icon">&#xe640;</i>
+                                </button>
+                            </td>
+                        </tr>
                     </th:block>
-                    <td>
-                        <input type="hidden" name="productSpecId" th:value="${info.productSpecId}"/>
-                        <button type="button" th:attr="data-method='delete',data-id=${info.productSpecId}"
-                                class="layui-btn layui-btn-xs layui-btn-danger">
-                            <i class="layui-icon">&#xe640;</i>
-                            删除
-                        </button>
-                    </td>
-                </tr>
-            </th:block>
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+                <div class="layui-form-mid layui-word-aux">双击表格调整顺序。</div>
 
+            </div>
+        </div>
 
         <div class="layui-form-item">
             <div class="layui-input-block" style="float: left;margin-left: 15px;">
@@ -303,7 +305,7 @@
             $(document).on("click", "button[data-method='delete']", function () {
 
                 var self = this;
-                layer.confirm('确定所选商品吗?', {icon: 3}, function (index) {
+                layer.confirm('确定删除所选商品吗?', {icon: 3}, function (index) {
                     layer.close(index);
                     $(self).parents("tr:first").remove();
                 });
@@ -315,6 +317,18 @@
             if (activityTypeId) {
                 $(":checkbox[name='typeId'][value='" + activityTypeId + "']").next("div.layui-form-checkbox").trigger("click");
             }
+
+            $(document).on("dblclick", "#content tr", function (e) {
+
+                if ($(this).index() == 0) {
+                    return;
+                }
+                if (e.target.tagName.toUpperCase() == "INPUT") {
+                    return;
+                }
+                var prev = $(this).prev();
+                $(this).insertBefore(prev);
+            });
 
         });
 
@@ -375,7 +389,7 @@
                             html.push('    <td>');
                             html.push('     <input type="hidden" name="productSpecId" value="' + item.productSpecId + '"/>');
                             html.push('     <button type="button" data-method="delete" data-id="' + item.productSpecId + '" class="layui-btn layui-btn-xs layui-btn-danger">');
-                            html.push('     <i class="layui-icon">&#xe640;</i>删除</button>');
+                            html.push('     <i class="layui-icon">&#xe640;</i></button>');
                             html.push('    </td>');
                             html.push('</tr>');
 

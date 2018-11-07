@@ -63,7 +63,7 @@ public class AdminActivityController {
             wrapper.where("type_id={0}", typeId);
         }
         wrapper.where(!StringUtils.isBlank(keys), "(activity_name LIKE concat(concat('%',{0}),'%') )", keys);
-        wrapper.orderBy("create_time desc");
+        wrapper.orderBy("iftop desc, update_time desc");
 
         Page<Activity> pageInfo = new Page<>(page, limit);
         Page<Activity> pp = activityService.selectPage(pageInfo, wrapper);
@@ -100,6 +100,7 @@ public class AdminActivityController {
             EntityWrapper<ActivityProduct> entityWrapper = new EntityWrapper<>();
             entityWrapper.where("delete_time is null");
             entityWrapper.where("activity_id={0}", activityId);
+            entityWrapper.orderBy("sort asc, update_time desc");
             activityProducts = activityProductService.selectList(entityWrapper);
 
         } else {
@@ -157,6 +158,8 @@ public class AdminActivityController {
 
         //是否审核
         boolean ifpass = !StringUtils.isBlank(request.getParameter("ifpass"));
+        //是否置顶
+        boolean iftop = !StringUtils.isBlank(request.getParameter("iftop"));
 
         if (activityId > 0) {
             //修改
@@ -174,6 +177,7 @@ public class AdminActivityController {
             activity.setTypeId(typeId);
             activity.setIfpass(ifpass);
 
+            activity.setIftop(iftop);
             activity.setUpdateTime(DateUtils.getCurrentUnixTime());
             activityService.updateById(activity);
 
@@ -191,6 +195,7 @@ public class AdminActivityController {
             activity.setSalePrice(Double.valueOf(salePrice));
             activity.setTypeId(typeId);
 
+            activity.setIftop(iftop);
             activity.setCreateTime(DateUtils.getCurrentUnixTime());
             activity.setUpdateTime(DateUtils.getCurrentUnixTime());
 
@@ -201,6 +206,7 @@ public class AdminActivityController {
         List<ActivityProduct> activityProducts = activityProductService.selectList(new EntityWrapper<ActivityProduct>().where("activity_id={0}", activity.getActivityId()));
         activityProducts.forEach(ap -> {
             ap.setDeleteTime(DateUtils.getCurrentUnixTime());
+            ap.setSort(9999);
             activityProductService.updateById(ap);
         });
 
@@ -228,12 +234,14 @@ public class AdminActivityController {
                     activityProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
                     activityProduct.setProductId(productSpec.getProductId());
                     activityProduct.setProductSpecId(specId);
+                    activityProduct.setSort(i);
                     activityProductService.insert(activityProduct);
 
                 } else {
                     activityProduct.setSalePrice(specSalePrice);
                     activityProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
                     activityProduct.setDeleteTime(null);
+                    activityProduct.setSort(i);
                     activityProductService.updateAllColumnById(activityProduct);
                 }
 
@@ -337,11 +345,20 @@ public class AdminActivityController {
 
         if (method.equals("ifpass")) {
             activity.setIfpass(!activity.getIfpass());
+            //activity.setUpdateTime(DateUtils.getCurrentUnixTime());
+            activityService.updateById(activity);
+        }
+        if (method.equals("iftop")) {
+            activity.setIftop(!activity.getIftop());
+            activity.setUpdateTime(DateUtils.getCurrentUnixTime());
+            activityService.updateById(activity);
+        }
+        if (method.equals("update")) {
             activity.setUpdateTime(DateUtils.getCurrentUnixTime());
             activityService.updateById(activity);
         }
         if (method.equals("delete")) {
-            activity.setUpdateTime(DateUtils.getCurrentUnixTime());
+            //activity.setUpdateTime(DateUtils.getCurrentUnixTime());
             activity.setDeleteTime(DateUtils.getCurrentUnixTime());
             activityService.updateById(activity);
         }

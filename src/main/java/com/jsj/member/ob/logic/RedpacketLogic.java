@@ -77,7 +77,6 @@ public class RedpacketLogic {
         dto.setBeginTime(redpacket.getBeginTime());
         dto.setEndTime(redpacket.getEndTime());
 
-        dto.setSort(redpacket.getSort());
         dto.setRedpacketType(RedpacketType.valueOf(redpacket.getTypeId()));
         dto.setCreateTime(redpacket.getCreateTime());
         dto.setDeleteTime(redpacket.getDeleteTime());

@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : ActivityProduct 活动商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-10-30
+ *   @since 2018-11-07
  */
 @TableName("_activity_product")
 public class ActivityProduct implements Serializable {
@@ -27,6 +27,7 @@ public class ActivityProduct implements Serializable {
 	private Integer productId;
 	@TableField("product_spec_id")
 	private Integer productSpecId;
+	private Integer sort;
     /**
      * 售价(秒杀时使用)
      */
@@ -81,6 +82,14 @@ public class ActivityProduct implements Serializable {
 		this.productSpecId = productSpecId;
 	}
 
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
 	public Double getSalePrice() {
 		return salePrice;
 	}
@@ -121,6 +130,7 @@ public class ActivityProduct implements Serializable {
 			", activityId=" + activityId +
 			", productId=" + productId +
 			", productSpecId=" + productSpecId +
+			", sort=" + sort +
 			", salePrice=" + salePrice +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
