@@ -86,3 +86,9 @@ webconfig:
   #密钥
   token: #wugf543sxcv5*$#
 
+  EBusinessID: 1400214
+
+  AppKey: a31be43c-ff92-4ec8-b748-9627b31e01dd
+
+  ReqURL: http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx
+

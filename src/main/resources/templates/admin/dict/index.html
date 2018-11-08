@@ -18,7 +18,7 @@
 
                     <label class="layui-form-label">所属类型</label>
                     <div class="layui-input-inline">
-                        <select name="typeId" title="所属类型">
+                        <select name="dictTypeId" title="所属类型">
                             <option value="">所属类型</option>
                             <th:block th:each="dictType : ${dictTypes}">
                                 <option th:value="${dictType.value}" th:text="${dictType.message}" th:selected="${dictType.value == dictTypeId}"></option>

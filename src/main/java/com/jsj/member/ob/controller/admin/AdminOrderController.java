@@ -17,6 +17,7 @@ import com.jsj.member.ob.logic.OrderLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
+import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,8 @@ public class AdminOrderController {
                         @RequestParam(value = "limit", defaultValue = "10") Integer limit,
                         @RequestParam(value = "typeId", defaultValue = "-1") Integer typeId,
                         @RequestParam(value = "status", defaultValue = "-1") Integer status,
+                        @RequestParam(value = "startDate", defaultValue = "") String startDate,
+                        @RequestParam(value = "endDate", defaultValue = "") String endDate,
                         @RequestParam(value = "keys", defaultValue = "") String keys,
                         Model model) {
         EntityWrapper<Order> wrapper = new EntityWrapper<>();
@@ -82,6 +85,20 @@ public class AdminOrderController {
             wrapper.where("status={0}", status);
         }
         wrapper.where(!StringUtils.isBlank(keys), "(open_id like concat(concat('%',{0}),'%') or order_id like concat(concat('%',{0}),'%')  )", keys);
+
+        if (!org.apache.commons.lang3.StringUtils.isBlank(startDate) && !org.apache.commons.lang3.StringUtils.isBlank(endDate)) {
+            int startUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(startDate, "yyyy-MM-dd"));
+            int endUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(endDate, "yyyy-MM-dd"));
+            endUnix += 60 * 60 * 24;
+            wrapper.between("create_time", startUnix, endUnix);
+        } else if (!org.apache.commons.lang3.StringUtils.isBlank(startDate)) {
+            int startUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(startDate, "yyyy-MM-dd"));
+            wrapper.gt("create_time", startUnix);
+        } else if (!org.apache.commons.lang3.StringUtils.isBlank(endDate)) {
+            int endUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(endDate, "yyyy-MM-dd"));
+            endUnix += 60 * 60 * 24;
+            wrapper.lt("create_time", endUnix);
+        }
         wrapper.orderBy("create_time desc");
 
         Page<Order> pageInfo = new Page<>(page, limit);

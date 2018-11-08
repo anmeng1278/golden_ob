@@ -31,6 +31,36 @@ public class Webconfig {
     //密钥
     private String token;
 
+    private String EBusinessID;
+
+    private String AppKey;
+
+    private String ReqURL;
+
+    public String getReqURL() {
+        return ReqURL;
+    }
+
+    public void setReqURL(String reqURL) {
+        ReqURL = reqURL;
+    }
+
+    public String getAppKey() {
+        return AppKey;
+    }
+
+    public void setAppKey(String appKey) {
+        AppKey = appKey;
+    }
+
+    public String getEBusinessID() {
+        return EBusinessID;
+    }
+
+    public void setEBusinessID(String EBusinessID) {
+        this.EBusinessID = EBusinessID;
+    }
+
     public String getPlatformAppId() {
         return PlatformAppId;
     }

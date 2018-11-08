@@ -136,4 +136,15 @@ public class EnumLogic {
         return RedpacketType.valueOf(value);
     }
 
+
+    /**
+     * 商品图片类型
+     * @param value
+     * @return
+     */
+    public static ProductImgType GetProductImgType(Integer value) {
+        return ProductImgType.valueOf(value);
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.jsj.member.ob.controller.admin;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
@@ -61,6 +62,7 @@ public class AdminProductController {
     public String index(@RequestParam(value = "page", defaultValue = "1") int page,
                         @RequestParam(value = "limit", defaultValue = "20") int limit,
                         @RequestParam(value = "isSellout", defaultValue = "") String isSellout,
+                        @RequestParam(value = "ifpass", defaultValue = "true") Boolean ifpass,
                         @RequestParam(value = "keys", defaultValue = "") String keys,
                         HttpServletRequest request) {
 
@@ -68,6 +70,9 @@ public class AdminProductController {
         EntityWrapper<Product> wrapper = new EntityWrapper<Product>();
         wrapper.where(!StringUtils.isBlank(keys), "(product_name LIKE concat(concat('%',{0}),'%') )", keys);
         wrapper.where(!StringUtils.isBlank(isSellout), "ifnull(( select sum(_product_spec.stock_count) from _product_spec where _product_spec.product_id = _product.product_id), 0) = 0");
+       if(ifpass == false || ifpass == true){
+           wrapper.where("ifpass={0}",ifpass);
+       }
         wrapper.orderBy("iftop desc, update_time desc");
 
         Page<Product> pageInfo = new Page<>(page, limit);
@@ -76,6 +81,7 @@ public class AdminProductController {
         request.setAttribute("infos", new CCPage<Product>(pp, limit));
         request.setAttribute("keys", keys);
         request.setAttribute("isSellout", isSellout);
+        request.setAttribute("ifpass", ifpass);
 
         return "admin/product/index";
     }

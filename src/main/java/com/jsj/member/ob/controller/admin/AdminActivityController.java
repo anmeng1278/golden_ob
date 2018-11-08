@@ -6,10 +6,9 @@ import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.ActivityType;
-import com.jsj.member.ob.service.ActivityProductService;
-import com.jsj.member.ob.service.ActivityService;
-import com.jsj.member.ob.service.ProductService;
-import com.jsj.member.ob.service.ProductSpecService;
+import com.jsj.member.ob.enums.DictType;
+import com.jsj.member.ob.logic.DictLogic;
+import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +36,9 @@ public class AdminActivityController {
 
     @Autowired
     private ActivityProductService activityProductService;
+
+    @Autowired
+    private DictService dictService;
 
 
     //活动活动列表
@@ -266,6 +268,8 @@ public class AdminActivityController {
     public String chooseProducts(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+            @RequestParam(value = "typeId", defaultValue = "0") Integer typeId,
+            @RequestParam(value = "propertyTypeId", defaultValue = "0") Integer propertyTypeId,
             @RequestParam(value = "keys", defaultValue = "") String keys,
             HttpServletRequest request) {
 
@@ -274,13 +278,34 @@ public class AdminActivityController {
         wrapper.where("delete_time is null");
         wrapper.where(!StringUtils.isBlank(keys), "(product_name LIKE concat(concat('%',{0}),'%') )", keys);
         wrapper.where("exists( select * from _product_spec where product_id = _product.product_id )");
+        if(typeId > 0){
+            wrapper.where("type_id={0}",typeId);
+        }
+        if(propertyTypeId > 0){
+            wrapper.where("property_type_id={0}",propertyTypeId);
+        }
         wrapper.orderBy("create_time desc");
 
         Page<Product> pageInfo = new Page<>(page, limit);
         Page<Product> pp = productService.selectPage(pageInfo, wrapper);
 
+        //商品分类
+        EntityWrapper<Dict> typeWrapper = new EntityWrapper<>();
+        typeWrapper.where("parent_dict_id={0} and delete_time is null", DictType.PRODUCTTYPE.getValue());
+        List<Dict> productType = dictService.selectList(typeWrapper);
+
+        //商品属性
+        EntityWrapper<Dict> propertyWrapper = new EntityWrapper<>();
+        propertyWrapper.where("parent_dict_id={0} and delete_time is null", DictType.PRODUCTPERPROTY.getValue());
+        List<Dict> productProperty = dictService.selectList(propertyWrapper);
+
+
         request.setAttribute("infos", new CCPage<Dict>(pp, limit));
+        request.setAttribute("typeId", typeId);
         request.setAttribute("keys", keys);
+        request.setAttribute("propertyTypeId", propertyTypeId);
+        request.setAttribute("productType", productType);
+        request.setAttribute("productProperty", productProperty);
 
         return "admin/activity/chooseProducts";
     }

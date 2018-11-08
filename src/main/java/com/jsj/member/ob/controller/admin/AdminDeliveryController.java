@@ -103,7 +103,7 @@ public class AdminDeliveryController {
         if (!StringUtils.isBlank(delivery.getExpressNumber())) {
             //查询配送的物流信息
             requ.setText(delivery.getExpressNumber());
-            ExpressResp resp = ExpressApiLogic.GetExpress(requ);
+            ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
             resps = new ArrayList<Map<String, String>>();
             List data = resp.getData();
             for (int i = 0; i < data.size(); i++) {
