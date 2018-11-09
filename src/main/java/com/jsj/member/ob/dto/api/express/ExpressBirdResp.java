@@ -11,7 +11,6 @@ public class ExpressBirdResp {
     public ExpressBirdResp(){
         this.Traces = new ArrayList<>();
         this.EBusinessID = "1400214";
-        this.expressBirdHeader = new ExpressBirdHeader();
     }
 
     @JSONField(name="EBusinessID")
@@ -34,16 +33,6 @@ public class ExpressBirdResp {
 
     @JSONField(name="Traces")
     private List<Traces> Traces;
-
-    private ExpressBirdHeader expressBirdHeader;
-
-    public ExpressBirdHeader getExpressBirdHeader() {
-        return expressBirdHeader;
-    }
-
-    public void setExpressBirdHeader(ExpressBirdHeader expressBirdHeader) {
-        this.expressBirdHeader = expressBirdHeader;
-    }
 
     public String getEBusinessID() {
         return EBusinessID;
