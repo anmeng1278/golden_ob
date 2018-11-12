@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : ActivityProduct 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-07
+ *   @since 2018-11-12
  */
 @Service
 public class ActivityProductServiceImpl extends ServiceImpl<ActivityProductMapper, ActivityProduct> implements ActivityProductService {

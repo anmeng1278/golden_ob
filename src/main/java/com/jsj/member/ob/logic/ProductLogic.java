@@ -312,10 +312,70 @@ public class ProductLogic {
     public static Integer GetUnPassProduct() {
 
         EntityWrapper<Product> productWrapper = new EntityWrapper<>();
-
         productWrapper.where("ifpass is false and delete_time is null");
 
         return productLogic.productService.selectCount(productWrapper);
+
+    }
+
+    /**
+     * 更新商品排序
+     *
+     * @param productId
+     * @param ifUp
+     */
+    public static void Sort(int productId, Boolean ifUp) {
+
+        Product current = productLogic.productService.selectById(productId);
+        int typeId = current.getTypeId();
+
+        EntityWrapper<Product> wrapper = new EntityWrapper<>();
+        wrapper.where("type_id={0}", typeId);
+        wrapper.orderBy("sort asc, update_time desc");
+        List<Product> products = productLogic.productService.selectList(wrapper);
+
+        //重置所有排序
+        int sort = 0;
+        for (Product product : products) {
+            product.setSort(sort);
+            productLogic.productService.updateById(product);
+
+            sort++;
+        }
+
+        if (ifUp != null) {
+            //向上
+            if (ifUp) {
+
+                current = products.stream().filter(p -> p.getProductId() == productId).findFirst().get();
+                if (current.getSort() == 0) {
+                    return;
+                }
+                int currentSort = current.getSort();
+                Product prev = products.stream().filter(p -> p.getSort() == (currentSort - 1)).findFirst().get();
+                prev.setSort(prev.getSort() + 1);
+
+                current.setSort(current.getSort() - 1);
+
+                productLogic.productService.updateById(current);
+                productLogic.productService.updateById(prev);
+            } else {
+                //向下移动
+                current = products.stream().filter(p -> p.getProductId() == productId).findFirst().get();
+                if (current.getSort() == products.size() - 1) {
+                    return;
+                }
+                int currentSort = current.getSort();
+                Product next = products.stream().filter(p -> p.getSort() == currentSort + 1).findFirst().get();
+                next.setSort(next.getSort() - 1);
+
+                current.setSort(current.getSort() + 1);
+
+                productLogic.productService.updateById(current);
+                productLogic.productService.updateById(next);
+            }
+        }
+
 
     }
 }

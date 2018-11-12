@@ -42,7 +42,11 @@ public class DictLogic {
      * @return
      */
     public static Dict GetDict(int dictId) {
-        return dictLogic.dictService.selectById(dictId);
+        Dict dict = dictLogic.dictService.selectById(dictId);
+        if (dict == null) {
+            return new Dict();
+        }
+        return dict;
     }
 
     /**

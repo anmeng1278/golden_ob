@@ -7,7 +7,6 @@ import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.DictType;
-import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
@@ -65,7 +64,7 @@ public class AdminActivityController {
             wrapper.where("type_id={0}", typeId);
         }
         wrapper.where(!StringUtils.isBlank(keys), "(activity_name LIKE concat(concat('%',{0}),'%') )", keys);
-        wrapper.orderBy("iftop desc, update_time desc");
+        wrapper.orderBy("update_time desc");
 
         Page<Activity> pageInfo = new Page<>(page, limit);
         Page<Activity> pp = activityService.selectPage(pageInfo, wrapper);
@@ -160,8 +159,6 @@ public class AdminActivityController {
 
         //是否审核
         boolean ifpass = !StringUtils.isBlank(request.getParameter("ifpass"));
-        //是否置顶
-        boolean iftop = !StringUtils.isBlank(request.getParameter("iftop"));
 
         if (activityId > 0) {
             //修改
@@ -179,7 +176,6 @@ public class AdminActivityController {
             activity.setTypeId(typeId);
             activity.setIfpass(ifpass);
 
-            activity.setIftop(iftop);
             activity.setUpdateTime(DateUtils.getCurrentUnixTime());
             activityService.updateById(activity);
 
@@ -197,7 +193,6 @@ public class AdminActivityController {
             activity.setSalePrice(Double.valueOf(salePrice));
             activity.setTypeId(typeId);
 
-            activity.setIftop(iftop);
             activity.setCreateTime(DateUtils.getCurrentUnixTime());
             activity.setUpdateTime(DateUtils.getCurrentUnixTime());
 
@@ -371,15 +366,6 @@ public class AdminActivityController {
         if (method.equals("ifpass")) {
             activity.setIfpass(!activity.getIfpass());
             //activity.setUpdateTime(DateUtils.getCurrentUnixTime());
-            activityService.updateById(activity);
-        }
-        if (method.equals("iftop")) {
-            activity.setIftop(!activity.getIftop());
-            activity.setUpdateTime(DateUtils.getCurrentUnixTime());
-            activityService.updateById(activity);
-        }
-        if (method.equals("update")) {
-            activity.setUpdateTime(DateUtils.getCurrentUnixTime());
             activityService.updateById(activity);
         }
         if (method.equals("delete")) {

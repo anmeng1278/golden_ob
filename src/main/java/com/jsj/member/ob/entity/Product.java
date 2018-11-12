@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Product 商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-07
+ *   @since 2018-11-12
  */
 @TableName("_product")
 public class Product implements Serializable {
@@ -73,7 +73,7 @@ public class Product implements Serializable {
      * 是否支持配送
      */
 	private Boolean ifdistribution;
-	private Boolean iftop;
+	private Integer sort;
     /**
      * 操作人编号
      */
@@ -192,12 +192,12 @@ public class Product implements Serializable {
 		this.ifdistribution = ifdistribution;
 	}
 
-	public Boolean getIftop() {
-		return iftop;
+	public Integer getSort() {
+		return sort;
 	}
 
-	public void setIftop(Boolean iftop) {
-		this.iftop = iftop;
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 
 	public Integer getOpemployeeId() {
@@ -248,7 +248,7 @@ public class Product implements Serializable {
 			", ifpickup=" + ifpickup +
 			", ifpass=" + ifpass +
 			", ifdistribution=" + ifdistribution +
-			", iftop=" + iftop +
+			", sort=" + sort +
 			", opemployeeId=" + opemployeeId +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +

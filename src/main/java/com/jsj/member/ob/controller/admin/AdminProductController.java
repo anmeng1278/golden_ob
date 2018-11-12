@@ -1,7 +1,6 @@
 package com.jsj.member.ob.controller.admin;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
@@ -62,26 +61,36 @@ public class AdminProductController {
     public String index(@RequestParam(value = "page", defaultValue = "1") int page,
                         @RequestParam(value = "limit", defaultValue = "20") int limit,
                         @RequestParam(value = "isSellout", defaultValue = "") String isSellout,
-                        @RequestParam(value = "ifpass", defaultValue = "true") Boolean ifpass,
+                        @RequestParam(value = "ifpass", defaultValue = "") Integer ifpass,
                         @RequestParam(value = "keys", defaultValue = "") String keys,
+                        @RequestParam(value = "typeId", defaultValue = "0") int typeId,
                         HttpServletRequest request) {
 
 
         EntityWrapper<Product> wrapper = new EntityWrapper<Product>();
         wrapper.where(!StringUtils.isBlank(keys), "(product_name LIKE concat(concat('%',{0}),'%') )", keys);
         wrapper.where(!StringUtils.isBlank(isSellout), "ifnull(( select sum(_product_spec.stock_count) from _product_spec where _product_spec.product_id = _product.product_id), 0) = 0");
-       if(ifpass == false || ifpass == true){
-           wrapper.where("ifpass={0}",ifpass);
-       }
-        wrapper.orderBy("iftop desc, update_time desc");
+
+        if (ifpass != null) {
+            wrapper.where("ifpass={0}", ifpass);
+        }
+        wrapper.where(typeId > 0, "type_id={0}", typeId);
+        wrapper.orderBy("sort asc, update_time desc");
 
         Page<Product> pageInfo = new Page<>(page, limit);
         Page<Product> pp = productService.selectPage(pageInfo, wrapper);
+
+        //商品分类
+        List<Dict> productTypes = DictLogic.GetDicts(DictType.PRODUCTTYPE);
+
 
         request.setAttribute("infos", new CCPage<Product>(pp, limit));
         request.setAttribute("keys", keys);
         request.setAttribute("isSellout", isSellout);
         request.setAttribute("ifpass", ifpass);
+        request.setAttribute("productTypes", productTypes);
+        request.setAttribute("typeId", typeId);
+
 
         return "admin/product/index";
     }
@@ -160,9 +169,6 @@ public class AdminProductController {
         boolean ifpass = !StringUtils.isBlank(request.getParameter("ifpass"));
         //支持配送
         boolean ifdistribution = !StringUtils.isBlank(request.getParameter("ifdistribution"));
-        //是否置顶
-        boolean iftop = !StringUtils.isBlank(request.getParameter("iftop"));
-
 
         if (productId > 0) {
             product = productService.selectById(productId);
@@ -178,12 +184,14 @@ public class AdminProductController {
             product.setGiftCopywriting(giftCopywriting);
             product.setIfpickup(ifpickup);
 
-            product.setIftop(iftop);
             product.setIfpass(ifpass);
             product.setIfdistribution(ifdistribution);
             product.setUpdateTime(DateUtils.getCurrentUnixTime());
 
             productService.updateById(product);
+
+            ProductLogic.Sort(product.getProductId(), null);
+
         } else {
             product.setProductName(productName);
             product.setTypeId(typeId);
@@ -196,14 +204,16 @@ public class AdminProductController {
             product.setGiftCopywriting(giftCopywriting);
             product.setIfpickup(ifpickup);
 
-            product.setIftop(iftop);
             product.setIfpass(ifpass);
             product.setIfdistribution(ifdistribution);
             product.setCreateTime(DateUtils.getCurrentUnixTime());
             product.setUpdateTime(DateUtils.getCurrentUnixTime());
 
             productService.insert(product);
+
+            ProductLogic.Sort(product.getProductId(), true);
         }
+
 
         //型号规格
         EntityWrapper<ProductSpec> productSpecWrapper = new EntityWrapper<ProductSpec>();
@@ -362,18 +372,14 @@ public class AdminProductController {
             product.setIfpass(!product.getIfpass());
             productService.updateById(product);
         }
-        if (method.equals("iftop")) {
-            product.setIftop(!product.getIftop());
-            product.setUpdateTime(DateUtils.getCurrentUnixTime());
-            productService.updateById(product);
-        }
-        if (method.equals("update")) {
-            product.setUpdateTime(DateUtils.getCurrentUnixTime());
-            productService.updateById(product);
-        }
+
         if (method.equals("delete")) {
             product.setDeleteTime(DateUtils.getCurrentUnixTime());
             productService.updateById(product);
+        }
+
+        if (method.equals("up") || method.equals("down")) {
+            ProductLogic.Sort(id, method.equals("up"));
         }
 
         return RestResponseBo.ok("操作成功");

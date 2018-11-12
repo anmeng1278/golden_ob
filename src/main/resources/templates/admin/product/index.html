@@ -17,15 +17,30 @@
             <form class="layui-form" method="get" style="float:right;">
                 <div class="layui-form-item" style="margin:0;">
 
+                    <label class="layui-form-label">商品类型</label>
+
+                    <div class="layui-input-inline">
+                        <select name="typeId" lay-verify="req" title="商品类型">
+                            <option value="">商品类型</option>
+                            <th:block th:each="pts : ${productTypes}">
+                                <option th:value="${pts.dictId}" th:selected="${typeId==pts.dictId}"
+                                        th:text="${pts.dictName}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <select name="ifpass" title="审核状态">
+                            <option value="">审核状态</option>
+                            <option value="0" th:selected="${ifpass == 0}">未审</option>
+                            <option value="1" th:selected="${ifpass == 1}">已审</option>
+                        </select>
+                    </div>
+
                     <label class="layui-form-label">关键字</label>
                     <div class="layui-input-inline">
                         <input type="text" name="keys" placeholder="关键字……" th:value="${keys}" autocomplete="off"
                                class="layui-input"/>
-                    </div>
-
-                    <label class="layui-form-label">审核</label>
-                    <div class="layui-input-inline" style="width: 100px;">
-                        <input type="checkbox" th:value="${ifpass == false}" th:checked="${ifpass == false}" name="ifpass" lay-skin="switch" lay-text="未审|已审">
                     </div>
 
                     <div class="layui-input-inline" style="width:100px;">
@@ -92,25 +107,6 @@
                                     th:text="${dateUtils.formatDateByUnixTime(info.updateTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
                         </td>
                         <td class="ext">
-                            <th:block th:if="${info.iftop}">
-                                <button type="button" th:attr="data-id=${info.productId},data-method='iftop'"
-                                        class="layui-btn layui-btn-normal layui-btn-xs">
-                                    已置顶
-                                </button>
-                            </th:block>
-                            <th:block th:if="!${info.iftop}">
-                                <button type="button" th:attr="data-id=${info.productId},data-method='iftop'"
-                                        class="layui-btn layui-btn-danger layui-btn-xs">
-                                    未置顶
-                                </button>
-                            </th:block>
-
-                            <br/>
-                            <button type="button" th:attr="data-id=${info.productId},data-method='update'"
-                                    class="layui-btn layui-btn-normal layui-btn-xs">
-                                刷新
-                            </button>
-                            <br/>
                             <th:block th:if="${info.ifpass}">
                                 <button type="button" th:attr="data-id=${info.productId},data-method='ifpass'"
                                         class="layui-btn layui-btn-normal layui-btn-xs">
@@ -124,26 +120,35 @@
                                 </button>
                             </th:block>
                         </td>
+
                         <td>
+                            <th:block th:if="${typeId > 0}">
+                                <button th:attr="data-id=${info.productId}" data-method='up'
+                                        class="layui-btn layui-btn-normal layui-btn-xs"><i
+                                        class="layui-icon">&#xe619;</i></button>
+                                <button th:attr="data-id=${info.productId}" data-method='down'
+                                        class="layui-btn layui-btn-normal layui-btn-xs"
+                                        style="margin-left: 3px;"><i
+                                        class="layui-icon">&#xe61a;</i></button>
+                            </th:block>
+
                             <a th:title="|${info.productName} 商品详情|"
                                th:attr="data-tab-href=@{'/admin/product/'+${info.productId}}"
                                class="layui-btn layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe642;</i>
-                                编辑
                             </a>
 
                             <a th:title="|${info.productName} 商品图片|"
                                th:attr="data-tab-href=@{'/admin/product/'+${info.productId}}+'/productImgs'"
                                class="layui-btn layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe64a;</i>
-                                图片
                             </a>
 
                             <button type="button" th:attr="data-method='delete',data-id=${info.productId}"
                                     class="layui-btn layui-btn-xs layui-btn-danger">
                                 <i class="layui-icon">&#xe640;</i>
-                                删除
                             </button>
+
                         </td>
                     </tr>
                 </th:block>
@@ -177,12 +182,11 @@
                 if (method == "ifpass") {
                     modifyStatus(method, id);
                 }
-                if (method == "iftop") {
+
+                if (method == "up" || method == "down") {
                     modifyStatus(method, id);
                 }
-                if (method == "update") {
-                    modifyStatus(method, id);
-                }
+
             });
 
 

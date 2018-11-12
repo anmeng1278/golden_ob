@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : Redpacket 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-07
+ *   @since 2018-11-12
  */
 @Service
 public class RedpacketServiceImpl extends ServiceImpl<RedpacketMapper, Redpacket> implements RedpacketService {

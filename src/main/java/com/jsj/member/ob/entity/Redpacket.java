@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Redpacket 礼包表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-07
+ *   @since 2018-11-12
  */
 @TableName("_redpacket")
 public class Redpacket implements Serializable {
@@ -39,7 +39,7 @@ public class Redpacket implements Serializable {
      * 是否审核
      */
 	private Boolean ifpass;
-	private Boolean iftop;
+	private Integer sort;
     /**
      * 创建时间
      */
@@ -105,12 +105,12 @@ public class Redpacket implements Serializable {
 		this.ifpass = ifpass;
 	}
 
-	public Boolean getIftop() {
-		return iftop;
+	public Integer getSort() {
+		return sort;
 	}
 
-	public void setIftop(Boolean iftop) {
-		this.iftop = iftop;
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 
 	public Integer getCreateTime() {
@@ -147,7 +147,7 @@ public class Redpacket implements Serializable {
 			", beginTime=" + beginTime +
 			", endTime=" + endTime +
 			", ifpass=" + ifpass +
-			", iftop=" + iftop +
+			", sort=" + sort +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +
