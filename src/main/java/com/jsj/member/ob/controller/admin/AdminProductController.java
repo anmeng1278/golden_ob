@@ -190,7 +190,7 @@ public class AdminProductController {
 
             productService.updateById(product);
 
-            ProductLogic.Sort(product.getProductId(), null);
+            //ProductLogic.Sort(product.getProductId(), null);
 
         } else {
             product.setProductName(productName);

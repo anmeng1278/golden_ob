@@ -71,7 +71,7 @@ public class AdminActivityController {
 
 
         //所属类型
-        List<ActivityType> activityTypes = Arrays.asList(ActivityType.values());
+        List<ActivityType> activityTypes = Arrays.asList(ActivityType.values()).stream().filter(x -> x != ActivityType.NORMAL).collect(Collectors.toList());
 
         model.addAttribute("infos", new CCPage<Dict>(pp, limit));
         model.addAttribute("activityTypes", activityTypes);
