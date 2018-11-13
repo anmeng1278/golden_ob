@@ -48,7 +48,7 @@
                 <tr>
                     <th style="width: 5%;">编号</th>
                     <th>活动名称</th>
-                    <th style="width: 5%;">类型</th>
+                    <th style="width: 8%;">类型</th>
                     <th style="width: 15%;">活动时间</th>
                     <th style="width: 5%;">售价</th>
                     <th style="width: 5%;">库存</th>
@@ -97,6 +97,15 @@
 
                         <td>
 
+                            <th:block th:if="${typeId > 0}">
+                                <button th:attr="data-id=${info.activityId}" data-method='up'
+                                        class="layui-btn layui-btn-normal layui-btn-xs"><i
+                                        class="layui-icon">&#xe619;</i></button>
+                                <button th:attr="data-id=${info.activityId}" data-method='down'
+                                        class="layui-btn layui-btn-normal layui-btn-xs"><i
+                                        class="layui-icon">&#xe61a;</i></button>
+                            </th:block>
+
                             <a th:title="|${info.activityName}活动详情|"
                                th:attr="data-tab-href=@{'/admin/activity/'+${info.activityId}}"
                                class="layui-btn layui-btn-normal layui-btn-xs">
@@ -138,6 +147,10 @@
                 }
 
                 if (method == "ifpass") {
+                    modifyStatus(method, id);
+                }
+
+                if (method == "up" || method == "down") {
                     modifyStatus(method, id);
                 }
 

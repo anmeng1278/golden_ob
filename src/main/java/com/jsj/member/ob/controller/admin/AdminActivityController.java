@@ -7,6 +7,8 @@ import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.DictType;
+import com.jsj.member.ob.logic.ActivityLogic;
+import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
@@ -64,7 +66,7 @@ public class AdminActivityController {
             wrapper.where("type_id={0}", typeId);
         }
         wrapper.where(!StringUtils.isBlank(keys), "(activity_name LIKE concat(concat('%',{0}),'%') )", keys);
-        wrapper.orderBy("update_time desc");
+        wrapper.orderBy("sort asc, update_time desc");
 
         Page<Activity> pageInfo = new Page<>(page, limit);
         Page<Activity> pp = activityService.selectPage(pageInfo, wrapper);
@@ -197,6 +199,9 @@ public class AdminActivityController {
             activity.setUpdateTime(DateUtils.getCurrentUnixTime());
 
             activityService.insert(activity);
+
+            ActivityLogic.Sort(activity.getActivityId(), true);
+
         }
 
         //添加更新商品
@@ -372,6 +377,10 @@ public class AdminActivityController {
             //activity.setUpdateTime(DateUtils.getCurrentUnixTime());
             activity.setDeleteTime(DateUtils.getCurrentUnixTime());
             activityService.updateById(activity);
+        }
+
+        if (method.equals("up") || method.equals("down")) {
+            ActivityLogic.Sort(id, method.equals("up"));
         }
 
         return RestResponseBo.ok("操作成功");

@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.dto.api.coupon.CouponDto;
 import com.jsj.member.ob.dto.api.redpacket.RedpacketCouponDto;
 import com.jsj.member.ob.dto.api.redpacket.RedpacketDto;
-import com.jsj.member.ob.entity.OrderRedpacketCoupon;
-import com.jsj.member.ob.entity.Redpacket;
-import com.jsj.member.ob.entity.RedpacketCoupon;
-import com.jsj.member.ob.entity.WechatCoupon;
+import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.CouponStatus;
 import com.jsj.member.ob.enums.RedpacketType;
 import com.jsj.member.ob.exception.TipException;
@@ -281,5 +278,64 @@ public class RedpacketLogic {
             throw new TipException("该订单没有礼包诶！");
         }
         return orderRedpacketCoupons;
+    }
+
+    /**
+     * 更新红包排序
+     *
+     * @param redpacketId
+     * @param ifUp
+     */
+    public static void Sort(int redpacketId, Boolean ifUp) {
+
+        Redpacket current = redpacketLogic.redpacketService.selectById(redpacketId);
+
+        EntityWrapper<Redpacket> wrapper = new EntityWrapper<>();
+        wrapper.orderBy("sort asc, ifpass desc");
+        List<Redpacket> redpackets= redpacketLogic.redpacketService.selectList(wrapper);
+
+        //重置所有排序
+        int sort = 0;
+        for (Redpacket redpacket : redpackets) {
+            redpacket.setSort(sort);
+            redpacketLogic.redpacketService.updateById(redpacket);
+            sort++;
+        }
+
+        if (ifUp != null) {
+            //向上
+            if (ifUp) {
+
+                current = redpackets.stream().filter(p -> p.getRedpacketId() == redpacketId).findFirst().get();
+                if (current.getSort() == 0) {
+                    return;
+                }
+                int currentSort = current.getSort();
+                Redpacket prev = redpackets.stream().filter(p -> p.getSort() == (currentSort - 1)).findFirst().get();
+                prev.setSort(prev.getSort() + 1);
+
+                current.setSort(current.getSort() - 1);
+
+                redpacketLogic.redpacketService.updateById(current);
+                redpacketLogic.redpacketService.updateById(prev);
+
+            } else {
+                //向下移动
+                current = redpackets.stream().filter(p -> p.getRedpacketId() == redpacketId).findFirst().get();
+                if (current.getSort() == redpackets.size() - 1) {
+                    return;
+                }
+                int currentSort = current.getSort();
+                Redpacket next = redpackets.stream().filter(p -> p.getSort() == (currentSort + 1)).findFirst().get();
+                next.setSort(next.getSort() - 1);
+
+                current.setSort(current.getSort() + 1);
+
+                redpacketLogic.redpacketService.updateById(current);
+                redpacketLogic.redpacketService.updateById(next);
+            }
+        }
+
+
     }
 }

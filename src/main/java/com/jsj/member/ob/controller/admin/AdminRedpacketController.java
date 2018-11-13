@@ -9,7 +9,9 @@ import com.jsj.member.ob.entity.Coupon;
 import com.jsj.member.ob.entity.Redpacket;
 import com.jsj.member.ob.entity.RedpacketCoupon;
 import com.jsj.member.ob.enums.RedpacketType;
+import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.CouponLogic;
+import com.jsj.member.ob.logic.RedpacketLogic;
 import com.jsj.member.ob.service.CouponService;
 import com.jsj.member.ob.service.RedpacketCouponService;
 import com.jsj.member.ob.service.RedpacketService;
@@ -63,7 +65,7 @@ public class AdminRedpacketController {
             wrapper.where("type_id={0}", typeId);
         }
         wrapper.where(!StringUtils.isBlank(keys), "(redpacket_name LIKE concat(concat('%',{0}),'%') )", keys);
-        wrapper.orderBy("create_time desc");
+        wrapper.orderBy("sort asc, ifpass desc");
 
         Page<Redpacket> pageInfo = new Page<>(page, limit);
         Page<Redpacket> pp = redpacketService.selectPage(pageInfo, wrapper);
@@ -159,6 +161,8 @@ public class AdminRedpacketController {
             redpacket.setCreateTime(DateUtils.getCurrentUnixTime());
             redpacket.setUpdateTime(DateUtils.getCurrentUnixTime());
             redpacketService.insert(redpacket);
+            RedpacketLogic.Sort(redpacket.getRedpacketId(), true);
+
         }
 
         //先删除礼包中的优惠券
@@ -301,7 +305,9 @@ public class AdminRedpacketController {
             redpacket.setDeleteTime(DateUtils.getCurrentUnixTime());
             redpacketService.updateById(redpacket);
         }
-
+        if (method.equals("up") || method.equals("down")) {
+            RedpacketLogic.Sort(id, method.equals("up"));
+        }
         return RestResponseBo.ok("操作成功");
 
     }

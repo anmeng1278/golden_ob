@@ -33,12 +33,10 @@ public class ActivityDto {
     /**
      * 开始时间
      */
-    @TableField("begin_time")
     private Integer beginTime;
     /**
      * 结束时间
      */
-    @TableField("end_time")
     private Integer endTime;
     /**
      * 是否审核

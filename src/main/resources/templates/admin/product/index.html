@@ -135,17 +135,20 @@
                                th:attr="data-tab-href=@{'/admin/product/'+${info.productId}}"
                                class="layui-btn layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe642;</i>
+                                编辑
                             </a>
 
                             <a th:title="|${info.productName} 商品图片|"
                                th:attr="data-tab-href=@{'/admin/product/'+${info.productId}}+'/productImgs'"
                                class="layui-btn layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe64a;</i>
+                                图片
                             </a>
 
                             <button type="button" th:attr="data-method='delete',data-id=${info.productId}"
                                     class="layui-btn layui-btn-xs layui-btn-danger">
                                 <i class="layui-icon">&#xe640;</i>
+                                删除
                             </button>
 
                         </td>

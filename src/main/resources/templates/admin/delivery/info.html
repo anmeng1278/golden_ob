@@ -108,6 +108,14 @@
                 });
 
             });
+            $("#btnClose").click(function () {
+                if (parent.window.TX.TEMP.LAYERINDEX) {
+                    parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
+                } else {
+                    var currentTabId = parent.tab.getCurrentTabId();
+                    parent.tab.deleteTab(currentTabId);
+                }
+            });
         });
     </script>
 </th:block>

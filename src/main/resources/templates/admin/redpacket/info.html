@@ -269,7 +269,7 @@
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                parent.tab.openTab("/admin/redpacket", {refershType: "refersh"});
+                                parent.tab.openTab("/admin/redpacket", {refershType: "reload"});
                                 // location.href = "/admin/redpacket";
                             });
                         } else {

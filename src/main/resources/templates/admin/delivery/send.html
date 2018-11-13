@@ -9,24 +9,12 @@
     <form class="layui-form" method="post" action="">
 
         <div class="layui-form-item">
-            <label class="layui-form-label">用户openId</label>
-            <div class="layui-input-inline" >
-                <input type="text" class="layui-input" name="openId"
-                       lay-verify="num2"
-                       title="用户openId"
-                       placeholder="用户openId"/>
-            </div>
-            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
-        </div>
-
-
-        <div class="layui-form-item">
             <label class="layui-form-label">快递号</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" name="expressNumber"
-                       lay-verify="num2"
+                       lay-verify="req"
                        title="快递号"
-                       placeholder="快递号"/>
+                       th:value="${info.expressNumber}" placeholder="请输入快递号"/>
             </div>
             <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
         </div>
@@ -35,9 +23,9 @@
             <label class="layui-form-label">手机号</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" name="mobile"
-                       lay-verify="num2"
+                       lay-verify="num"
                        title="手机号"
-                       placeholder="手机号"/>
+                       th:value="${info.mobile}" placeholder="手机号"/>
             </div>
             <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
         </div>
@@ -46,54 +34,27 @@
             <label class="layui-form-label">联系人</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" name="contactName"
-                       lay-verify="num2"
                        title="手机号"
-                       placeholder="联系人"/>
+                       th:value="${info.contactName}" placeholder="联系人"/>
             </div>
             <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
         </div>
 
-
-
         <div class="layui-form-item">
-            <label class="layui-form-label">联动选择框</label>
-            <div class="layui-input-inline">
-                <select name="province" title="省">
-                    <option value="">请选择省</option>
-                    <th:block th:each="gf : ${areas}">
-                        <option th:value="${gf.dictId}" th:text="${gf.dictName}"
-                                th:selected="${gf.dictId}"></option>
-                    </th:block>
-                </select>
-            </div>
-            <div class="layui-input-inline">
-                <select name="city" title="市">
-                    <option value="">请选择市</option>
-                    <th:block th:each="gf : ${areas}">
-                        <option th:value="${gf.dictId}" th:text="${gf.dictName}"
-                                th:selected="${gf.dictId}"></option>
-                    </th:block>
-                </select>
-            </div>
-            <div class="layui-input-inline">
-                <select name="district" title="区">
-                    <option value="">请选择区</option>
-                    <th:block th:each="gf : ${areas}">
-                        <option th:value="${gf.dictId}" th:text="${gf.dictName}"
-                                th:selected="${gf.dictId}"></option>
-                    </th:block>
-                </select>
-            </div>
-        </div>
-
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">详细地址</label>
-            <div class="layui-input-inline">
+            <label class="layui-form-label">地址:</label>
+            <div class="layui-input-inline layui-form-label-col">
+                <input type="text" class="layui-input" name="province"
+                       title="省"
+                       th:value="${info.province}" placeholder="省"/>
+                <input type="text" class="layui-input" name="city"
+                       title="市"
+                       th:value="${info.city}" placeholder="市"/>
+                <input type="text" class="layui-input" name="district"
+                       title="区"
+                       th:value="${info.district}" placeholder="区"/>
                 <input type="text" class="layui-input" name="address"
-                       lay-verify="num2"
                        title="详细地址"
-                       placeholder="详细地址"/>
+                       th:value="${info.address}" placeholder="详细地址"/>
             </div>
             <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
         </div>
@@ -103,11 +64,11 @@
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" lay-submit="">
                     <i class="layui-icon">&#xe621;</i>
-                    保存
+                    发货
                 </button>
                 <button type="button" class="layui-btn" id="btnClose">
                     <i class="layui-icon">&#x1006;</i>
-                    关闭
+                    取消
                 </button>
             </div>
         </div>
@@ -138,6 +99,14 @@
                     }
                 });
 
+            });
+            $("#btnClose").click(function () {
+                if (parent.window.TX.TEMP.LAYERINDEX) {
+                    parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
+                } else {
+                    var currentTabId = parent.tab.getCurrentTabId();
+                    parent.tab.deleteTab(currentTabId);
+                }
             });
         });
     </script>

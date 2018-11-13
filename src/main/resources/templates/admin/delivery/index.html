@@ -7,22 +7,49 @@
     <div class="admin-main layui-anim">
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
-            <div class="layui-btn-group" style="float: left;">
-                <a title="添加" class="layui-btn" th:attr="data-tab-href=@{'/admin/delivery/0'}">
-                    <i class="layui-icon">&#xe654;</i>
-                    添加
-                </a>
-            </div>
-
-            <form class="layui-form" method="get" style="float:right;">
+            <form class="layui-form" method="get" style="float:left;">
                 <div class="layui-form-item" style="margin:0;">
+
+                        <label class="layui-form-label">提货日期</label>
+                        <div class="layui-input-inline width100">
+                            <input type="text" name="startDate" id="startDate" th:value="${startDate}" class="layui-input"
+                                   autocomplete="off"/>
+
+                        </div>
+                        <label class="layui-form-label width10" style="width:10px;"> 至</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" name="endDate" th:value="${endDate}" id="endDate"
+                                   autocomplete="off"/>
+                        </div>
+
+                    <label class="layui-form-label">配送类型</label>
+                    <div class="layui-input-inline">
+                        <select name="typeId" title="配送类型">
+                            <option value="">配送类型</option>
+                            <th:block th:each="deliveryType : ${deliveryTypes}">
+                                <option th:value="${deliveryType.value}" th:text="${deliveryType.message}"
+                                        th:selected="${deliveryType.value == typeId}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label">配送状态</label>
+                    <div class="layui-input-inline" >
+                        <select name="status" title="配送状态">
+                            <option value="">配送状态</option>
+                            <th:block th:each="deliveryStatus : ${deliveryStatuses}">
+                                <option th:value="${deliveryStatus.value}" th:text="${deliveryStatus.message}"
+                                        th:selected="${deliveryStatus.value == status}"></option>
+                            </th:block>
+                        </select>
+                    </div>
 
                     <label class="layui-form-label">关键字</label>
                     <div class="layui-input-inline">
                         <input type="text" name="keys" placeholder="关键字……" th:value="${keys}" autocomplete="off"
                                class="layui-input"/>
                     </div>
-                    <div class="layui-input-inline">
+                    <div class="layui-input-inline" style="width:100px; float: right">
                         <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
                             <i class="layui-icon">&#xe615;</i> 查询
                         </button>
@@ -37,13 +64,13 @@
                 <tr>
                     <th>openId</th>
                     <th style="width: 10%;">快递号</th>
+                    <th style="width: 10%;">订单号</th>
                     <th style="width: 5%;">状态</th>
                     <th style="width: 10%;">配送方式</th>
                     <th style="width: 5%;">联系人</th>
                     <th style="width: 10%;">手机号</th>
                     <th style="width: 15%;">详细地址</th>
                     <th style="width: 15%;">创建时间</th>
-                    <th style="width: 15%;">更新时间</th>
                     <th style="width: 15%;">操作</th>
                 </tr>
                 </thead>
@@ -52,27 +79,32 @@
                     <tr>
                         <td th:text="${info.openId}"></td>
                         <td th:text="${info.expressNumber}"></td>
-                        <td th:text="${enumLogic.GetDeliveryStatus(info.status).message}"></td>
+                        <td>
+                            <th:block th:each="stock:${deliveryLogic.GetDeliveryStock(info.deliveryId).get(0)}">
+                                <th:block th:text="${stock.orderId}"></th:block>
+                            </th:block>
+                        </td>
+                        <td th:text="${enumLogic.GetDeliveryStatus(info.status).message}">
+                        </td>
                         <td th:text="${enumLogic.GetDeliveryType(info.typeId).message}"></td>
                         <td th:text="${info.contactName}"></td>
                         <td th:text="${info.mobile}"></td>
                         <td th:text="${info.address}"></td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                        <td th:text="${dateUtils.formatDateByUnixTime(info.updateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td>
-                            <a th:title="|${info.deliveryId} 配送详情|"
+                            <button th:title="|${info.deliveryId} 配送详情|" th:disabled="${info.status = 0}"
                                th:attr="data-tab-href=@{'/admin/delivery/sendInfo/'+${info.deliveryId}}"
                                class="layui-btn layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe642;</i>
                                 配送详情
-                            </a>
+                            </button>
 
-                            <a th:title="|${info.deliveryId} 配送详情|"
-                               th:attr="data-tab-href=@{/admin/delivery/sendInfo/0}"
+                            <button th:title="|${info.deliveryId} 去发货|" th:disabled="${info.status > 0}"
+                                    th:attr="data-tab-href=@{'/admin/delivery/sendProduct/'+${info.deliveryId}}"
                                class="layui-btn layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe609;</i>
-                                去发货
-                            </a>
+                                待发货
+                            </button>
                         </td>
                     </tr>
                 </th:block>
@@ -89,6 +121,11 @@
     <script th:inline="javascript">
 
         TX.INIT(function () {
+            /*     if($("input[type='hidden']").val()){
+                $("button[data-method='detail']").hidden == true;
+            }else {
+                $("button[data-method='send']").hidden;
+            }
 
             $("button[data-method]").click(function () {
 
@@ -96,7 +133,7 @@
                 var method = $(this).attr("data-method");
 
 
-                if (method == "delete") {
+                if (method == "detail") {
                     layer.confirm('确定删除该信息吗?', {icon: 3}, function (index) {
                         layer.close(index);
                         modifyStatus(method, id);
@@ -104,28 +141,32 @@
                 }
 
                 if (method == "send") {
-                    modifyStatus(method, id);
+                    layer.confirm('确定要发货吗?', {icon: 3}, function (index) {
+                        layer.close(index);
+                        modifyStatus(method, id);
+                    });
                 }
             });
 
+        });*/
         });
+            function modifyStatus(method, id) {
 
-        function modifyStatus(method, id) {
-
-            TX.CORE.p({
-                data: {method: method, id: id},
-                url: "/admin/delivery/status",
-                success: function (resp) {
-                    if (resp.baseResp.success) {
-                        TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                            location.href = location.href;
-                        });
-                    } else {
-                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                TX.CORE.p({
+                    data: {method: method, id: id},
+                    url: "/admin/delivery/status",
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                location.href = location.href;
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
+
 
 
     </script>

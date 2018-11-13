@@ -17,6 +17,8 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.jsj.member.ob.logic.ProductLogic.productLogic;
+
 @Component
 public class ActivityLogic {
 
@@ -171,6 +173,68 @@ public class ActivityLogic {
         activityWrapper.where("ifpass is false and delete_time is null");
 
         return  activityLogic.activityService.selectCount(activityWrapper);
+    }
+
+
+    /**
+     * 更新活动排序
+     *
+     * @param activityId
+     * @param ifUp
+     */
+    public static void Sort(int activityId, Boolean ifUp) {
+
+        Activity current = activityLogic.activityService.selectById(activityId);
+        int typeId = current.getTypeId();
+
+        EntityWrapper<Activity> wrapper = new EntityWrapper<>();
+        wrapper.where("type_id={0}", typeId);
+        wrapper.orderBy("sort asc, update_time desc");
+        List<Activity> activities = activityLogic.activityService.selectList(wrapper);
+
+        //重置所有排序
+        int sort = 0;
+        for (Activity activity : activities) {
+            activity.setSort(sort);
+            activityLogic.activityService.updateById(activity);
+            sort++;
+        }
+
+        if (ifUp != null) {
+            //向上
+            if (ifUp) {
+
+                current = activities.stream().filter(p -> p.getActivityId() == activityId).findFirst().get();
+                if (current.getSort() == 0) {
+                    return;
+                }
+                int currentSort = current.getSort();
+                Activity prev = activities.stream().filter(p -> p.getSort() == (currentSort - 1)).findFirst().get();
+                prev.setSort(prev.getSort() + 1);
+
+                current.setSort(current.getSort() - 1);
+
+                activityLogic.activityService.updateById(current);
+                activityLogic.activityService.updateById(prev);
+
+            } else {
+                //向下移动
+                current = activities.stream().filter(p -> p.getActivityId() == activityId).findFirst().get();
+                if (current.getSort() == activities.size() - 1) {
+                    return;
+                }
+                int currentSort = current.getSort();
+                Activity next = activities.stream().filter(p -> p.getSort() == (currentSort + 1)).findFirst().get();
+                next.setSort(next.getSort() - 1);
+
+                current.setSort(current.getSort() + 1);
+
+                activityLogic.activityService.updateById(current);
+                activityLogic.activityService.updateById(next);
+            }
+        }
+
+
     }
 
 }

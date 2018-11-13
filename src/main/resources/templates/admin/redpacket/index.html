@@ -87,10 +87,12 @@
                                     th:text="${dateUtils.formatDateByUnixTime(info.endTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
                         </td>
                         <td>
-                            <button data-method='up' class="layui-btn layui-btn-normal layui-btn-xs"><i
-                                    class="layui-icon">&#xe619;</i></button>
-                            <button data-method='down' class="layui-btn layui-btn-normal layui-btn-xs"><i
-                                    class="layui-icon">&#xe61a;</i></button>
+                                <button th:attr="data-id=${info.redpacketId}" data-method='up'
+                                        class="layui-btn layui-btn-normal layui-btn-xs"><i
+                                        class="layui-icon">&#xe619;</i></button>
+                                <button th:attr="data-id=${info.redpacketId}" data-method='down'
+                                        class="layui-btn layui-btn-normal layui-btn-xs"><i
+                                        class="layui-icon">&#xe61a;</i></button>
 
                             <a th:title="|${info.redpacketName}详情|"
                                th:attr="data-tab-href=@{'/admin/redpacket/'+${info.redpacketId}}"
@@ -133,6 +135,9 @@
                     });
                 }
                 if (method == "ifpass") {
+                    modifyStatus(method, id);
+                }
+                if (method == "up" || method == "down") {
                     modifyStatus(method, id);
                 }
             });
