@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : DeliveryStock 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-12
+ *   @since 2018-11-13
  */
 @Service
 public class DeliveryStockServiceImpl extends ServiceImpl<DeliveryStockMapper, DeliveryStock> implements DeliveryStockService {

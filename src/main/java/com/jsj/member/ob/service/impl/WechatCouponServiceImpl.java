@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : WechatCoupon 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-12
+ *   @since 2018-11-13
  */
 @Service
 public class WechatCouponServiceImpl extends ServiceImpl<WechatCouponMapper, WechatCoupon> implements WechatCouponService {

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsj.member.ob.dao.BannerMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.Banner">
+        <id column="banner_id" property="bannerId" />
+        <result column="title" property="title" />
+        <result column="type_id" property="typeId" />
+        <result column="ifpass" property="ifpass" />
+        <result column="banner_path" property="bannerPath" />
+        <result column="navigate_url" property="navigateUrl" />
+        <result column="sort" property="sort" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="delete_time" property="deleteTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        banner_id AS bannerId, title, type_id AS typeId, ifpass, banner_path AS bannerPath, navigate_url AS navigateUrl, sort, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+    </sql>
+
+</mapper>

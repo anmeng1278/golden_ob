@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : OrderProduct 订单商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-12
+ *   @since 2018-11-13
  */
 @TableName("_order_product")
 public class OrderProduct implements Serializable {
