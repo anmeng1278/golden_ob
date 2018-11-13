@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Activity 活动表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-12
+ *   @since 2018-11-13
  */
 @TableName("_activity")
 public class Activity implements Serializable {
@@ -29,6 +29,11 @@ public class Activity implements Serializable {
      */
 	@TableField("activity_name")
 	private String activityName;
+    /**
+     * 展示时间
+     */
+	@TableField("show_time")
+	private Integer showTime;
     /**
      * 开始时间
      */
@@ -96,6 +101,14 @@ public class Activity implements Serializable {
 
 	public void setActivityName(String activityName) {
 		this.activityName = activityName;
+	}
+
+	public Integer getShowTime() {
+		return showTime;
+	}
+
+	public void setShowTime(Integer showTime) {
+		this.showTime = showTime;
 	}
 
 	public Integer getBeginTime() {
@@ -200,6 +213,7 @@ public class Activity implements Serializable {
 		return "Activity{" +
 			", activityId=" + activityId +
 			", activityName=" + activityName +
+			", showTime=" + showTime +
 			", beginTime=" + beginTime +
 			", endTime=" + endTime +
 			", ifpass=" + ifpass +

@@ -11,7 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Wechat 微信用户实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-12
+ *   @since 2018-11-13
  */
 @TableName("_wechat")
 public class Wechat implements Serializable {
