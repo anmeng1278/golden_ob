@@ -161,6 +161,9 @@ public class AdminDeliveryController {
         Delivery delivery = new Delivery();
 
         String expressNumber = request.getParameter("expressNumber");
+        if(StringUtils.isBlank(expressNumber)){
+            expressNumber = "";
+        }
         String openId = request.getParameter("openId");
         String contactName = request.getParameter("contactName");
         Integer mobile = Integer.valueOf(request.getParameter("mobile"));
