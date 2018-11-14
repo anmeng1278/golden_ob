@@ -8,7 +8,7 @@
     </fieldset>
     <form class="layui-form" method="post" action="">
 
-        <div class="layui-form-item">
+        <div class="layui-form-item" th:if="${info.typeId > 1}" disabled="true">
             <label class="layui-form-label">快递号</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" name="expressNumber"

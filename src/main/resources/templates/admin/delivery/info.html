@@ -16,6 +16,12 @@
                  style="color: blue; font-size: large; font-weight: bold;">
                 <th:block th:text="${info.expressNumber}"></th:block>
             </div>
+
+            <label class="layui-form-label">配送状态:</label>
+            <div class="layui-input-inline layui-form-label-col"
+                 style="color: blue; font-size: large; font-weight: bold;">
+                <th:block th:text="${enumLogic.GetDeliveryStatus(info.status).message}"></th:block>
+            </div>
         </div>
 
         <div class="layui-form-item">

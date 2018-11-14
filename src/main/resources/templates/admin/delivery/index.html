@@ -80,7 +80,8 @@
                         <td th:text="${info.openId}"></td>
                         <td th:text="${info.expressNumber}"></td>
                         <td>
-                            <th:block th:text="${deliveryLogic.GetDeliveryStock(info.deliveryId).get(0).orderId}"></th:block>
+                            <th:block th:text="${deliveryLogic.GetDeliveryStock(info.deliveryId).get(0).orderId}">
+                            </th:block>
                         </td>
                         <td th:text="${enumLogic.GetDeliveryStatus(info.status).message}">
                         </td>
