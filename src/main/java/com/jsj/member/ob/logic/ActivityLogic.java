@@ -10,6 +10,7 @@ import com.jsj.member.ob.exception.ActivityStockException;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.ActivityProductService;
 import com.jsj.member.ob.service.ActivityService;
+import com.jsj.member.ob.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -82,6 +83,7 @@ public class ActivityLogic {
         dto.setActivityType(ActivityType.valueOf(entity.getTypeId()));
         dto.setBeginTime(entity.getBeginTime());
         dto.setEndTime(entity.getEndTime());
+        dto.setShowTime(entity.getShowTime());
 
         dto.setCreateTime(entity.getCreateTime());
         dto.setDeleteTime(entity.getDeleteTime());
@@ -125,6 +127,29 @@ public class ActivityLogic {
 
         activity.setStockCount(activity.getStockCount() - number);
         activityLogic.activityService.updateById(activity);
+    }
+
+
+    /**
+     * 获得当前预热展示的活动
+     * @return
+     */
+    public static List<ActivityDto> GetShowActivity(){
+
+        int currentTime = DateUtils.getCurrentUnixTime();
+
+        List<ActivityDto> activityDtos = new ArrayList<>();
+        EntityWrapper<Activity> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where("delete_time is null and ifpass = 1");
+        entityWrapper.lt("show_time",currentTime);
+        entityWrapper.ge("begin_time",currentTime);
+
+        List<Activity> activities = activityLogic.activityService.selectList(entityWrapper);
+        for (Activity activity : activities) {
+            ActivityDto activityDto = ActivityLogic.GetActivity(activity.getActivityId());
+            activityDtos.add(activityDto);
+        }
+        return activityDtos;
     }
 
     /**
