@@ -98,6 +98,7 @@ public class AdminDeliveryController {
 
     /**
      * 配送详情
+     *
      * @param deliveryId
      * @param model
      * @return
@@ -111,19 +112,19 @@ public class AdminDeliveryController {
 
         ExpressRequ requ = new ExpressRequ();
         List<Map<String, String>> resps = null;
-            if (!StringUtils.isBlank(delivery.getExpressNumber())) {
-                //查询配送的物流信息
-                requ.setText(delivery.getExpressNumber());
-                ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
-                resps = new ArrayList<Map<String, String>>();
-                List data = resp.getData();
-                for (int i = 0; i < data.size(); i++) {
-                    Map<String, String> tempMap = new HashMap<String, String>();
-                    JSONObject temp = (JSONObject) data.get(i);
-                    tempMap.put("time", (String) temp.get("time"));
-                    tempMap.put("content", (String) temp.get("context"));
-                    resps.add(tempMap);
-                }
+        if (!StringUtils.isBlank(delivery.getExpressNumber())) {
+            //查询配送的物流信息
+            requ.setText(delivery.getExpressNumber());
+            ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
+            resps = new ArrayList<Map<String, String>>();
+            List data = resp.getData();
+            for (int i = 0; i < data.size(); i++) {
+                Map<String, String> tempMap = new HashMap<String, String>();
+                JSONObject temp = (JSONObject) data.get(i);
+                tempMap.put("time", (String) temp.get("time"));
+                tempMap.put("content", (String) temp.get("context"));
+                resps.add(tempMap);
+            }
         }
         model.addAttribute("resps", resps);
         model.addAttribute("info", delivery);
@@ -135,6 +136,7 @@ public class AdminDeliveryController {
 
     /**
      * 去发货页面
+     *
      * @param deliveryId
      * @param model
      * @return
@@ -152,7 +154,6 @@ public class AdminDeliveryController {
     }
 
 
-
     @RequestMapping(value = "/sendProduct/{deliveryId}", method = RequestMethod.POST)
     @ResponseBody
     @Transactional(Constant.DBTRANSACTIONAL)
@@ -161,7 +162,7 @@ public class AdminDeliveryController {
         Delivery delivery = new Delivery();
 
         String expressNumber = request.getParameter("expressNumber");
-        if(StringUtils.isBlank(expressNumber)){
+        if (StringUtils.isBlank(expressNumber)) {
             expressNumber = "";
         }
         String openId = request.getParameter("openId");
@@ -172,22 +173,26 @@ public class AdminDeliveryController {
         String district = request.getParameter("district");
         String address = request.getParameter("address");
 
-        delivery = deliveryService.selectById(deliveryId);
-        //修改状态已发货
-        delivery.setExpressNumber(expressNumber);
-        delivery.setMobile(mobile);
-        delivery.setOpenId(openId);
-        delivery.setProvince(province);
-        delivery.setCity(city);
-        delivery.setDistrict(district);
-        delivery.setAddress(address);
-        delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
-        delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
-        deliveryService.updateById(delivery);
+        if (deliveryId > 0) {
 
+            delivery = deliveryService.selectById(deliveryId);
+            //修改状态已发货
+            delivery.setExpressNumber(expressNumber);
+            delivery.setMobile(mobile);
+            delivery.setOpenId(openId);
+            delivery.setProvince(province);
+            delivery.setCity(city);
+            delivery.setContactName(contactName);
+            delivery.setDistrict(district);
+            delivery.setAddress(address);
+            delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
+            delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
+            deliveryService.updateById(delivery);
+        }
         return RestResponseBo.ok("发货成功");
 
     }
+
     /**
      * 修改状态
      *
