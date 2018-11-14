@@ -38,6 +38,12 @@ public class ActivityDto {
      * 结束时间
      */
     private Integer endTime;
+
+    /**
+     * 展示时间
+     */
+    private Integer showTime;
+
     /**
      * 是否审核
      */
@@ -67,6 +73,13 @@ public class ActivityDto {
      */
     private Integer deleteTime;
 
+    public Integer getShowTime() {
+        return showTime;
+    }
+
+    public void setShowTime(Integer showTime) {
+        this.showTime = showTime;
+    }
 
     public Integer getTypeId() {
         return typeId;
