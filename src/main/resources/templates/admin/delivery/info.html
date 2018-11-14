@@ -60,10 +60,10 @@
 
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button type="button" class="layui-btn" lay-submit="">
-                    <i class="layui-icon">&#xe621;</i>
-                    保存
-                </button>
+                <!--<button type="button" class="layui-btn" lay-submit="">-->
+                    <!--<i class="layui-icon">&#xe621;</i>-->
+                    <!--保存-->
+                <!--</button>-->
                 <button type="button" class="layui-btn" id="btnClose">
                     <i class="layui-icon">&#x1006;</i>
                     关闭
@@ -89,7 +89,7 @@
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                parent.tab.openTab("/admin/delivery", {refershType: "refersh"});
+                                parent.tab.openTab("/admin/delivery/sendInfo", {refershType: "refersh"});
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
