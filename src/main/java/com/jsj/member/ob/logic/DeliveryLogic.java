@@ -63,10 +63,10 @@ public class DeliveryLogic {
         List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(entityWrapper);
         List<StockDto> stockDtos = new ArrayList<>();
         for (DeliveryStock deliveryStock : deliveryStocks) {
-            StockDto stockDto = new StockDto();
-            stockDto = StockLogic.GetStock(deliveryStock.getStockId());
+            StockDto stockDto = StockLogic.GetStock(deliveryStock.getStockId());
             stockDtos.add(stockDto);
         }
         return stockDtos;
     }
+
 }
