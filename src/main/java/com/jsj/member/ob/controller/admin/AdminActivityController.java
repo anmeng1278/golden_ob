@@ -138,6 +138,7 @@ public class AdminActivityController {
         int typeId = Integer.parseInt(request.getParameter("typeId"));
         String beginTime = request.getParameter("beginTime");
         String endTime = request.getParameter("endTime");
+        String showTime = request.getParameter("showTime");
         String salePrice = request.getParameter("salePrice");
         if (StringUtils.isBlank(salePrice)) {
             salePrice = "0";
@@ -158,6 +159,7 @@ public class AdminActivityController {
 
         int beginTimeUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(beginTime, "yyyy-MM-dd HH:mm:ss"));
         int endTimeUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(endTime, "yyyy-MM-dd HH:mm:ss"));
+        int showTimeUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(showTime, "yyyy-MM-dd HH:mm:ss"));
 
         //是否审核
         boolean ifpass = !StringUtils.isBlank(request.getParameter("ifpass"));
@@ -170,6 +172,7 @@ public class AdminActivityController {
             activity.setStockCount(stockCount);
             activity.setBeginTime(beginTimeUnix);
             activity.setEndTime(endTimeUnix);
+            activity.setShowTime(showTimeUnix);
             activity.setStockCount(stockCount);
 
             activity.setNumber(number);
@@ -187,6 +190,7 @@ public class AdminActivityController {
             activity.setStockCount(stockCount);
             activity.setBeginTime(beginTimeUnix);
             activity.setEndTime(endTimeUnix);
+            activity.setShowTime(showTimeUnix);
             activity.setStockCount(stockCount);
 
             activity.setIfpass(ifpass);
