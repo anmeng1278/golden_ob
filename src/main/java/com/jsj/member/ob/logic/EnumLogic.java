@@ -146,5 +146,22 @@ public class EnumLogic {
         return ProductImgType.valueOf(value);
     }
 
+    /**
+     * 赠送文案类型
+     * @param value
+     * @return
+     */
+    public static CopywriterType GetCopywriterType(Integer value) {
+        return CopywriterType.valueOf(value);
+    }
+
+    /**
+     * 赠送文案类型
+     * @param value
+     * @return
+     */
+    public static BannerType GetBannerType(Integer value) {
+        return BannerType.valueOf(value);
+    }
 
 }
