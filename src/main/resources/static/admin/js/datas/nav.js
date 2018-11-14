@@ -61,18 +61,6 @@ var navs = [
     },
 
     {
-        "title": "字典管理",
-        "icon": "fa-wpforms",
-        "spread": true,
-        "children": [
-            {
-                "title": "字典列表",
-                "icon": "fa-angle-right",
-                "href": "/admin/dict"
-            }
-        ]
-    },
-    {
         "title": "优惠券管理",
         "icon": "fa-wpforms",
         "spread": true,
@@ -86,6 +74,42 @@ var navs = [
                 "title": "礼包管理",
                 "icon": "fa-angle-right",
                 "href": "/admin/redpacket"
+            }
+        ]
+    },
+    {
+        "title": "字典管理",
+        "icon": "fa-wpforms",
+        "spread": true,
+        "children": [
+            {
+                "title": "字典列表",
+                "icon": "fa-angle-right",
+                "href": "/admin/dict"
+            }
+        ]
+    },
+    {
+        "title": "赠送文案",
+        "icon": "fa-wpforms",
+        "spread": true,
+        "children": [
+            {
+                "title": "文案管理",
+                "icon": "fa-angle-right",
+                "href": "/admin/copywriter"
+            }
+        ]
+    },
+    {
+        "title": "轮播图管理",
+        "icon": "fa-wpforms",
+        "spread": true,
+        "children": [
+            {
+                "title": "轮播图列表",
+                "icon": "fa-angle-right",
+                "href": "/admin/banner"
             }
         ]
     }

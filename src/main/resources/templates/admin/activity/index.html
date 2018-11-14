@@ -49,10 +49,10 @@
                     <th style="width: 5%;">编号</th>
                     <th>活动名称</th>
                     <th style="width: 8%;">类型</th>
-                    <th style="width: 15%;">活动时间</th>
                     <th style="width: 5%;">售价</th>
                     <th style="width: 5%;">库存</th>
-                    <th style="width: 15%;">创建时间<br/>更新时间</th>
+                    <th style="width: 15%;">预热时间</th>
+                    <th style="width: 15%;">活动时间</th>
                     <th style="width: 5%;"></th>
                     <th style="width: 20%;">操作</th>
                 </tr>
@@ -63,22 +63,21 @@
                         <td th:text="${info.activityId}"></td>
                         <td th:text="${info.activityName}"></td>
                         <td th:text="${enumLogic.GetActivityType(info.typeId).message}"></td>
+                        <td th:text="${info.salePrice}"></td>
+                        <td th:text="${info.stockCount}"></td>
+                        <td>
+                            <th:block
+                                    th:text="${dateUtils.formatDateByUnixTime(info.showTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+                            <br/>
+                            <th:block
+                                    th:text="${dateUtils.formatDateByUnixTime(info.beginTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+                        </td>
                         <td>
                             <th:block
                                     th:text="${dateUtils.formatDateByUnixTime(info.beginTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
                             <br/>
                             <th:block
                                     th:text="${dateUtils.formatDateByUnixTime(info.endTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
-                        </td>
-
-                        <td th:text="${info.salePrice}"></td>
-                        <td th:text="${info.stockCount}"></td>
-                        <td>
-                            <th:block
-                                    th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
-                            <br/>
-                            <th:block
-                                    th:text="${dateUtils.formatDateByUnixTime(info.updateTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
                         </td>
                         <td class="ext">
                             <th:block th:if="${info.ifpass}">
