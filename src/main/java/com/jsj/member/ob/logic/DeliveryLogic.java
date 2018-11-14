@@ -51,21 +51,28 @@ public class DeliveryLogic {
 
     /**
      * 获得配送的库存详情
+     *
      * @param deliveryId
      * @return
      */
-    public static List<StockDto> GetDeliveryStock(int deliveryId){
+    public static List<StockDto> GetDeliveryStock(int deliveryId) {
 
         EntityWrapper<DeliveryStock> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where("delivery_id={0}",deliveryId);
+        entityWrapper.where("delivery_id={0}", deliveryId);
         entityWrapper.where("delete_time is null");
 
-        List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(entityWrapper);
         List<StockDto> stockDtos = new ArrayList<>();
-        for (DeliveryStock deliveryStock : deliveryStocks) {
-            StockDto stockDto = StockLogic.GetStock(deliveryStock.getStockId());
-            stockDtos.add(stockDto);
+
+        List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(entityWrapper);
+
+        if (deliveryStocks.size() == 0) {
+            return stockDtos;
         }
+        deliveryStocks.forEach(ds -> {
+                    StockDto stockDto = StockLogic.GetStock(ds.getStockId());
+                    stockDtos.add(stockDto);
+                });
+
         return stockDtos;
     }
 
