@@ -92,7 +92,7 @@
                         <td th:text="${info.address}"></td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td>
-                            <button th:title="|${info.deliveryId} 配送详情|" th:disabled="${info.status = 0}"
+                            <button th:title="|${info.deliveryId} 配送详情|" th:disabled="${info.status <= 0}"
                                th:attr="data-tab-href=@{'/admin/delivery/sendInfo/'+${info.deliveryId}}"
                                class="layui-btn layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe642;</i>
@@ -121,34 +121,7 @@
     <script th:inline="javascript">
 
         TX.INIT(function () {
-            /*     if($("input[type='hidden']").val()){
-                $("button[data-method='detail']").hidden == true;
-            }else {
-                $("button[data-method='send']").hidden;
-            }
 
-            $("button[data-method]").click(function () {
-
-                var id = $(this).attr("data-id");
-                var method = $(this).attr("data-method");
-
-
-                if (method == "detail") {
-                    layer.confirm('确定删除该信息吗?', {icon: 3}, function (index) {
-                        layer.close(index);
-                        modifyStatus(method, id);
-                    });
-                }
-
-                if (method == "send") {
-                    layer.confirm('确定要发货吗?', {icon: 3}, function (index) {
-                        layer.close(index);
-                        modifyStatus(method, id);
-                    });
-                }
-            });
-
-        });*/
         });
             function modifyStatus(method, id) {
 
