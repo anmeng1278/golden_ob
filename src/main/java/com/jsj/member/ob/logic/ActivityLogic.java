@@ -141,8 +141,7 @@ public class ActivityLogic {
         List<ActivityDto> activityDtos = new ArrayList<>();
         EntityWrapper<Activity> entityWrapper = new EntityWrapper<>();
         entityWrapper.where("delete_time is null and ifpass = 1");
-        entityWrapper.lt("show_time",currentTime);
-        entityWrapper.ge("begin_time",currentTime);
+        entityWrapper.where("UNIX_TIMESTAMP() between show_time and begin_time");
 
         List<Activity> activities = activityLogic.activityService.selectList(entityWrapper);
         for (Activity activity : activities) {
@@ -199,7 +198,6 @@ public class ActivityLogic {
 
         return  activityLogic.activityService.selectCount(activityWrapper);
     }
-
 
     /**
      * 更新活动排序
