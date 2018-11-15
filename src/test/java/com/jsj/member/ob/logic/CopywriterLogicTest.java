@@ -1,7 +1,7 @@
 package com.jsj.member.ob.logic;
 
 import com.jsj.member.ob.App;
-import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
+import com.jsj.member.ob.entity.Copywriter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,16 +15,19 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = App.class)
 @WebAppConfiguration
-public class DeliveryLogicTest {
+public class CopywriterLogicTest {
 
     @Test
-    public void getDeliveryOrder() {
-        DeliveryLogic.GetDeliveryStock(2);
+    public void getCopywriter() {
+        List<Copywriter> copywriters = CopywriterLogic.GetCopywriter();
+        for (Copywriter copywriter : copywriters) {
+            copywriters.forEach(s->s.getRemark());
+        }
     }
 
     @Test
-    public void getMyDelivery(){
-        List<DeliveryDto> deliveryDtos = DeliveryLogic.GetMyDelivery("111");
-        deliveryDtos.stream().forEach(s->s.getDeliveryId());
+    public void getOneCopywriter(){
+        Copywriter copywriter = CopywriterLogic.GetOneCopywriter();
+        System.out.println(copywriter.getRemark());
     }
 }
