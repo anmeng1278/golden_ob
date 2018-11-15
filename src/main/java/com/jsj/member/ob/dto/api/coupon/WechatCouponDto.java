@@ -35,6 +35,15 @@ public class WechatCouponDto extends BaseDto {
      */
     private CouponType couponType;
 
+    private CouponDto couponDto;
+
+    public CouponDto getCouponDto() {
+        return couponDto;
+    }
+
+    public void setCouponDto(CouponDto couponDto) {
+        this.couponDto = couponDto;
+    }
 
     public Integer getWechatCouponId() {
         return wechatCouponId;
