@@ -9,6 +9,7 @@ import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.*;
+import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
@@ -110,22 +111,8 @@ public class AdminDeliveryController {
         Delivery delivery = new Delivery();
         delivery = deliveryService.selectById(deliveryId);
 
-        ExpressRequ requ = new ExpressRequ();
-        List<Map<String, String>> resps = null;
-        if (!StringUtils.isBlank(delivery.getExpressNumber())) {
-            //查询配送的物流信息
-            requ.setText(delivery.getExpressNumber());
-            ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
-            resps = new ArrayList<Map<String, String>>();
-            List data = resp.getData();
-            for (int i = 0; i < data.size(); i++) {
-                Map<String, String> tempMap = new HashMap<String, String>();
-                JSONObject temp = (JSONObject) data.get(i);
-                tempMap.put("time", (String) temp.get("time"));
-                tempMap.put("content", (String) temp.get("context"));
-                resps.add(tempMap);
-            }
-        }
+        List<Map<String, String>> resps = DeliveryLogic.GetDeliveryExpress(delivery.getExpressNumber());
+
         model.addAttribute("resps", resps);
         model.addAttribute("info", delivery);
         model.addAttribute("deliveryId", deliveryId);
