@@ -2,12 +2,14 @@ package com.jsj.member.ob.logic;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.enums.DeliveryStatus;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import org.apache.commons.lang3.StringUtils;
@@ -68,23 +70,20 @@ public class DeliveryLogic {
         entityWrapper.where("delivery_id={0}", deliveryId);
         entityWrapper.where("delete_time is null");
 
-        List<StockDto> stockDtos = new ArrayList<>();
-
         List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(entityWrapper);
 
-        if (deliveryStocks.size() == 0) {
-            return stockDtos;
-        }
-        deliveryStocks.forEach(ds -> {
-            StockDto stockDto = StockLogic.GetStock(ds.getStockId());
+        List<StockDto> stockDtos = new ArrayList<>();
+        for (DeliveryStock deliveryStock : deliveryStocks) {
+            StockDto stockDto = StockLogic.GetStock(deliveryStock.getStockId());
             stockDtos.add(stockDto);
-        });
+        }
 
         return stockDtos;
     }
 
     /**
      * 查询物流详情
+     *
      * @param expressNumber
      * @return
      * @throws IOException
@@ -108,5 +107,48 @@ public class DeliveryLogic {
         }
         return resps;
     }
+
+
+    /**
+     * 获取我的配送记录
+     * @param openId
+     * @return
+     */
+    public static List<DeliveryDto> GetMyDelivery(String openId) {
+
+        if (StringUtils.isBlank(openId)) {
+            throw new TipException("参数不合法，用户openId为空");
+        }
+
+        EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null and open_Id={0}", openId);
+        List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
+
+        List<StockDto> stockDtos = new ArrayList<>();
+        List<DeliveryDto> deliveryDtos = new ArrayList<>();
+        for (Delivery delivery : deliveries) {
+            DeliveryDto deliveryDto = new DeliveryDto();
+            stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
+            deliveryDto.setStockDto(stockDtos);
+
+            deliveryDto.setAddress(delivery.getAddress());
+            deliveryDto.setCity(delivery.getCity());
+            deliveryDto.setProvince(delivery.getProvince());
+            deliveryDto.setContactName(delivery.getContactName());
+            deliveryDto.setDistrict(delivery.getDistrict());
+            deliveryDto.setOpenId(delivery.getOpenId());
+            deliveryDto.setExpressNumber(delivery.getExpressNumber());
+            deliveryDto.setMobile(delivery.getMobile());
+            deliveryDto.setStatus(delivery.getStatus());
+            deliveryDto.setTypeId(delivery.getTypeId());
+            deliveryDto.setRemarks(delivery.getRemarks());
+            deliveryDto.setDeliveryId(delivery.getDeliveryId());
+            deliveryDtos.add(deliveryDto);
+
+        }
+        return deliveryDtos;
+
+    }
+
 
 }
