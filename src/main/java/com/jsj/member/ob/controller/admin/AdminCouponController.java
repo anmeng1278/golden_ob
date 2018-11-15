@@ -211,7 +211,7 @@ public class AdminCouponController {
 
 
     /**
-     * 选择活动商品页面
+     * 选择优惠券的商品页面
      *
      * @param request
      * @return
