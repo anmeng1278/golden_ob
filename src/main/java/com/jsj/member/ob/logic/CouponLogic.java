@@ -1,22 +1,26 @@
 package com.jsj.member.ob.logic;
 
-import com.jsj.member.ob.dto.api.coupon.CouponDto;
-import com.jsj.member.ob.dto.api.coupon.UseCouponRequ;
-import com.jsj.member.ob.dto.api.coupon.UseCouponResp;
-import com.jsj.member.ob.dto.api.coupon.WechatCouponDto;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.jsj.member.ob.dto.api.coupon.*;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Coupon;
+import com.jsj.member.ob.entity.CouponProduct;
 import com.jsj.member.ob.entity.WechatCoupon;
 import com.jsj.member.ob.enums.CouponStatus;
 import com.jsj.member.ob.enums.CouponType;
 import com.jsj.member.ob.enums.CouponUseRange;
 import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.service.CouponProductService;
 import com.jsj.member.ob.service.CouponService;
 import com.jsj.member.ob.service.WechatCouponService;
 import com.jsj.member.ob.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class CouponLogic {
@@ -29,6 +33,7 @@ public class CouponLogic {
     public void init() {
         couponLogic = this;
         couponLogic.couponService = this.couponService;
+        couponLogic.couponProductService = this.couponProductService;
     }
 
     @Autowired
@@ -36,6 +41,9 @@ public class CouponLogic {
 
     @Autowired
     WechatCouponService wechatCouponService;
+
+    @Autowired
+    CouponProductService couponProductService;
 
     //region (public) 使用优惠券 UseCoupon
 
@@ -165,5 +173,81 @@ public class CouponLogic {
 
     }
     //endregion
+
+    /**
+     * 获得我所有可用的优惠券
+     *
+     * @param openId
+     * @return
+     */
+    public static List<WechatCouponDto> GetMyAvailableCoupon(String openId) {
+
+        if (StringUtils.isBlank(openId)) {
+            throw new TipException("参数不合法，用户openId不能为空");
+        }
+
+        EntityWrapper<WechatCoupon> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null and open_id={0}", openId);
+        wrapper.where("status=0");
+        wrapper.le("expired_time", DateUtils.getCurrentUnixTime());
+        List<WechatCoupon> wechatCoupons = couponLogic.wechatCouponService.selectList(wrapper);
+
+        List<WechatCouponDto> wechatCouponDtos = new ArrayList<>();
+
+        for (WechatCoupon wechatCoupon : wechatCoupons) {
+
+            WechatCouponDto wechatCouponDto = new WechatCouponDto();
+
+            //获取优惠券详情
+            CouponDto couponDto = CouponLogic.GetCoupon(wechatCoupon.getCouponId());
+            wechatCouponDto.setCouponDto(couponDto);
+
+            wechatCouponDto.setAmount(wechatCoupon.getAmount());
+            wechatCouponDto.setCouponId(wechatCoupon.getCouponId());
+            wechatCouponDto.setCouponType(CouponType.valueOf(wechatCoupon.getTypeId()));
+            wechatCouponDto.setExpiredTime(wechatCoupon.getExpiredTime());
+            wechatCouponDto.setOpenId(wechatCoupon.getOpenId());
+            wechatCouponDto.setCouponStatus(CouponStatus.valueOf(wechatCoupon.getStatus()));
+            wechatCouponDto.setWechatCouponId(wechatCoupon.getWechatCouponId());
+            wechatCouponDtos.add(wechatCouponDto);
+        }
+        return wechatCouponDtos;
+
+    }
+
+    /**
+     * 获取优惠券可使用的商品
+     * @param couponId
+     * @return
+     */
+    public static List<CouponProductDto> GetCouponProduct(int couponId){
+        if(couponId < 0){
+            throw new TipException("参数不正确！");
+        }
+
+        EntityWrapper<CouponProduct> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null and coupon_id={0}",couponId);
+        List<CouponProduct> couponProducts = couponLogic.couponProductService.selectList(wrapper);
+        if(couponProducts.size() == 0){
+            throw new TipException("该优惠券适用于全部商品！");
+        }
+
+        List<CouponProductDto> couponProductDtos = new ArrayList<>();
+        for (CouponProduct couponProduct : couponProducts) {
+            CouponProductDto couponProductDto = new CouponProductDto();
+
+            ProductDto productDto = ProductLogic.GetProduct(couponProduct.getProductId());
+            couponProductDto.setProductDto(productDto);
+
+            couponProductDto.setCouponId(couponProduct.getCouponId());
+            couponProductDto.setCouponProductId(couponProduct.getCouponProductId());
+            couponProductDto.setProductId(couponProduct.getProductId());
+
+            couponProductDtos.add(couponProductDto);
+
+        }
+
+        return couponProductDtos;
+    }
 
 }
