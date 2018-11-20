@@ -31,7 +31,7 @@ import java.util.List;
  */
 
 @Component
-public class CartLogic {
+public class CartLogic extends BaseLogic {
 
     public static CartLogic cartLogic;
 
@@ -39,9 +39,6 @@ public class CartLogic {
     @PostConstruct
     public void init() {
         cartLogic = this;
-        cartLogic.cartService = this.cartService;
-        cartLogic.cartProductService = this.cartProductService;
-        cartLogic.productService = this.productService;
 
     }
 

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class ProductLogic {
+public class ProductLogic extends BaseLogic {
 
     public static ProductLogic productLogic;
 
@@ -35,10 +35,6 @@ public class ProductLogic {
     @PostConstruct
     public void init() {
         productLogic = this;
-        productLogic.productService = this.productService;
-        productLogic.productImgService = this.productImgService;
-        productLogic.productSpecService = this.productSpecService;
-        productLogic.activityProductService = this.activityProductService;
     }
 
     @Autowired

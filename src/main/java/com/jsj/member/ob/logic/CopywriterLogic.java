@@ -12,14 +12,13 @@ import java.util.List;
 import java.util.Random;
 
 @Component
-public class CopywriterLogic {
+public class CopywriterLogic extends BaseLogic {
 
     public static CopywriterLogic copywriterLogic;
 
     @PostConstruct
     public void init() {
         copywriterLogic = this;
-        copywriterLogic.copywriterService = this.copywriterService;
     }
 
     @Autowired

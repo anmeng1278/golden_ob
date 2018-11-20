@@ -24,7 +24,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Component
-public class RedpacketLogic {
+public class RedpacketLogic extends BaseLogic {
 
     public static RedpacketLogic redpacketLogic;
 
@@ -32,10 +32,6 @@ public class RedpacketLogic {
     @PostConstruct
     public void init() {
         redpacketLogic = this;
-        redpacketLogic.redpacketService = this.redpacketService;
-        redpacketLogic.redpacketCouponService = this.redpacketCouponService;
-        redpacketLogic.orderRedpacketCouponService = this.orderRedpacketCouponService;
-        redpacketLogic.wechatCouponService = this.wechatCouponService;
     }
 
     @Autowired

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class CouponLogic {
+public class CouponLogic  extends BaseLogic {
 
 
     public static CouponLogic couponLogic;
@@ -32,8 +32,6 @@ public class CouponLogic {
     @PostConstruct
     public void init() {
         couponLogic = this;
-        couponLogic.couponService = this.couponService;
-        couponLogic.couponProductService = this.couponProductService;
     }
 
     @Autowired

@@ -4,7 +4,7 @@ import com.jsj.member.ob.enums.*;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EnumLogic {
+public class EnumLogic extends BaseLogic {
 
     /**
      * 获取所属类型

@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 @Component
-public class ThirdPartyLogic {
+public class ThirdPartyLogic extends BaseLogic {
 
     public static ThirdPartyLogic thirdPartyLogic;
 
@@ -28,7 +28,6 @@ public class ThirdPartyLogic {
     @PostConstruct
     public void init() {
         thirdPartyLogic = this;
-        thirdPartyLogic.webconfig = this.webconfig;
     }
 
     /**

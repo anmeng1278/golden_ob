@@ -9,9 +9,25 @@ spring:
       username: zhangning
       password: zhangning123
       driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: 140.143.0.152
+    port: 6379
+    timeout: 10000
+    pool:
+      max-idle: 500
+      max-wait: 500
+      max-active: 1000
 
 webconfig:
   # 图片服务器
   imgServerURL: http://img.jsjinfo.cn/upload
   # 是否上传到图片服务器 (true为上传到图片服务器 false为上传到本地服务器)
   imgServerSwitch: false
+redis:
+  host: 140.143.0.152
+  port: 6379
+  timeout: 10000
+  pool-max-total: 1000
+  pool-max-idle: 500
+  pool-max-wait: 500
+

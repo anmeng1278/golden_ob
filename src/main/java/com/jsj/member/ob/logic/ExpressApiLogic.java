@@ -21,13 +21,11 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.util.*;
-
-import static com.jsj.member.ob.logic.ThirdPartyLogic.thirdPartyLogic;
+import java.util.Map;
+import java.util.Random;
 
 @Component
-public class ExpressApiLogic {
+public class ExpressApiLogic extends BaseLogic {
 
     private static ExpressApiLogic expressApiLogic;
 
@@ -37,7 +35,6 @@ public class ExpressApiLogic {
     @PostConstruct
     public void init() {
         expressApiLogic = this;
-        this.webconfig = expressApiLogic.webconfig;
     }
 
 

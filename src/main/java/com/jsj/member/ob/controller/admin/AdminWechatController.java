@@ -2,6 +2,7 @@ package com.jsj.member.ob.controller.admin;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
@@ -14,13 +15,12 @@ import com.jsj.member.ob.enums.StockType;
 import com.jsj.member.ob.logic.GiftLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.logic.WechatLogic;
-import com.jsj.member.ob.service.GiftService;
-import com.jsj.member.ob.service.GiftStockService;
 import com.jsj.member.ob.service.StockService;
 import com.jsj.member.ob.service.WechatService;
 import com.jsj.member.ob.utils.CCPage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +32,7 @@ import java.util.List;
 @ApiIgnore
 @Controller
 @RequestMapping("/admin/wechat")
-public class AdminWechatController {
+public class AdminWechatController extends BaseController {
 
     @Autowired
     private WechatService wechatService;
@@ -41,10 +41,8 @@ public class AdminWechatController {
     private StockService stockService;
 
     @Autowired
-    private GiftService giftService;
+    ApplicationContext applicationContext;
 
-    @Autowired
-    private GiftStockService giftStockService;
 
     /**
      * 查询用户列表
@@ -58,7 +56,9 @@ public class AdminWechatController {
     @GetMapping(value = {"", "/index"})
     public String index(@RequestParam(value = "page", defaultValue = "1") Integer page,
                         @RequestParam(value = "limit", defaultValue = "10") Integer limit,
-                        @RequestParam(value = "keys", defaultValue = "") String keys, Model model) {
+                        @RequestParam(value = "keys", defaultValue = "") String keys,
+                        Model model
+    ) {
 
         EntityWrapper<Wechat> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");

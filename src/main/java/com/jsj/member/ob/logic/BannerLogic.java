@@ -1,29 +1,16 @@
 package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.jsj.member.ob.dto.api.activity.ActivityDto;
-import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
-import com.jsj.member.ob.entity.Activity;
-import com.jsj.member.ob.entity.ActivityProduct;
 import com.jsj.member.ob.entity.Banner;
-import com.jsj.member.ob.enums.ActivityType;
-import com.jsj.member.ob.exception.ActivityStockException;
-import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.service.ActivityProductService;
-import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.service.BannerService;
-import com.jsj.member.ob.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.jsj.member.ob.logic.ActivityLogic.activityLogic;
-
 @Component
-public class BannerLogic {
+public class BannerLogic extends BaseLogic {
 
     public static BannerLogic bannerLogic;
 
@@ -35,7 +22,6 @@ public class BannerLogic {
     @PostConstruct
     public void init() {
         bannerLogic = this;
-        bannerLogic.bannerService = this.bannerService;
     }
 
 

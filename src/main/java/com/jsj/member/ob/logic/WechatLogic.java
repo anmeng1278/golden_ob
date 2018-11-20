@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
-public class WechatLogic {
+public class WechatLogic extends BaseLogic {
 
     public static WechatLogic wechatLogic;
 
@@ -21,7 +21,6 @@ public class WechatLogic {
     @PostConstruct
     public void init() {
         wechatLogic = this;
-        wechatLogic.wechatService = this.wechatService;
     }
 
 
@@ -76,9 +75,10 @@ public class WechatLogic {
 
     /**
      * 获取新增用户
+     *
      * @return
      */
-    public static Integer GetNewUsers(){
+    public static Integer GetNewUsers() {
         EntityWrapper<Wechat> wechatWrapper = new EntityWrapper<>();
 
         wechatWrapper.where("delete_time is null and unsubscribe_time is null and create_time={0}", DateUtils.getCurrentUnixTime());

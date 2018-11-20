@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Random;
 
 @Component
-public class GiftLogic {
+public class GiftLogic extends BaseLogic {
 
     public static GiftLogic giftLogic;
 
@@ -43,9 +43,6 @@ public class GiftLogic {
     @PostConstruct
     public void init() {
         giftLogic = this;
-        giftLogic.giftService = this.giftService;
-        giftLogic.giftStockService = this.giftStockService;
-        giftLogic.stockService = this.stockService;
     }
 
 

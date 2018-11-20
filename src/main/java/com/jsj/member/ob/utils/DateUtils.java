@@ -1,6 +1,7 @@
 package com.jsj.member.ob.utils;
 
 
+import com.jsj.member.ob.logic.BaseLogic;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,7 @@ import java.util.*;
  */
 
 @Component
-public class DateUtils {
+public class DateUtils extends BaseLogic {
     public static final int INTERVAL_DAY = 1;
     public static final int INTERVAL_WEEK = 2;
     public static final int INTERVAL_MONTH = 3;
@@ -491,7 +492,6 @@ public class DateUtils {
     }
 
 
-
     public static long getUnixTimeLong() {
         return (long) getUnixTimeByDate(new Date());
     }
@@ -626,7 +626,7 @@ public class DateUtils {
     }
 
     public static String formatDateByUnixTime(Long unixTime, String dateFormat) {
-        if(unixTime == null) return "";
+        if (unixTime == null) return "";
         return dateFormat(new Date(unixTime * 1000L), dateFormat);
     }
 

@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class StringUtils {
 
@@ -157,6 +158,17 @@ public class StringUtils {
         mainMethod.setAccessible(true);
         Object retObj = mainMethod.invoke(null, input);
         return new String((byte[]) retObj);
+    }
+
+    /**
+     * 驼峰命名
+     * @param str
+     * @return
+     */
+    public static String camelCase(String str) {
+        if (str.isEmpty())
+            return str;
+        return Stream.of(str.trim().split("\\s+")).map(e -> e.substring(0, 1).toLowerCase() + e.substring(1)).reduce("", (a, b) -> a+b);
     }
 
 }

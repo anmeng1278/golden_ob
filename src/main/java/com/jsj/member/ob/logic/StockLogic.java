@@ -32,7 +32,7 @@ import java.util.List;
  * 获取我的库存
  */
 @Component
-public class StockLogic {
+public class StockLogic extends BaseLogic {
 
     public static StockLogic stockLogic;
 
@@ -40,9 +40,6 @@ public class StockLogic {
     @PostConstruct
     public void init() {
         stockLogic = this;
-        stockLogic.stockService = this.stockService;
-        stockLogic.giftStockService = this.giftStockService;
-
     }
 
     @Autowired

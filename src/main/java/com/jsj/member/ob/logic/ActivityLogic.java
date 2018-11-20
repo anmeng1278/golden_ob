@@ -1,6 +1,7 @@
 package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.entity.Activity;
@@ -8,22 +9,25 @@ import com.jsj.member.ob.entity.ActivityProduct;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.exception.ActivityStockException;
 import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.redis.ActivityKey;
+import com.jsj.member.ob.redis.RedisService;
 import com.jsj.member.ob.service.ActivityProductService;
 import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jsj.member.ob.logic.ProductLogic.productLogic;
-
 @Component
-public class ActivityLogic {
+public class ActivityLogic extends BaseLogic {
 
-    public static ActivityLogic activityLogic;
+    private static ActivityLogic activityLogic;
 
     @Autowired
     ActivityProductService activityProductService;
@@ -31,12 +35,14 @@ public class ActivityLogic {
     @Autowired
     ActivityService activityService;
 
+    @Autowired
+    RedisService redisService;
+
+
     // 初始化的时候，将本类中的sysConfigManager赋值给静态的本类变量
     @PostConstruct
     public void init() {
         activityLogic = this;
-        activityLogic.activityProductService = this.activityProductService;
-        activityLogic.activityService = this.activityService;
     }
 
     /**
@@ -132,9 +138,10 @@ public class ActivityLogic {
 
     /**
      * 获得当前预热展示的活动
+     *
      * @return
      */
-    public static List<ActivityDto> GetShowActivity(){
+    public static List<ActivityDto> GetShowActivity() {
 
         int currentTime = DateUtils.getCurrentUnixTime();
 
@@ -189,14 +196,15 @@ public class ActivityLogic {
 
     /**
      * 获得未审核的商品
+     *
      * @return
      */
-    public static Integer GetUnPassActivity(){
+    public static Integer GetUnPassActivity() {
         EntityWrapper<Activity> activityWrapper = new EntityWrapper<>();
 
         activityWrapper.where("ifpass is false and delete_time is null");
 
-        return  activityLogic.activityService.selectCount(activityWrapper);
+        return activityLogic.activityService.selectCount(activityWrapper);
     }
 
     /**
@@ -259,5 +267,84 @@ public class ActivityLogic {
 
 
     }
+
+
+    public static void Sync2Redis() {
+
+        Wrapper<Activity> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null");
+        wrapper.where("ifpass = 1");
+        wrapper.where("UNIX_TIMESTAMP() between begin_time - 60 * 10 and begin_time - 60 *5");
+
+        List<Activity> activities = activityLogic.activityService.selectList(wrapper);
+        for (Activity at : activities) {
+            ActivityLogic.Sync2Redis(at);
+        }
+    }
+
+    public static void Sync2Redis(Activity activity) {
+
+        Jedis jedis = activityLogic.jedisPool.getResource();
+        String key = String.format("%d", activity.getActivityId());
+        //没有库存
+        if (activity.getStockCount() <= 0) {
+            jedis.del(ActivityKey.SecKill.getPrefix() + key);
+            return;
+        }
+        //已初始化
+        if (jedis.exists(ActivityKey.SecKill.getPrefix() + key)) {
+            return;
+        }
+        jedis.set(ActivityKey.SecKill.getPrefix() + key, activity.getStockCount() + "");
+
+    }
+
+    @Autowired
+    JedisPool jedisPool;
+
+    public static String SecKill(int activityId, String userId) {
+
+        String uuid = StringUtils.UUID32();
+        Jedis jedis = activityLogic.jedisPool.getResource();
+        while (true) {
+            boolean ok = RedisService.tryGetDistributedLock(jedis, "ttt", uuid, 5);
+            if (!ok) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                continue;
+            } else {
+                try {
+                    String key = String.format("%d", activityId);
+                    String userKey = String.format("%d_%s", activityId, userId);
+                    //初始化判断
+                    if (!jedis.exists(ActivityKey.SecKill.getPrefix() + key)) {
+                        return "未初始化数据";
+                    }
+                    //判断购买
+                    if (jedis.exists(ActivityKey.SecKill.getPrefix() + userKey)) {
+                        return "重复购买";
+                    }
+                    //预减库存
+                    long stock = jedis.decr(ActivityKey.SecKill.getPrefix() + key);
+                    if (stock < 0) {
+                        return "已被抢空";
+                    }
+                    jedis.set(ActivityKey.SecKill.getPrefix() + userKey, userKey);
+                    //放入rabbitmq队列
+                    return "抢购成功";
+
+                } catch (Exception ex) {
+                    throw ex;
+                } finally {
+                    System.out.println("end >>" + userId + ">>" + DateUtils.getCurrentUnixTime());
+                    RedisService.releaseDistributedLock(jedis, "ttt", uuid);
+                }
+            }
+        }
+    }
+
 
 }

@@ -16,7 +16,7 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Component
-public class DictLogic {
+public class DictLogic extends BaseLogic {
 
     public static DictLogic dictLogic;
 
@@ -24,8 +24,6 @@ public class DictLogic {
     @PostConstruct
     public void init() {
         dictLogic = this;
-        dictLogic.dictService = this.dictService;
-        dictLogic.vAreaService = this.vAreaService;
     }
 
     @Autowired

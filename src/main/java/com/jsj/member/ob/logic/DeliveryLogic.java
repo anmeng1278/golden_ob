@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class DeliveryLogic {
+public class DeliveryLogic extends BaseLogic {
 
     public static DeliveryLogic deliveryLogic;
 
@@ -32,8 +32,6 @@ public class DeliveryLogic {
     @PostConstruct
     public void init() {
         deliveryLogic = this;
-        deliveryLogic.deliveryService = this.deliveryService;
-        deliveryLogic.deliveryStockService = this.deliveryStockService;
     }
 
     @Autowired

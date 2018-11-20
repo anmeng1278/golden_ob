@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class OrderLogic {
+public class OrderLogic extends BaseLogic {
 
     public static OrderLogic orderLogic;
 
@@ -31,8 +31,6 @@ public class OrderLogic {
     @PostConstruct
     public void init() {
         orderLogic = this;
-        orderLogic.orderService = this.orderService;
-        orderLogic.orderProductService = this.orderProductService;
     }
 
     @Autowired
