@@ -7,10 +7,12 @@ import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
+import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.*;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
+import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
@@ -37,6 +39,9 @@ public class AdminDeliveryController {
 
     @Autowired
     DeliveryStockService deliveryStockService;
+
+    @Autowired
+    StockService stockService;
 
     /**
      * 查询所有配送列表
@@ -159,22 +164,38 @@ public class AdminDeliveryController {
         String city = request.getParameter("city");
         String district = request.getParameter("district");
         String address = request.getParameter("address");
+        Integer typeId = Integer.valueOf(request.getParameter("typeId"));
 
-        if (deliveryId > 0) {
+        delivery = deliveryService.selectById(deliveryId);
+        //修改状态已发货
+        delivery.setExpressNumber(expressNumber);
+        delivery.setMobile(mobile);
+        delivery.setOpenId(openId);
+        delivery.setProvince(province);
+        delivery.setCity(city);
+        delivery.setContactName(contactName);
+        delivery.setDistrict(district);
+        delivery.setAddress(address);
+        delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
+        delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
+        deliveryService.updateById(delivery);
 
-            delivery = deliveryService.selectById(deliveryId);
-            //修改状态已发货
-            delivery.setExpressNumber(expressNumber);
-            delivery.setMobile(mobile);
-            delivery.setOpenId(openId);
-            delivery.setProvince(province);
-            delivery.setCity(city);
-            delivery.setContactName(contactName);
-            delivery.setDistrict(district);
-            delivery.setAddress(address);
-            delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
-            delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
-            deliveryService.updateById(delivery);
+        List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
+        if (typeId == DeliveryType.DISTRIBUTE.getValue()) {
+            //配送 修改库存状态已发货
+            stockDtos.stream().forEach(s -> {
+                Stock stock = stockService.selectById(s.getStockId());
+                stock.setStatus(StockStatus.SENT.getValue());
+                stockService.updateById(stock);
+
+            });
+        } else {
+            //自提 修改库存状态已自提
+            stockDtos.stream().forEach(s -> {
+                Stock stock = stockService.selectById(s.getStockId());
+                stock.setStatus(StockStatus.USED.getValue());
+                stockService.updateById(stock);
+            });
         }
         return RestResponseBo.ok("发货成功");
 
