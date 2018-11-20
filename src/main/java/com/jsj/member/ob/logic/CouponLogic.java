@@ -175,7 +175,7 @@ public class CouponLogic {
     //endregion
 
     /**
-     * 获得我所有可用的优惠券
+     * 获得用户可使用的优惠券
      *
      * @param openId
      * @return
@@ -250,4 +250,40 @@ public class CouponLogic {
         return couponProductDtos;
     }
 
+    /**
+     * 获取用户失效不可用的优惠券
+     * @param openId
+     * @return
+     */
+    public static List<WechatCouponDto> GetMyInvalidCoupon(String openId){
+        if (StringUtils.isBlank(openId)) {
+            throw new TipException("参数不合法，用户openId不能为空");
+        }
+        EntityWrapper<WechatCoupon> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null and open_id={0}", openId);
+        wrapper.gt("expired_time", DateUtils.getCurrentUnixTime());
+        wrapper.or("status in (10,60)");
+        List<WechatCoupon> wechatCoupons = couponLogic.wechatCouponService.selectList(wrapper);
+        List<WechatCouponDto> wechatCouponDtos = new ArrayList<>();
+
+        for (WechatCoupon wechatCoupon : wechatCoupons) {
+
+            WechatCouponDto wechatCouponDto = new WechatCouponDto();
+
+            //获取优惠券详情
+            CouponDto couponDto = CouponLogic.GetCoupon(wechatCoupon.getCouponId());
+            wechatCouponDto.setCouponDto(couponDto);
+
+            wechatCouponDto.setAmount(wechatCoupon.getAmount());
+            wechatCouponDto.setCouponId(wechatCoupon.getCouponId());
+            wechatCouponDto.setCouponType(CouponType.valueOf(wechatCoupon.getTypeId()));
+            wechatCouponDto.setExpiredTime(wechatCoupon.getExpiredTime());
+            wechatCouponDto.setOpenId(wechatCoupon.getOpenId());
+            wechatCouponDto.setCouponStatus(CouponStatus.valueOf(wechatCoupon.getStatus()));
+            wechatCouponDto.setWechatCouponId(wechatCoupon.getWechatCouponId());
+            wechatCouponDtos.add(wechatCouponDto);
+        }
+        return wechatCouponDtos;
+
+    }
 }
