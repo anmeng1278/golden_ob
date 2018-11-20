@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : StockFlow Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-13
+ *   @since 2018-11-20
  */
 @Repository
 public interface StockFlowMapper extends BaseMapper<StockFlow> {

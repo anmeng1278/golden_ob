@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Banner 实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-13
+ *   @since 2018-11-20
  */
 @TableName("_banner")
 public class Banner implements Serializable {

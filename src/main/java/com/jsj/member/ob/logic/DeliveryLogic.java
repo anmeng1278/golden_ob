@@ -130,10 +130,10 @@ public class DeliveryLogic extends BaseLogic {
             deliveryDto.setStockDto(stockDtos);
 
             deliveryDto.setAddress(delivery.getAddress());
-            deliveryDto.setCity(delivery.getCity());
-            deliveryDto.setProvince(delivery.getProvince());
+            deliveryDto.setCityId(delivery.getCityId());
+            deliveryDto.setProvinceId(delivery.getProvinceId());
             deliveryDto.setContactName(delivery.getContactName());
-            deliveryDto.setDistrict(delivery.getDistrict());
+            deliveryDto.setDistrictId(delivery.getDistrictId());
             deliveryDto.setOpenId(delivery.getOpenId());
             deliveryDto.setExpressNumber(delivery.getExpressNumber());
             deliveryDto.setMobile(delivery.getMobile());

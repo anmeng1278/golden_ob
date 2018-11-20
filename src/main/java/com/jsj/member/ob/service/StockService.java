@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.service.IService;
  *   @description : Stock 服务接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-13
+ *   @since 2018-11-20
  */
 public interface StockService extends IService<Stock> {
 	

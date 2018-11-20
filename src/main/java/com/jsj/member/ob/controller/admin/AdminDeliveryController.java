@@ -1,19 +1,19 @@
 package com.jsj.member.ob.controller.admin;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
-import com.jsj.member.ob.dto.api.express.ExpressRequ;
-import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.dto.api.stock.StockDto;
-import com.jsj.member.ob.entity.*;
-import com.jsj.member.ob.enums.*;
+import com.jsj.member.ob.entity.Delivery;
+import com.jsj.member.ob.entity.Stock;
+import com.jsj.member.ob.enums.DeliveryStatus;
+import com.jsj.member.ob.enums.DeliveryType;
+import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.logic.DeliveryLogic;
-import com.jsj.member.ob.logic.ExpressApiLogic;
-import com.jsj.member.ob.logic.StockLogic;
-import com.jsj.member.ob.service.*;
+import com.jsj.member.ob.service.DeliveryService;
+import com.jsj.member.ob.service.DeliveryStockService;
+import com.jsj.member.ob.service.StockService;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +26,9 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @ApiIgnore
 @Controller
@@ -160,9 +162,11 @@ public class AdminDeliveryController {
         String openId = request.getParameter("openId");
         String contactName = request.getParameter("contactName");
         Integer mobile = Integer.valueOf(request.getParameter("mobile"));
-        String province = request.getParameter("province");
-        String city = request.getParameter("city");
-        String district = request.getParameter("district");
+
+        //TODO 省市区修改
+        //String province = request.getParameter("province");
+        //String city = request.getParameter("city");
+        //String district = request.getParameter("district");
         String address = request.getParameter("address");
         Integer typeId = Integer.valueOf(request.getParameter("typeId"));
 
@@ -171,10 +175,10 @@ public class AdminDeliveryController {
         delivery.setExpressNumber(expressNumber);
         delivery.setMobile(mobile);
         delivery.setOpenId(openId);
-        delivery.setProvince(province);
-        delivery.setCity(city);
+        //delivery.setProvince(province);
+        //delivery.setCity(city);
         delivery.setContactName(contactName);
-        delivery.setDistrict(district);
+        //delivery.setDistrict(district);
         delivery.setAddress(address);
         delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
         delivery.setUpdateTime(DateUtils.getCurrentUnixTime());

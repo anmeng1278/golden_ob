@@ -38,15 +38,15 @@ public class DeliveryDto {
     /**
      * 省
      */
-    private String province;
+    private Integer provinceId;
     /**
      * 市
      */
-    private String city;
+    private Integer cityId;
     /**
      * 区
      */
-    private String district;
+    private Integer districtId;
     /**
      * 详细地址
      */
@@ -114,30 +114,6 @@ public class DeliveryDto {
         this.mobile = mobile;
     }
 
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -160,5 +136,29 @@ public class DeliveryDto {
 
     public void setStockDto(List<StockDto> stockDto) {
         this.stockDto = stockDto;
+    }
+
+    public Integer getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(Integer provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
+    public Integer getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(Integer districtId) {
+        this.districtId = districtId;
     }
 }

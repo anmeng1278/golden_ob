@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.service.IService;
  *   @description : Coupon 服务接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-13
+ *   @since 2018-11-20
  */
 public interface CouponService extends IService<Coupon> {
 	

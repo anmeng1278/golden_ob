@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Delivery 提货表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-13
+ *   @since 2018-11-20
  */
 @TableName("_delivery")
 public class Delivery implements Serializable {
@@ -53,18 +53,6 @@ public class Delivery implements Serializable {
      */
 	private Integer mobile;
     /**
-     * 省
-     */
-	private String province;
-    /**
-     * 市
-     */
-	private String city;
-    /**
-     * 区
-     */
-	private String district;
-    /**
      * 详细地址
      */
 	private String address;
@@ -72,6 +60,21 @@ public class Delivery implements Serializable {
      * 备注
      */
 	private String remarks;
+    /**
+     * 省
+     */
+	@TableField("province_id")
+	private Integer provinceId;
+    /**
+     * 市
+     */
+	@TableField("city_id")
+	private Integer cityId;
+    /**
+     * 区
+     */
+	@TableField("district_id")
+	private Integer districtId;
     /**
      * 创建时间
      */
@@ -145,30 +148,6 @@ public class Delivery implements Serializable {
 		this.mobile = mobile;
 	}
 
-	public String getProvince() {
-		return province;
-	}
-
-	public void setProvince(String province) {
-		this.province = province;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getDistrict() {
-		return district;
-	}
-
-	public void setDistrict(String district) {
-		this.district = district;
-	}
-
 	public String getAddress() {
 		return address;
 	}
@@ -183,6 +162,30 @@ public class Delivery implements Serializable {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public Integer getProvinceId() {
+		return provinceId;
+	}
+
+	public void setProvinceId(Integer provinceId) {
+		this.provinceId = provinceId;
+	}
+
+	public Integer getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(Integer cityId) {
+		this.cityId = cityId;
+	}
+
+	public Integer getDistrictId() {
+		return districtId;
+	}
+
+	public void setDistrictId(Integer districtId) {
+		this.districtId = districtId;
 	}
 
 	public Integer getCreateTime() {
@@ -220,11 +223,11 @@ public class Delivery implements Serializable {
 			", typeId=" + typeId +
 			", contactName=" + contactName +
 			", mobile=" + mobile +
-			", province=" + province +
-			", city=" + city +
-			", district=" + district +
 			", address=" + address +
 			", remarks=" + remarks +
+			", provinceId=" + provinceId +
+			", cityId=" + cityId +
+			", districtId=" + districtId +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +
