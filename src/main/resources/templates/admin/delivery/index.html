@@ -91,16 +91,16 @@
                         <td th:text="${info.address}"></td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td>
-                            <button th:title="|${info.deliveryId} 配送详情|" th:disabled="${info.status <= 0}"
+                            <button th:title="|${info.deliveryId} 配送详情|" th:disabled="${info.status <= 0}" type="button"
                                th:attr="data-tab-href=@{'/admin/delivery/sendInfo/'+${info.deliveryId}}"
-                               class="layui-btn layui-btn-normal layui-btn-xs">
+                               class=" layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe642;</i>
                                 配送详情
                             </button>
 
-                            <button th:title="|${info.deliveryId} 去发货|" th:disabled="${info.status > 0}"
+                            <button th:title="|${info.deliveryId} 去发货|" th:disabled="${info.status > 0}" type="button"
                                     th:attr="data-tab-href=@{'/admin/delivery/sendProduct/'+${info.deliveryId}}"
-                               class="layui-btn layui-btn-normal layui-btn-xs">
+                               class=" layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe609;</i>
                                 待发货
                             </button>
