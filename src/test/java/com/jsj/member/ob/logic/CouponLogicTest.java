@@ -30,4 +30,10 @@ public class CouponLogicTest {
             System.out.println(couponProductDto.getCouponId());
         }
     }
+
+    @Test
+    public void getInvalid(){
+        List<WechatCouponDto> wechatCouponDtos = CouponLogic.GetMyInvalidCoupon("19");
+        wechatCouponDtos.stream().forEach(s->s.getOpenId());
+    }
 }
