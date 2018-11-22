@@ -62,5 +62,10 @@ public class DictLogicTest {
         System.out.println(JSON.toJSONString(resp));
     }
 
+    @Test
+    public void getCascade(){
+        GetAreasResp getAreasResp = DictLogic.GetCascade(210700);
+        System.out.println(getAreasResp);
+    }
 
 }

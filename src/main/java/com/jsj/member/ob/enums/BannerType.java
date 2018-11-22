@@ -4,7 +4,9 @@ import com.jsj.member.ob.exception.FatalException;
 
 public enum  BannerType {
 
-    COVER(1, "首页轮播");
+    COVER(1, "首页轮播"),
+
+    STOCK(2, "库存轮播");
 
     private Integer value;
 
@@ -27,6 +29,8 @@ public enum  BannerType {
         switch (value) {
             case 1:
                 return COVER;
+            case 2:
+                return STOCK;
             default:
                 throw new FatalException("未知的枚举值");
         }

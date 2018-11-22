@@ -11,16 +11,24 @@
         </fieldset>
 
         <div class="layui-form-item">
+
             <label class="layui-form-label">快递号:</label>
             <div class="layui-input-inline layui-form-label-col"
                  style="color: blue; font-size: large; font-weight: bold;">
                 <th:block th:text="${info.expressNumber}"></th:block>
+                <th:block th:if="${info.expressNumber == null}" th:text="null"></th:block>
             </div>
 
             <label class="layui-form-label">配送状态:</label>
             <div class="layui-input-inline layui-form-label-col"
                  style="color: blue; font-size: large; font-weight: bold;">
                 <th:block th:text="${enumLogic.GetDeliveryStatus(info.status).message}"></th:block>
+            </div>
+
+            <label class="layui-form-label">配送方式:</label>
+            <div class="layui-input-inline layui-form-label-col"
+                 style="color: blue; font-size: large; font-weight: bold;">
+                <th:block th:text="${enumLogic.GetDeliveryType(info.typeId).message}"></th:block>
             </div>
         </div>
 
@@ -37,39 +45,87 @@
 
             <label class="layui-form-label">详细地址:</label>
             <div class="layui-input-inline layui-form-label-col">
-                <th:block th:text="${info.province}"></th:block>
-                <th:block th:text="${info.city}"></th:block>
-                <th:block th:text="${info.district}"></th:block>
+                <th:block th:text="${dictLogic.GetDict(info.provinceId).dictName}"></th:block>
+                <th:block th:text="${dictLogic.GetDict(info.cityId).dictName}"></th:block>
+                <th:block th:text="${dictLogic.GetDict(info.districtId).dictName}"></th:block>
                 <th:block th:text="${info.address}"></th:block>
             </div>
         </div>
 
-        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend th:text="|物流信息|"></legend>
-        </fieldset>
+        <table style="width:100%;">
+            <tr>
+                <td style="width: 50%" valign="top">
+                    <table class="layui-table" lay-size="sm" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;width: 99%">
+                                <legend th:text="|商品信息|"></legend>
+                            </fieldset>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>商品名称</th>
+                            <th style="width: 30%;">规格 * 规格</th>
+                        </tr>
+                        </thead>
+                        <tbody id="content">
+                        <th:block th:each="orderProduct : ${orderProducts}">
+                            <tr>
+                                <td>
+                                    <img th:src="${productLogic.GetProductImgDtos(orderProduct.productId).get(0).imgPath}"
+                                         style="width:40px;height:40px;"/>
+                                </td>
+                                <th:block th:with="pro=${productLogic.GetProduct(orderProduct.productId)}">
+                                    <td th:text="${pro.productName}"></td>
+                                    <td th:text="|${productLogic.GetProductSpec(orderProduct.productSpecId).specName} * ${orderProduct.number} |"></td>
+                                </th:block>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </td>
 
-        <div class="layui-form-item">
-            <ul class="layui-timeline">
-                <th:block th:each="resp : ${resps}">
-                <li class="layui-timeline-item">
-                    <i class="layui-icon layui-timeline-axis"></i>
-                    <div class="layui-timeline-content layui-text">
-                        <div class="layui-timeline-title">
-                            <th:block th:text="${resp.time}"></th:block>
-                            <th:block th:text="${resp.content}"></th:block>
-                        </div>
-                    </div>
-                </li>
-                </th:block>
-            </ul>
-        </div>
+                <td style="text-align: left;" valign="top">
+                    <table class="layui-table" lay-size="sm" lay-skin="line" >
+                        <thead>
+                        <tr>
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;width: 99%" th:if="${info.typeId > 1}">
+                                <legend  th:text="|物流信息|"></legend>
+                            </fieldset>
+                        </tr>
+                        </thead>
+                        <tbody id="content">
+                        <tr>
+                            <ul class="layui-timeline">
+                                <th:block th:each="resp : ${resps}">
+                                    <li class="layui-timeline-item">
+                                        <i class="layui-icon layui-timeline-axis"></i>
+                                        <div class="layui-timeline-content layui-text">
+                                            <div class="layui-timeline-title">
+                                                <th:block th:text="${resp.time}"></th:block>
+                                                <th:block th:text="${resp.content}"></th:block>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </th:block>
+                            </ul>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
 
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <!--<button type="button" class="layui-btn" lay-submit="">-->
-                    <!--<i class="layui-icon">&#xe621;</i>-->
-                    <!--保存-->
-                <!--</button>-->
+            </tr>
+
+        </table>
+
+        <div class="layui-form-item" style="float: bottom">
+            <div class="layui-input-block" disabled="${info.status == 20}">
+                <button type="button" class="layui-btn" id="sendProduct">
+                    <i class="layui-icon">&#xe621;</i>
+                    <th:block th:if="${info.status == 0}" th:text="发货"></th:block>
+                    <th:block th:if="${info.status ==10}" th:text="修改地址"></th:block>
+                </button>
+
                 <button type="button" class="layui-btn" id="btnClose">
                     <i class="layui-icon">&#x1006;</i>
                     关闭
@@ -78,7 +134,6 @@
         </div>
 
     </form>
-
 
 </div>
 
@@ -112,6 +167,22 @@
                     parent.tab.deleteTab(currentTabId);
                 }
             });
+
+            $("#sendProduct").click(function () {
+                var deliveryId = [[${deliveryId}]];
+                window.TX.TEMP.LAYERINDEX = window.layer.open({
+                    title: "",
+                    type: 2,
+                    btn: ['选择', '关闭'],
+                    content: "/admin/delivery/sendProduct/" + deliveryId,
+                    area: ["800px", "600px"],
+                    yes: function (index, layero) {
+                        var iframe = layero.find('iframe');
+                        iframe.contents().find("button[lay-submit]").click();
+                    }
+                });
+            });
+
         });
     </script>
 </th:block>

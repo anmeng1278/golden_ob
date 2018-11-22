@@ -239,7 +239,7 @@ public class ActivityLogic extends BaseLogic {
         int typeId = current.getTypeId();
 
         EntityWrapper<Activity> wrapper = new EntityWrapper<>();
-        wrapper.where("type_id={0}", typeId);
+        wrapper.where("type_id={0} and delete_time is null", typeId);
         wrapper.orderBy("sort asc, update_time desc");
         List<Activity> activities = activityLogic.activityService.selectList(wrapper);
 

@@ -104,6 +104,7 @@ public class AdminBannerController {
     @Transactional(Constant.DBTRANSACTIONAL)
     public RestResponseBo saveOrUpdate(@PathVariable("bannerId") Integer bannerId,HttpServletRequest request){
 
+
         String title = request.getParameter("title");
         int typeId = Integer.parseInt(request.getParameter("typeId"));
         boolean ifpass = !StringUtils.isBlank(request.getParameter("ifpass"));
