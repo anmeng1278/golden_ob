@@ -287,6 +287,7 @@ public class RedpacketLogic extends BaseLogic {
         Redpacket current = redpacketLogic.redpacketService.selectById(redpacketId);
 
         EntityWrapper<Redpacket> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null");
         wrapper.orderBy("sort asc, ifpass desc");
         List<Redpacket> redpackets= redpacketLogic.redpacketService.selectList(wrapper);
 

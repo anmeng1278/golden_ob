@@ -59,14 +59,13 @@ var navs = [
             }
         ]
     },
-
     {
-        "title": "优惠券管理",
+        "title": "优惠券礼包",
         "icon": "fa-wpforms",
         "spread": true,
         "children": [
             {
-                "title": "优惠券列表",
+                "title": "优惠券管理",
                 "icon": "fa-angle-right",
                 "href": "/admin/coupon"
             },
@@ -77,41 +76,29 @@ var navs = [
             }
         ]
     },
+
+
     {
-        "title": "字典管理",
+        "title": "参数管理",
         "icon": "fa-wpforms",
         "spread": true,
         "children": [
             {
-                "title": "字典列表",
+                "title": "字典管理",
                 "icon": "fa-angle-right",
                 "href": "/admin/dict"
-            }
-        ]
-    },
-    {
-        "title": "赠送文案",
-        "icon": "fa-wpforms",
-        "spread": true,
-        "children": [
+            },
             {
                 "title": "文案管理",
                 "icon": "fa-angle-right",
                 "href": "/admin/copywriter"
-            }
-        ]
-    },
-    {
-        "title": "轮播图管理",
-        "icon": "fa-wpforms",
-        "spread": true,
-        "children": [
+            },
             {
-                "title": "轮播图列表",
+                "title": "轮播图管理",
                 "icon": "fa-angle-right",
                 "href": "/admin/banner"
             }
+
         ]
     }
-
 ];

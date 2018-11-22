@@ -4,15 +4,27 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
+import com.jsj.member.ob.dto.api.dict.DictDto;
+import com.jsj.member.ob.dto.api.dict.GetAreasRequ;
+import com.jsj.member.ob.dto.api.dict.GetAreasResp;
+import com.jsj.member.ob.dto.api.order.OrderProductDto;
+import com.jsj.member.ob.dto.api.product.ProductDto;
+import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
+import com.jsj.member.ob.entity.Dict;
+import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.entity.Stock;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.logic.DeliveryLogic;
+import com.jsj.member.ob.logic.DictLogic;
+import com.jsj.member.ob.logic.OrderLogic;
+import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
+import com.jsj.member.ob.service.OrderProductService;
 import com.jsj.member.ob.service.StockService;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
@@ -26,6 +38,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +57,9 @@ public class AdminDeliveryController {
 
     @Autowired
     StockService stockService;
+
+    @Autowired
+    OrderProductService orderProductService;
 
     /**
      * 查询所有配送列表
@@ -118,8 +134,19 @@ public class AdminDeliveryController {
         Delivery delivery = new Delivery();
         delivery = deliveryService.selectById(deliveryId);
 
+        //物流信息
         List<Map<String, String>> resps = DeliveryLogic.GetDeliveryExpress(delivery.getExpressNumber());
 
+        //配送的库存
+        List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(deliveryId);
+
+        List<OrderProduct> orderProducts = new ArrayList<>();
+        for (StockDto stockDto : stockDtos) {
+            OrderProduct orderProduct = orderProductService.selectOne(new EntityWrapper<OrderProduct>().where("order_id={0} and product_id={1} and product_spec_id={2}", stockDto.getOrderId(), stockDto.getProductId(), stockDto.getProductSpecId()));
+            orderProducts.add(orderProduct);
+        }
+        model.addAttribute("orderProducts", orderProducts);
+        model.addAttribute("stockDtos", stockDtos);
         model.addAttribute("resps", resps);
         model.addAttribute("info", delivery);
         model.addAttribute("deliveryId", deliveryId);
@@ -163,10 +190,9 @@ public class AdminDeliveryController {
         String contactName = request.getParameter("contactName");
         Integer mobile = Integer.valueOf(request.getParameter("mobile"));
 
-        //TODO 省市区修改
-        //String province = request.getParameter("province");
-        //String city = request.getParameter("city");
-        //String district = request.getParameter("district");
+        Integer provinceId = Integer.valueOf(request.getParameter("provinceId"));
+        Integer cityId = Integer.valueOf(request.getParameter("cityId"));
+        Integer districtId = Integer.valueOf(request.getParameter("districtId"));
         String address = request.getParameter("address");
         Integer typeId = Integer.valueOf(request.getParameter("typeId"));
 
@@ -175,10 +201,10 @@ public class AdminDeliveryController {
         delivery.setExpressNumber(expressNumber);
         delivery.setMobile(mobile);
         delivery.setOpenId(openId);
-        //delivery.setProvince(province);
-        //delivery.setCity(city);
+        delivery.setProvinceId(provinceId);
+        delivery.setCityId(cityId);
+        delivery.setDistrictId(districtId);
         delivery.setContactName(contactName);
-        //delivery.setDistrict(district);
         delivery.setAddress(address);
         delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
         delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
@@ -201,7 +227,7 @@ public class AdminDeliveryController {
                 stockService.updateById(stock);
             });
         }
-        return RestResponseBo.ok("发货成功");
+        return RestResponseBo.ok("操作成功");
 
     }
 
@@ -220,13 +246,20 @@ public class AdminDeliveryController {
 
         Delivery delivery = deliveryService.selectById(id);
 
-        if (method.equals("ifpass")) {
+        if (method.equals("delete")) {
+            delivery.setDeleteTime(DateUtils.getCurrentUnixTime());
+            deliveryService.updateById(delivery);
         }
-        if (method.equals("send")) {
-        }
-
         return RestResponseBo.ok("操作成功");
 
+    }
+
+    @RequestMapping(value = "/chooseArea/{parentAreaId}", method = RequestMethod.POST)
+    @ResponseBody
+    public List<DictDto> chooseArea(@PathVariable("parentAreaId") int parentAreaId){
+        GetAreasResp getAreasResp = DictLogic.GetCascade(parentAreaId);
+        List<DictDto> areas = getAreasResp.getAreas();
+        return  areas;
     }
 
 

@@ -65,6 +65,17 @@ public class DictLogic extends BaseLogic {
 
     }
 
+    /**
+     * 获得级联列表
+     * @param parentAreaId
+     * @return
+     */
+    public static GetAreasResp GetCascade(int parentAreaId){
+        GetAreasRequ requ = new GetAreasRequ();
+        requ.setParentAreaId(parentAreaId);
+        GetAreasResp getAreasResp = DictLogic.GetAreas(requ);
+        return getAreasResp;
+    }
 
     /**
      * 获取省市区

@@ -48,12 +48,24 @@
             </div>
 
             <div class="layui-input-block" id="divImages">
-                <label style="position: relative; float: left;margin-right: 10px;">
-                    <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>
-                    <img class="layui-upload-img" style="width:115px;height:115px;" th:src="${info.bannerPath}"/>
-                    <input type="hidden" name="bannerPath" th:value="${info.bannerPath}"/>
-                </label>
+                <th:block th:if="${bannerId > 0}">
+                    <label style="position: relative; float: left;margin-right: 10px;">
+                        <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>
+                        <img class="layui-upload-img" style="width:115px;height:115px;" th:src="${info.bannerPath}"/>
+                        <input type="hidden" name="bannerPath" th:value="${info.bannerPath}"/>
+                    </label>
+                </th:block>
+
+                <th:block th:if="${bannerId == 0}">
+                    <label style="position: relative; float: left;margin-right: 10px;">
+                        <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>
+                        <img class="layui-upload-img" style="width:115px;height:115px;"/>
+                        <input type="hidden" name="bannerPath"/>
+                    </label>
+                </th:block>
+
             </div>
+
         </div>
 
         <div class="layui-form-item">
@@ -142,7 +154,8 @@
                     html.push('    <img class="layui-upload-img"  style="width:115px;height:115px;"/>');
                     html.push('    <input type="hidden" name="bannerPath"  />');
                     html.push('</label>');
-                    $(html.join('')).appendTo($("#divImages"));
+                    /*$(html.join('')).appendTo($("#divImages"));*/
+                    document.getElementById("divImages").innerHTML = html.join('');
                 }
             }
 
@@ -154,7 +167,7 @@
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                parent.tab.openTab("/admin/banner", {refershType: "refersh"});
+                                parent.tab.openTab("/admin/banner", {refershType: "reload"});
                                 // location.href = "/admin/product";
                             });
                         } else {

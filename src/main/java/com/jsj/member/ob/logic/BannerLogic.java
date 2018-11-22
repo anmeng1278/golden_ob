@@ -34,10 +34,9 @@ public class BannerLogic extends BaseLogic {
     public static void Sort(int bannerId, Boolean ifUp) {
 
         Banner current = bannerLogic.bannerService.selectById(bannerId);
-        int typeId = current.getTypeId();
 
         EntityWrapper<Banner> wrapper = new EntityWrapper<>();
-        wrapper.where("type_id={0}", typeId);
+        wrapper.where("delete_time is null");
         wrapper.orderBy("sort asc, update_time desc");
         List<Banner> banners = bannerLogic.bannerService.selectList(wrapper);
 
