@@ -7,6 +7,7 @@ import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.entity.Activity;
 import com.jsj.member.ob.entity.ActivityProduct;
 import com.jsj.member.ob.enums.ActivityType;
+import com.jsj.member.ob.enums.SecKillStatus;
 import com.jsj.member.ob.exception.ActivityStockException;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.redis.ActivityKey;
@@ -45,6 +46,8 @@ public class ActivityLogic extends BaseLogic {
         activityLogic = this;
     }
 
+    //region (public) 获取商品正在参加的活动 GetProductCurrentActivityDtos
+
     /**
      * 获取商品正在参加的活动
      *
@@ -71,6 +74,9 @@ public class ActivityLogic extends BaseLogic {
         return activityDtos;
 
     }
+    //endregion
+
+    //region (public) 获取活动信息 GetActivity
 
     /**
      * 获取活动信息
@@ -105,6 +111,9 @@ public class ActivityLogic extends BaseLogic {
         return dto;
 
     }
+    //endregion
+
+    //region (public) 削减活动库存 ReductionActivityStock
 
     /**
      * 削减活动库存
@@ -134,7 +143,9 @@ public class ActivityLogic extends BaseLogic {
         activity.setStockCount(activity.getStockCount() - number);
         activityLogic.activityService.updateById(activity);
     }
+    //endregion
 
+    //region (public) 获得当前预热展示的活动 GetShowActivity
 
     /**
      * 获得当前预热展示的活动
@@ -157,6 +168,9 @@ public class ActivityLogic extends BaseLogic {
         }
         return activityDtos;
     }
+    //endregion
+
+    //region (public) 获取活动商品列表 GetActivityProductDtos
 
     /**
      * 获取活动商品列表
@@ -193,6 +207,9 @@ public class ActivityLogic extends BaseLogic {
         return activityProductDtos;
 
     }
+    //endregion
+
+    //region (public) 获得未审核的商品 GetUnPassActivity
 
     /**
      * 获得未审核的商品
@@ -206,6 +223,9 @@ public class ActivityLogic extends BaseLogic {
 
         return activityLogic.activityService.selectCount(activityWrapper);
     }
+    //endregion
+
+    //region (public) 更新活动排序 Sort
 
     /**
      * 更新活动排序
@@ -267,9 +287,14 @@ public class ActivityLogic extends BaseLogic {
 
 
     }
+    //endregion
 
+    //region (public) 同步活动到redis数据库 RedisSync
 
-    public static void Sync2Redis() {
+    /**
+     * 同步活动到redis数据库
+     */
+    public static void RedisSync() {
 
         Wrapper<Activity> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
@@ -278,34 +303,64 @@ public class ActivityLogic extends BaseLogic {
 
         List<Activity> activities = activityLogic.activityService.selectList(wrapper);
         for (Activity at : activities) {
-            ActivityLogic.Sync2Redis(at);
+            ActivityLogic.RedisSync(at);
         }
     }
+    //endregion
 
-    public static void Sync2Redis(Activity activity) {
+    //region (public) 同步活动到redis数据库 RedisSync
+
+    /**
+     * 同步活动到redis数据库
+     *
+     * @param activity
+     */
+    public static void RedisSync(Activity activity) {
 
         Jedis jedis = activityLogic.jedisPool.getResource();
-        String key = String.format("%d", activity.getActivityId());
+
+        int activityId = activity.getActivityId();
+
+        ActivityKey activityKey = new ActivityKey(0, activityId + "");
+        String key = String.format("%s:%s", activityKey.getPrefix(), "INIT");
+
         //没有库存
         if (activity.getStockCount() <= 0) {
-            jedis.del(ActivityKey.SecKill.getPrefix() + key);
+            jedis.del(key);
             return;
         }
         //已初始化
-        if (jedis.exists(ActivityKey.SecKill.getPrefix() + key)) {
+        if (jedis.exists(key)) {
             return;
         }
-        jedis.set(ActivityKey.SecKill.getPrefix() + key, activity.getStockCount() + "");
+        jedis.set(key, activity.getStockCount() + "");
 
     }
+    //endregion
 
     @Autowired
     JedisPool jedisPool;
 
-    public static String SecKill(int activityId, String userId) {
+
+    //region (public) 秒杀 RedisKill
+
+    /**
+     * 秒杀
+     *
+     * @param activityId
+     * @param openId
+     * @return
+     */
+    public static SecKillStatus RedisKill(int activityId, String openId) {
 
         String uuid = StringUtils.UUID32();
         Jedis jedis = activityLogic.jedisPool.getResource();
+
+        ActivityKey activityKey = new ActivityKey(0, activityId + "");
+
+        String key = String.format("%s:%s", activityKey.getPrefix(), "INIT");
+        String userKey = String.format("%s:%s", activityKey.getPrefix(), openId);
+
         while (true) {
             boolean ok = RedisService.tryGetDistributedLock(jedis, "ttt", uuid, 5);
             if (!ok) {
@@ -317,34 +372,32 @@ public class ActivityLogic extends BaseLogic {
                 continue;
             } else {
                 try {
-                    String key = String.format("%d", activityId);
-                    String userKey = String.format("%d_%s", activityId, userId);
                     //初始化判断
-                    if (!jedis.exists(ActivityKey.SecKill.getPrefix() + key)) {
-                        return "未初始化数据";
+                    if (!jedis.exists(key)) {
+                        return SecKillStatus.UNINIT;
                     }
                     //判断购买
-                    if (jedis.exists(ActivityKey.SecKill.getPrefix() + userKey)) {
-                        return "重复购买";
+                    if (jedis.exists(userKey)) {
+                        return SecKillStatus.REPEAT;
                     }
                     //预减库存
-                    long stock = jedis.decr(ActivityKey.SecKill.getPrefix() + key);
+                    long stock = jedis.decr(key);
                     if (stock < 0) {
-                        return "已被抢空";
+                        return SecKillStatus.SOLDOUT;
                     }
-                    jedis.set(ActivityKey.SecKill.getPrefix() + userKey, userKey);
+                    jedis.set(userKey, openId);
                     //放入rabbitmq队列
-                    return "抢购成功";
+                    return SecKillStatus.SUCCESS;
 
                 } catch (Exception ex) {
                     throw ex;
                 } finally {
-                    System.out.println("end >>" + userId + ">>" + DateUtils.getCurrentUnixTime());
                     RedisService.releaseDistributedLock(jedis, "ttt", uuid);
                 }
             }
         }
     }
+    //endregion
 
 
 }

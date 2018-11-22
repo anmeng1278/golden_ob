@@ -3,6 +3,7 @@ package com.jsj.member.ob.logic;
 import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.entity.Activity;
+import com.jsj.member.ob.enums.SecKillStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +34,7 @@ public class ActivityLogicTest {
         activity.setActivityId(1);
         activity.setStockCount(3);
 
-        ActivityLogic.Sync2Redis(activity);
+        ActivityLogic.RedisSync(activity);
     }
 
     @Test
@@ -43,8 +44,7 @@ public class ActivityLogicTest {
         activity.setActivityId(1);
         activity.setStockCount(3);
 
-        ActivityLogic.Sync2Redis(activity);
-
+        ActivityLogic.RedisSync(activity);
         List<String> userIds = new ArrayList<>();
 
         userIds.add("10001");
@@ -66,13 +66,12 @@ public class ActivityLogicTest {
         for (int i = 0; i < userIds.size(); i++) {
             String userId = userIds.get(i);
 
-            Future<String> future = CommonThreadPool.submit(() -> {
-                String result = ActivityLogic.SecKill(1, userId);
-                System.out.println(userId + " >> " + result);
+            Future future = CommonThreadPool.submit(() -> {
+                SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, userId);
+                return secKillStatus.getMessage() + ">>" + userId;
             });
             futureList.add(future);
         }
-
 
         try {
             for (Future future : futureList) {
@@ -95,8 +94,8 @@ public class ActivityLogicTest {
         //activity.setStockCount(3);
         //ActivityLogic.Sync2Redis(activity);
 
-        String result = ActivityLogic.SecKill(1, "10001");
-        System.out.println(result);
+        SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, "10001");
+        System.out.println(secKillStatus.getMessage());
 
     }
 }

@@ -17,6 +17,22 @@ spring:
       max-idle: 500
       max-wait: 500
       max-active: 1000
+    password: '%@##4755REDIS'
+  rabbitmq:
+    host: 172.16.5.64
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual
+
+
+
+
 
 webconfig:
   # 图片服务器
@@ -30,4 +46,3 @@ redis:
   pool-max-total: 1000
   pool-max-idle: 500
   pool-max-wait: 500
-
