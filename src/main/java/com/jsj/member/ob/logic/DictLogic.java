@@ -67,10 +67,11 @@ public class DictLogic extends BaseLogic {
 
     /**
      * 获得级联列表
+     *
      * @param parentAreaId
      * @return
      */
-    public static GetAreasResp GetCascade(int parentAreaId){
+    public static GetAreasResp GetCascade(int parentAreaId) {
         GetAreasRequ requ = new GetAreasRequ();
         requ.setParentAreaId(parentAreaId);
         GetAreasResp getAreasResp = DictLogic.GetAreas(requ);
@@ -106,9 +107,15 @@ public class DictLogic extends BaseLogic {
 
         EntityWrapper<VArea> entityWrapper = new EntityWrapper<>();
 
-        entityWrapper.where(parentAreaId == 0, "city_id = 0 and area_id = 0");
-        entityWrapper.where(parentAreaId > 0 && parentAreaId % 10000 == 0, "province_id  = {0} and ( city_id = dict_id or ( area_id = dict_id and  not exists( select * from _dict where _dict.dict_id = _v_area.city_id ) ))", parentAreaId);
-        entityWrapper.where(parentAreaId > 0 && parentAreaId % 100 == 0 && parentAreaId % 10000 != 0, "city_id = {0} and area_id <> 0", parentAreaId);
+        if (parentAreaId == 0) {
+            entityWrapper.where("city_id = 0 and area_id = 0");
+        } else if (parentAreaId % 10000 == 0) {
+            entityWrapper.where("province_id  = {0} and ( city_id = dict_id or ( area_id = dict_id and  not exists( select * from _dict where _dict.dict_id = _v_area.city_id ) ))", parentAreaId);
+        } else if (parentAreaId % 100 == 0 && parentAreaId % 10000 != 0) {
+            entityWrapper.where("city_id = {0} and area_id <> 0", parentAreaId);
+        } else {
+            entityWrapper.where("1=0");
+        }
 
         List<VArea> vAreas = dictLogic.vAreaService.selectList(entityWrapper);
 

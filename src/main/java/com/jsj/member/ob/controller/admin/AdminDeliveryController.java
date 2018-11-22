@@ -5,23 +5,14 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.dict.DictDto;
-import com.jsj.member.ob.dto.api.dict.GetAreasRequ;
 import com.jsj.member.ob.dto.api.dict.GetAreasResp;
-import com.jsj.member.ob.dto.api.order.OrderProductDto;
-import com.jsj.member.ob.dto.api.product.ProductDto;
-import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
-import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.entity.OrderProduct;
-import com.jsj.member.ob.entity.Stock;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
-import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.DictLogic;
-import com.jsj.member.ob.logic.OrderLogic;
-import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import com.jsj.member.ob.service.OrderProductService;
@@ -131,8 +122,7 @@ public class AdminDeliveryController {
     @GetMapping("/sendInfo/{deliveryId}")
     public String sendInfo(@PathVariable("deliveryId") Integer deliveryId, Model model) throws IOException {
 
-        Delivery delivery = new Delivery();
-        delivery = deliveryService.selectById(deliveryId);
+        Delivery delivery = deliveryService.selectById(deliveryId);
 
         //物流信息
         List<Map<String, String>> resps = DeliveryLogic.GetDeliveryExpress(delivery.getExpressNumber());
@@ -166,6 +156,7 @@ public class AdminDeliveryController {
     @GetMapping("/sendProduct/{deliveryId}")
     public String sendProduct(@PathVariable("deliveryId") Integer deliveryId, Model model) throws IOException {
 
+        //TODO 不需要定义空对象
         Delivery delivery = new Delivery();
         delivery = deliveryService.selectById(deliveryId);
 
@@ -175,11 +166,13 @@ public class AdminDeliveryController {
     }
 
 
+    //TODO 注释
     @RequestMapping(value = "/sendProduct/{deliveryId}", method = RequestMethod.POST)
     @ResponseBody
     @Transactional(Constant.DBTRANSACTIONAL)
     public RestResponseBo updateInfo(@PathVariable("deliveryId") Integer deliveryId, HttpServletRequest request) {
 
+        //TODO 不需要定义空对象
         Delivery delivery = new Delivery();
 
         String expressNumber = request.getParameter("expressNumber");
@@ -190,46 +183,58 @@ public class AdminDeliveryController {
         String contactName = request.getParameter("contactName");
         Integer mobile = Integer.valueOf(request.getParameter("mobile"));
 
-        Integer provinceId = Integer.valueOf(request.getParameter("provinceId"));
-        Integer cityId = Integer.valueOf(request.getParameter("cityId"));
-        Integer districtId = Integer.valueOf(request.getParameter("districtId"));
+        Integer provinceId = 0, cityId = 0, districtId = 0;
+        if (!StringUtils.isBlank(request.getParameter("provinceId"))) {
+            provinceId = Integer.valueOf(request.getParameter("provinceId"));
+        }
+        if (!StringUtils.isBlank(request.getParameter("cityId"))) {
+            cityId = Integer.valueOf(request.getParameter("cityId"));
+        }
+        if (!StringUtils.isBlank(request.getParameter("districtId"))) {
+            districtId = Integer.valueOf(request.getParameter("districtId"));
+        }
+
         String address = request.getParameter("address");
-        Integer typeId = Integer.valueOf(request.getParameter("typeId"));
+        //Integer typeId = Integer.valueOf(request.getParameter("typeId"));
 
         delivery = deliveryService.selectById(deliveryId);
         //修改状态已发货
-        delivery.setExpressNumber(expressNumber);
+        //delivery.setExpressNumber(expressNumber);
         delivery.setMobile(mobile);
-        delivery.setOpenId(openId);
+        //delivery.setOpenId(openId);
         delivery.setProvinceId(provinceId);
         delivery.setCityId(cityId);
         delivery.setDistrictId(districtId);
         delivery.setContactName(contactName);
         delivery.setAddress(address);
-        delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
+        //delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
         delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
-        deliveryService.updateById(delivery);
+        deliveryService.updateAllColumnById(delivery);
 
-        List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
-        if (typeId == DeliveryType.DISTRIBUTE.getValue()) {
-            //配送 修改库存状态已发货
-            stockDtos.stream().forEach(s -> {
-                Stock stock = stockService.selectById(s.getStockId());
-                stock.setStatus(StockStatus.SENT.getValue());
-                stockService.updateById(stock);
-
-            });
-        } else {
-            //自提 修改库存状态已自提
-            stockDtos.stream().forEach(s -> {
-                Stock stock = stockService.selectById(s.getStockId());
-                stock.setStatus(StockStatus.USED.getValue());
-                stockService.updateById(stock);
-            });
-        }
+        //List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
+        //if (typeId == DeliveryType.DISTRIBUTE.getValue()) {
+        //    //配送 修改库存状态已发货
+        //    //TODO 库存状态不需要再次修改,当用户提货时,库存状态已经被改成已使用了
+        //    stockDtos.stream().forEach(s -> {
+        //        Stock stock = stockService.selectById(s.getStockId());
+        //        stock.setStatus(StockStatus.SENT.getValue());
+        //        stockService.updateById(stock);
+        //
+        //    });
+        //} else {
+        //    //自提 修改库存状态已自提
+        //    //TODO 库存状态不需要再次修改,当用户提货时,库存状态已经被改成已使用了
+        //    stockDtos.stream().forEach(s -> {
+        //        Stock stock = stockService.selectById(s.getStockId());
+        //        stock.setStatus(StockStatus.USED.getValue());
+        //        stockService.updateById(stock);
+        //    });
+        //}
         return RestResponseBo.ok("操作成功");
 
     }
+
+    //TODO 提货功能不应该有删除方法
 
     /**
      * 修改状态
@@ -256,10 +261,10 @@ public class AdminDeliveryController {
 
     @RequestMapping(value = "/chooseArea/{parentAreaId}", method = RequestMethod.POST)
     @ResponseBody
-    public List<DictDto> chooseArea(@PathVariable("parentAreaId") int parentAreaId){
+    public RestResponseBo chooseArea(@PathVariable("parentAreaId") int parentAreaId) {
         GetAreasResp getAreasResp = DictLogic.GetCascade(parentAreaId);
         List<DictDto> areas = getAreasResp.getAreas();
-        return  areas;
+        return RestResponseBo.ok(areas);
     }
 
 

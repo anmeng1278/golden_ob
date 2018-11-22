@@ -45,30 +45,18 @@
         <div class="layui-form-item">
             <label class="layui-form-label">选择地址</label>
             <div class="layui-input-inline">
-                <select name="provinceId" id="province" title="请选择省">
-                    <option value="0">请选择省</option>
-                    <th:block th:each="province : ${dictLogic.GetCascade(0).areas}">
-                        <option th:value="${province.dictId}" th:text="${province.dictName}"
-                                th:selected="${province.dictId == provinceId}"></option>
-                    </th:block>
+                <select name="provinceId" lay-filter="province" lay-verify="req" id="province" title="省">
+                    <option value="">请选择</option>
                 </select>
             </div>
             <div class="layui-input-inline">
-                <select name="cityId" id="city" title="请选择城市">
-                    <option value="">请选择城市</option>
-                    <!-- <th:block th:each="city : ${dictLogic.GetCascade(__${info.provinceId}__).areas}">
-                         <option th:value="${city.dictId}" th:text="${city.dictName}"
-                                 th:selected="${city.dictId == cityId}"></option>
-                     </th:block>-->
+                <select name="cityId" lay-filter="city" id="city" lay-verify="req" title="城市">
+                    <option value="">请选择</option>
                 </select>
             </div>
             <div class="layui-input-inline">
-                <select name="districtId" id="district">
-                    <option value="">请选择县/区</option>
-                    <!-- <th:block th:each="district : ${dictLogic.GetCascade(__${info.cityId}__).areas}">
-                         <option th:value="${district.dictId}" th:text="${district.dictName}"
-                                 th:selected="${district.dictId == districtId}"></option>
-                     </th:block>-->
+                <select name="districtId" lay-filter="district" id="district">
+                    <option value="">请选择</option>
                 </select>
             </div>
         </div>
@@ -105,8 +93,16 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
 
+        //省
+        var provinceId = [[${info.provinceId}]];
+        //市
+        var cityId = [[${info.cityId}]];
+        //区
+        var districtId = [[${info.districtId}]];
+
         TX.INIT(function (layui) {
-            var form = layui.form;
+
+            window.form = layui.form;
             form.on("submit", function (data) {
 
                 TX.CORE.p({
@@ -133,17 +129,74 @@
                 }
             });
 
-            //监听下拉框选中事件
+            // //监听下拉框选中事件
             form.on('select(province)', function (data) {
-                alert("222");
-                loadCity(layer, form, data.value);
+
+                loadArea(data.value, 0, $("#city"), function () {
+
+                });
+
+            });
+            //
+            form.on('select(city)', function (data) {
+
+                loadArea(data.value, 0, $("#district"), function () {
+
+                });
+
             });
 
-            form.on('select(city)', function (data) {
-                loadCountry(layer, form, data.value);
+            $("#province").empty();
+            $("#city").empty();
+            $("#district").empty();
+
+            //加载省
+            loadArea(0, provinceId, $("#province"), function () {
+
+                if (provinceId == 0) {
+                    return;
+                }
+
+                //加载城市
+                loadArea(provinceId, cityId, $("#city"), function () {
+
+                    if (cityId == 0) {
+                        return;
+                    }
+
+                    //加载地址
+                    loadArea(cityId, districtId, $("#district"), function () {
+
+                    });
+
+                });
+
             });
+
 
         });
+
+
+        function loadArea(parentAreaId, areaId, selector, callback) {
+
+            selector.empty().append('<option value="" >请选择</option>');
+            $.ajax({
+                url: "/admin/delivery/chooseArea/" + parentAreaId,
+                type: "post",
+                dataType: 'json',
+                success: function (resp) {
+
+                    var html = [];
+                    $.each(resp.datas, function (i, item) {
+                        html.push('<option value="' + item.dictId + '" ' + (item.dictId == areaId ? "selected" : "") + '>' + item.dictName + '</option>');
+                    });
+                    $(html.join('')).appendTo(selector);
+
+                    form.render();
+                    callback && callback();
+                }
+            });
+        }
 
         /*$("select[name='provinceId']").on("click",function () {
             alert("ddd");
@@ -184,46 +237,46 @@
 
 
         //加载市数据
-        function loadCity(layer, form,provinceId) {
-            var provinceId = $("#province option:selected").val();
-            $.ajax({
-                url: "/admin/delivery/chooseArea/" + provinceId,
-                type: "post",
-                dataType: 'json',
-                data: {"parentAreaId": provinceId},
-                success: function (result) {
-                    $("#city").empty();
-                    $("#district").empty();
-                    form.render('select', 'province');
-                    $.each(result, function (i, item) {
-                        $("#city").appendTo('<option value="' + item.dictId + '" text="' + item.dictName + '"></option>')
-                    });
-                    form.render('select');
-                }
-            });
-        }
+        // function loadCity(layer, form,provinceId) {
+        //     var provinceId = $("#province option:selected").val();
+        //     $.ajax({
+        //         url: "/admin/delivery/chooseArea/" + provinceId,
+        //         type: "post",
+        //         dataType: 'json',
+        //         data: {"parentAreaId": provinceId},
+        //         success: function (result) {
+        //             $("#city").empty();
+        //             $("#district").empty();
+        //             form.render('select', 'province');
+        //             $.each(result, function (i, item) {
+        //                 $("#city").appendTo('<option value="' + item.dictId + '" text="' + item.dictName + '"></option>')
+        //             });
+        //             form.render('select');
+        //         }
+        //     });
+        // }
 
         //加载县、区数据
-        function loadDistrict(layer, form, cityId) {
-            var cityId = $("#city option:selected").val();
-            $.ajax({
-                url: "/admin/delivery/chooseArea/" + cityId,
-                type: "post",
-                dataType: 'json',
-                data: {"parentAreaId": cityId},
-                success: function (result) {
-                    $("#district").empty();
-                    form.render('select', 'district');
-                    var disHtml = "<option value=\"\" >请选择县\区</option>";
-                    $.each(result, function (i, item) {
-                        disHtml += '<option value="' + item.dictId + '" text="' + item.dictName + '"></option>';
-                    });
-                    $("#city").appendTo(disHtml);
-
-                    form.render('select');
-                }
-            });
-        }
+        // function loadDistrict(layer, form, cityId) {
+        //     var cityId = $("#city option:selected").val();
+        //     $.ajax({
+        //         url: "/admin/delivery/chooseArea/" + cityId,
+        //         type: "post",
+        //         dataType: 'json',
+        //         data: {"parentAreaId": cityId},
+        //         success: function (result) {
+        //             $("#district").empty();
+        //             form.render('select', 'district');
+        //             var disHtml = "<option value=\"\" >请选择县\区</option>";
+        //             $.each(result, function (i, item) {
+        //                 disHtml += '<option value="' + item.dictId + '" text="' + item.dictName + '"></option>';
+        //             });
+        //             $("#city").appendTo(disHtml);
+        //
+        //             form.render('select');
+        //         }
+        //     });
+        // }
 
 
     </script>

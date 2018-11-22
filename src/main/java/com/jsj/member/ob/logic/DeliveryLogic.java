@@ -79,6 +79,8 @@ public class DeliveryLogic extends BaseLogic {
         return stockDtos;
     }
 
+    //TODO 为什么不直接使用ExpressApiLogic.GetExpressHundred,还要封装一次?
+
     /**
      * 查询物流详情
      *

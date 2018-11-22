@@ -49,6 +49,7 @@ public class ExpressApiLogic extends BaseLogic {
         if (StringUtils.isBlank(requ.getText())) {
             throw new TipException("快递单号不能为空！");
         }
+        //TODO 这里不需要定义空对象
         ExpressResp resp = new ExpressResp();
 
         String getText = GetText(requ.getText());
@@ -70,6 +71,7 @@ public class ExpressApiLogic extends BaseLogic {
      */
     public static ExpressBirdResp GetExpressBird(ExpressBirdRequ requ) throws Exception{
 
+        //TODO 这里不需要定义空对象
         ExpressBirdResp resp = new ExpressBirdResp();
 
         String requestData = requ.toString();
@@ -122,7 +124,10 @@ public class ExpressApiLogic extends BaseLogic {
 
 
 
+    //TODO 去掉以下方法,如果StringUtils里没有,在那个工具类里添加
+
     /**
+     *
      * base64编码
      * @param str 内容
      * @param charset 编码方式
@@ -194,7 +199,7 @@ public class ExpressApiLogic extends BaseLogic {
     }
 
 
-
+    //TODO 去掉以下方法,使用HtppUtils里的post方法
     /**
      * 向指定 URL 发送POST方法的请求
      * @param url 发送请求的 URL

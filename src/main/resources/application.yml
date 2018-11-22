@@ -17,7 +17,7 @@ spring:
   thymeleaf:
     mode: LEGACYHTML5
     encoding: utf-8
-    cache: true
+    cache: false
   mail:
     default-encoding: UTF-8
     host: smtp.sina.com
