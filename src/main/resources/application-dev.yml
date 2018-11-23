@@ -26,10 +26,6 @@ spring:
     virtual-host: /
     publisher-confirms: true
     publisher-returns: true
-    listener:
-      simple:
-        acknowledge-mode: manual
-
 
 
 

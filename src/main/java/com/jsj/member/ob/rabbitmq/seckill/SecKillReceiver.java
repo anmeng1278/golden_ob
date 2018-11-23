@@ -5,6 +5,7 @@ import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.logic.OrderLogic;
 import com.jsj.member.ob.rabbitmq.MQSender;
+import com.jsj.member.ob.utils.DateUtils;
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +52,13 @@ public class SecKillReceiver {
 
         } catch (Exception ex) {
 
+            dto.setTimeStamp(DateUtils.getCurrentUnixTime());
             dto.setMessage(ex.getMessage());
             dto.setSuccess(false);
 
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+
+            //送至错误队列
             mqSender.sendError(dto);
         }
 

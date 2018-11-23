@@ -37,18 +37,18 @@ public class MQSender implements RabbitTemplate.ReturnCallback {
 
     @Override
     public void returnedMessage(Message message, int i, String s, String s1, String s2) {
-        System.out.println("sender return success" + message.toString() + "===" + i + "===" + s1 + "===" + s2);
+        //System.out.println("sender return success" + message.toString() + "===" + i + "===" + s1 + "===" + s2);
     }
 
     public void sendNormal(BaseDto mm) {
 
         this.rabbitTemplate.setReturnCallback(this);
         this.rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
-            if (!ack) {
-                System.out.println("HelloSender消息发送失败" + cause + correlationData.toString());
-            } else {
-                System.out.println("HelloSender 消息发送成功 ");
-            }
+            //if (!ack) {
+            //    System.out.println("HelloSender消息发送失败" + cause + correlationData.toString());
+            //} else {
+            //    System.out.println("HelloSender 消息发送成功 ");
+            //}
         });
         this.rabbitTemplate.convertAndSend(this.getNormalQueue(), mm);
     }
@@ -57,11 +57,11 @@ public class MQSender implements RabbitTemplate.ReturnCallback {
 
         this.rabbitTemplate.setReturnCallback(this);
         this.rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
-            if (!ack) {
-                System.out.println("HelloSender消息发送失败" + cause + correlationData.toString());
-            } else {
-                System.out.println("HelloSender 消息发送成功 ");
-            }
+            //if (!ack) {
+            //    System.out.println("HelloSender消息发送失败" + cause + correlationData.toString());
+            //} else {
+            //    System.out.println("HelloSender 消息发送成功 ");
+            //}
         });
         this.rabbitTemplate.convertAndSend(this.getErrorQueue(), mm);
 
