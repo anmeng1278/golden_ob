@@ -79,35 +79,6 @@ public class DeliveryLogic extends BaseLogic {
         return stockDtos;
     }
 
-    //TODO 为什么不直接使用ExpressApiLogic.GetExpressHundred,还要封装一次?
-
-    /**
-     * 查询物流详情
-     *
-     * @param expressNumber
-     * @return
-     * @throws IOException
-     */
-    public static List<Map<String, String>> GetDeliveryExpress(String expressNumber) throws IOException {
-        ExpressRequ requ = new ExpressRequ();
-        List<Map<String, String>> resps = null;
-        if (!StringUtils.isBlank(expressNumber)) {
-            //查询配送的物流信息
-            requ.setText(expressNumber);
-            ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
-            resps = new ArrayList<Map<String, String>>();
-            List data = resp.getData();
-            for (int i = 0; i < data.size(); i++) {
-                Map<String, String> tempMap = new HashMap<String, String>();
-                JSONObject temp = (JSONObject) data.get(i);
-                tempMap.put("time", (String) temp.get("time"));
-                tempMap.put("content", (String) temp.get("context"));
-                resps.add(tempMap);
-            }
-        }
-        return resps;
-    }
-
 
     /**
      * 获取我的配送记录
