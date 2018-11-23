@@ -78,7 +78,7 @@
                         <td th:text="${enumLogic.GetDeliveryType(info.typeId).message}"></td>
                         <td th:text="${enumLogic.GetDeliveryStatus(info.status).message}">
                         <td>
-                            <button th:title="|${info.deliveryId} 配送详情|"
+                            <button th:title="|配送详情|"
                                     th:attr="data-tab-href=@{'/admin/delivery/sendInfo/'+${info.deliveryId}}"
                                     class="layui-btn layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe642;</i>
