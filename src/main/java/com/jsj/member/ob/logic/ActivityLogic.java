@@ -154,8 +154,6 @@ public class ActivityLogic extends BaseLogic {
      */
     public static List<ActivityDto> GetShowActivity() {
 
-        int currentTime = DateUtils.getCurrentUnixTime();
-
         List<ActivityDto> activityDtos = new ArrayList<>();
         EntityWrapper<Activity> entityWrapper = new EntityWrapper<>();
         entityWrapper.where("delete_time is null and ifpass = 1");

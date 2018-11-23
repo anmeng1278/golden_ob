@@ -40,7 +40,10 @@ public class CopywriterLogic extends BaseLogic {
         return copywriters;
     }
 
-
+    /**
+     * 随机分配一条文案
+     * @return
+     */
     public static Copywriter GetOneCopywriter() {
 
         //获取所有有效的文案
