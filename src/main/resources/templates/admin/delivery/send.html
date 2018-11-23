@@ -73,7 +73,7 @@
 
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button type="button" class="layui-btn" lay-submit="">
+                <button type="button" class="layui-btn" lay-submit="" id="update">
                     <i class="layui-icon">&#xe621;</i>
                     <th:block th:if="${info.status == 0}" th:text="发货"></th:block>
                     <th:block th:if="${info.status ==10}" th:text="修改"></th:block>
@@ -105,6 +105,13 @@
             window.form = layui.form;
             form.on("submit", function (data) {
 
+                //移除disable状态
+                $("input[name='expressNumber']").each(function () {
+                    if (parseInt($(this).val()) != -1) {
+                        $(this).attr("disabled", false);
+                    }
+                });
+
                 TX.CORE.p({
                     data: $("form.layui-form").serialize(),
                     success: function (resp) {
@@ -112,13 +119,15 @@
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
                                 parent.tab.openTab("/admin/delivery", {refershType: "refersh"});
                             });
+                            parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
+                            parent.location.reload();
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
                         }
                     }
                 });
-
             });
+
 
             $("#btnClose").click(function () {
                 if (parent.window.TX.TEMP.LAYERINDEX) {
@@ -164,7 +173,7 @@
                         return;
                     }
 
-                    //加载地址
+                    //加载县、区
                     loadArea(cityId, districtId, $("#district"), function () {
 
                     });
@@ -173,9 +182,7 @@
 
             });
 
-
         });
-
 
         function loadArea(parentAreaId, areaId, selector, callback) {
 
@@ -197,87 +204,6 @@
                 }
             });
         }
-
-        /*$("select[name='provinceId']").on("click",function () {
-            alert("ddd");
-            var provinceId = $("#province option:selected").val();
-            alert(provinceId);
-            $.ajax({
-                url: "/admin/delivery/chooseArea/" + provinceId,
-                type: "post",
-                dataType: 'json',
-                data: {"parentAreaId": provinceId},
-                success: function (data) {
-                    $("#city").empty();
-                    $("#district").empty();
-                    $.each(data, function (i, item) {
-                        $("#city").appendTo('<option value="' + item.dictId + '" text="' + item.dictName + '"></option>')
-                    });
-                    $('#province').trigger('change');
-                }
-            });
-        });*/
-
-        /*$("select[name='city']").on("click",function () {
-            var cityId = $("#city option:selected").val();
-            alert(cityId);
-            $.ajax({
-                url: "/admin/delivery/chooseArea/" + cityId,
-                type: "post",
-                dataType: 'json',
-                data: {"parentAreaId": cityId},
-                success: function (data) {
-                    $("#district").empty();
-                    $.each(data, function (i, item) {
-                        $("#district").appendTo('<option value="' + item.dictId + '" text="' + item.dictName + '"></option>')
-                    });
-                }
-            });
-        });*/
-
-
-        //加载市数据
-        // function loadCity(layer, form,provinceId) {
-        //     var provinceId = $("#province option:selected").val();
-        //     $.ajax({
-        //         url: "/admin/delivery/chooseArea/" + provinceId,
-        //         type: "post",
-        //         dataType: 'json',
-        //         data: {"parentAreaId": provinceId},
-        //         success: function (result) {
-        //             $("#city").empty();
-        //             $("#district").empty();
-        //             form.render('select', 'province');
-        //             $.each(result, function (i, item) {
-        //                 $("#city").appendTo('<option value="' + item.dictId + '" text="' + item.dictName + '"></option>')
-        //             });
-        //             form.render('select');
-        //         }
-        //     });
-        // }
-
-        //加载县、区数据
-        // function loadDistrict(layer, form, cityId) {
-        //     var cityId = $("#city option:selected").val();
-        //     $.ajax({
-        //         url: "/admin/delivery/chooseArea/" + cityId,
-        //         type: "post",
-        //         dataType: 'json',
-        //         data: {"parentAreaId": cityId},
-        //         success: function (result) {
-        //             $("#district").empty();
-        //             form.render('select', 'district');
-        //             var disHtml = "<option value=\"\" >请选择县\区</option>";
-        //             $.each(result, function (i, item) {
-        //                 disHtml += '<option value="' + item.dictId + '" text="' + item.dictName + '"></option>';
-        //             });
-        //             $("#city").appendTo(disHtml);
-        //
-        //             form.render('select');
-        //         }
-        //     });
-        // }
-
 
     </script>
 </th:block>

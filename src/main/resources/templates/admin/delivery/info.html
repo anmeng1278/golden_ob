@@ -44,7 +44,7 @@
             </div>
 
             <label class="layui-form-label">详细地址:</label>
-            <div class="layui-input-inline layui-form-label-col">
+            <div class="layui-input-inline layui-form-label-col" style="width: auto">
                 <th:block th:text="${dictLogic.GetDict(info.provinceId).dictName}"></th:block>
                 <th:block th:text="${dictLogic.GetDict(info.cityId).dictName}"></th:block>
                 <th:block th:text="${dictLogic.GetDict(info.districtId).dictName}"></th:block>
@@ -97,13 +97,13 @@
                         <tbody id="content">
                         <tr>
                             <ul class="layui-timeline">
-                                <th:block th:each="resp : ${resps}">
+                                <th:block th:each="resp : ${data}">
                                     <li class="layui-timeline-item">
                                         <i class="layui-icon layui-timeline-axis"></i>
                                         <div class="layui-timeline-content layui-text">
                                             <div class="layui-timeline-title">
                                                 <th:block th:text="${resp.time}"></th:block>
-                                                <th:block th:text="${resp.content}"></th:block>
+                                                <th:block th:text="${resp.context}"></th:block>
                                             </div>
                                         </div>
                                     </li>
@@ -143,26 +143,13 @@
         TX.INIT(function (layui) {
 
             var form = layui.form;
-            form.on("submit", function (data) {
 
-                TX.CORE.p({
-                    data: $("form.layui-form").serialize(),
-                    success: function (resp) {
-                        if (resp.baseResp.success) {
-                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                parent.tab.openTab("/admin/delivery/sendInfo", {refershType: "refersh"});
-                            });
-                        } else {
-                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
-                        }
-                    }
-                });
-
-            });
             $("#btnClose").click(function () {
                 if (parent.window.TX.TEMP.LAYERINDEX) {
-                    parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
+                    parent.tab.openTab("/admin/delivery", {refershType: "refersh"});
+                   parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
                 } else {
+                    parent.tab.openTab("/admin/delivery", {refershType: "refersh"});
                     var currentTabId = parent.tab.getCurrentTabId();
                     parent.tab.deleteTab(currentTabId);
                 }
@@ -173,7 +160,6 @@
                 window.TX.TEMP.LAYERINDEX = window.layer.open({
                     title: "",
                     type: 2,
-                    btn: ['选择', '关闭'],
                     content: "/admin/delivery/sendProduct/" + deliveryId,
                     area: ["800px", "600px"],
                     yes: function (index, layero) {
