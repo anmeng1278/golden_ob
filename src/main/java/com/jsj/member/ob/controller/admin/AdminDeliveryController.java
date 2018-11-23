@@ -1,11 +1,14 @@
 package com.jsj.member.ob.controller.admin;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.dict.DictDto;
 import com.jsj.member.ob.dto.api.dict.GetAreasResp;
+import com.jsj.member.ob.dto.api.express.ExpressRequ;
+import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.OrderProduct;
@@ -13,6 +16,7 @@ import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.DictLogic;
+import com.jsj.member.ob.logic.ExpressApiLogic;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import com.jsj.member.ob.service.OrderProductService;
@@ -29,10 +33,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ApiIgnore
 @Controller
@@ -64,8 +65,7 @@ public class AdminDeliveryController {
     public String index(@RequestParam(value = "page", defaultValue = "1") Integer page,
                         @RequestParam(value = "limit", defaultValue = "10") Integer limit,
                         @RequestParam(value = "typeId", defaultValue = "0") Integer typeId,
-                        @RequestParam(value = "startDate", defaultValue = "") String startDate,
-                        @RequestParam(value = "endDate", defaultValue = "") String endDate,
+                        @RequestParam(value = "keys", defaultValue = "") String keys,
                         @RequestParam(value = "status", defaultValue = "-1") Integer status,
                         Model model) {
         EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
@@ -77,19 +77,8 @@ public class AdminDeliveryController {
         if (status >= 0) {
             wrapper.where("status={0}", status);
         }
-        if (!StringUtils.isBlank(startDate) && !StringUtils.isBlank(endDate)) {
-            int startUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(startDate, "yyyy-MM-dd"));
-            int endUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(endDate, "yyyy-MM-dd"));
-            endUnix += 60 * 60 * 24;
-            wrapper.between("create_time", startUnix, endUnix);
-        } else if (!StringUtils.isBlank(startDate)) {
-            int startUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(startDate, "yyyy-MM-dd"));
-            wrapper.gt("create_time", startUnix);
-        } else if (!StringUtils.isBlank(endDate)) {
-            int endUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(endDate, "yyyy-MM-dd"));
-            endUnix += 60 * 60 * 24;
-            wrapper.lt("create_time", endUnix);
-        }
+        wrapper.where(!StringUtils.isBlank(keys), "(express_number like concat(concat('%',{0}),'%') or open_id like concat(concat('%',{0}),'%')  )", keys);
+
         wrapper.orderBy("create_time desc");
 
         Page<Delivery> pageInfo = new Page<>(page, limit);
@@ -124,20 +113,26 @@ public class AdminDeliveryController {
 
         Delivery delivery = deliveryService.selectById(deliveryId);
 
-        //物流信息
-        List<Map<String, String>> resps = DeliveryLogic.GetDeliveryExpress(delivery.getExpressNumber());
+        //查询配送的物流信息
+        List data = null;
+        if (!StringUtils.isBlank(delivery.getExpressNumber())) {
+            ExpressRequ requ = new ExpressRequ();
+            requ.setText(delivery.getExpressNumber());
+            ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
+            data = resp.getData();
+        }
 
         //配送的库存
         List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(deliveryId);
 
         List<OrderProduct> orderProducts = new ArrayList<>();
-        for (StockDto stockDto : stockDtos) {
-            OrderProduct orderProduct = orderProductService.selectOne(new EntityWrapper<OrderProduct>().where("order_id={0} and product_id={1} and product_spec_id={2}", stockDto.getOrderId(), stockDto.getProductId(), stockDto.getProductSpecId()));
+        stockDtos.stream().forEach(s->{
+            OrderProduct orderProduct = orderProductService.selectOne(new EntityWrapper<OrderProduct>().where("order_id={0} and product_id={1} and product_spec_id={2}", s.getOrderId(), s.getProductId(), s.getProductSpecId()));
             orderProducts.add(orderProduct);
-        }
+        });
+
         model.addAttribute("orderProducts", orderProducts);
-        model.addAttribute("stockDtos", stockDtos);
-        model.addAttribute("resps", resps);
+        model.addAttribute("data", data);
         model.addAttribute("info", delivery);
         model.addAttribute("deliveryId", deliveryId);
         return "admin/delivery/info";
@@ -156,24 +151,23 @@ public class AdminDeliveryController {
     @GetMapping("/sendProduct/{deliveryId}")
     public String sendProduct(@PathVariable("deliveryId") Integer deliveryId, Model model) throws IOException {
 
-        //TODO 不需要定义空对象
-        Delivery delivery = new Delivery();
-        delivery = deliveryService.selectById(deliveryId);
+        Delivery delivery = deliveryService.selectById(deliveryId);
 
         model.addAttribute("info", delivery);
         model.addAttribute("deliveryId", deliveryId);
         return "admin/delivery/send";
     }
 
-
-    //TODO 注释
+    /**
+     * 修改地址及物流状态
+     * @param deliveryId
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/sendProduct/{deliveryId}", method = RequestMethod.POST)
     @ResponseBody
     @Transactional(Constant.DBTRANSACTIONAL)
     public RestResponseBo updateInfo(@PathVariable("deliveryId") Integer deliveryId, HttpServletRequest request) {
-
-        //TODO 不需要定义空对象
-        Delivery delivery = new Delivery();
 
         String expressNumber = request.getParameter("expressNumber");
         if (StringUtils.isBlank(expressNumber)) {
@@ -195,70 +189,29 @@ public class AdminDeliveryController {
         }
 
         String address = request.getParameter("address");
-        //Integer typeId = Integer.valueOf(request.getParameter("typeId"));
 
-        delivery = deliveryService.selectById(deliveryId);
+        Delivery delivery = deliveryService.selectById(deliveryId);
         //修改状态已发货
-        //delivery.setExpressNumber(expressNumber);
         delivery.setMobile(mobile);
-        //delivery.setOpenId(openId);
         delivery.setProvinceId(provinceId);
         delivery.setCityId(cityId);
         delivery.setDistrictId(districtId);
+        delivery.setExpressNumber(expressNumber);
         delivery.setContactName(contactName);
         delivery.setAddress(address);
-        //delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
+        delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
         delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
         deliveryService.updateAllColumnById(delivery);
 
-        //List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
-        //if (typeId == DeliveryType.DISTRIBUTE.getValue()) {
-        //    //配送 修改库存状态已发货
-        //    //TODO 库存状态不需要再次修改,当用户提货时,库存状态已经被改成已使用了
-        //    stockDtos.stream().forEach(s -> {
-        //        Stock stock = stockService.selectById(s.getStockId());
-        //        stock.setStatus(StockStatus.SENT.getValue());
-        //        stockService.updateById(stock);
-        //
-        //    });
-        //} else {
-        //    //自提 修改库存状态已自提
-        //    //TODO 库存状态不需要再次修改,当用户提货时,库存状态已经被改成已使用了
-        //    stockDtos.stream().forEach(s -> {
-        //        Stock stock = stockService.selectById(s.getStockId());
-        //        stock.setStatus(StockStatus.USED.getValue());
-        //        stockService.updateById(stock);
-        //    });
-        //}
         return RestResponseBo.ok("操作成功");
 
     }
-
-    //TODO 提货功能不应该有删除方法
 
     /**
-     * 修改状态
-     *
-     * @param request
+     * 获取省市区
+     * @param parentAreaId
      * @return
      */
-    @RequestMapping(value = "/status", method = RequestMethod.POST)
-    @ResponseBody
-    public RestResponseBo status(HttpServletRequest request) {
-
-        int id = Integer.parseInt(request.getParameter("id"));
-        String method = request.getParameter("method");
-
-        Delivery delivery = deliveryService.selectById(id);
-
-        if (method.equals("delete")) {
-            delivery.setDeleteTime(DateUtils.getCurrentUnixTime());
-            deliveryService.updateById(delivery);
-        }
-        return RestResponseBo.ok("操作成功");
-
-    }
-
     @RequestMapping(value = "/chooseArea/{parentAreaId}", method = RequestMethod.POST)
     @ResponseBody
     public RestResponseBo chooseArea(@PathVariable("parentAreaId") int parentAreaId) {
