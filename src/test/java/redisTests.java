@@ -1,20 +1,20 @@
-import com.jsj.member.ob.App;
+import com.jsj.member.ob.enums.SingletonMap;
 import com.jsj.member.ob.redis.AccessKey;
 import com.jsj.member.ob.redis.RedisService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Response;
+import redis.clients.jedis.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = App.class)
-@WebAppConfiguration
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@SpringBootTest(classes = App.class)
+//@WebAppConfiguration
 public class redisTests {
 
     @Autowired
@@ -67,7 +67,262 @@ public class redisTests {
 
     }
 
+
+    @Test
+    public void Test12() throws InterruptedException {
+
+        SingletonMap instance = SingletonMap.INSTANCE;
+        System.out.println(instance);
+
+        try {
+
+            List<Future> futureList = new ArrayList<>();
+            for (int i = 0; i < 1000; i++) {
+
+                int finalI = i;
+                Future future = CommonThreadPool.submit(() -> {
+
+                    Thread.sleep(10000);
+                    //for (int index = 0; index < 5; index++) {
+                    boolean result = instance.Put("1", "1");
+                    //}
+                    if(result) {
+                        return result + "/" + finalI;
+                    }
+                    return "";
+                });
+                futureList.add(future);
+            }
+
+            for (Future future : futureList) {
+                System.out.println(future.get());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("主线程干完了");
+
+    }
+
+
+    @Test
+    public void Test13() throws InterruptedException {
+
+
+        CopyOnWriteArraySet<String> copyOnWriteArraySet = new CopyOnWriteArraySet<String>();
+
+
+        try {
+
+            List<Future> futureList = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                int finalI = i;
+                Future future = CommonThreadPool.submit(() -> {
+
+                    Thread.sleep(100);
+                    //for (int index = 0; index < 5; index++) {
+                    if (copyOnWriteArraySet.contains("1")) {
+                        return false;
+                    }
+                    copyOnWriteArraySet.add("1");
+                    return true;
+
+                });
+                futureList.add(future);
+            }
+
+            for (Future future : futureList) {
+                System.out.println(future.get());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(copyOnWriteArraySet);
+        System.out.println("主线程干完了");
+
+    }
+
+
+    /**
+     * 保存数据
+     *
+     * @param jedis
+     * @param key
+     * @param value
+     */
+    public static void saveData(Jedis jedis, String key, String value) {
+        Transaction transaction = jedis.multi();
+        // 向List头部追加记录
+        transaction.lpush(key, value);
+        // 仅保留指定区间内的记录数，删除区间外的记录。
+        transaction.ltrim(key, 0, maxCount);
+
+        transaction.exec();
+    }
+
+    /**
+     * 获取数据
+     *
+     * @param jedis
+     * @param key
+     * @return
+     */
+    public static List getData(Jedis jedis, String key) {
+        List list = jedis.lrange(key, 0, -1);// end 为 -1
+        // 表示到末尾。因为前面插入操作时，限定了存在的记录数
+        if (list == null || list.size() == 0) {
+            list = new ArrayList();
+        }
+        return list;
+    }
+
+    public static int maxCount = 9;
+    public static String key = "shareniu";
+
+
+    @Autowired
+    JedisPool jedisPool;
+
+    @Test
+    public void testSaveData() {
+
+        Jedis jedis = jedisPool.getResource();
+
+        String k = "hasBoughtSetKey";
+
+        Boolean sismember = jedis.sismember(k, "123");
+        System.out.println(sismember);
+
+        Long sadd = jedis.sadd(k, "123");
+        System.out.println(sadd);
+    }
+
+    @Test
+    public void testDecr() {
+
+        Jedis jedis = jedisPool.getResource();
+
+        jedis.set("abc", "10");
+        jedis.set("money", "100");
+
+
+        Transaction transaction = jedis.multi();
+        Response<Long> abc = transaction.decr("abc");
+
+        transaction.exec();
+
+
+        System.out.println(abc.get());
+        transaction.discard();
+
+        //transaction.discard();
+
+        //jedis.watch("abc");
+        //
+        //Long abc = jedis.decr("abc");
+        //System.out.println("abc >>" + abc);
+        //
+        //Transaction transaction = jedis.multi();
+        //
+        ////
+        ////Response<Long> abc1 = transaction.decr("abc");
+        ////Response<Long> money = transaction.decrBy("money", 100);
+        ////
+        ////System.out.println("abc1 >>" + abc1);
+        ////System.out.println("money >>" + money);
+        //
+        //transaction.exec();
+        //List<Object> exec = transaction.exec();
+        //System.out.println(exec);
+        //
+        //System.out.println(exec.size());
+
+    }
+
+
+    @Test
+    public void testHGetSet() {
+
+        Jedis jedis = jedisPool.getResource();
+
+        String hget = jedis.hget("aaa", "bbb");
+        System.out.println(hget);
+
+        Long hset = jedis.hset("aaa", "bbb", "ccc");
+        System.out.println(hset);
+
+        hget = jedis.hget("aaa", "bbb");
+        System.out.println(hget);
+
+        hset = jedis.hset("aaa", "bbb", "ddd");
+        System.out.println(hset);
+
+        hget = jedis.hget("aaa", "bbb");
+        System.out.println(hget);
+
+
+    }
+
+
+    @Test
+    public void testHGetSetX() {
+
+        Jedis jedis = jedisPool.getResource();
+
+        String hget = jedis.hget("aaa1", "bbb");
+        System.out.println(hget);
+
+        Long hset = jedis.hsetnx("aaa1", "bbb", "ccc");
+        System.out.println(hset);
+
+        hget = jedis.hget("aaa1", "bbb");
+        System.out.println(hget);
+
+        hset = jedis.hsetnx("aaa", "bbb", "ddd");
+        System.out.println(hset);
+
+        hget = jedis.hget("aaa", "bbb");
+        System.out.println(hget);
+    }
+
+
+    @Test
+    public void testHMGetSet() {
+
+
+        Jedis jedis = jedisPool.getResource();
+        Long sadd = jedis.sadd("abc123", "abc123");
+        System.out.println(sadd);
+
+        sadd = jedis.sadd("abc123", "abc123");
+        System.out.println(sadd);
+
+        sadd = jedis.sadd("abc123", "abc124");
+        System.out.println(sadd);
+
+        jedis.srem("abc123", "abc123");
+
+        sadd = jedis.sadd("abc123", "abc123");
+        System.out.println(sadd);
+
+        sadd = jedis.sadd("abc123", "abc123");
+        System.out.println(sadd);
+
+    }
+
+    //public static void main(String[] args) {
+    //
+    //    Jedis jedis = new Jedis("127.0.0.1");// Redis的ip端口
+    ///*for (int i = 0; i < 15; i++) {
+    //	saveData(jedis, "shareniu", ""+i);
+    //}*/
+    //    List data = getData(jedis, key);
+    //    System.err.println(data);
+    //}
 }
+
 
 class CommonThreadPool {
     private static ExecutorService exec = new ThreadPoolExecutor(50, 100, 0L,

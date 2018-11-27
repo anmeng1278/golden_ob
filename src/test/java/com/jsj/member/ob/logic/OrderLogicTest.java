@@ -98,6 +98,10 @@ public class OrderLogicTest {
             requ.setActivityType(ActivityType.SECKILL);
             requ.setActivityId(1);
 
+            OrderProductDto opd = new OrderProductDto();
+            opd.setProductId(3);
+            opd.setProductSpecId(4);
+            requ.getOrderProductDtos().add(opd);
 
             CreateOrderResp createOrderResp = OrderLogic.CreateOrder(requ);
             System.out.println(JSON.toJSONString(createOrderResp));

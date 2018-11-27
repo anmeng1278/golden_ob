@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
  *   @description : Cart Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-20
+ *   @since 2018-11-26
  */
 @Repository
 public interface CartMapper extends BaseMapper<Cart> {

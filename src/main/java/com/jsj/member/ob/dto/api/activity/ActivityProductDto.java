@@ -23,6 +23,11 @@ public class ActivityProductDto {
     private double salePrice;
 
     /**
+     * 库存
+     */
+    private Integer stockCount;
+
+    /**
      * 规格编号
      */
     private Integer productSpecId;
@@ -101,5 +106,13 @@ public class ActivityProductDto {
 
     public void setSalePrice(double salePrice) {
         this.salePrice = salePrice;
+    }
+
+    public Integer getStockCount() {
+        return stockCount;
+    }
+
+    public void setStockCount(Integer stockCount) {
+        this.stockCount = stockCount;
     }
 }

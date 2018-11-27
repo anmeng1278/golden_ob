@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : OrderRedpacketCoupon 订单礼包代金券表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-20
+ *   @since 2018-11-26
  */
 @TableName("_order_redpacket_coupon")
 public class OrderRedpacketCoupon implements Serializable {

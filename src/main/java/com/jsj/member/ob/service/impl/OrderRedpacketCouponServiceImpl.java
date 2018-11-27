@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : OrderRedpacketCoupon 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-20
+ *   @since 2018-11-26
  */
 @Service
 public class OrderRedpacketCouponServiceImpl extends ServiceImpl<OrderRedpacketCouponMapper, OrderRedpacketCoupon> implements OrderRedpacketCouponService {

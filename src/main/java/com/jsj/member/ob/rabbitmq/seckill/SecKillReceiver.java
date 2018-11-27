@@ -2,13 +2,12 @@ package com.jsj.member.ob.rabbitmq.seckill;
 
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
+import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.logic.OrderLogic;
 import com.jsj.member.ob.rabbitmq.MQSender;
 import com.jsj.member.ob.utils.DateUtils;
 import com.rabbitmq.client.Channel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,14 @@ public class SecKillReceiver {
         mqSender.setErrorQueue(SecKillConfig.SECKILL_ERROR_QUEUE);
     }
 
-    private static Logger log = LoggerFactory.getLogger(SecKillReceiver.class);
-
+    /**
+     * 监听秒杀队列，创建秒杀订单
+     *
+     * @param dto
+     * @param channel
+     * @param message
+     * @throws IOException
+     */
     @RabbitListener(queues = SecKillConfig.SECKILL_NORMAL_QUEUE)
     public void secKillOrder(SecKillDto dto, Channel channel, Message message) throws IOException {
 
@@ -41,6 +46,11 @@ public class SecKillReceiver {
             requ.setActivityType(ActivityType.SECKILL);
             requ.setActivityId(dto.getActivityId());
             requ.getBaseRequ().setOpenId(dto.getOpenId());
+
+            OrderProductDto orderProductDto = new OrderProductDto();
+            orderProductDto.setProductSpecId(dto.getProductSpecId());
+            orderProductDto.setProductId(dto.getProductId());
+            requ.getOrderProductDtos().add(orderProductDto);
 
             CreateOrderResp resp = OrderLogic.CreateOrder(requ);
 

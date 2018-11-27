@@ -11,7 +11,7 @@ spring:
       driver-class-name: com.mysql.jdbc.Driver
   redis:
     host: 140.143.0.152
-    port: 6379
+    port: 16379
     timeout: 10000
     pool:
       max-idle: 500
@@ -37,8 +37,9 @@ webconfig:
   imgServerSwitch: false
 redis:
   host: 140.143.0.152
-  port: 6379
+  port: 16379
   timeout: 10000
   pool-max-total: 1000
   pool-max-idle: 500
   pool-max-wait: 500
+  password: '%@##4755REDIS'

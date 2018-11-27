@@ -374,4 +374,5 @@ public class ProductLogic extends BaseLogic {
 
 
     }
+
 }

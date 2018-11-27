@@ -15,6 +15,16 @@ public class SecKillDto extends BaseDto {
      */
     private Integer activityId;
 
+    /**
+     * 商品编号
+     */
+    private Integer productId;
+
+    /**
+     * 型号编号
+     */
+    private Integer productSpecId;
+
     public String getOpenId() {
         return openId;
     }
@@ -31,4 +41,19 @@ public class SecKillDto extends BaseDto {
         this.activityId = activityId;
     }
 
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public Integer getProductSpecId() {
+        return productSpecId;
+    }
+
+    public void setProductSpecId(Integer productSpecId) {
+        this.productSpecId = productSpecId;
+    }
 }

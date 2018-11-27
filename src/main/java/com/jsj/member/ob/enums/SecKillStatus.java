@@ -11,7 +11,11 @@ public enum SecKillStatus {
 
     SOLDOUT(2, "已售罄"),
 
-    SUCCESS(3, "下单成功");
+    SUCCESS(3, "下单成功"),
+
+    REPEATREQUEST(4, "重复请求"),
+
+    UNBEGIN(5, "未开始");
 
     private Integer value;
     private String message;
@@ -42,6 +46,10 @@ public enum SecKillStatus {
                 return SOLDOUT;
             case 3:
                 return SUCCESS;
+            case 4:
+                return REPEATREQUEST;
+            case 5:
+                return UNBEGIN;
             default:
                 throw new FatalException("未知的枚举值");
         }
