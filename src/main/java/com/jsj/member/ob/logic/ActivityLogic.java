@@ -380,7 +380,7 @@ public class ActivityLogic extends BaseLogic {
     public static SecKillStatus RedisKill(int activityId, int productId, int productSpecId, String openId) {
 
         ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, productId, productSpecId));
-        Jedis jedis = activityLogic.jedisPool.getResource();
+        Jedis jedis = null;
 
         String key = String.format("%s:%s", productKey.getPrefix(), "INIT");
         String userKey = String.format("%s:%s", productKey.getPrefix(), openId);
@@ -390,6 +390,8 @@ public class ActivityLogic extends BaseLogic {
         SingletonMap singletonMap = SingletonMap.INSTANCE;
 
         try {
+
+            jedis = activityLogic.jedisPool.getResource();
 
             if (soldOutMap.containsKey(productKey.getPrefix())) {
                 if (soldOutMap.get(productKey.getPrefix())) {
@@ -409,7 +411,7 @@ public class ActivityLogic extends BaseLogic {
             }
 
             long readyTime = Long.parseLong(jedis.get(readyKey));
-            if(readyTime > DateUtils.getCurrentUnixTime()){
+            if (readyTime > DateUtils.getCurrentUnixTime()) {
                 return SecKillStatus.UNBEGIN;
             }
 
@@ -444,10 +446,13 @@ public class ActivityLogic extends BaseLogic {
             return SecKillStatus.SUCCESS;
 
         } catch (Exception ex) {
-            throw ex;
+            ex.printStackTrace();
+            return SecKillStatus.SYSTEMERROR;
         } finally {
             singletonMap.Remove(openId);
-            jedis.disconnect();
+            if (jedis != null) {
+                jedis.close();
+            }
             System.gc();
         }
     }

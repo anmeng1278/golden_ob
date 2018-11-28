@@ -5,6 +5,7 @@ import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.entity.Activity;
 import com.jsj.member.ob.enums.SecKillStatus;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.ThreadPoolUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,8 @@ import redis.clients.jedis.JedisPool;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = App.class)
@@ -72,7 +74,7 @@ public class ActivityLogicTest {
         for (int i = 0; i < userIds.size(); i++) {
             String userId = userIds.get(i);
 
-            Future future = CommonThreadPool.submit(() -> {
+            Future future = ThreadPoolUtils.submit(() -> {
                 SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, 3, 4, userId);
 
                 if (secKillStatus == SecKillStatus.REPEAT) {
@@ -147,22 +149,3 @@ public class ActivityLogicTest {
     }
 }
 
-class CommonThreadPool {
-    private static ExecutorService exec = new ThreadPoolExecutor(50, 100, 0L,
-            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(10000),
-            new ThreadPoolExecutor.CallerRunsPolicy());
-
-    public static void execute(Runnable command) {
-        exec.execute(command);
-    }
-
-    // 子线程执行结束future.get()返回null，若没有执行完毕，主线程将会阻塞等待
-    public static Future submit(Runnable command) {
-        return exec.submit(command);
-    }
-
-    // 子线程中的返回值可以从返回的future中获取：future.get();
-    public static Future submit(Callable command) {
-        return exec.submit(command);
-    }
-}

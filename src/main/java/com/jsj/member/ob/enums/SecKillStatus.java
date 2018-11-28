@@ -15,7 +15,9 @@ public enum SecKillStatus {
 
     REPEATREQUEST(4, "重复请求"),
 
-    UNBEGIN(5, "未开始");
+    UNBEGIN(5, "未开始"),
+
+    SYSTEMERROR(99, "系统异常");
 
     private Integer value;
     private String message;
@@ -50,6 +52,8 @@ public enum SecKillStatus {
                 return REPEATREQUEST;
             case 5:
                 return UNBEGIN;
+            case 99:
+                return SYSTEMERROR;
             default:
                 throw new FatalException("未知的枚举值");
         }
