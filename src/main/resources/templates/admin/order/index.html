@@ -7,8 +7,16 @@
     <div class="admin-main layui-anim">
 
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
-            <form class="layui-form" method="get" style="float:left;">
-                <div class="layui-form-item" style="margin:0;">
+
+            <button type="button"
+                    th:attr="data-method='export'"
+                    class="layui-btn">
+                <i class="layui-icon">&#xe654;</i>
+                导出
+            </button>
+
+            <form class="layui-form" method="get" style="float: right">
+                <div class="layui-form-item" style="margin:0;float: right">
 
                     <label class="layui-form-label">订单日期</label>
                     <div class="layui-input-inline width100">
@@ -16,15 +24,15 @@
                                autocomplete="off">
 
                     </div>
-                    <label class="layui-form-label width10" style="width:10px;"> 至</label>
+                    <label class="layui-form-label width10" style="width:5px;"> 至</label>
                     <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="endDate" th:value="${endDate}" id="endDate"
                                autocomplete="off">
                     </div>
 
                     <label class="layui-form-label">订单类型</label>
-                    <div class="layui-input-inline">
-                        <select name="typeId" title="订单类型">
+                    <div class="layui-input-inline" style="width: 10%">
+                        <select name="typeId" title="订单类型" >
                             <option value="">订单类型</option>
                             <th:block th:each="activityType : ${activityTypes}">
                                 <option th:value="${activityType.value}" th:text="${activityType.message}"
@@ -34,7 +42,7 @@
                     </div>
 
                     <label class="layui-form-label">订单状态</label>
-                    <div class="layui-input-inline" >
+                    <div class="layui-input-inline" style="width: 10%">
                         <select name="status" title="订单状态">
                             <option value="">订单状态</option>
                             <th:block th:each="orderStatus : ${orderStatuses}">
@@ -50,25 +58,28 @@
                                class="layui-input"/>
                     </div>
 
-                    <div class="layui-input-inline" style="width:100px; float: right">
+                    <div class="layui-input-inline" style="width: auto;float: right">
                         <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
                             <i class="layui-icon">&#xe615;</i> 查询
                         </button>
                     </div>
                 </div>
             </form>
+
         </blockquote>
+
         <div class="layui-field-box layui-form">
             <table class="layui-table admin-table">
                 <thead>
                 <tr>
                     <th style="width: 5%;">编号</th>
                     <th style="width: 5%;">类型</th>
-                    <th>用户</th>
+                    <th>用户昵称</th>
+                    <th>用户openId</th>
                     <th style="width: 10%;">商品数量</th>
                     <th style="width: 5%;">金额</th>
                     <th style="width: 10%;">状态</th>
-                    <th style="width: 15%;">创建时间</th>
+                    <th style="width: 15%;">创建时间<br/>支付时间</th>
                     <th style="width: 20%;">操作</th>
                 </tr>
                 </thead>
@@ -80,13 +91,22 @@
                         <td>
                             <th:block th:with="wechat=${wechatLogic.GetWechat(info.openId)}">
                                 <th:block th:text="${wechat.nickname}"></th:block>
+                            </th:block>
+                        </td>
+                        <td>
+                            <th:block th:with="wechat=${wechatLogic.GetWechat(info.openId)}">
                                 <th:block th:text="${info.openId}"></th:block>
                             </th:block>
                         </td>
                         <td th:text="${#lists.size(orderLogic.GetOrderProducts(info.orderId))}"></td>
                         <td th:text="${info.payAmount}"></td>
                         <td th:text="${enumLogic.GetOrderStatus(info.status).message}"></td>
-                        <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td >
+                            <th:block th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+                        <br/>
+                            <th:block th:text="${dateUtils.formatDateByUnixTime(info.payTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+
+                        </td>
                         <td>
                             <a th:title="|${info.orderId} 详情|"
                                th:attr="data-tab-href=@{'/admin/order/'+${info.orderId}}"
@@ -162,6 +182,16 @@
                 }
 
             });
+            $("button[data-method='export']").click(function () {
+
+                var typeId = $("select[name='typeId']").val();
+                var status = $("select[name='status']").val();
+                var keys = $("input[name='keys']").val();
+                var startDate = $("input[name='startDate']").val();
+                var endDate = $("input[name='endDate']").val();
+                window.location.href="/excel/exportOrder?typeId="+typeId+"&status="+status+"&keys="+keys+"&startDate="+startDate+"&endDate="+endDate;
+            });
+
         });
 
         function modifyStatus(method, id) {
