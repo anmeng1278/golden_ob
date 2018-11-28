@@ -8,14 +8,17 @@ import com.jsj.member.ob.entity.Activity;
 import com.jsj.member.ob.entity.ActivityProduct;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.SecKillStatus;
+import com.jsj.member.ob.enums.SingletonMap;
 import com.jsj.member.ob.exception.ActivityStockException;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.redis.ActivityKey;
+import com.jsj.member.ob.rabbitmq.MQSender;
+import com.jsj.member.ob.rabbitmq.seckill.SecKillConfig;
+import com.jsj.member.ob.rabbitmq.seckill.SecKillDto;
+import com.jsj.member.ob.redis.ProductKey;
 import com.jsj.member.ob.redis.RedisService;
 import com.jsj.member.ob.service.ActivityProductService;
 import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.utils.DateUtils;
-import com.jsj.member.ob.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
@@ -23,6 +26,7 @@ import redis.clients.jedis.JedisPool;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -39,10 +43,17 @@ public class ActivityLogic extends BaseLogic {
     @Autowired
     RedisService redisService;
 
+    @Autowired
+    MQSender mqSender;
+
 
     // 初始化的时候，将本类中的sysConfigManager赋值给静态的本类变量
     @PostConstruct
     public void init() {
+
+        mqSender.setNormalQueue(SecKillConfig.SECKILL_NORMAL_QUEUE);
+        mqSender.setErrorQueue(SecKillConfig.SECKILL_ERROR_QUEUE);
+
         activityLogic = this;
     }
 
@@ -198,6 +209,7 @@ public class ActivityLogic extends BaseLogic {
             dto.setSalePrice(ap.getSalePrice());
             dto.setProductSpecId(ap.getProductSpecId());
             dto.setUpdateTime(ap.getUpdateTime());
+            dto.setStockCount(ap.getStockCount());
 
             activityProductDtos.add(dto);
         }
@@ -316,28 +328,42 @@ public class ActivityLogic extends BaseLogic {
     public static void RedisSync(Activity activity) {
 
         Jedis jedis = activityLogic.jedisPool.getResource();
-
         int activityId = activity.getActivityId();
 
-        ActivityKey activityKey = new ActivityKey(0, activityId + "");
-        String key = String.format("%s:%s", activityKey.getPrefix(), "INIT");
-
-        //没有库存
-        if (activity.getStockCount() <= 0) {
-            jedis.del(key);
+        //活动商品
+        List<ActivityProductDto> products = ActivityLogic.GetActivityProductDtos(activityId);
+        if (products == null || products.isEmpty()) {
             return;
         }
-        //已初始化
-        if (jedis.exists(key)) {
-            return;
-        }
-        jedis.set(key, activity.getStockCount() + "");
 
+        for (ActivityProductDto dto : products) {
+
+            ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, dto.getProductId(), dto.getProductSpecId()));
+            String key = String.format("%s:%s", productKey.getPrefix(), "INIT");
+            String readyKey = String.format("%s:%s", productKey.getPrefix(), "READYTIME");
+
+            //没有库存
+            if (dto.getStockCount() == 0) {
+                jedis.del(key);
+                continue;
+            }
+
+            //已初始化
+            if (jedis.exists(key)) {
+                continue;
+            }
+
+            jedis.set(key, dto.getStockCount() + "");
+            jedis.set(readyKey, activity.getBeginTime() + "");
+        }
     }
     //endregion
 
     @Autowired
     JedisPool jedisPool;
+
+
+    public static HashMap<String, Boolean> soldOutMap = new HashMap<String, Boolean>();
 
 
     //region (public) 秒杀 RedisKill
@@ -346,56 +372,85 @@ public class ActivityLogic extends BaseLogic {
      * 秒杀
      *
      * @param activityId
+     * @param productId
+     * @param productSpecId
      * @param openId
      * @return
      */
-    public static SecKillStatus RedisKill(int activityId, String openId) {
+    public static SecKillStatus RedisKill(int activityId, int productId, int productSpecId, String openId) {
 
-        String uuid = StringUtils.UUID32();
+        ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, productId, productSpecId));
         Jedis jedis = activityLogic.jedisPool.getResource();
 
-        ActivityKey activityKey = new ActivityKey(0, activityId + "");
+        String key = String.format("%s:%s", productKey.getPrefix(), "INIT");
+        String userKey = String.format("%s:%s", productKey.getPrefix(), openId);
+        String resultKey = String.format("%s:%s", productKey.getPrefix(), "RESULT");
+        String readyKey = String.format("%s:%s", productKey.getPrefix(), "READYTIME");
 
-        String key = String.format("%s:%s", activityKey.getPrefix(), "INIT");
-        String userKey = String.format("%s:%s", activityKey.getPrefix(), openId);
+        SingletonMap singletonMap = SingletonMap.INSTANCE;
 
-        while (true) {
-            boolean ok = RedisService.tryGetDistributedLock(jedis, "ttt", uuid, 5);
-            if (!ok) {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                continue;
-            } else {
-                try {
-                    //初始化判断
-                    if (!jedis.exists(key)) {
-                        return SecKillStatus.UNINIT;
-                    }
-                    //判断购买
-                    if (jedis.exists(userKey)) {
-                        return SecKillStatus.REPEAT;
-                    }
-                    //预减库存
-                    long stock = jedis.decr(key);
-                    if (stock < 0) {
-                        return SecKillStatus.SOLDOUT;
-                    }
-                    jedis.set(userKey, openId);
-                    //放入rabbitmq队列
-                    return SecKillStatus.SUCCESS;
+        try {
 
-                } catch (Exception ex) {
-                    throw ex;
-                } finally {
-                    RedisService.releaseDistributedLock(jedis, "ttt", uuid);
+            if (soldOutMap.containsKey(productKey.getPrefix())) {
+                if (soldOutMap.get(productKey.getPrefix())) {
+                    return SecKillStatus.SOLDOUT;
                 }
             }
+
+            //初始化判断
+            if (!jedis.exists(key)) {
+                return SecKillStatus.UNINIT;
+            }
+
+            //重复请求判断
+            boolean put = singletonMap.Put(openId, openId);
+            if (!put) {
+                return SecKillStatus.REPEATREQUEST;
+            }
+
+            long readyTime = Long.parseLong(jedis.get(readyKey));
+            if(readyTime > DateUtils.getCurrentUnixTime()){
+                return SecKillStatus.UNBEGIN;
+            }
+
+
+            if (soldOutMap.containsKey(productKey.getPrefix())) {
+                if (soldOutMap.get(productKey.getPrefix())) {
+                    return SecKillStatus.SOLDOUT;
+                }
+            }
+
+            //判断购买
+            if (jedis.sadd(resultKey, userKey).intValue() == 0) {
+                return SecKillStatus.REPEAT;
+            }
+            //预减库存
+            long stock = jedis.decr(key);
+            if (stock < 0) {
+                jedis.srem(resultKey, userKey);
+                soldOutMap.put(productKey.getPrefix(), true);
+                return SecKillStatus.SOLDOUT;
+            }
+
+            //放入rabbitmq队列
+            SecKillDto dto = new SecKillDto();
+            dto.setActivityId(activityId);
+            dto.setOpenId(openId);
+            dto.setProductId(productId);
+            dto.setProductSpecId(productSpecId);
+
+            activityLogic.mqSender.sendNormal(dto);
+
+            return SecKillStatus.SUCCESS;
+
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            singletonMap.Remove(openId);
+            jedis.disconnect();
+            System.gc();
         }
     }
-    //endregion
-
-
 }
+//endregion
+

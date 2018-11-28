@@ -1,11 +1,18 @@
 package com.jsj.member.ob.rabbitmq;
 
-public class BaseDto {
+import java.io.Serializable;
+
+public class BaseDto implements Serializable {
 
     /**
      * 是否成功
      */
     private Boolean isSuccess;
+
+    /**
+     * 处理时间
+     */
+    private int timeStamp;
 
     /**
      * 错误消息
@@ -28,5 +35,11 @@ public class BaseDto {
         this.message = message;
     }
 
+    public int getTimeStamp() {
+        return timeStamp;
+    }
 
+    public void setTimeStamp(int timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 }

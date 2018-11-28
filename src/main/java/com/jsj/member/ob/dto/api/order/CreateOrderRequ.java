@@ -3,12 +3,14 @@ package com.jsj.member.ob.dto.api.order;
 import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.enums.ActivityType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateOrderRequ {
 
     public CreateOrderRequ() {
         this.baseRequ = new BaseRequ();
+        this.orderProductDtos = new ArrayList<>();
     }
 
     private BaseRequ baseRequ;

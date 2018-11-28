@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 秒杀单
@@ -76,11 +77,29 @@ public class OrderSeckill extends OrderBase {
             throw new TipException("活动编号不能为空");
         }
 
+        if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().isEmpty()) {
+            throw new TipException("秒杀商品不能为空");
+        }
+        if (requ.getOrderProductDtos().size() != 1) {
+            throw new TipException("只能秒杀一个商品");
+        }
+
+        //所选商品
+        OrderProductDto chooseOrderProduct = requ.getOrderProductDtos().get(0);
+
         //活动
         ActivityDto activityDto = ActivityLogic.GetActivity(requ.getActivityId());
 
         //活动商品
         List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(requ.getActivityId());
+
+        activityProductDtos = activityProductDtos.stream().filter(apd -> apd.getProductId().equals(chooseOrderProduct.getProductId()) &&
+                apd.getProductSpecId().equals(chooseOrderProduct.getProductSpecId())
+        ).collect(Collectors.toList());
+
+        if (activityProductDtos.isEmpty()) {
+            throw new TipException(String.format("没有发现活动商品，请稍后重试。活动编号：%d", activityDto.getActivityId()));
+        }
 
         if (activityDto.getDeleteTime() != null) {
             throw new TipException("活动结束啦");
@@ -91,9 +110,7 @@ public class OrderSeckill extends OrderBase {
         if (activityDto.getEndTime() < DateUtils.getCurrentUnixTime()) {
             throw new TipException("活动结束啦");
         }
-        if (activityProductDtos.isEmpty()) {
-            throw new TipException(String.format("没有发现活动商品，请稍后重试。活动编号：%d", activityDto.getActivityId()));
-        }
+
         if (activityDto.getActivityType() != this.getActivityType()) {
             throw new TipException("当前活动非秒杀活动");
         }
