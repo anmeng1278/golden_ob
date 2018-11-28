@@ -6,6 +6,14 @@
 
     <div class="admin-main layui-anim">
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
+            <button type="button"
+                    th:attr="data-method='export'"
+                    class="layui-btn">
+                <i class="layui-icon">&#xe654;</i>
+                导出
+            </button>
+
+
             <form class="layui-form" method="get" style="float:right;">
                 <div class="layui-form-item" style="margin:0;">
 
@@ -50,6 +58,7 @@
                 <thead>
                 <tr>
                     <th>openId</th>
+                    <th style="width: 10%;">用户昵称</th>
                     <th style="width: 10%;">快递号</th>
                     <th style="width: 10%;">订单号</th>
                     <th style="width: 10%;">联系人</th>
@@ -65,6 +74,7 @@
                 <th:block th:each="info : ${infos.list}">
                     <tr>
                         <td th:text="${info.openId}"></td>
+                        <td th:text="${wechatLogic.GetWechat(info.openId).getNickname()}"></td>
                         <td th:text="${info.expressNumber}"></td>
                         <td>
                             <th:block th:text="${deliveryLogic.GetDeliveryStock(info.deliveryId).get(0).orderId}">
@@ -101,6 +111,30 @@
     <script th:inline="javascript">
 
         TX.INIT(function () {
+
+            $("button[data-method='export']").click(function () {
+                /*  TX.CORE.p({
+                      url: "/excel/SubmitExcelData",
+                      type: "post",
+                      dataType: "json",
+                      data: paramData,
+                      success: function (data) {
+                          if (data && data.code == "1") {
+                              window.location.href = "/excel/DownloadExcel";
+                          } else {
+                              $.dialog.alert("下载失败!");
+                          }
+                      },
+                      error: function (err) {
+                          $.dialog.alert("下载失败");
+                      }
+                  });*/
+                var typeId = $("select[name='typeId']").val();
+                var status = $("select[name='status']").val();
+                var keys = $("input[name='keys']").val();
+
+                window.location.href="/excel/exportDelivery?typeId="+typeId+"&keys="+keys+"&status="+status;
+            });
 
         });
 

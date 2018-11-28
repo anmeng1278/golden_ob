@@ -23,7 +23,7 @@ public class ActivityProductDto {
     private double salePrice;
 
     /**
-     * 库存
+     * 秒杀库存
      */
     private Integer stockCount;
 
@@ -43,6 +43,14 @@ public class ActivityProductDto {
      * 删除时间
      */
     private Integer deleteTime;
+
+    public Integer getStockCount() {
+        return stockCount;
+    }
+
+    public void setStockCount(Integer stockCount) {
+        this.stockCount = stockCount;
+    }
 
     public Integer getActivityProductId() {
         return activityProductId;
@@ -106,13 +114,5 @@ public class ActivityProductDto {
 
     public void setSalePrice(double salePrice) {
         this.salePrice = salePrice;
-    }
-
-    public Integer getStockCount() {
-        return stockCount;
-    }
-
-    public void setStockCount(Integer stockCount) {
-        this.stockCount = stockCount;
     }
 }

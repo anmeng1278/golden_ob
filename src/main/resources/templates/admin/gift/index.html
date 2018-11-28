@@ -4,7 +4,13 @@
 <div layout:fragment="content" class="admin-main layui-anim">
     <div class="admin-main layui-anim">
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
-            <form class="layui-form" method="get" style="float:left;">
+            <button type="button"
+                    th:attr="data-method='export'"
+                    class="layui-btn">
+                <i class="layui-icon">&#xe654;</i>
+                导出
+            </button>
+            <form class="layui-form" method="get" style="float:right;">
                 <div class="layui-form-item" style="margin:0;">
 
                     <label class="layui-form-label">赠送日期</label>
@@ -139,6 +145,17 @@
             laydate.render({
                 elem: '#endDate',
                 type: 'date'
+            });
+
+
+            $("button[data-method='export']").click(function () {
+
+                var giftShareType = $("select[name='giftShareType']").val();
+                var giftStatus = $("select[name='giftStatus']").val();
+                var startDate = $("input[name='startDate']").val();
+                var endDate = $("input[name='endDate']").val();
+
+                window.location.href = "/excel/exportGift?giftShareType="+giftShareType+"&giftStatus="+giftStatus+"&startDate="+startDate+"&endDate="+endDate;
             });
 
 
