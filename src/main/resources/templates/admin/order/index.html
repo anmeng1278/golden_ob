@@ -8,15 +8,8 @@
 
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
-            <button type="button"
-                    th:attr="data-method='export'"
-                    class="layui-btn">
-                <i class="layui-icon">&#xe654;</i>
-                导出
-            </button>
-
-            <form class="layui-form" method="get" style="float: right">
-                <div class="layui-form-item" style="margin:0;float: right">
+            <form class="layui-form" method="get" style="float:left">
+                <div class="layui-form-item" style="margin:0;">
 
                     <label class="layui-form-label">订单日期</label>
                     <div class="layui-input-inline width100">
@@ -30,7 +23,6 @@
                                autocomplete="off">
                     </div>
 
-                    <label class="layui-form-label">订单类型</label>
                     <div class="layui-input-inline" style="width: 10%">
                         <select name="typeId" title="订单类型" >
                             <option value="">订单类型</option>
@@ -41,7 +33,6 @@
                         </select>
                     </div>
 
-                    <label class="layui-form-label">订单状态</label>
                     <div class="layui-input-inline" style="width: 10%">
                         <select name="status" title="订单状态">
                             <option value="">订单状态</option>
@@ -51,7 +42,6 @@
                             </th:block>
                         </select>
                     </div>
-
                     <label class="layui-form-label">关键字</label>
                     <div class="layui-input-inline">
                         <input type="text" name="keys" placeholder="订单Id、openId……" th:value="${keys}" autocomplete="off"
@@ -62,9 +52,11 @@
                         <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
                             <i class="layui-icon">&#xe615;</i> 查询
                         </button>
+
                     </div>
                 </div>
             </form>
+
 
         </blockquote>
 
@@ -142,6 +134,15 @@
             </table>
         </div>
         <div th:replace="comm/macros :: pageAdminNav(${infos})"></div>
+
+
+        <button type="button"
+                th:attr="data-method='export'"
+                style="margin-left: 15px;"
+                class="layui-btn">
+            <i class="layui-icon">&#xe654;</i>
+            导出
+        </button>
     </div>
 
 </div>
