@@ -52,7 +52,7 @@
             <label class="layui-form-label">商品单位</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" name="unit" th:value="${info.unit}" placeholder="请输入单位"
-                       lay-verify="req" title="商品单位"/>
+                       lay-verify="chn" title="商品单位"/>
 
             </div>
             <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
@@ -319,7 +319,7 @@
             });
 
             $(document).on("dblclick", "#content tr", function (e) {
-                if($(this).index() == 0){
+                if ($(this).index() == 0) {
                     return;
                 }
                 if (e.target.tagName.toUpperCase() == "INPUT") {
