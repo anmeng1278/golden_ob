@@ -5,15 +5,16 @@
 <link rel="stylesheet" href="static/common/plugins/layui/css/layui.css" media="all">
 <div layout:fragment="content" class="admin-main layui-anim" style="margin: 15px;">
 
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend th:text="信息编辑"></legend>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 40px;">
+        <legend th:if="${info.bannerId == null}" th:text="|添加轮播图|"></legend>
+        <legend th:if="${info.bannerId > 0}" th:text="|编辑轮播图|"></legend>
     </fieldset>
 
     <form class="layui-form" method="post" action="">
 
         <div class="layui-form-item">
             <label class="layui-form-label">标题</label>
-            <div class="layui-input-inline">
+            <div class="layui-input-inline" style="width: 30%;">
                 <input type="text" class="layui-input" name="title"
                        lay-verify="req"
                        title="标题"
@@ -23,7 +24,7 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label">所属模块</label>
-            <div class="layui-input-inline">
+            <div class="layui-input-inline" style="width: 30%;">
                 <select name="typeId" lay-verify="req" title="所属模块">
                     <option value="">请选择</option>
                     <th:block th:each="pps : ${bannerTypes}">
@@ -33,6 +34,16 @@
                 </select>
             </div>
         </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">触发链接</label>
+            <div class="layui-input-inline" style="width: 30%;">
+                <input type="text" class="layui-input" name="navigateUrl"
+                       title="链接"
+                       th:value="${info.navigateUrl}" placeholder="请输入触发链接"/>
+            </div>
+        </div>
+
 
         <div class="layui-form-item">
             <div class="layui-form-item">
