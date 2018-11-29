@@ -66,7 +66,7 @@ Namespace.register("TX.TEMP");
                         //系统登录信息丢失
                         if (resp.data._SYS_SESSION_LOSE_) {
 
-                            TX.MSG.msg(resp.msg, { time: 1500 }, function () {
+                            TX.MSG.msg(resp.msg, {time: 1500}, function () {
                                 if (resp.url) {
                                     top.window.location.href = resp.url;
                                 }
@@ -98,7 +98,8 @@ Namespace.register("TX.TEMP");
             var result = '';
             for (var i = 0; i < n; i++) {
                 result += str;
-            };
+            }
+            ;
             return result;
         },
         in_array: function (search, arr) {
@@ -116,7 +117,10 @@ Namespace.register("TX.TEMP");
             return func.toString().split(/\n/).slice(1, -1).join('\n');
         },
         htmlspecialchars: function (str) {
-            if (!str) { return };
+            if (!str) {
+                return
+            }
+            ;
             str = str.replace(/&/g, '&amp;');
             str = str.replace(/</g, '&lt;');
             str = str.replace(/>/g, '&gt;');
@@ -125,7 +129,10 @@ Namespace.register("TX.TEMP");
             return str;
         },
         htmlspecialchars_decode: function (str) {
-            if (!str) { return };
+            if (!str) {
+                return
+            }
+            ;
             str = str.replace(/&lt;/g, '<');
             str = str.replace(/&gt;/g, '>');
             str = str.replace(/&quot;/g, '"');
@@ -229,7 +236,8 @@ Namespace.register("TX.TEMP");
 
         },
         msg: function (info, options, callback) {
-            layer.msg(info, options || {}, callback || function () { });
+            layer.msg(info, options || {}, callback || function () {
+            });
         }
     };
 
@@ -302,6 +310,17 @@ Namespace.register("TX.TEMP");
                         return title;
                     }
                 },
+                chn: function (value, input) {
+                    var title = $(input).attr("title");
+                    if (title) {
+                        title = "\"" + title + "\"不能填写数字,英文";
+                    } else {
+                        title = "请填写单位张、个、盒...";
+                    }
+                    if (!/[\u4e00-\u9fa5]/g.test(value)) {
+                        return title;
+                    }
+                },
                 float: function (value, input) {
                     var title = $(input).attr("title");
                     if (title) {
@@ -323,7 +342,7 @@ Namespace.register("TX.TEMP");
                     if (!/^(-)?\d+(\.\d+)?$/.test(value)) {
                         return title;
                     }
-                    if(parseFloat(value) == 0){
+                    if (parseFloat(value) == 0) {
                         return "输入格式错误（不能充值0元）";
                     }
                 },
@@ -337,7 +356,7 @@ Namespace.register("TX.TEMP");
                     if (!/^0(\.\d{1,4})?$/.test(value)) {
                         return title;
                     }
-                    if(parseFloat(value) == 0){
+                    if (parseFloat(value) == 0) {
                         return "输入格式错误（0或小于0的最多四位小数，如：0.0002）";
                     }
                 },
@@ -351,7 +370,7 @@ Namespace.register("TX.TEMP");
                     if (!/^\d+(\.\d+)?$/.test(value)) {
                         return title;
                     }
-                    if(parseFloat(value) <= 0){
+                    if (parseFloat(value) <= 0) {
                         return "必须大于0的小数或整数";
                     }
                 }
@@ -508,7 +527,7 @@ Namespace.register("TX.TEMP");
                     //系统登录信息丢失
                     if (resp.data._SYS_SESSION_LOSE_) {
 
-                        TX.MSG.msg(resp.msg, { time: 1500 }, function () {
+                        TX.MSG.msg(resp.msg, {time: 1500}, function () {
                             if (resp.url) {
                                 top.window.location.href = resp.url;
                             }
