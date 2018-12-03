@@ -8,22 +8,23 @@
 
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
-            <form class="layui-form" method="get" style="float:left">
+            <form class="layui-form" method="get" style="float:right">
                 <div class="layui-form-item" style="margin:0;">
 
                     <label class="layui-form-label">订单日期</label>
                     <div class="layui-input-inline width100">
                         <input type="text" name="startDate" id="startDate" th:value="${startDate}" class="layui-input"
-                               autocomplete="off">
+                               autocomplete="off"  id="start" readonly="readonly">
 
                     </div>
-                    <label class="layui-form-label width10" style="width:5px;"> 至</label>
+                    <label class="layui-form-label width10" style="width:10px;">至</label>
                     <div class="layui-input-inline">
                         <input type="text" class="layui-input" name="endDate" th:value="${endDate}" id="endDate"
-                               autocomplete="off">
+                               autocomplete="off"  id="end" readonly="readonly">
                     </div>
 
-                    <div class="layui-input-inline" style="width: 10%">
+                    <label class="layui-form-label" style="width: auto">订单类型</label>
+                    <div class="layui-input-inline">
                         <select name="typeId" title="订单类型" >
                             <option value="">订单类型</option>
                             <th:block th:each="activityType : ${activityTypes}">
@@ -33,7 +34,8 @@
                         </select>
                     </div>
 
-                    <div class="layui-input-inline" style="width: 10%">
+                    <label class="layui-form-label" style="width: auto">订单状态</label>
+                    <div class="layui-input-inline">
                         <select name="status" title="订单状态">
                             <option value="">订单状态</option>
                             <th:block th:each="orderStatus : ${orderStatuses}">
@@ -42,13 +44,13 @@
                             </th:block>
                         </select>
                     </div>
-                    <label class="layui-form-label">关键字</label>
+                    <label class="layui-form-label" style="width: auto">关键字</label>
                     <div class="layui-input-inline">
                         <input type="text" name="keys" placeholder="订单Id、openId……" th:value="${keys}" autocomplete="off"
                                class="layui-input"/>
                     </div>
 
-                    <div class="layui-input-inline" style="width: auto;float: right">
+                    <div class="layui-input-inline" style="float: right">
                         <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
                             <i class="layui-icon">&#xe615;</i> 查询
                         </button>
@@ -211,6 +213,37 @@
                 }
             });
         }
+
+        layui.use(['form', 'layedit', 'laydate',"jquery"], function(){
+            var form = layui.form
+                ,layer = layui.layer
+                ,$ = layui.jquery
+                ,laydate = layui.laydate;
+            var nowTime = new Date().valueOf();
+
+            //日期
+            var start = laydate.render({ //投票开始
+                elem: '#start',
+                min:nowTime,
+                done:function(value,date){
+                    endMax = end.config.max;
+                    end.config.min = date;
+                    end.config.min.month = date.month -1;
+                }
+            });
+            var end = laydate.render({ //投票结束
+                elem: '#end',
+                min : nowTime,
+                done:function(value,date){
+                    if($.trim(value) == ''){
+                        var curDate = new Date();
+                        date = {'date': curDate.getDate(), 'month': curDate.getMonth()+1, 'year': curDate.getFullYear()};
+                    }
+                    start.config.max = date;
+                    start.config.max.month = date.month -1;
+                }
+            });
+        });
 
 
     </script>
