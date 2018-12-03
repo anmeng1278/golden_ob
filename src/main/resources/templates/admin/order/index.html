@@ -13,14 +13,14 @@
 
                     <label class="layui-form-label">订单日期</label>
                     <div class="layui-input-inline width100">
-                        <input type="text" name="startDate" th:value="${startDate}" class="layui-input"
-                               autocomplete="off"  id="start" readonly="readonly">
+                        <input type="text" name="startDate" id="startDate" th:value="${startDate}" class="layui-input"
+                               autocomplete="off">
 
                     </div>
                     <label class="layui-form-label width10" style="width:10px;">至</label>
                     <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="endDate" th:value="${endDate}"
-                               autocomplete="off"  id="end" readonly="readonly">
+                        <input type="text" class="layui-input" name="endDate" th:value="${endDate}" id="endDate"
+                               autocomplete="off">
                     </div>
 
                     <label class="layui-form-label" style="width: auto">订单类型</label>
@@ -155,6 +155,16 @@
 
         TX.INIT(function () {
 
+            //日期
+            laydate.render({
+                elem: '#startDate',
+                type: 'date'
+            });
+            laydate.render({
+                elem: '#endDate',
+                type: 'date'
+            });
+
             $("button[data-method]").click(function () {
 
                 var id = $(this).attr("data-id");
@@ -202,41 +212,7 @@
                     }
                 }
             });
-        };
-
-        //设置日期
-        layui.use(['form', 'layedit', 'laydate',"jquery"], function(){
-            var form = layui.form
-                ,layer = layui.layer
-                ,$ = layui.jquery
-                ,laydate = layui.laydate;
-            var nowTime = new Date().valueOf();
-
-            //日期
-            var start = laydate.render({
-                elem: '#start',
-                type: 'datetime',
-                min:nowTime,
-                done:function(value,date){
-                    endMax = end.config.max;
-                    end.config.min = date;
-                    end.config.min.month = date.month -1;
-                }
-            });
-            var end = laydate.render({
-                elem: '#end',
-                type: 'datetime',
-                min : nowTime,
-                done:function(value,date){
-                    if($.trim(value) == ''){
-                        var curDate = new Date();
-                        date = {'date': curDate.getDate(), 'month': curDate.getMonth()+1, 'year': curDate.getFullYear()};
-                    }
-                    start.config.max = date;
-                    start.config.max.month = date.month -1;
-                }
-            });
-        });
+        }
 
 
     </script>
