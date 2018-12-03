@@ -42,27 +42,27 @@
             <div class="layui-inline">
                 <label class="layui-form-label">预热时间</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="showTime" id="showTime" placeholder="yyyy-MM-dd HH:mm:ss"
+                    <input type="text" name="showTime" placeholder="yyyy-MM-dd HH:mm:ss"
                            th:value="${dateUtils.formatDateByUnixTime(info.showTime, 'yyyy-MM-dd HH:mm:ss')}"
-                           autocomplete="off" class="layui-input">
+                           autocomplete="off" class="layui-input" id="show" readonly="readonly">
                 </div>
             </div>
 
             <div class="layui-inline">
                 <label class="layui-form-label">开始时间</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="beginTime" id="beginTime" placeholder="yyyy-MM-dd HH:mm:ss"
+                    <input type="text" name="beginTime" placeholder="yyyy-MM-dd HH:mm:ss"
                            th:value="${dateUtils.formatDateByUnixTime(info.beginTime, 'yyyy-MM-dd HH:mm:ss')}"
-                           autocomplete="off" class="layui-input">
+                           autocomplete="off" class="layui-input" id="start" readonly="readonly">
                 </div>
             </div>
 
             <div class="layui-inline">
                 <label class="layui-form-label">结束时间</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="endTime" id="endTime" placeholder="yyyy-MM-dd HH:mm:ss"
+                    <input type="text" name="endTime" placeholder="yyyy-MM-dd HH:mm:ss"
                            th:value="${dateUtils.formatDateByUnixTime(info.endTime, 'yyyy-MM-dd HH:mm:ss')}"
-                           autocomplete="off" class="layui-input">
+                           autocomplete="off" class="layui-input" id="end" readonly="readonly">
                 </div>
             </div>
 
@@ -279,18 +279,52 @@
 
             //日期
 
-            laydate.render({
-                elem: '#beginTime',
-                type: 'datetime'
+            //设置时间
+            layui.use(['form', 'layedit', 'laydate',"jquery"], function(){
+                var form = layui.form
+                    ,layer = layui.layer
+                    ,$ = layui.jquery
+                    ,laydate = layui.laydate;
+                var nowTime = new Date().valueOf();
+
+                //日期
+                var show = laydate.render({
+                    elem: '#show',
+                    type: 'datetime',
+                    min:nowTime,
+                    done:function(value,date){
+                        endMax = end.config.max;
+                        start.config.min = date;
+                        start.config.min.month = date.month -1;
+                    }
+                });
+
+                var start = laydate.render({
+                    elem: '#start',
+                    type: 'datetime',
+                    min:nowTime,
+                    done:function(value,date){
+                        endMax = end.config.max;
+                        end.config.min = date;
+                        end.config.min.month = date.month -1;
+                    }
+
+                });
+                var end = laydate.render({
+                    elem: '#end',
+                    type: 'datetime',
+                    min : nowTime,
+                    done:function(value,date){
+                        if($.trim(value) == ''){
+                            var curDate = new Date();
+                            date = {'date': curDate.getDate(), 'month': curDate.getMonth()+1, 'year': curDate.getFullYear()};
+                        }
+                        start.config.max = date;
+                        start.config.max.month = date.month -1;
+                    }
+                });
             });
-            laydate.render({
-                elem: '#endTime',
-                type: 'datetime'
-            });
-            laydate.render({
-                elem: '#showTime',
-                type: 'datetime'
-            });
+
 
             //选择商品
             $("#btnChooseProducts").click(function () {
@@ -414,6 +448,38 @@
                 }
             });
         }
+
+        layui.use(['form', 'layedit', 'laydate',"jquery"], function(){
+            var form = layui.form
+                ,layer = layui.layer
+                ,$ = layui.jquery
+                ,laydate = layui.laydate;
+            var nowTime = new Date().valueOf();
+
+            //日期
+            var start = laydate.render({
+                elem: '#start',
+                min:nowTime,
+                done:function(value,date){
+                    endMax = end.config.max;
+                    end.config.min = date;
+                    end.config.min.month = date.month -1;
+                }
+            });
+            var end = laydate.render({
+                elem: '#end',
+                min : nowTime,
+                done:function(value,date){
+                    if($.trim(value) == ''){
+                        var curDate = new Date();
+                        date = {'date': curDate.getDate(), 'month': curDate.getMonth()+1, 'year': curDate.getFullYear()};
+                    }
+                    start.config.max = date;
+                    start.config.max.month = date.month -1;
+                }
+            });
+        });
+
     </script>
 </th:block>
 </html>
