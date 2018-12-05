@@ -25,7 +25,7 @@
             <ul class="clearfix">
                 <th:block th:each="activity:${activities}">
                     <li>
-                        <a th:attr="href=${activity.activityName}" th:text="${activity.activityName}"></a>
+                        <a th:attr="href='#'+${activity.activityId}" th:text="${activity.activityName}"></a>
                     </li>
                 </th:block>
             </ul>
@@ -34,7 +34,7 @@
     <!--nav end-->
 
     <th:block th:each="activity:${activities}">
-        <div th:attr="id=${activity.activityName}"  class="section clear">
+        <div th:attr="id=${activity.activityId}"  class="section clear">
             <h2 class="section-title">
                 <th:block th:text="${activity.activityName}"></th:block>
             </h2>
@@ -58,16 +58,16 @@
 
                     <!--limited-time-goods start-->
 
-                    <div class="limited-time-goods">
+                    <div class="limited-time-goods limited-time-goods-div">
                         <div class="limited-goods-con">
                             <th:block th:each="product:${activityLogic.GetActivityProductDtos(activity.activityId)}">
                                 <a href="javascript:void(0);">
-                                    <dl class="section-con-dl">
+                                    <dl class="section-con-dl section-con-dlS">
                                         <dt>
                                             <th:block
                                                     th:each="image:${productLogic.GetProductImgDtos(product.productId)}">
                                                 <img th:src="${image.imgPath}"
-                                                     th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}"/>
+                                                     th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}" width="100%"/>
                                             </th:block>
                                         </dt>
                                         <dd>
@@ -103,7 +103,7 @@
                             <dt>
                                 <th:block th:each="image:${productLogic.GetProductImgDtos(product.productId)}">
                                     <img th:src="${image.imgPath}"
-                                         th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}"/>
+                                         th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}" width="100%"/>
                                 </th:block>
                             </dt>
                             <dd>
