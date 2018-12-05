@@ -64,7 +64,7 @@ public class AdminCopywriterController {
         model.addAttribute("keys",keys);
         model.addAttribute("copywriterTypes",copywriterTypes);
 
-        return "/admin/copywriter/index";
+        return "admin/copywriter/index";
 
     }
 

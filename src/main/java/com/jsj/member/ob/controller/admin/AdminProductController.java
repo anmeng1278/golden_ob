@@ -66,8 +66,8 @@ public class AdminProductController {
                         @RequestParam(value = "typeId", defaultValue = "0") int typeId,
                         HttpServletRequest request) {
 
-
         EntityWrapper<Product> wrapper = new EntityWrapper<Product>();
+        wrapper.where("delete_time is null");
         wrapper.where(!StringUtils.isBlank(keys), "(product_name LIKE concat(concat('%',{0}),'%') )", keys);
         wrapper.where(!StringUtils.isBlank(isSellout), "ifnull(( select sum(_product_spec.stock_count) from _product_spec where _product_spec.product_id = _product.product_id), 0) = 0");
 

@@ -2,32 +2,44 @@ package com.jsj.member.ob.controller.admin;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.RestResponseBo;
+import com.jsj.member.ob.dto.api.coupon.CouponDto;
+import com.jsj.member.ob.dto.api.coupon.WechatCouponDto;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.stock.StockFlowDto;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
-import com.jsj.member.ob.entity.Stock;
-import com.jsj.member.ob.entity.Wechat;
+import com.jsj.member.ob.entity.*;
+import com.jsj.member.ob.enums.CouponType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.enums.StockType;
+import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.GiftLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.logic.WechatLogic;
+import com.jsj.member.ob.service.CouponService;
 import com.jsj.member.ob.service.StockService;
+import com.jsj.member.ob.service.WechatCouponService;
 import com.jsj.member.ob.service.WechatService;
 import com.jsj.member.ob.utils.CCPage;
+import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ApiIgnore
 @Controller
@@ -42,6 +54,12 @@ public class AdminWechatController extends BaseController {
 
     @Autowired
     ApplicationContext applicationContext;
+
+    @Autowired
+    CouponService couponService;
+
+    @Autowired
+    WechatCouponService wechatCouponService;
 
 
     /**
@@ -155,4 +173,74 @@ public class AdminWechatController extends BaseController {
 
         return "admin/wechat/giftStocks";
     }
+
+
+    /**
+     * 赠送优惠券
+     *
+     * @param page  当前页
+     * @param limit 每页显示条数
+     * @param keys  关键字
+     * @param model
+     * @return
+     */
+    @GetMapping("/giveCoupon/{openId}")
+    public String giveCoupon(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                             @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+                             @RequestParam(value = "keys", defaultValue = "") String keys,
+                             @RequestParam(value = "typeId", defaultValue = "0") Integer typeId,
+                             @PathVariable("openId") String openId, Model model) {
+        EntityWrapper<Coupon> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null");
+
+        if (typeId > 0) {
+            wrapper.where("type_id={0}", typeId);
+        }
+        wrapper.where(!StringUtils.isBlank(keys), "(coupon_name LIKE concat(concat('%',{0}),'%') )", keys);
+        wrapper.orderBy("create_time desc");
+
+        Page<Coupon> pageInfo = new Page<>(page, limit);
+        Page<Coupon> pp = couponService.selectPage(pageInfo, wrapper);
+
+        //优惠券类型
+        List<CouponType> couponTypes = Arrays.asList(CouponType.values());
+
+        model.addAttribute("infos", new CCPage<Coupon>(pp, limit));
+        model.addAttribute("couponTypes", couponTypes);
+        model.addAttribute("keys", keys);
+        model.addAttribute("typeId", typeId);
+        model.addAttribute("openId", openId);
+
+        return "admin/wechat/giveCoupons";
+    }
+
+    @PostMapping("/addCoupon/{openId}")
+    @ResponseBody
+    @Transactional(Constant.DBTRANSACTIONAL)
+    public RestResponseBo addCoupon(@PathVariable("openId") String openId, HttpServletRequest request) {
+        String couponIds = request.getParameter("couponIds");
+        List<WechatCoupon> wechatCoupons = new ArrayList<>();
+        WechatCoupon wechatCoupon = new WechatCoupon();
+        if (!StringUtils.isBlank(couponIds)) {
+
+            List<Integer> couponIdLists = Arrays.asList(couponIds.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
+
+            for (int i = 0; i < couponIdLists.size(); i++) {
+                Integer couponId = couponIdLists.get(i);
+                CouponDto couponDto = CouponLogic.GetCoupon(couponId);
+
+                wechatCoupon.setOpenId(openId);
+                wechatCoupon.setCouponId(Integer.valueOf(couponId));
+                wechatCoupon.setExpiredTime(DateUtils.getCurrentUnixTime() + couponDto.getValidDays() * 86400);
+                wechatCoupon.setAmount(couponDto.getAmount());
+                wechatCoupon.setTypeId(couponDto.getCouponType().getValue());
+                wechatCoupon.setCreateTime(DateUtils.getCurrentUnixTime());
+                wechatCoupon.setUpdateTime(DateUtils.getCurrentUnixTime());
+                wechatCoupons.add(wechatCoupon);
+            }
+            wechatCouponService.insertBatch(wechatCoupons);
+        }
+        return RestResponseBo.ok("赠送成功");
+    }
+
 }

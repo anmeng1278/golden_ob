@@ -20,7 +20,7 @@
                        title="名称"
                        th:value="${info.redpacketName}" placeholder="请输入名称"/>
             </div>
-            <div class="layui-form-mid layui-word-aux layui-word-aux-red">*</div>
+            <div class="layui-form-mid layui-word-aux-red">*</div>
         </div>
 
 
@@ -41,18 +41,18 @@
             <div class="layui-inline">
                 <label class="layui-form-label">开始时间</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="beginTime" id="beginTime" placeholder="yyyy-MM-dd HH:mm:ss"
+                    <input type="text" name="beginTime" id="start" placeholder="yyyy-MM-dd HH:mm:ss"
                            th:value="${dateUtils.formatDateByUnixTime(info.beginTime, 'yyyy-MM-dd HH:mm:ss')}"
-                           autocomplete="off" class="layui-input">
+                           autocomplete="off" class="layui-input" readonly="readonly">
                 </div>
             </div>
 
             <div class="layui-inline">
                 <label class="layui-form-label">结束时间</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="endTime" id="endTime" placeholder="yyyy-MM-dd HH:mm:ss"
+                    <input type="text" name="endTime" id="end" placeholder="yyyy-MM-dd HH:mm:ss"
                            th:value="${dateUtils.formatDateByUnixTime(info.endTime, 'yyyy-MM-dd HH:mm:ss')}"
-                           autocomplete="off" class="layui-input">
+                           autocomplete="off" class="layui-input" readonly="readonly">
                 </div>
             </div>
 
@@ -215,17 +215,6 @@
                 $(":checkbox[name='typeId'][value='" + typeId + "']").next("div.layui-form-checkbox").trigger("click");
             }
 
-            //日期
-            laydate.render({
-                elem: '#beginTime',
-                type: 'datetime'
-            });
-            laydate.render({
-                elem: '#endTime',
-                type: 'datetime'
-            });
-
-
             //选择优惠券
             $("#btnChooseCoupons").click(function () {
                 var couponIds = getChoosedCoupon();
@@ -290,6 +279,41 @@
             });
 
         });
+
+        //设置时间
+        layui.use(['form', 'layedit', 'laydate',"jquery"], function(){
+            var form = layui.form
+                ,layer = layui.layer
+                ,$ = layui.jquery
+                ,laydate = layui.laydate;
+            var nowTime = new Date().valueOf();
+
+            //日期
+            var start = laydate.render({
+                elem: '#start',
+                type: 'datetime',
+                min:nowTime,
+                done:function(value,date){
+                    endMax = end.config.max;
+                    end.config.min = date;
+                    end.config.min.month = date.month -1;
+                }
+            });
+            var end = laydate.render({
+                elem: '#end',
+                type: 'datetime',
+                min : nowTime,
+                done:function(value,date){
+                    if($.trim(value) == ''){
+                        var curDate = new Date();
+                        date = {'date': curDate.getDate(), 'month': curDate.getMonth()+1, 'year': curDate.getFullYear()};
+                    }
+                    start.config.max = date;
+                    start.config.max.month = date.month -1;
+                }
+            });
+        });
+
 
         /**
          * 获取所选优惠券编号

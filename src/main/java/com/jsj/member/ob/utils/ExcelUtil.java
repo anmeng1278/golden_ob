@@ -53,7 +53,7 @@ public class ExcelUtil {
         //创建一个excel工作簿
         HSSFWorkbook workbook = new HSSFWorkbook();
         //创建一个sheet工作表
-        HSSFSheet sheet = workbook.createSheet("学生信息");
+        HSSFSheet sheet = workbook.createSheet("信息");
 
         //创建第0行表头，再在这行里在创建单元格，并赋值
         HSSFRow row = sheet.createRow(0);

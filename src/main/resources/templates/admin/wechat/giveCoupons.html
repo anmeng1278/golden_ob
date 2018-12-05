@@ -9,16 +9,26 @@
     <div class="admin-main layui-anim">
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
-            <form class="layui-form" method="get" style="float:right;">
+            <form class="layui-form" method="get" style="float:left;">
                 <div class="layui-form-item" style="margin:0;">
 
-
-                    <label class="layui-form-label">优惠券名称</label>
+                    <label class="layui-form-label" style="width: auto">优惠券类型</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="keys" placeholder="输入券名……" th:value="${keys}" autocomplete="off"
+                        <select name="typeId" title="所属类型">
+                            <option value="">类型</option>
+                            <th:block th:each="couponType : ${couponTypes}">
+                                <option th:value="${couponType.value}" th:text="${couponType.message}"
+                                        th:selected="${couponType.value == typeId}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label" style="width: auto">优惠券名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="keys" placeholder="输入优惠券名……" th:value="${keys}" autocomplete="off"
                                class="layui-input"/>
                     </div>
-                    <div class="layui-input-inline">
+                    <div class="layui-input-inline" style="width: auto;">
                         <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
                             <i class="layui-icon">&#xe615;</i> 查询
                         </button>
@@ -77,7 +87,7 @@
 
         <div class="layui-form-item" style="display: none;">
             <div class="layui-input-block" style="margin-left: 15px;">
-                <button type="button" class="layui-btn" lay-submit id="btnChooseProducts">
+                <button type="button" class="layui-btn" lay-submit id="btnChooseProducts" th:attr="data-id=${openId}">
                     <i class="layui-icon">&#xea97;</i>
                     添加
                 </button>
@@ -119,8 +129,22 @@
                     layer.msg('请选择优惠券', {icon: 2});
                     return false;
                 }
-                parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
-                parent.chooseCoupons(couponIds);
+                var openId = $(this).attr("data-id");
+
+                TX.CORE.p({
+                    data: {couponIds: couponIds.join(',')},
+                    url: "/admin/wechat/addCoupon/" + openId,
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
+                                location.href = location.href;
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
             });
         });
 

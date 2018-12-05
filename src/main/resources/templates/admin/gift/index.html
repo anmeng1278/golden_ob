@@ -4,12 +4,7 @@
 <div layout:fragment="content" class="admin-main layui-anim">
     <div class="admin-main layui-anim">
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
-            <button type="button"
-                    th:attr="data-method='export'"
-                    class="layui-btn">
-                <i class="layui-icon">&#xe654;</i>
-                导出
-            </button>
+
             <form class="layui-form" method="get" style="float:right;">
                 <div class="layui-form-item" style="margin:0;">
 
@@ -46,7 +41,7 @@
                             </th:block>
                         </select>
                     </div>
-                    <div class="layui-input-inline" style="width:100px;">
+                    <div class="layui-input-inline">
                         <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
                             <i class="layui-icon">&#xe615;</i> 查询
                         </button>
@@ -114,6 +109,12 @@
             </table>
         </div>
         <div th:replace="comm/macros :: pageAdminNav(${infos})"></div>
+        <button type="button" style="margin-left: 15px;"
+                th:attr="data-method='export'"
+                class="layui-btn">
+            <i class="layui-icon">&#xe654;</i>
+            导出
+        </button>
     </div>
 
 </div>
@@ -155,7 +156,7 @@
                 var startDate = $("input[name='startDate']").val();
                 var endDate = $("input[name='endDate']").val();
 
-                window.location.href = "/excel/exportGift?giftShareType="+giftShareType+"&giftStatus="+giftStatus+"&startDate="+startDate+"&endDate="+endDate;
+                window.location.href = "/excel/exportGift?giftShareType=" + giftShareType + "&giftStatus=" + giftStatus + "&startDate=" + startDate + "&endDate=" + endDate;
             });
 
 

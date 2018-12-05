@@ -48,14 +48,15 @@
                             <button type="button" th:title="|${info.nickname} 订单列表|"
                                     th:attr="data-tab-href=@{'/admin/order?keys='+${info.openId}}"
                                     class="layui-btn layui-btn-xs layui-btn-normal"
-                                    th:text="|订单：${orderLogic.GetOrderCount(info.openId)}|" style="float: left;margin-bottom: 5px;">
+                                    th:text="|订单：${orderLogic.GetOrderCount(info.openId)}|"
+                                    style="float: left;margin-bottom: 5px;">
                                 <i class="layui-icon">&#xe63c;</i>
                             </button>
-<br/>
+                            <br/>
                             <button type="button" th:title="|${info.nickname} 库存列表|"
                                     th:attr="data-tab-href=@{'/admin/wechat/'+${info.openId}+'/stock'}"
                                     class="layui-btn layui-btn-xs layui-btn-normal"
-                                    th:text="|库存：${stockLogic.GetStockCount(info.openId)}|"  style="float: left;">
+                                    th:text="|库存：${stockLogic.GetStockCount(info.openId)}|" style="float: left;">
                                 <i class="layui-icon">&#xe610;</i>
                                 库存
                             </button>
@@ -65,10 +66,11 @@
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td>
 
-                            <!--<button type="button" class="layui-btn layui-btn-xs layui-btn-normal">-->
-                            <!--<i class="layui-icon">&#xe658;</i>-->
-                            <!--赠券-->
-                            <!--</button>-->
+                            <button type="button" class="layui-btn layui-btn-xs layui-btn-normal"
+                                    name="btnChooseCoupons" th:attr="data-id=${info.openId}">
+                                <i class="layui-icon">&#xe658;</i>
+                                赠券
+                            </button>
 
                         </td>
                     </tr>
@@ -100,6 +102,21 @@
                 }
             });
 
+            //选择优惠券
+            $("button[name='btnChooseCoupons']").click(function () {
+                var openId = $(this).attr("data-id");
+                window.TX.TEMP.LAYERINDEX = window.layer.open({
+                    title: "",
+                    type: 2,
+                    btn: ['选择', '关闭'],
+                    content: "/admin/wechat/giveCoupon/" + openId,
+                    area: ["800px", "600px"],
+                    yes: function (index, layero) {
+                        var iframe = layero.find('iframe');
+                        iframe.contents().find("button[lay-submit]").click();
+                    }
+                });
+            });
         });
 
         function modifyStatus(method, id) {
