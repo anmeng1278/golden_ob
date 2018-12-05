@@ -220,6 +220,13 @@
                 $(data.elem).attr("checked", "checked");
 
                 switch (typeId) {
+                    //普通
+                    case "0":
+                        $(":text[name='number']").removeAttr("lay-verify");
+                        $(":text[name='originalPrice']").removeAttr("lay-verify");
+                        $(":text[name='salePrice']").removeAttr("lay-verify");
+                        $(":text[name='productSpecSalePrice']").removeAttr("lay-verify");
+                        break;
                     //团单
                     case "10":
                         $("#groupNumber").show();
