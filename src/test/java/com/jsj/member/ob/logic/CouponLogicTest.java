@@ -8,6 +8,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
@@ -29,11 +31,5 @@ public class CouponLogicTest {
         for (CouponProductDto couponProductDto : couponProductDtos) {
             System.out.println(couponProductDto.getCouponId());
         }
-    }
-
-    @Test
-    public void getInvalid(){
-        List<WechatCouponDto> wechatCouponDtos = CouponLogic.GetMyInvalidCoupon("19");
-        wechatCouponDtos.stream().forEach(s->s.getOpenId());
     }
 }

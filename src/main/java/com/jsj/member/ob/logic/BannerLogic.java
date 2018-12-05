@@ -85,4 +85,16 @@ public class BannerLogic extends BaseLogic {
 
     }
 
+    /**
+     * 获得banner图
+     * @param typeId
+     * @return
+     */
+    public static List<Banner> GetBanner(int typeId){
+        EntityWrapper<Banner> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null and type_id={0}",typeId);
+        List<Banner> banners = bannerLogic.bannerService.selectList(wrapper);
+        return banners;
+    }
+
 }
