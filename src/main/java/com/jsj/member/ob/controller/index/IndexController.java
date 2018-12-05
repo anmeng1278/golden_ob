@@ -3,60 +3,74 @@ package com.jsj.member.ob.controller.index;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.jsj.member.ob.dto.RestResponseBo;
+import com.jsj.member.ob.dto.api.activity.ActivityDto;
+import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
+import com.jsj.member.ob.entity.Activity;
+import com.jsj.member.ob.entity.Banner;
 import com.jsj.member.ob.entity.Dict;
+import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.enums.SecKillStatus;
 import com.jsj.member.ob.logic.ActivityLogic;
+import com.jsj.member.ob.logic.BannerLogic;
+import com.jsj.member.ob.logic.DictLogic;
+import com.jsj.member.ob.service.ActivityService;
+import com.jsj.member.ob.service.BannerService;
 import com.jsj.member.ob.service.DictService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Random;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/index")
 public class IndexController {
 
     @Autowired
     DictService dictService;
 
-    @GetMapping(value = {""})
-    @ResponseBody
-    public String index(HttpServletRequest request) {
+    @Autowired
+    BannerService bannerService;
 
-        List<Dict> dicts = dictService.selectList(new EntityWrapper<>());
-        return JSON.toJSONString(dicts);
+    @Autowired
+    ActivityService activityService;
 
-    }
 
-    /*
-    测试秒杀
-     */
-    @GetMapping(value = {"/seckill"})
-    @ResponseBody
-    public String seckill(HttpServletRequest request) {
+    @GetMapping("/index")
+    public String index(Model model) {
 
-        String openId = new Random().nextDouble() + "";
-        SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, 3, 4, openId);
+        //活动信息
+        EntityWrapper<Activity> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null");
+        wrapper.orderBy("sort asc, update_time desc");
+        List<Activity> activities = activityService.selectList(wrapper);
 
-        return secKillStatus.getMessage();
+        //首页轮播图
+        EntityWrapper<Banner> bannerWrapper = new EntityWrapper<>();
+        bannerWrapper.where("delete_time is null");
+        List<Banner> banners = bannerService.selectList(bannerWrapper);
 
-    }
+        model.addAttribute("banners",banners);
 
-    /*
-        测试秒杀
-         */
-    @GetMapping(value = {"/seckill/reset"})
-    @ResponseBody
-    public String seckillReset(HttpServletRequest request) {
 
-        ActivityLogic.soldOutMap.clear();
-        return "重置成功";
+        model.addAttribute("activities",activities);
+
+        return "index/index/index";
 
     }
+    @GetMapping("/getSystemTime")
+    @ResponseBody
+    public String getSystemTime(Model model){
+        //获取当前系统的毫秒数
+        Long systemTime=System.currentTimeMillis();
+        return String.valueOf(systemTime);
+    }
+
 
 }
