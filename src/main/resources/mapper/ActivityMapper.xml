@@ -6,7 +6,9 @@
     <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.Activity">
         <id column="activity_id" property="activityId" />
         <result column="activity_name" property="activityName" />
+        <result column="img_path" property="imgPath" />
         <result column="show_time" property="showTime" />
+        <result column="introduce" property="introduce" />
         <result column="begin_time" property="beginTime" />
         <result column="end_time" property="endTime" />
         <result column="ifpass" property="ifpass" />
@@ -23,7 +25,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        activity_id AS activityId, activity_name AS activityName, show_time AS showTime, begin_time AS beginTime, end_time AS endTime, ifpass, sort, sale_price AS salePrice, original_price AS originalPrice, stock_count AS stockCount, number, type_id AS typeId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        activity_id AS activityId, activity_name AS activityName, img_path AS imgPath, show_time AS showTime, introduce, begin_time AS beginTime, end_time AS endTime, ifpass, sort, sale_price AS salePrice, original_price AS originalPrice, stock_count AS stockCount, number, type_id AS typeId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

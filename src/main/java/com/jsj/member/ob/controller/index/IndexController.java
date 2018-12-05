@@ -1,11 +1,11 @@
 package com.jsj.member.ob.controller.index;
 
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.jsj.member.ob.entity.Dict;
+import com.jsj.member.ob.entity.Banner;
 import com.jsj.member.ob.enums.SecKillStatus;
 import com.jsj.member.ob.logic.ActivityLogic;
+import com.jsj.member.ob.service.BannerService;
 import com.jsj.member.ob.service.DictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,12 +24,16 @@ public class IndexController {
     @Autowired
     DictService dictService;
 
+    @Autowired
+    BannerService bannerService;
+
     @GetMapping(value = {""})
-    @ResponseBody
     public String index(HttpServletRequest request) {
 
-        List<Dict> dicts = dictService.selectList(new EntityWrapper<>());
-        return JSON.toJSONString(dicts);
+        List<Banner> banners = bannerService.selectList(new EntityWrapper<>());
+        request.setAttribute("banners", banners);
+
+        return "index/index/index";
 
     }
 

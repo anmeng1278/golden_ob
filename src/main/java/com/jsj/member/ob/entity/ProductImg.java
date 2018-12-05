@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : ProductImg 商品图片表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-26
+ *   @since 2018-12-05
  */
 @TableName("_product_img")
 public class ProductImg implements Serializable {
@@ -35,7 +35,7 @@ public class ProductImg implements Serializable {
 	@TableField("img_path")
 	private String imgPath;
     /**
-     * 类型 0 封面  1 商品图片
+     * 类型 0 封面  1 商品图片 2 秒杀展示图片
      */
 	@TableField("type_id")
 	private Integer typeId;

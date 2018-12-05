@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : Copywriter Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-26
+ *   @since 2018-12-05
  */
 @Repository
 public interface CopywriterMapper extends BaseMapper<Copywriter> {

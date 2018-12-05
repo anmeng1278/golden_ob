@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : ProductSpec 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-11-26
+ *   @since 2018-12-05
  */
 @Service
 public class ProductSpecServiceImpl extends ServiceImpl<ProductSpecMapper, ProductSpec> implements ProductSpecService {
