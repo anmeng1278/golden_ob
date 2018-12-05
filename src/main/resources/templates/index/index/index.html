@@ -57,7 +57,6 @@
                     <!--SecKill-time end-->
 
                     <!--limited-time-goods start-->
-
                     <div class="limited-time-goods limited-time-goods-div">
                         <div class="limited-goods-con">
                             <th:block th:each="product:${activityLogic.GetActivityProductDtos(activity.activityId)}">
@@ -89,8 +88,8 @@
                             </th:block>
                         </div>
                     </div>
-
                     <!--limited-time-goods end-->
+
                 </div>
             </th:block>
 
@@ -133,8 +132,6 @@
 
 <div th:replace="/index/footer::html" ></div>
 
-<!--js-->
-<script th:src="@{/index/js/index.js}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     var beginTime = $("input[type='hidden'][name='beginTime']").val();
     var endTime= $("input[type='hidden'][name='beginTime']").val();
@@ -145,7 +142,7 @@
             if (data < beginTime) {
                 $("span[name='secKillBox']").countdown(beginTime,
                     function(event) {
-                        var str = event.strftime("距离开始时间还有    %D天 %H小时 %M分钟 %S秒");
+                        var str = event.strftime("%D:%H:%M:%S");
                         $("span[name='secKillBox']").html(str);
                         $("span[name='secKillBox']").css("color", "red");
                     });
@@ -157,5 +154,10 @@
         }
     });
 </script>
+
+<!--js-->
+<script th:src="@{/index/js/index.js}" type="text/javascript" charset="utf-8"></script>
+<script th:src="@{/index/js/jquery.countdown.min.js}"></script>
+
 </body>
 </html>
