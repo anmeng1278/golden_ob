@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="format-detection" content="email=no"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"/>
+    <title>空铁服务</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/index/common/css/public.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/index/common/js/swiper/css/swiper.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/index/goodsDetail/css/GoodsDetail.css}"/>
+</head>
+<body>
+
+<!--banner start-->
+<div class="banner">
+    <!-- 轮播 start -->
+    <div class="swiper-container">
+
+        <div class="swiper-wrapper">
+            <th:block th:each="img : ${productImgDtos}">
+                <div class="swiper-slide">
+                    <img th:src="${img.imgPath}" alt="1" width="100%"/>
+                </div>
+            </th:block>
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+    <!-- 轮播 end -->
+
+    <!--只限时秒杀商品才显示-->
+    <th:block th:if="${#lists.size(activityDto) != 0}">
+        <th:block th:if="${activityDto.typeId == 20}">
+            <p class="banner-SecKill"><span>限时秒杀</span></p>
+        </th:block>
+    </th:block>
+</div>
+<!--banner end-->
+
+<!--goods-introduce start-->
+<div class="goods-introduce">
+    <h2 class="goods-name">
+        <th:block th:text="${productDto.productName}"></th:block>
+    </h2>
+    <p class="goods-tips">
+        <th:block th:text="${productDto.introduce}"></th:block>
+    </p>
+    <span class="goods-num">剩余
+        <th:block th:text="${productDto.stockCount}"></th:block>
+           盒
+        </span>
+    <th:block th:if="${activityDto.typeId == 20}">
+            <span class="goods-price">&yen;<em>
+            <th:block th:text="${productDto.salePrice}"></th:block>
+             </em>
+             </span>    <!--只限时秒杀商品才显示-->
+    </th:block>
+</div>
+<!--goods-introduce end-->
+
+<!--main start-->
+<div class="main">
+    <h2 class="goods-detail"><span>商品详情</span></h2>
+    <p>
+        <th:block th:each="img : ${productImgDtos}">
+            <img th:src="${img.imgPath}" alt="1" width="100%"/>
+        </th:block>
+    </p>
+</div>
+<!--main end-->
+
+<!--footer start-->
+<div class="footer">
+    <p class="footer-lt">
+        <span class="shopping-price">&yen;<em>
+            <th:block th:text="${productDto.salePrice}"></th:block>
+        </em></span>
+    </p>
+    <p class="footer-rt">
+        <a href="javascript:void(0);" class="shopping-cart-btn">加入购物车</a>
+        <a href="javascript:void(0);" class="purchase-show-btn">立即购买</a>
+    </p>
+</div>
+<!--footer end-->
+
+<!-- purchase-layer start -->
+<div class="purchase-layer" style="display: none;">
+    <div class="purchase-layer-bg"></div>
+    <div class="purchase-layer-con">
+
+        <!--purchase-layer-main start-->
+        <div class="purchase-layer-main">
+            <dl class="purchase-layer-dl">
+                <dt>
+                    <th:block th:each="image:${productLogic.GetProductImgDtos(productDto.productId)}">
+                        <img th:src="${image.imgPath}"
+                             th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}"
+                             width="100%"/>
+                    </th:block>
+                </dt>
+                <dd>
+                    <h2 class="purchase-goods-name">
+                        <th:block th:text="${productDto.productName}"></th:block>
+                    </h2>
+                    <p class="purchase-goods-tips">
+                        <th:block th:text="${productDto.introduce}"></th:block>
+                    </p>
+                </dd>
+            </dl>
+            <div class="purchase-layer-div">
+                <span class="purchase-layer-lable">规格</span>
+                <p class="purchase-layer-p">
+                    <th:block th:each="spec:${productLogic.GetProductSpecDtos(productDto.productId)}">
+                    <span class="active">
+                        <th:block th:text="${spec.specName}"></th:block>
+                    </span>
+                    </th:block>
+                </p>
+            </div>
+            <div class="purchase-layer-div">
+                <span class="purchase-layer-lable">购买数量</span>
+                <div class="purchase-num">
+                    <em class="purchase-num-reduce"></em>
+                    <input type="text" value="1" class="num"/>
+                    <em class="purchase-num-add"></em>
+                </div>
+                <th:block th:if="${avtivityId > 0}">
+                    <p class="purchase-num-tips">每个账号限购1件</p>        <!--秒杀时提示购买数量限制-->
+                </th:block>
+            </div>
+            <!-- 显示优惠券-->
+            <!--<div class="purchase-layer-div">
+                <th:block th:if="${avtivityId <= 0}">
+                <th:block th:if="${#lists.size(couponDtos) != 0}">
+                    <span class="purchase-layer-lable">优惠券</span>
+
+                    <ul class="purchase-coupon">
+                        <th:block th:each="coupon:${couponDtos}">
+                            <li class="active">
+                        <span class="coupon-price">
+                            <th:block th:text="${coupon.amount}"></th:block>
+                            <em>&yen;</em></span>
+                                <p class="coupon-tips">
+                                    <th:block th:text="${coupon.instruction}"></th:block>
+                                </p>
+                            </li>
+                        </th:block>
+                    </ul>
+                </th:block>
+                 <th:block th:if="${#lists.size(couponDtos) == 0}">
+                    <p class="coupon-none clear" style="display: none;">无可用优惠券</p>
+                </th:block>
+
+                </th:block>
+            </div>-->
+        </div>
+        <!--purchase-layer-main end-->
+
+        <!--purchase-footer start-->
+        <div class="purchase-footer">
+            <!--<th:block th:if="${#lists.size(couponDtos) != 0}">-->
+            <p class="purchase-footer-lt">
+                <span class="shopping-price">&yen;<em>
+                     <th:block th:text="${productDto.salePrice}"></th:block>
+                </em></span>
+                <span class="shopping-price-org">￥
+                    <th:block th:text="${productDto.originalPrice}"></th:block>
+                </span>
+                <!--<span class="shopping-price-dis">已优惠￥<em>
+                    <th:block th:text="${productDto.originalPrice - productDto.salePrice}"></th:block>
+                </em></span>-->    <!--购买时使用优惠券才显示-->
+            </p>
+            <a href="javascript:void(0);" class="purchase-btn">立即购买</a>
+        </div>
+        <!--purchase-footer end-->
+    </div>
+</div>
+<!-- purchase-layer end -->
+
+<!-- shopping-cart start -->
+<div class="shopping-cart" style="display: none;">
+    <div class="shopping-cart-bg"></div>
+    <div class="shopping-cart-con">
+        <!--purchase-layer-main start-->
+        <div class="purchase-layer-main">
+            <dl class="purchase-layer-dl">
+                <dt>
+                    <th:block th:each="image:${productLogic.GetProductImgDtos(productDto.productId)}">
+                        <img th:src="${image.imgPath}"
+                             th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}"
+                             width="100%"/>
+                    </th:block>
+                </dt>
+                <dd>
+                    <h2 class="purchase-goods-name">
+                        <th:block th:text="${productDto.productName}"></th:block>
+                    </h2>
+                    <p class="purchase-goods-tips">
+                        <th:block th:text="${productDto.introduce}"></th:block>
+                    </p>
+                </dd>
+            </dl>
+            <div class="purchase-layer-div">
+                <span class="purchase-layer-lable">规格</span>
+                <p class="purchase-layer-p">
+                    <th:block th:each="spec:${productLogic.GetProductSpecDtos(productDto.productId)}">
+                    <span class="active">
+                        <th:block th:text="${spec.specName}"></th:block>
+                        <input type="hidden" name="specId" th:value="${spec.productSpecId}">
+                    </span>
+                    </th:block>
+                </p>
+
+            </div>
+            <div class="purchase-layer-div">
+                <span class="purchase-layer-lable">购买数量</span>
+                <div class="purchase-num">
+                    <em class="purchase-num-reduce"></em>
+                    <input type="text" value="1" class="num">
+                    <em class="purchase-num-add"></em>
+                </div>
+                <th:block th:if="${avtivityId > 0}">
+                    <p class="purchase-num-tips">每个账号限购1件</p>        <!--秒杀时提示购买数量限制-->
+                </th:block>
+            </div>
+        </div>
+        <!--purchase-layer-main end-->
+
+        <!--purchase-footer start-->
+        <a id="add" class="shopping-cart-confirm">确定</a>
+        <!--<button id="add" class="shopping-cart-confirm">确定</button>-->
+        <!--purchase-footer end-->
+    </div>
+</div>
+<!-- shopping-cart end -->
+
+<!--引入的js-->
+<script th:src="@{/index/common/js/jquery.min.js}" type="text/javascript" charset="utf-8"></script>
+<script th:src="@{/index/common/js/size.js}" type="text/javascript" charset="utf-8"></script>
+<script th:src="@{/index/common/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
+<script th:src="@{/index/goodsDetail/js/GoodsDetail.js}" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript" th:inline="javascript">
+
+    $('#add').click(function () {
+        var productId = [[${productId}]];
+        var openId = [[${openId}]];
+        var productSpecId = $("span[class='active']  input[type='hidden']").val();
+        var number = $(".purchase-num-reduce").parents('.purchase-num').find('.num').val();
+        $.ajax({
+            type: "GET",
+            url: "/cart/addProduct?openId="+openId+'&productId='+productId+'&productSpecId='+productSpecId+'&number='+number,
+            success: function (data) {
+                alert("添加成功")
+            },
+            error: function (err) {
+                alert("添加失败")
+            }
+        })
+    });
+</script>
+
+</body>
+</html>

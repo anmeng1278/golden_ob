@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <meta name="apple-mobile-web-app-capable" content="yes" />
+	    <meta name="format-detection" content="telephone=no" />
+	    <meta name="format-detection" content="email=no" />
+	    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+	    <title>空铁服务</title>
+		<link rel="stylesheet" type="text/css" th:href="@{/index/common/css/public.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/index/goodsDetail/css/GoodsOfJoint.css}"/>
+	</head>
+	<body>
+		<!--banner start-->
+		<div class="banner">
+			<img th:src="${activityLogic.GetActivity(activityId).imgPath}" alt="1" width="100%"/>
+		</div>
+		<!--banner end-->
+
+		<!-- purchase-layer start -->
+		<div class="purchase-layer">
+			<div class="purchase-layer-bg"></div>
+			<div class="purchase-layer-con">
+				<!--purchase-layer-content start-->
+				<div class="purchase-layer-content">
+					<!--purchase-discount start-->
+					<div class="purchase-discount">
+						<div class="purchase-discount-head">
+							<p class="purchase-discount-tips"><span>优惠组合</span></p>
+							<th:block th:with="act=${activityLogic.GetActivity(activityId)}">
+							<h2 class="purchase-discount-name">
+								<th:block th:text="${act.activityName}"></th:block>
+							</h2>
+							<p class="purchase-discount-text">
+								<th:block th:text="${act.introduce}"></th:block>
+							</p>
+							</th:block>
+						</div>
+						<div class="purchase-discount-list clear">
+							<th:block th:each="pro : ${activityLogic.GetActivityProductDtos(activityId)}">
+							<dl class="discount-list-dl">
+								<dt>
+									<th:block th:each="image:${productLogic.GetProductImgDtos(pro.productId)}">
+										<img th:src="${image.imgPath}"
+											 th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}" alt="1"/>
+									</th:block>
+								</dt>
+								<dd>
+									<h2 class="discount-dl-name">
+										<th:block th:text="${productLogic.GetProduct(pro.productId).productName}"></th:block>
+									</h2>
+									<p class="discount-dl-tips">
+										规格：
+										<th:block th:text="${productLogic.GetProductSpec(pro.productSpecId).specName}"></th:block>
+									</p>
+									<p class="discount-dl-p">
+										<span class="discount-dl-price">￥
+											<th:block th:text="${productLogic.GetProduct(pro.productId).salePrice}"></th:block>
+										</span>
+										<a th:attr="href=@{'/goodsDetail/goodsDetail?productId='+${pro.productId}}" class="discount-dl-look">查看详情</a>
+									</p>
+								</dd>
+							</dl>
+							</th:block>
+						</div>
+					</div>
+					<!--purchase-discount end-->
+
+					<!--purchase-layer-main start-->
+					<div class="purchase-layer-main">
+						<div class="purchase-layer-div">
+							<span class="purchase-layer-lable">购买数量</span>
+							<div class="purchase-num">
+								<em class="purchase-num-reduce"></em>
+								<input type="text" value="1" class="num"/>
+								<em class="purchase-num-add"></em>
+							</div>
+						</div>
+					</div>
+					<!--purchase-layer-main end-->
+				</div>
+				<!--purchase-layer-content end-->
+
+				<!--purchase-footer start-->
+				<div class="purchase-footer">
+					<p class="footer-lt">
+						<span class="shopping-price">&yen;<em>
+                            <th:block th:each="pro : ${activityLogic.GetActivityProductDtos(activityId)}">
+                                <th:block th:text="${productLogic.GetProduct(pro.productId).salePrice} "></th:block>
+                            </th:block>
+                        </em></span>
+					</p>
+					<a href="javascript:void(0);" class="purchase-btn">立即购买</a>
+				</div>
+				<!--purchase-footer end-->
+			</div>
+		</div>
+		<!-- purchase-layer end -->
+
+		<!--引入的js-->
+		<script th:src="@{/index/common/js/jquery.min.js}" type="text/javascript" charset="utf-8"></script>
+		<script th:src="@{/index/common/js/size.js}" type="text/javascript" charset="utf-8"></script>
+		<script th:src="@{/index/goodsDetail/js/GoodsOfJoint.js}" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>
