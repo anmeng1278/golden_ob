@@ -9,6 +9,8 @@ import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.entity.Activity;
 import com.jsj.member.ob.entity.Banner;
 import com.jsj.member.ob.entity.Dict;
+import com.jsj.member.ob.entity.Product;
+import com.jsj.member.ob.enums.BannerType;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.enums.SecKillStatus;
 import com.jsj.member.ob.logic.ActivityLogic;
@@ -17,6 +19,7 @@ import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.service.BannerService;
 import com.jsj.member.ob.service.DictService;
+import com.jsj.member.ob.service.ProductService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,25 +44,35 @@ public class IndexController {
     @Autowired
     ActivityService activityService;
 
+    @Autowired
+    ProductService productService;
+
 
     @GetMapping("/index")
-    public String index(Model model) {
-
+    public String index(Model model,@RequestParam(value = "openId", defaultValue = "111") String openId) {
         //活动信息
         EntityWrapper<Activity> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
         wrapper.orderBy("sort asc, update_time desc");
         List<Activity> activities = activityService.selectList(wrapper);
 
+        //商品
+        EntityWrapper<Product> productWrapper = new EntityWrapper<Product>();
+        wrapper.where("delete_time is null and ifpass is true");
+        wrapper.where("( select sum(_product_spec.stock_count) from _product_spec where _product_spec.product_id = _product.product_id) > 0");
+        wrapper.orderBy("sort asc, update_time desc");
+        List<Product> products = productService.selectList(productWrapper);
+
+
         //首页轮播图
         EntityWrapper<Banner> bannerWrapper = new EntityWrapper<>();
-        bannerWrapper.where("delete_time is null");
+        bannerWrapper.where("delete_time is null and ifpass is true and type_id={0}", BannerType.COVER.getValue());
         List<Banner> banners = bannerService.selectList(bannerWrapper);
 
         model.addAttribute("banners",banners);
-
-
         model.addAttribute("activities",activities);
+        model.addAttribute("products",products);
+        model.addAttribute("openId",openId);
 
         return "index/index/index";
 
