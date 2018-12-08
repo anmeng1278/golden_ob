@@ -87,6 +87,22 @@ public class CartLogic extends BaseLogic {
 
 
     /**
+     *
+     * 给用户创建购物车
+     * @param openId
+     */
+    public static void CreateCart(String openId){
+        if (StringUtils.isBlank(openId)) {
+            throw new TipException("参数不合法，用户openId为空");
+        }
+
+        Cart cart = new Cart();
+        cart.setOpenId(openId);
+        cart.setCreateTime(DateUtils.getCurrentUnixTime());
+        cart.setUpdateTime(DateUtils.getCurrentUnixTime());
+        cartLogic.cartService.insert(cart);
+    }
+    /**
      * 添加或修改购物车
      *
      * @param openId
@@ -114,17 +130,12 @@ public class CartLogic extends BaseLogic {
         //判断当前用户是否有购物车，没有则创建购物车
         Cart cart = cartLogic.cartService.selectOne(cartWrapper);
         if (cart == null) {
-            cart = new Cart();
-            cart.setOpenId(openId);
-            cart.setCreateTime(DateUtils.getCurrentUnixTime());
-            cart.setUpdateTime(DateUtils.getCurrentUnixTime());
-            cartLogic.cartService.insert(cart);
-
+            CartLogic.CreateCart(openId);
         }
 
         //查询购物车中的商品信息
         EntityWrapper<CartProduct> cartProductWrapper = new EntityWrapper<CartProduct>();
-        Wrapper<CartProduct> where = cartProductWrapper.where("cart_id={0} and product_id={1} and product_size_id={2}",
+        Wrapper<CartProduct> where = cartProductWrapper.where("cart_id={0} and product_id={1} and product_spec_id={2}",
                 cart.getCartId(),
                 productId,
                 productSpecId
@@ -175,43 +186,43 @@ public class CartLogic extends BaseLogic {
     /**
      * 获取用户购物车中商品列表
      *
-     * @param requ
+     * @param openId
      * @return
      */
-    public static GetCartProductsResp GetCartProducts(GetCartProductsRequ requ) {
+    public static List<CartProduct> GetCartProducts(String openId) {
 
-        if (StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
+        if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
 
-        GetCartProductsResp resp = new GetCartProductsResp();
+        List<CartProduct> cartProducts = new ArrayList<>();
 
-        Cart cart = CartLogic.GetCart(requ.getBaseRequ().getOpenId());
+        Cart cart = CartLogic.GetCart(openId);
         if (cart == null) {
-            return resp;
+            return cartProducts;
         }
 
         EntityWrapper<CartProduct> wrapper = new EntityWrapper<>();
         wrapper.where("cart_id={0} and delete_time is null", cart.getCartId());
 
-        List<CartProductDto> cartProductDtoList = new ArrayList<>();
         //获取购物车中商品
-        List<CartProduct> cartProductList = cartLogic.cartProductService.selectList(wrapper);
+        cartProducts = cartLogic.cartProductService.selectList(wrapper);
 
-        for (CartProduct cp : cartProductList) {
-            CartProductDto cartProductDto = new CartProductDto();
-
-            //获取商品详情
-            ProductDto productDto = ProductLogic.GetProduct(cp.getProductId());
-            cartProductDto.setCartProductId(cp.getCartProductId());
-            cartProductDto.setProductId(productDto.getProductId());
-            cartProductDto.setNumber(cp.getNumber());
-            cartProductDto.setProductDto(productDto);
-            cartProductDtoList.add(cartProductDto);
-            resp.setCartProductDtoList(cartProductDtoList);
-        }
-        return resp;
+        return cartProducts;
     }
 
+    /**
+     * 获得用户购物车中商品数量
+     * @param openId
+     * @return
+     */
+    public static int GetProductAmount(String openId){
+        int amount = 0;
+        List<CartProduct> cartProducts = CartLogic.GetCartProducts(openId);
+        for (CartProduct cartProduct : cartProducts) {
+            amount += cartProduct.getNumber();
+        }
+        return  amount;
+    }
 
 }
