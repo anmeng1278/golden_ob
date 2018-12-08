@@ -301,7 +301,7 @@ public class ProductLogic extends BaseLogic {
     }
 
     /**
-     * 获取已售罄商品
+     * 获取未审核的商品
      *
      * @return
      */

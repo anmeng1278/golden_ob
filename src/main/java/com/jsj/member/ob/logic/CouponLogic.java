@@ -284,4 +284,50 @@ public class CouponLogic  extends BaseLogic {
         return wechatCouponDtos;
 
     }
+
+
+    /**
+     * 获得商品可用优惠券
+     * @param productId
+     * @return
+     */
+    public static List<CouponDto> GetProductCoupon(int productId){
+
+        if(productId < 0){
+            throw new TipException("参数不正确！");
+        }
+
+        EntityWrapper<CouponProduct> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null and product_id={0}",productId);
+        List<CouponProduct> couponProducts = couponLogic.couponProductService.selectList(wrapper);
+        List<CouponDto> couponDtos = new ArrayList<>();
+        for (CouponProduct couponProduct : couponProducts) {
+            CouponDto couponDto = CouponLogic.GetCoupon(couponProduct.getCouponId());
+            couponDtos.add(couponDto);
+        }
+        return couponDtos;
+    }
+
+
+    /**
+     * 获得该用户选中商品的可用优惠券
+     * @param productId
+     * @param openId
+     * @return
+     */
+    public static List<CouponDto> GetUserProductCoupon(int productId,String openId){
+
+        List<CouponDto> couponDtos = new ArrayList<>();
+        List<WechatCouponDto> wechatCouponDtos = CouponLogic.GetMyAvailableCoupon(openId);
+        for (WechatCouponDto wechatCouponDto : wechatCouponDtos) {
+            List<CouponProductDto> couponProductDtos = CouponLogic.GetCouponProduct(wechatCouponDto.getCouponId());
+            for (CouponProductDto couponProductDto : couponProductDtos) {
+                if(couponProductDto.getProductId() == productId){
+                    CouponDto couponDto = CouponLogic.GetCoupon(couponProductDto.getCouponId());
+                    couponDtos.add(couponDto);
+                }
+            }
+        }
+        return couponDtos;
+    }
 }

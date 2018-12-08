@@ -95,11 +95,11 @@ public class DeliveryLogic extends BaseLogic {
         wrapper.where("delete_time is null and open_Id={0}", openId);
         List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
 
-        List<StockDto> stockDtos = new ArrayList<>();
         List<DeliveryDto> deliveryDtos = new ArrayList<>();
         for (Delivery delivery : deliveries) {
             DeliveryDto deliveryDto = new DeliveryDto();
-            stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
+
+            List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
             deliveryDto.setStockDto(stockDtos);
 
             deliveryDto.setAddress(delivery.getAddress());

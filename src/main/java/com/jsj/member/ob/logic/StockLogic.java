@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -57,45 +58,42 @@ public class StockLogic extends BaseLogic {
     /**
      * 获取我的库存
      *
-     * @param requ
+     * @param openId
      * @return
      */
-    public static GetMyStockResp GetMyStock(GetMyStockRequ requ) {
+    public static HashSet<StockDto> GetMyStock(String openId) {
 
-        if (StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
+        if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
 
-        GetMyStockResp resp = new GetMyStockResp();
-
-        List<StockDto> stockDtoList = new ArrayList<>();
-
-        EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
+        HashSet<StockDto> stockDtos = new HashSet<>();
 
         //查询该用户下所有库存
         EntityWrapper<Stock> stockWrapper = new EntityWrapper<>();
-        stockWrapper.where("open_id={0} and status = {1} and delete_time is null", requ.getBaseRequ().getOpenId(), StockStatus.UNUSE.getValue());
+        stockWrapper.where("open_id={0} and status = {1} and delete_time is null", openId, StockStatus.UNUSE.getValue());
         List<Stock> stockList = stockLogic.stockService.selectList(stockWrapper);
         if (stockList.size() == 0) {
-            return resp;
+            return stockDtos;
         }
-        StockDto stockDto = new StockDto();
         for (Stock stock : stockList) {
+            StockDto stockDto = new StockDto();
+
             //获得库存中每样商品总量
-            productWrapper.where("product_id={0} and open_id={1}", stock.getProductId(), stock.getOpenId());
+            EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
+            productWrapper.where("product_id={0} and open_id={1}", stock.getProductId(), openId);
             int number = stockLogic.stockService.selectCount(productWrapper);
 
             ProductSpecDto dto = ProductLogic.GetProductSpec(stock.getProductSpecId());
             stockDto.setProductSpecDto(dto);
-            stockDto.setOpenId(requ.getBaseRequ().getOpenId());
+            stockDto.setOpenId(openId);
             stockDto.setOrderId(stock.getOrderId());
             stockDto.setProductId(stock.getProductId());
             stockDto.setStockId(stock.getStockId());
             stockDto.setNumber(number);
-            stockDtoList.add(stockDto);
-            resp.setStockDtos(stockDtoList);
+            stockDtos.add(stockDto);
         }
-        return resp;
+        return stockDtos;
     }
     //endregion
 
