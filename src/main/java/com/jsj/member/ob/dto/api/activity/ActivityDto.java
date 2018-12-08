@@ -73,6 +73,32 @@ public class ActivityDto {
      */
     private Integer deleteTime;
 
+    /**
+     * 活动图片
+     */
+    private String imgPath;
+
+    /**
+     * 活动介绍
+     */
+    private String introduce;
+
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
+
+    public String getIntroduce() {
+        return introduce;
+    }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
+
     public Integer getShowTime() {
         return showTime;
     }

@@ -9,7 +9,6 @@ public class GetCartProductsRequ {
 
     public  GetCartProductsRequ(){
         this.baseRequ = new BaseRequ();
-        this.cartProductDtos = new ArrayList<>();
     }
     private BaseRequ baseRequ;
 
@@ -22,16 +21,4 @@ public class GetCartProductsRequ {
         this.baseRequ = baseRequ;
     }
 
-    /**
-     * 购物车商品列表
-     */
-    private List<CartProductDto> cartProductDtos;
-
-    public List<CartProductDto> getCartProductDtos() {
-        return cartProductDtos;
-    }
-
-    public void setCartProductDtos(List<CartProductDto> cartProductDtos) {
-        this.cartProductDtos = cartProductDtos;
-    }
 }

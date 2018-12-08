@@ -6,6 +6,8 @@ import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.enums.StockType;
 
+import java.util.Objects;
+
 public class StockDto {
 
     /**
@@ -68,6 +70,19 @@ public class StockDto {
      * 用户
      */
     private WechatDto wechatDto;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StockDto stockDto = (StockDto) o;
+        return Objects.equals(productId, stockDto.productId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productId);
+    }
 
     public Integer getStockId() {
         return stockId;

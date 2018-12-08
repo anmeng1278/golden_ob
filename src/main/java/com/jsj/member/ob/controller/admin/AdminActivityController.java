@@ -6,6 +6,7 @@ import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.ActivityType;
+import com.jsj.member.ob.enums.CouponType;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.ProductLogic;
@@ -73,7 +74,7 @@ public class AdminActivityController {
 
 
         //所属类型
-        List<ActivityType> activityTypes = Arrays.asList(ActivityType.values());
+        List<ActivityType> activityTypes = Arrays.asList(ActivityType.values()).stream().filter(x -> !x.equals(ActivityType.NORMAL)).collect(Collectors.toList());
 
         model.addAttribute("infos", new CCPage<Dict>(pp, limit));
         model.addAttribute("activityTypes", activityTypes);
@@ -110,11 +111,12 @@ public class AdminActivityController {
             activity.setTypeId(ActivityType.GROUPON.getValue());
         }
         //获取活动类型
-        List<ActivityType> activityTypes = Arrays.asList(ActivityType.values());
+        List<ActivityType> activityTypes = Arrays.asList(ActivityType.values()).stream().filter(x -> !x.equals(ActivityType.NORMAL)).collect(Collectors.toList());
+
         model.addAttribute("activityTypes", activityTypes);
 
         model.addAttribute("info", activity);
-        model.addAttribute("dictId", activityId);
+        model.addAttribute("activityId", activityId);
         model.addAttribute("activityProducts", activityProducts);
 
         return "admin/activity/info";
@@ -140,6 +142,8 @@ public class AdminActivityController {
         String endTime = request.getParameter("endTime");
         String showTime = request.getParameter("showTime");
         String salePrice = request.getParameter("salePrice");
+        String introduce = request.getParameter("introduce");
+        String imgPath = request.getParameter("imgPath");
         if (StringUtils.isBlank(salePrice)) {
             salePrice = "0";
         }
@@ -180,6 +184,8 @@ public class AdminActivityController {
             activity.setSalePrice(Double.valueOf(salePrice));
             activity.setTypeId(typeId);
             activity.setIfpass(ifpass);
+            activity.setIntroduce(introduce);
+            activity.setImgPath(imgPath);
 
             activity.setUpdateTime(DateUtils.getCurrentUnixTime());
             activityService.updateById(activity);
@@ -198,6 +204,8 @@ public class AdminActivityController {
             activity.setOriginalPrice(Double.valueOf(originalPrice));
             activity.setSalePrice(Double.valueOf(salePrice));
             activity.setTypeId(typeId);
+            activity.setIntroduce(introduce);
+            activity.setImgPath(imgPath);
 
             activity.setCreateTime(DateUtils.getCurrentUnixTime());
             activity.setUpdateTime(DateUtils.getCurrentUnixTime());
@@ -279,7 +287,7 @@ public class AdminActivityController {
 
         EntityWrapper<Product> wrapper = new EntityWrapper<>();
 
-        wrapper.where("delete_time is null");
+        wrapper.where("delete_time is null and ifpass is true");
         wrapper.where(!StringUtils.isBlank(keys), "(product_name LIKE concat(concat('%',{0}),'%') )", keys);
         wrapper.where("exists( select * from _product_spec where product_id = _product.product_id )");
         if(typeId > 0){

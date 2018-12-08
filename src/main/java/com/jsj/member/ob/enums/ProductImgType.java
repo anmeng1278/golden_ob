@@ -7,7 +7,9 @@ public enum ProductImgType {
     //0 封面  1 商品图片
     COVER(0, "封面"),
 
-    PRODUCT(1, "商品图片");
+    PRODUCT(1, "商品图片"),
+
+    SECKILL(2,"秒杀展示图片");
 
     private Integer value;
 
@@ -32,6 +34,8 @@ public enum ProductImgType {
                 return COVER;
             case 1:
                 return PRODUCT;
+            case 2:
+                return SECKILL;
             default:
                 throw new FatalException("未知的枚举值");
         }
