@@ -10,11 +10,11 @@
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"/>
     <title>空铁服务</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/index/css/index.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/index/index/css/index.css}"/>
 </head>
 <body>
 <!--banner start-->
-<div th:replace="/index/header::html" ></div>
+<div th:replace="/index/header::html"></div>
 <!--banner end-->
 
 <!--main start-->
@@ -23,132 +23,218 @@
     <div class="navHeight" id="navHeight">
         <nav class="nav-wrap clear" id="nav-wrap">
             <ul class="clearfix">
-                <th:block th:each="activity:${activities}">
-                    <li>
-                        <a th:attr="href='#'+${activity.activityId}" th:text="${activity.activityName}"></a>
-                    </li>
-                </th:block>
+                <li>
+                    <a class="active" href="#section1">品质出行</a>
+                </li>
+                <li>
+                    <a href="#section2">限时秒杀</a>
+                </li>
+                <li>
+                    <a href="#section3">爆款单品</a>
+                </li>
+                <li>
+                    <a href="#section4">组合优惠</a>
+                </li>
             </ul>
         </nav>
     </div>
     <!--nav end-->
 
-    <th:block th:each="activity:${activities}">
-        <div th:attr="id=${activity.activityId}"  class="section clear">
-            <h2 class="section-title">
-                <th:block th:text="${activity.activityName}"></th:block>
-            </h2>
-
-            <!-- 秒杀 -->
-            <th:block th:if="${activity.typeId == 20}">
-
-                <input type="hidden" th:value="${activity.beginTime}" name="beginTime">
-                <input type="hidden" th:value="${activity.endTime}" name="endTime">
-                <div class="limited-time">
-                    <!--SecKill-time start-->
-                    <p class="SecKill-time">
-                        <!--<span class="joinh">00</span>
-                        <em>:</em>
-                        <span class="joinm">00</span>
-                        <em>:</em>
-                        <span class="joins">00</span>-->
-                        <span id="secKillBox" name="secKillBox"></span>
-                    </p>
-                    <!--SecKill-time end-->
-
-                    <!--limited-time-goods start-->
-                    <div class="limited-time-goods limited-time-goods-div">
-                        <div class="limited-goods-con">
-                            <th:block th:each="product:${activityLogic.GetActivityProductDtos(activity.activityId)}">
-                                <a href="javascript:void(0);">
-                                    <dl class="section-con-dl section-con-dlS">
-                                        <dt>
-                                            <th:block
-                                                    th:each="image:${productLogic.GetProductImgDtos(product.productId)}">
-                                                <img th:src="${image.imgPath}"
-                                                     th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}" width="100%"/>
-                                            </th:block>
-                                        </dt>
-                                        <dd>
-                                            <h2 class="section-dl-title">
-                                                <th:block
-                                                        th:text="${productLogic.GetProduct(product.productId).productName}"></th:block>
-                                            </h2>
-                                            <p class="section-dl-tips">
-                                                <th:block
-                                                        th:text="${productLogic.GetProduct(product.productId).introduce}"></th:block>
-                                            </p>
-                                            <p class="section-dl-price">&yen;<em>
-                                                <th:block
-                                                        th:text="${product.salePrice}"></th:block>
-                                            </em></p>
-                                        </dd>
-                                    </dl>
-                                </a>
-                            </th:block>
-                        </div>
-                    </div>
-                    <!--limited-time-goods end-->
-
-                </div>
-            </th:block>
-
-            <!--其他活动-->
-            <th:block th:if="${activity.typeId != 20}">
-            <div class="section-con">
-                <th:block th:each="product:${activityLogic.GetActivityProductDtos(activity.activityId)}">
-                    <a href="javascript:void(0);">
+    <!--品质出行 start-->
+    <div id="section1" class="section clear">
+        <h2 class="section-title">品质出行</h2>
+        <!--section-con start-->
+        <div class="section-con">
+            <th:block th:each="pro:${products}">
+                <th:block th:if="${pro.typeId == 1}">
+                    <a th:attr="href=@{'/goodsDetail/goodsDetail?productId='+${pro.productId}}">
                         <dl class="section-con-dl">
                             <dt>
-                                <th:block th:each="image:${productLogic.GetProductImgDtos(product.productId)}">
+                                <th:block th:each="image:${productLogic.GetProductImgDtos(pro.productId)}">
                                     <img th:src="${image.imgPath}"
-                                         th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}" width="100%"/>
+                                         th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}"
+                                         width="100%"/>
                                 </th:block>
                             </dt>
                             <dd>
                                 <h2 class="section-dl-title">
-                                    <th:block
-                                            th:text="${productLogic.GetProduct(product.productId).productName}"></th:block>
+                                    <th:block th:text="${pro.productName}"></th:block>
                                 </h2>
                                 <p class="section-dl-tips">
-                                    <th:block
-                                            th:text="${productLogic.GetProduct(product.productId).introduce}"></th:block>
+                                    <th:block th:text="${pro.introduce}"></th:block>
                                 </p>
                                 <p class="section-dl-price">&yen;<em>
-                                    <th:block
-                                            th:text="${productLogic.GetProduct(product.productId).salePrice}"></th:block>
+                                    <th:block th:text="${productLogic.GetProduct(pro.productId).salePrice}"></th:block>
                                 </em></p>
                             </dd>
                         </dl>
                     </a>
+
                 </th:block>
-            </div>
             </th:block>
         </div>
-    </th:block>
+        <!--section-con end-->
+    </div>
+    <!--品质出行 end-->
+
+    <!--限时秒杀 start-->
+    <div id="section2" class="section clear">
+        <h2 class="section-title">限时秒杀</h2>
+        <div class="limited-time">
+            <th:block th:each="activity:${activities}">
+                <!-- 秒杀 -->
+                <th:block th:if="${activity.typeId == 20}">
+
+                    <input type="hidden" th:value="${activity.beginTime}" name="beginTime">
+                    <input type="hidden" th:value="${activity.endTime}" name="endTime">
+                    <div class="limited-time">
+                        <!--SecKill-time start-->
+                        <p class="SecKill-time">
+                            <!--<span class="joinh">00</span>
+                            <em>:</em>
+                            <span class="joinm">00</span>
+                            <em>:</em>
+                            <span class="joins">00</span>-->
+                            <span id="secKillBox" name="secKillBox"></span>
+                        </p>
+                        <!--SecKill-time end-->
+
+                        <!--limited-time-goods start-->
+                        <div class="limited-time-goods limited-time-goods-div">
+                            <div class="limited-goods-con">
+                                <th:block
+                                        th:each="product:${activityLogic.GetActivityProductDtos(activity.activityId)}">
+                                    <a th:attr="href=@{'/goodsDetail/goodsDetail?productId='+${product.productId}+'&activityId='+${activity.activityId}}">
+                                        <dl class="section-con-dl section-con-dlS">
+                                            <dt>
+                                                <th:block
+                                                        th:each="image:${productLogic.GetProductImgDtos(product.productId)}">
+                                                    <img th:src="${image.imgPath}"
+                                                         th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}"
+                                                         width="100%"/>
+                                                </th:block>
+                                            </dt>
+                                            <dd>
+                                                <h2 class="section-dl-title">
+                                                    <th:block
+                                                            th:text="${productLogic.GetProduct(product.productId).productName}"></th:block>
+                                                </h2>
+                                                <p class="section-dl-tips">
+                                                    <th:block
+                                                            th:text="${productLogic.GetProduct(product.productId).introduce}"></th:block>
+                                                </p>
+                                                <p class="section-dl-price">&yen;<em>
+                                                    <th:block
+                                                            th:text="${product.salePrice}"></th:block>
+                                                </em></p>
+                                            </dd>
+                                        </dl>
+                                    </a>
+                                </th:block>
+                            </div>
+                        </div>
+                        <!--limited-time-goods end-->
+
+                    </div>
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+    <!--限时秒杀 end-->
+
+    <!--爆款单品 start-->
+    <div id="section3" class="section clear">
+        <h2 class="section-title">爆款单品</h2>
+        <!--section-con start-->
+        <div class="section-con">
+            <th:block th:each="pro:${products}">
+                <th:block th:if="${pro.typeId == 839033}">
+                    <a th:attr="href=@{'/goodsDetail/goodsDetail?productId='+${pro.productId}}">
+                        <dl class="section-con-dl">
+                            <dt>
+                                <th:block th:each="image:${productLogic.GetProductImgDtos(pro.productId)}">
+                                    <img th:src="${image.imgPath}"
+                                         th:if="${image.productImgType eq enumLogic.GetProductImgType(0)}"
+                                         width="100%"/>
+                                </th:block>
+                            </dt>
+                            <dd>
+                                <h2 class="section-dl-title">
+                                    <th:block th:text="${pro.productName}"></th:block>
+                                </h2>
+                                <p class="section-dl-tips">
+                                    <th:block th:text="${pro.introduce}"></th:block>
+                                </p>
+                                <p class="section-dl-price">&yen;<em>
+                                    <th:block th:text="${productLogic.GetProduct(pro.productId).salePrice}"></th:block>
+                                </em></p>
+                            </dd>
+                        </dl>
+                    </a>
+
+                </th:block>
+            </th:block>
+        </div>
+        <!--section-con end-->
+    </div>
+    <!--爆款单品 end-->
+
+    <!--组合优惠 start-->
+    <div id="section4" class="section clear">
+        <h2 class="section-title">组合优惠</h2>
+        <!--section-con start-->
+        <div class="section-con">
+            <th:block th:each="activity:${activities}">
+                <th:block th:if="${activity.typeId == 30}">
+                    <a th:attr="href=@{'/goodsDetail/joinDetail?activityId='+${activity.activityId}}">
+                        <dl class="section-con-dl">
+                            <dt>
+                                <img th:src="${activity.imgPath}" alt="1" width="100%"/>
+                            </dt>
+                            <dd>
+                                <h2 class="section-dl-title">
+                                    <th:block th:text="${activity.activityName}"></th:block>
+                                </h2>
+                                <p class="section-dl-tips">
+                                    <th:block th:text="${activity.introduce}"></th:block>
+                                </p>
+                                <p class="section-dl-price">&yen;<em>
+                                    <th:block th:text="${activity.originalPrice}"></th:block>
+                                </em><span>
+                             <th:block th:text="${activity.salePrice}"></th:block>
+                        </span></p>
+                            </dd>
+                        </dl>
+                    </a>
+                </th:block>
+            </th:block>
+        </div>
+        <!--section-con end-->
+    </div>
+    <!--组合优惠 end-->
 
 </div>
 <!--main end-->
 
-<div th:replace="/index/footer::html" ></div>
+<div th:replace="/index/footer::html"></div>
 
 <script type="text/javascript">
     var beginTime = $("input[type='hidden'][name='beginTime']").val();
-    var endTime= $("input[type='hidden'][name='beginTime']").val();
+    var endTime = $("input[type='hidden'][name='beginTime']").val();
     $.ajax({
         url: "/index/getSystemTime",
         type: "get",
-        success: function(data) {
+        success: function (data) {
             if (data < beginTime) {
                 $("span[name='secKillBox']").countdown(beginTime,
-                    function(event) {
+                    function (event) {
                         var str = event.strftime("%D:%H:%M:%S");
                         $("span[name='secKillBox']").html(str);
                         $("span[name='secKillBox']").css("color", "red");
                     });
             } else if (data > beginTime) {
                 $("span[name='secKillBox']").html("秒杀已结束")
-            } else if(data < beginTime && data < endTime ){
+            } else if (data < beginTime && data < endTime) {
                 $("span[name='secKillBox']").html("立即秒杀")
             }
         }
@@ -156,8 +242,8 @@
 </script>
 
 <!--js-->
-<script th:src="@{/index/js/index.js}" type="text/javascript" charset="utf-8"></script>
-<script th:src="@{/index/js/jquery.countdown.min.js}"></script>
+<script th:src="@{/index/index/js/index.js}" type="text/javascript" charset="utf-8"></script>
+<script th:src="@{/index/index/js/jquery.countdown.min.js}"></script>
 
 </body>
 </html>
