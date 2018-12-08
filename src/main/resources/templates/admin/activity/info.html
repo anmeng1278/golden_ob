@@ -112,6 +112,60 @@
             <div class="layui-form-mid layui-word-aux-red">*</div>
         </div>
 
+        <div id="pic">
+            <div class="layui-form-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">活动封面</label>
+                    <div class="layui-input-4">
+                        <input type="hidden" name="img_path" id="img_path"></input>
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn layui-btn-primary" id="thumbBtn"
+                                    style="width: 115px;">
+                                <i class="icon icon-upload3"></i>点击上传
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-input-block" id="divImages">
+                    <th:block th:if="${activityId > 0}">
+                        <label style="position: relative; float: left;margin-right: 10px;">
+                            <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>
+                            <img class="layui-upload-img" style="width:115px;height:115px;" th:src="${info.imgPath}"/>
+                            <input type="hidden" name="imgPath" th:value="${info.imgPath}"/>
+                        </label>
+                    </th:block>
+
+                    <th:block th:if="${activityId == 0}">
+                        <label style="position: relative; float: left;margin-right: 10px;">
+                            <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>
+                            <img class="layui-upload-img" style="width:115px;height:115px;"/>
+                            <input type="hidden" name="imgPath"/>
+                        </label>
+                    </th:block>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">活动简介</label>
+                <div class="layui-input-inline" style="width:85%;">
+                <textarea class="layui-textarea" name="introduce" id="useIntro"
+                          placeholder="请输入使用说明" title="备注" th:text="${info.introduce}"
+                          autocomplete="off"></textarea>
+
+                    <script type="text/javascript">
+                        UE.getEditor('useIntro', {
+                            initialFrameWidth: "100%",//设置编辑器宽度
+                            initialFrameHeight: 300,
+                            scaleEnabled: true
+                        });
+                    </script>
+
+                </div>
+            </div>
+        </div>
+
+
         <div class="layui-form-item">
             <label class="layui-form-label">审核</label>
             <div class="layui-input-inline">
@@ -199,6 +253,64 @@
         TX.INIT(function (layui) {
 
             var form = layui.form;
+            var upload = layui.upload;
+
+            //缩略图上传
+            upload.render({
+                elem: '#thumbBtn',
+                url: '/ueditor/uploadimage',
+                accept: 'images', //普通文件
+                field: "upfile",
+                multiple: true,
+                exts: 'jpg|png|gif|jpeg', //只允许上传压缩文件
+                done: function (resp) {
+
+                    if (resp.state == "SUCCESS") {
+                        var html = [];
+
+                        html.push('<label style="position: relative; float: left;margin-right: 10px;">');
+                        html.push('    <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>');
+                        html.push('    <img class="layui-upload-img" src="' + resp.url + '" style="width:115px;height:115px;"/>');
+                        html.push('    <input type="hidden" name="imgPath"  value="' + resp.fkey + '" />');
+                        html.push('</label>');
+
+                        document.getElementById("divImages").innerHTML = html.join('');
+
+                    }
+                    resetImage();
+                }
+            });
+
+            //删除图片
+            $(document).on("click", "#divImages label a", function () {
+                var self = this;
+                layer.confirm('确定删除该图片吗?', {icon: 3}, function (index) {
+                    layer.close(index);
+                    $(self).parent("label").remove();
+                    resetImage();
+                });
+            });
+
+            //重置图片
+            function resetImage() {
+
+                $("label", $("#divImages")).each(function () {
+                    if ($(":hidden", $(this)).val().length == 0) {
+                        $(this).remove();
+                    }
+                });
+
+                if ($("label", $("#divImages")).length == 0) {
+                    var html = [];
+                    html.push('<label style="position: relative; float: left;margin-right: 10px;">');
+                    html.push('    <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>');
+                    html.push('    <img class="layui-upload-img"  style="width:115px;height:115px;"/>');
+                    html.push('    <input type="hidden" name="imgPath"  />');
+                    html.push('</label>');
+                    document.getElementById("divImages").innerHTML = html.join('');
+                }
+            }
+
 
             //监听指定开关
             form.on('checkbox(typeId)', function (data) {
@@ -206,6 +318,7 @@
                 $("#groupNumber").hide();
                 $("#price").hide();
                 $("td[skillprice], th[skillprice]").hide();
+                $("#pic").hide();
 
 
                 $(":text[name='number']").attr("lay-verify", "num2");
@@ -220,13 +333,7 @@
                 $(data.elem).attr("checked", "checked");
 
                 switch (typeId) {
-                    //普通
-                    case "0":
-                        $(":text[name='number']").removeAttr("lay-verify");
-                        $(":text[name='originalPrice']").removeAttr("lay-verify");
-                        $(":text[name='salePrice']").removeAttr("lay-verify");
-                        $(":text[name='productSpecSalePrice']").removeAttr("lay-verify");
-                        break;
+
                     //团单
                     case "10":
                         $("#groupNumber").show();
@@ -243,6 +350,7 @@
                     case "30":
                         //组合
                         $("#price").show();
+                        $("#pic").show();
                         $(":text[name='number']").removeAttr("lay-verify");
                         $(":text[name='productSpecSalePrice']").removeAttr("lay-verify");
                         break;
@@ -264,7 +372,6 @@
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
                                 parent.tab.openTab("/admin/activity", {refershType: "reload"});
-                                // location.href = "/admin/activity";
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
@@ -287,47 +394,51 @@
             //日期
 
             //设置时间
-            layui.use(['form', 'layedit', 'laydate',"jquery"], function(){
+            layui.use(['form', 'layedit', 'laydate', "jquery"], function () {
                 var form = layui.form
-                    ,layer = layui.layer
-                    ,$ = layui.jquery
-                    ,laydate = layui.laydate;
+                    , layer = layui.layer
+                    , $ = layui.jquery
+                    , laydate = layui.laydate;
                 var nowTime = new Date().valueOf();
 
                 //日期
                 var show = laydate.render({
                     elem: '#show',
                     type: 'datetime',
-                    min:nowTime,
-                    done:function(value,date){
+                    min: nowTime,
+                    done: function (value, date) {
                         endMax = end.config.max;
                         start.config.min = date;
-                        start.config.min.month = date.month -1;
+                        start.config.min.month = date.month - 1;
                     }
                 });
 
                 var start = laydate.render({
                     elem: '#start',
                     type: 'datetime',
-                    min:nowTime,
-                    done:function(value,date){
+                    min: nowTime,
+                    done: function (value, date) {
                         endMax = end.config.max;
                         end.config.min = date;
-                        end.config.min.month = date.month -1;
+                        end.config.min.month = date.month - 1;
                     }
 
                 });
                 var end = laydate.render({
                     elem: '#end',
                     type: 'datetime',
-                    min : nowTime,
-                    done:function(value,date){
-                        if($.trim(value) == ''){
+                    min: nowTime,
+                    done: function (value, date) {
+                        if ($.trim(value) == '') {
                             var curDate = new Date();
-                            date = {'date': curDate.getDate(), 'month': curDate.getMonth()+1, 'year': curDate.getFullYear()};
+                            date = {
+                                'date': curDate.getDate(),
+                                'month': curDate.getMonth() + 1,
+                                'year': curDate.getFullYear()
+                            };
                         }
                         start.config.max = date;
-                        start.config.max.month = date.month -1;
+                        start.config.max.month = date.month - 1;
                     }
                 });
             });
@@ -456,33 +567,37 @@
             });
         }
 
-        layui.use(['form', 'layedit', 'laydate',"jquery"], function(){
+        layui.use(['form', 'layedit', 'laydate', "jquery"], function () {
             var form = layui.form
-                ,layer = layui.layer
-                ,$ = layui.jquery
-                ,laydate = layui.laydate;
+                , layer = layui.layer
+                , $ = layui.jquery
+                , laydate = layui.laydate;
             var nowTime = new Date().valueOf();
 
             //日期
             var start = laydate.render({
                 elem: '#start',
-                min:nowTime,
-                done:function(value,date){
+                min: nowTime,
+                done: function (value, date) {
                     endMax = end.config.max;
                     end.config.min = date;
-                    end.config.min.month = date.month -1;
+                    end.config.min.month = date.month - 1;
                 }
             });
             var end = laydate.render({
                 elem: '#end',
-                min : nowTime,
-                done:function(value,date){
-                    if($.trim(value) == ''){
+                min: nowTime,
+                done: function (value, date) {
+                    if ($.trim(value) == '') {
                         var curDate = new Date();
-                        date = {'date': curDate.getDate(), 'month': curDate.getMonth()+1, 'year': curDate.getFullYear()};
+                        date = {
+                            'date': curDate.getDate(),
+                            'month': curDate.getMonth() + 1,
+                            'year': curDate.getFullYear()
+                        };
                     }
                     start.config.max = date;
-                    start.config.max.month = date.month -1;
+                    start.config.max.month = date.month - 1;
                 }
             });
         });
