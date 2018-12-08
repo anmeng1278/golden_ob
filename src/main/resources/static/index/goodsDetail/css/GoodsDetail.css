@@ -1,0 +1,87 @@
+html,body{ background: #F5F5F5;}
+/*banner start*/
+.banner{ position: relative;}
+.swiper-pagination{ width: 0.7rem; height: 0.7rem; line-height: 0.7rem; text-align: center; background: #fff; border-radius: 50%; left: auto; right: 0.2rem;}
+.swiper-pagination span{ font-size: 0.24rem; color: #666;}
+
+.banner-SecKill{ width: 2.04rem; height: 0.6rem; line-height: 0.6rem; text-align: center; background: #C2191F; position: absolute; left: 0; bottom: 0.3rem; z-index: 200;}
+.banner-SecKill span{ font-size: 0.32rem; color: #fff; background: url(/index/common/images/SecKill_icon.png) no-repeat left; background-size: 0.32rem 0.32rem; padding-left: 0.5rem;}
+/*banner end*/
+
+/*goods-introduce start*/
+.goods-introduce{ background: #fff; padding: 0.4rem 1.4rem 0.4rem 0.3rem; font-family: "microsoft yahei",arial; position: relative;}
+.goods-name{ line-height: 1.2; font-size: 0.36rem; color: #333; font-weight: 700;}
+.goods-tips{ font-size: 0.28rem; color: #333; padding: 0.2rem 0 0.24rem;}
+.goods-num{ line-height: 1.2; font-size: 0.24rem; color: #C2191F; border: 1px solid #C2191F; padding: 0 0.1rem;}
+.goods-price{ font-size: 0.24rem; color: #C2191F; position: absolute; top: 50%; margin-top: -0.2rem; right: 0.3rem;}
+.goods-price em{ font-size: 0.44rem; font-weight: 700;}
+/*goods-introduce end*/
+
+/*main start*/
+.main{ background: #fff; margin: 0.1rem 0 1.1rem;}
+.goods-detail{ line-height: 1.2; padding: 0.5rem 0.4rem;}
+.goods-detail span{ display: block; font-size: 0.3rem; color: #666; border-left: 2px solid #C2191F; padding-left: 0.1rem;}
+/*main end*/
+
+/*footer start*/
+.footer{ height: 1.1rem; background: #fff; border-top: 0.02rem solid #DEDEDE; position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;}
+.footer-lt{ width: 40%; line-height: 1.1rem; float: left;}
+.shopping-price{ line-height: 1rem; font-size: 0.24rem; color: #C2191F; float: left; margin-left: 0.2rem;}
+.shopping-price em{ font-size: 0.44rem; color: #C2191F; font-weight: 700;}
+.shopping-price-org{ display: block; font-size: 0.24rem; color: #888; text-decoration: line-through; float: left; margin-left: 0.16rem;}
+.shopping-price-dis{ display: block; font-size: 0.24rem; color: #C2191F; float: left; margin-left: 0.08rem;}
+.footer-rt{ width: 60%; float: left;}
+.footer-rt a{ display: block; width: 50%; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #fff; float: left;}
+.shopping-cart-btn{ background: #F1A01B;}
+.purchase-show-btn{ background: #C2191F;}
+.purchase-btn{ width: 40%; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #fff; background: #C2191F; float: left;}
+/*footer end*/
+
+/*purchase-layer start*/
+.purchase-layer-bg{ width: 100%; background: #000; filter:alpha(opacity=50); -moz-opacity:0.5; -khtml-opacity: 0.5;  opacity: 0.5; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 200;}
+.purchase-layer-con{ background: #fff; position: fixed; right: 0; bottom: 0; left: 0; z-index: 201;}
+.purchase-layer-main{ padding: 0 0.6rem;}
+
+/*---------- purchase-layer-dl ----------*/
+.purchase-layer-dl{ margin: 0.4rem 0; height: 2.16rem; position: relative;}
+.purchase-layer-dl dt{ width: 2.16rem; height: 2.16; position: absolute; top: 0; left: 0;}
+.purchase-layer-dl dt img{ width: 2.16rem; height: 2.16;}
+.purchase-layer-dl dd{ margin-left: 2.46rem; padding-top: 1.2rem; font-family: "microsoft yahei",arial;}
+.purchase-goods-name{ line-height: 1.2; font-size: 0.36rem; color: #333; font-weight: 700; margin-bottom: 0.2rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.purchase-goods-tips{ font-size: 0.28rem; color: #666; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+
+.purchase-layer-div{ overflow: hidden; margin-bottom: 0.4rem;}
+.purchase-layer-lable{ display: block; font-size: 0.28rem; color: #999; padding-bottom: 0.3rem;}
+
+/*---------- purchase-layer-p ----------*/
+.purchase-layer-p span{ display: inline-block; padding: 0 0.2rem; min-width: 0.8rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.28rem; color: #333; background: #fff; border: 1px solid #DEDEDE; border-radius: 3px; margin-right: 0.1rem;}
+.purchase-layer-p .active{ color: #C2191F; border: 1px solid #C2191F;}
+
+/*---------- purchase-num ----------*/
+.purchase-num{ border: 1px solid #DEDEDE; border-radius: 3px; width: 2.1rem; line-height: 0.6rem; overflow: hidden; float: left;}
+.purchase-num em{ display: block; width: 0.7rem; height: 0.6rem; float: left; cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;}
+.purchase-num .purchase-num-reduce{ background: url(/index/common/images/reduce_cion.png) no-repeat center center; background-size: 0.26rem 0.06rem;}
+.purchase-num .purchase-num-add{ background: url(/index/common/images/add_icon.png) no-repeat center center; background-size: 0.26rem 0.26rem;}
+.purchase-num .num{ display: block; width: 0.7rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.28rem; color: #333; font-family: "microsoft yahei",arial; border: 0; border-left: 1px solid #DEDEDE; border-right: 1px solid #DEDEDE; float: left;}
+.purchase-num-tips{ line-height: 0.6rem; font-size: 0.3rem; color: #C2191F; float: left; margin-left: 0.2rem;}
+
+/*---------- purchase-coupon ----------*/
+.purchase-coupon li{ width: 2.04rem; height: 1.1rem; background: url(/index/common/images/coupon-wxz.png) no-repeat; background-size: 100% 100%; float: left; margin-right: 0.2rem;}
+.coupon-price{ display: block; text-align: center; font-size: 0.56rem; color: #333; font-weight: 700; padding-top: 0.1rem; position: relative;}
+.coupon-price em{ font-size: 0.24rem; font-weight: normal; position: absolute; top: 0.1rem;}
+.coupon-tips{ font-size: 0.24rem; color: #999; text-align: center;}
+.purchase-coupon .active{ background: url(/index/common/images/coupon-xz.png) no-repeat; background-size: 100% 100%;}
+.purchase-coupon .active .coupon-price{ color: #C2191F;}
+.coupon-none{ width: 2.1rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.3rem; color: #999; border: 1px solid #DEDEDE; border-radius: 3px;}
+
+.purchase-footer{ height: 1.1rem; background: #fff; border-top: 0.02rem solid #DEDEDE;}
+.purchase-footer-lt{ width: 60%; line-height: 1.1rem; float: left;}
+/*purchase-layer end*/
+
+/*shopping-cart start*/
+.shopping-cart-bg{ width: 100%; background: #000; filter:alpha(opacity=50); -moz-opacity:0.5; -khtml-opacity: 0.5;  opacity: 0.5; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 200;}
+.shopping-cart-con{ background: #fff; position: fixed; right: 0; bottom: 0; left: 0; z-index: 201;}
+.purchase-layer-main{ height: 9rem; overflow: scroll; -webkit-overflow-scrolling: touch;}
+.purchase-layer-main::-webkit-scrollbar{ display: none;}
+.shopping-cart-confirm{ display: block; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #fff; background: #C2191F;}
+/*shopping-cart end*/

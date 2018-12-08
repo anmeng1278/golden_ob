@@ -1,0 +1,52 @@
+/*head start*/
+.head{ height: 2.3rem; background: url(/index/common/images/stock_bg.png) no-repeat; background-size: 100% 100%;}
+.head-ul{ padding-top: 0.6rem;}
+.head-ul li{ width: 25%; text-align: center; float: left;}
+.head-ul-icon{ display: block; width: 0.72rem; margin: auto;}
+.head-ul-title{ display: block; font-size: 0.26rem; color: #fff; padding-top: 0.1rem;}
+/*head end*/
+
+/*banner start*/
+.banner{ padding: 0.3rem 0.1rem;}
+.banner img{ width: 100%; height: 2rem;}
+/*banner end*/
+
+/*main start*/
+.main{ margin-bottom: 1.2rem;}
+.stock-title{ line-height: 1.2; font-size: 0.32rem; color: #333; border-left: 3px solid #C2191F; padding-left: 0.18rem; margin: 0.2rem 0.3rem;}
+.share-fail{ font-family: "microsoft yahei",arial; padding: 0 0.3rem; height: 0.88rem; line-height: 0.88rem; background: #FFEBD4;}
+.share-fail-tips{ line-height: 0.88rem; font-size: 0.32rem; color: #C2191F; font-weight: 700; float: left;}
+.share-fail-look{ font-size: 0.3rem; color: #C2191F; float: right;}
+.strok-list{ margin: 0 0.3rem;}
+.strok-list-dl{ padding: 0.3rem 0; border-top: 1px solid #eee; position: relative;}
+.strok-list-dl:first-child{ border: 0;}
+.strok-list-dl dt{ width: 2.4rem; height: 2.4rem; position: absolute; top: 0.3rem; left: 0;}
+.strok-list-dl dt img{ width: 2.4rem; height: 2.4rem;}
+.goods-detail{ display: block; width: 1.2rem; height: 1.2rem; line-height: 1.2rem; text-align: center; font-size: 0.3rem; color: #fff; background: rgba(0,0,0,.8); border-radius: 50%; position: absolute; top: 50%; left: 50%; margin: -0.6rem 0 0 -0.6rem; z-index: 2;}
+.strok-list-dl dd{ min-height: 2.4rem; margin: 0 0.3rem 0 2.7rem; font-family: "microsoft yahei",arial; position: relative;}
+.strok-dd-name{ font-size: 0.36rem; color: #333; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.strok-dd-tips{ line-height: 1.2; font-size: 0.28rem; color: #333;}
+.strok-dd-bot{ height: 0.6rem; position: absolute; left: 0; bottom: 0; right: 0;}
+.strok-dd-num{ line-height: 0.6rem; font-size: 0.24rem; color: #C2191F; float: left;}
+.strok-dd-num span{ font-size: 0.36rem; color: #C2191F; font-weight: 700;}
+
+/*---------- purchase-num ----------*/
+.purchase-num{ border: 1px solid #DEDEDE; border-radius: 3px; width: 2.1rem; line-height: 0.6rem; overflow: hidden; float: right;}
+.purchase-num em{ display: block; width: 0.7rem; height: 0.6rem; float: left; cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;}
+.purchase-num .purchase-num-reduce{ background: url(/index/common/images/reduce_cion.png) no-repeat center center; background-size: 0.26rem 0.06rem;}
+.purchase-num .purchase-num-add{ background: url(/index/common/images/add_icon.png) no-repeat center center; background-size: 0.26rem 0.26rem;}
+.purchase-num .num{ display: block; width: 0.7rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.28rem; color: #333; font-family: "microsoft yahei",arial; border: 0; border-left: 1px solid #DEDEDE; border-right: 1px solid #DEDEDE; float: left;}
+.purchase-num-tips{ line-height: 0.6rem; font-size: 0.3rem; color: #C2191F; float: left; margin-left: 0.2rem;}
+
+/*main end*/
+
+/*footer start*/
+.footer{ height: 1.1rem; background: #C2191F; position: fixed; left: 0; bottom: 0; right: 0; z-index: 100;}
+.footer-ul li{ width: 36%; text-align: center; line-height: 1.1rem; font-family: "microsoft yahei",arial; float: left; position: relative;}
+.footer-ul li:first-child{ width: 28%;}
+.footer-ul li:before{ content: ""; position: absolute; top: 50%; margin-top: -0.24rem; left: 0; height: 0.48rem; border-left: 1px solid #fff;}
+.footer-ul li:first-child:before{ border: 0;}
+.selected-num{ display: inline-block; width: 0.6rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.32rem; color: #C2191F; font-weight: 700; background: #fff; border-radius: 50%;}
+.selected-title{ font-size: 0.26rem; color: #fff; padding-left: 0.1rem;}
+.share-btn,.use-btn{ display: block; font-size: 0.36rem; color: #fff; font-weight: 700;}
+/*footer end*/

@@ -1,0 +1,11 @@
+/*receive-gifts start*/
+.receive-gifts{ text-align: center;}
+.give-head-img{ display: block; width: 1.12rem; height: 1.12rem; border-radius: 50%; margin: 0.4rem auto 0.2rem;}
+.give-come-from{ padding-bottom: 0.6rem;}
+.give-come-from span{ display: block;}
+.give-come-from span:nth-child(1){ font-size: 0.3rem; color: #B78F7B; padding-bottom: 0.1rem;}
+.give-come-from span:nth-child(2){ font-size: 0.48rem; color: #333;}
+.receive-gifts-img{ width: 6.6rem;}
+.receive-gifts-tips{ font-size: 0.26rem; color: #aaa; padding: 0.4rem 0 0.8rem;}
+.receive-gifts-btn{ display: block; width: 4.8rem; height: 0.88rem; line-height: 0.88rem; text-align: center; font-size: 0.36rem; color: #fff; background: #C2191F; border-radius: 5px; margin: auto;}
+/*receive-gifts end*/
