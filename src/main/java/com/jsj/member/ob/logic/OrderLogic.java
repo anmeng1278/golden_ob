@@ -70,7 +70,6 @@ public class OrderLogic extends BaseLogic {
 
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
         List<OrderProduct> orderProducts = orderLogic.orderProductService.selectList(new EntityWrapper<OrderProduct>().where("order_id={0}", orderId));
-
         orderProducts.forEach(op -> {
 
             OrderProductDto dto = new OrderProductDto();
