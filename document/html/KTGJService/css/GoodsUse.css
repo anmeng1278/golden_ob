@@ -1,0 +1,46 @@
+/*head start*/
+.head{ width: 100%; padding: 0.2rem 0; height: 3.1rem; overflow: auto; -webkit-overflow-scrolling: touch;}
+.head::-webkit-scrollbar{ display: none;}
+.head-height{ width: 1000%;}
+.head-goods-list li{ width: 2.7rem; height: 3.1rem; text-align: center; background: #F2F2F2; float: left; margin-left: 0.2rem;}
+.head-goods-list li:first-child{ margin-left: 0.4rem;}
+.head-goods-img{ max-width: 2.7rem; height: 2.1rem; margin: 0.3rem 0 0.16rem;}
+.head-goods-tips{ width: 1.08rem; height: 0.3rem; line-height: 0.3rem; text-align: center; font-size: 0.2rem; color: #B78F7B; background: #fff; border: 1px solid #B78F7B; margin: auto;}
+/*head end*/
+
+/*main start*/
+.main{ margin-bottom: 1.1rem;}
+/*---------- nav-list ----------*/
+.nav-list{ height: 0.88rem; margin: 0.2rem 0.4rem 0.3rem;}
+.nav-list-ul{ height: 0.84rem; background: #fff; border: 1px solid #C2191F; border-radius: 5px; overflow: hidden;}
+.nav-list-ul li{ width: 50%; line-height: 0.88rem; text-align: center; font-size: 0.3rem; color: #C2191F; float: left;}
+.nav-list-ul .active{ background: #C2191F; color: #fff;}
+
+/*---------- address ----------*/
+.nav-wrap{ margin: 0.4rem 0.2rem 0;}
+.nav-wrap-item{ display: none;}
+.address-title{ line-height: 1.2; font-size: 0.32rem; color: #333; font-weight: 700; border-left: 2px solid #C2191F; padding-left: 0.1rem;}
+.address-item{ min-height: 1.1rem; border-bottom: 1px solid #eee; position: relative;}
+.address-lable{ width: 1.6rem; line-height: 1.1rem; font-size: 0.28rem; color: #333; position: absolute; top: 0; left: 0;}
+.address-rt{ padding: 0.25rem 0.2rem 0.25rem 1.7rem;}
+.address-input{ height: 0.6rem; line-height: 0.6rem; font-size: 0.28rem; color: #333; border: 0; padding: 0 !important; text-indent: 5px;}
+.address-textarea{ width: 100%; height: 1.2rem; line-height: 1.2; font-family: "microsoft yahei",arial; padding: 0.18rem 5px; font-size: 0.28rem; color: #333; resize: none; border: 0; text-align: justify;}
+.address-textarea::-webkit-input-placeholder{ color:#b6b6b6; }
+/*main end*/
+
+.confirm-btn{ display: block; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #fff; background: #C2191F; position: fixed; left: 0; bottom: 0; right: 0; z-index: 100;}
+
+/*city-layer start*/
+.city-layer-bg{ width: 100%; background: #000; filter:alpha(opacity=50); -moz-opacity:0.5; -khtml-opacity: 0.5;  opacity: 0.5; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100;}
+.city-layer-con{ background: #fff; position: fixed; left: 0; bottom: 0; right: 0; z-index: 101;}
+.city-title{ line-height: 1.2; font-size: 0.36rem; color: #333; font-weight: 700; padding: 0.4rem 0.3rem 0;}
+.close-btn{ width: 0.32rem; height: 0.32rem; position: absolute; top: 0.4rem; right: 0.3rem;}
+.city-select{ height: 0.88rem; line-height: 0.88rem; font-size: 0.3rem; color: #333; font-weight: 700; border-bottom: 1px solid #eee; margin: 0 0.3rem;}
+.city-select span{ margin-right: 0.2rem;}
+.city-select-tips{ font-size: 0.3rem; color: #C2191F; font-weight: normal; border-bottom: 1px solid #C2191F; padding: 0 0.1rem 0.2rem;}
+.city-list{ max-height: 8rem; overflow: auto; -webkit-overflow-scrolling: touch;}
+.city-list::-webkit-scrollbar{ display: none;}
+.city-list li{ height: 0.88rem; line-height: 0.88rem; font-size: 0.3rem; color: #333; padding: 0 0.3rem;}
+.city-list .active{ background: #F2F2F2; position: relative;}
+.city-list .active:after{ content: ""; position: absolute; top: 50%; right: 0.3rem; margin-top: -0.18rem; width: 0.12rem; height: 0.28rem; border-bottom: 2px solid #C2191F; border-right: 2px solid #C2191F; -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); -webkit-transform: rotate(45deg); transform: rotate(45deg);}
+/*city-layer end*/

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <meta name="apple-mobile-web-app-capable" content="yes" />
+	    <meta name="format-detection" content="telephone=no" />
+	    <meta name="format-detection" content="email=no" />
+	    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+	    <title>我的库存</title>
+	    <link rel="stylesheet" type="text/css" href="css/public.css"/>
+	    <link rel="stylesheet" type="text/css" href="css/mystock.css"/>
+	</head>
+	<body>
+		<!--head start-->
+		<div class="head">
+			<ul class="head-ul">
+				<li>
+					<img src="images/stock_order_icon.png" alt="1" class="head-ul-icon"/>
+					<span class="head-ul-title">订单记录</span>
+				</li>
+				<li>
+					<img src="images/stock_delivery_icon.png" alt="1" class="head-ul-icon"/>
+					<span class="head-ul-title">配送记录</span>
+				</li>
+				<li>
+					<img src="images/stock_give_icon.png" alt="1" class="head-ul-icon"/>
+					<span class="head-ul-title">赠送记录</span>
+				</li>
+				<li>
+					<img src="images/stock_coupon_icon.png" alt="1" class="head-ul-icon"/>
+					<span class="head-ul-title">优惠券</span>
+				</li>
+			</ul>
+		</div>
+		<!--head end-->
+		
+		<!--banner start-->
+		<div class="banner clear" style="display: none;">
+			<img src="images/banner.png" alt="1" />
+		</div>
+		<!--banner end-->
+		
+		<!--main start-->
+		<div class="main clear">
+			<h2 class="stock-title">库存商品</h2>
+			<div class="share-fail">
+				<p class="share-fail-tips">您有已<span>1</span>个礼包分享失败</p>
+				<a href="javascript:void(0);" class="share-fail-look">查看 ></a>
+			</div>
+			<div class="strok-list">
+				<dl class="strok-list-dl clear">
+					<dt>
+						<img src="images/purchase-layer-img.png" alt="1"/>
+						<a href="javascript:void(0);" class="goods-detail" style="display: none;">详情></a>
+					</dt>
+					<dd>
+						<h2 class="strok-dd-name">越甲科技20寸旅行箱</h2>
+						<p class="strok-dd-tips">科技产品特殊材质，旅行必备</p>
+						<div class="strok-dd-bot">
+							<p class="strok-dd-num">库存：<span>5</span></p>
+							<div class="purchase-num" style="display: none;">
+								<em class="purchase-num-reduce"></em>
+								<input type="text" value="1" class="num"/>
+								<em class="purchase-num-add"></em>
+							</div>
+						</div>
+					</dd>
+				</dl>
+				<dl class="strok-list-dl clear">
+					<dt>
+						<img src="images/purchase-layer-img.png" alt="1"/>
+						<a href="javascript:void(0);" class="goods-detail" style="display: none;">详情></a>
+					</dt>
+					<dd>
+						<h2 class="strok-dd-name">越甲科技20寸旅行箱</h2>
+						<p class="strok-dd-tips">科技产品特殊材质，旅行必备</p>
+						<div class="strok-dd-bot">
+							<p class="strok-dd-num">库存：<span>2</span></p>
+							<div class="purchase-num" style="display: none;">
+								<em class="purchase-num-reduce"></em>
+								<input type="text" value="1" class="num"/>
+								<em class="purchase-num-add"></em>
+							</div>
+						</div>
+					</dd>
+				</dl>
+			</div>
+		</div>
+		<!--main end-->
+		
+		<!--footer start-->
+		<div class="footer" style="display: none;">
+			<ul class="footer-ul">
+				<li>
+					<span class="selected-num">2</span>
+					<span class="selected-title">已选</span>
+				</li>
+				<li>
+					<a href="javascript:void(0);" class="share-btn">微信送好友</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);" class="use-btn">我要使用</a>
+				</li>
+			</ul>
+		</div>
+		<!--footer end-->
+		
+		<!--引入js-->
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/size.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mystock.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>
