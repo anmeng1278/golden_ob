@@ -7,13 +7,17 @@ import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Banner;
 import com.jsj.member.ob.entity.Gift;
+import com.jsj.member.ob.entity.Stock;
 import com.jsj.member.ob.enums.BannerType;
+import com.jsj.member.ob.enums.StockStatus;
+import com.jsj.member.ob.enums.StockType;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.GiftLogic;
 import com.jsj.member.ob.logic.OrderLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.service.BannerService;
 import com.jsj.member.ob.service.GiftService;
+import com.jsj.member.ob.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +38,9 @@ public class MyStockController {
 
     @Autowired
     GiftService giftService;
+
+    @Autowired
+    StockService stockService;
 
     /**
      * 获得用户的库存
@@ -97,7 +104,8 @@ public class MyStockController {
      * @param model
      * @return
      */
-    public String getMyGive(@RequestParam(value = "openId", defaultValue = "111") String openId,Model model){
+    @GetMapping("/giveRecord")
+    public String getMyGiveRecord(@RequestParam(value = "openId", defaultValue = "111") String openId,Model model){
 
 
         //用户所有赠送的
@@ -110,11 +118,13 @@ public class MyStockController {
             giftDtos.add(giftDto);
         }
 
-
-
         //用户所有领取的
+        EntityWrapper<Stock> stockWrapper = new EntityWrapper<>();
+        stockWrapper.where("delete_time is null and open_id={0} and type_id={1}",openId, StockType.GIFT.getValue());
+        List<Stock> stocks = stockService.selectList(stockWrapper);
 
         model.addAttribute("giftDtos",giftDtos);
+        model.addAttribute("stocks",stocks);
         model.addAttribute("openId",openId);
 
         return "index/share/GiveList";
