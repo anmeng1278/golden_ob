@@ -33,7 +33,7 @@
 .discount-dl-tips{ font-size: 0.28rem; color: #888; padding: 0.2rem 0;}
 .discount-dl-p{ line-height: 1.2; overflow: hidden;}
 .discount-dl-price{ font-size: 0.28rem; color: #333; float: left;}
-.discount-dl-price{ font-size: 0.30rem; color: #C2191F; float: right;}
+.discount-dl-price{ font-size: 0.30rem; color: #333; float: right;}
 
 /*---------- purchase-discount ----------*/
 .purchase-footer{ height: 1.1rem; background: #fff; border-top: 0.02rem solid #DEDEDE;}
