@@ -14,6 +14,7 @@
 	    <link rel="stylesheet" type="text/css" href="/index/order/css/OrderList.css"/>
 	</head>
 	<body>
+
 		<!--main start-->
 		<div class="main">
 			<th:block th:each="order:${orderDtos}">
@@ -26,7 +27,7 @@
 						<th:block th:text="${order.payAmount}"></th:block>
 					</span>
 				</p>
-				<th:block th:with="pro=${order.productDtos.get(0)}">
+				<th:block th:each="pro:${orderLogic.GetOrderProducts(order.orderId)}">
 				<dl class="order-item-dl">
 					<dt>
 						<th:block th:each="image:${productLogic.GetProductImgDtos(pro.productId)}">
@@ -37,11 +38,11 @@
 					</dt>
 					<dd>
 						<h2 class="order-dd-name">
-							<th:block th:text="${pro.productName}"></th:block>
+							<th:block th:text="${productLogic.GetProduct(pro.productId).productName}"></th:block>
 						</h2>
-						<p class="order-dd-tips">共
-							<th:block th:text="${order.count}"></th:block>
-							件商品</p>
+						<p class="order-dd-tips">X
+							<th:block th:text="${pro.number}"></th:block>
+							</p>
 						<p class="order-dd-time">购买时间:
 							<th:block th:text="${dateUtils.formatDateByUnixTime(order.payTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
 						</p>
@@ -56,6 +57,5 @@
 		<!--引入js-->
 		<script src="/index/common/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="/index/common/js/size.js" type="text/javascript" charset="utf-8"></script>
-		<script src="/index/order/js/OrderList.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 </html>

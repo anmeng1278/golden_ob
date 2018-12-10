@@ -5,6 +5,7 @@ import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
+import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.proto.NotifyModelOuterClass;
 import com.jsj.member.ob.enums.ActivityType;
@@ -190,6 +191,11 @@ public class OrderLogicTest {
        OrderBase orderBase = OrderFactory.GetInstance(orderId);
         orderBase.PaySuccessed(orderId, notifyModel);
 
+    }
+
+    @Test
+    public void geyMyOrder(){
+        List<OrderDto> orderDtos = OrderLogic.GetMyOrder("111");
     }
 
 }

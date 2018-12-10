@@ -1,11 +1,14 @@
 package com.jsj.member.ob.logic;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.dto.api.stock.GetMyStockRequ;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.stock.StockFlowDto;
+import com.jsj.member.ob.entity.Stock;
+import com.jsj.member.ob.enums.StockType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,7 +45,7 @@ public class StockLogicTest {
         GetMyStockResp resp = new GetMyStockResp();
         resp.setStockDtoList(stockDtoList);*/
 
-        StockLogic.GetMyStock(requ);
+        StockLogic.GetMyStock("111");
     }
 
     @Test
@@ -52,4 +55,5 @@ public class StockLogicTest {
         System.out.println(JSON.toJSONString(dtos));
 
     }
+
 }

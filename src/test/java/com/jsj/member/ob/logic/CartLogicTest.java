@@ -58,9 +58,8 @@ public class CartLogicTest {
         cartProducts.add(cartProductDto);
 
         requ.setBaseRequ(baseRequ);
-        requ.setCartProductDtos(cartProducts);
 
-        CartLogic.GetCartProducts(requ);
+        CartLogic.GetCartProducts("111");
 
     }
 
