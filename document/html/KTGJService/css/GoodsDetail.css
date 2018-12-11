@@ -34,6 +34,7 @@ html,body{ background: #F5F5F5;}
 .footer-rt a{ display: block; width: 50%; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #fff; float: left;}
 .shopping-cart-btn{ background: #F1A01B;}
 .purchase-show-btn{ background: #C2191F;}
+.purchase-show-btn-no,.purchase-show-btn-end{ background: #AEAEAE;}
 .purchase-btn{ width: 40%; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #fff; background: #C2191F; float: left;}
 /*footer end*/
 
