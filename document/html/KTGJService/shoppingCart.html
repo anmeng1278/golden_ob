@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <meta name="apple-mobile-web-app-capable" content="yes" />
+	    <meta name="format-detection" content="telephone=no" />
+	    <meta name="format-detection" content="email=no" />
+	    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+	    <title>购物车</title>
+	    <link rel="stylesheet" type="text/css" href="css/public.css"/>
+	    <link rel="stylesheet" type="text/css" href="css/shoppingCart.css"/>
+	</head>
+	<body>
+		<!--head start-->
+		<div class="head">
+			<h2 class="head-title"><span>我的购物车</span></h2>
+		</div>
+		<!--head end-->
+		
+		<!--main start-->
+		<div class="main">
+			<div class="goods-list-item">
+				<span class="checkone check-all-wxz"></span>
+				<dl class="goods-list-dl">
+					<dt><img src="images/purchase-layer-img.png" alt="1"/></dt>
+					<dd>
+						<h2 class="goods-dl-name">越甲科技20寸旅行箱</h2>
+						<span class="goods-dl-tips">规格：21寸</span>
+						<span class="goods-dl-price">&yen;<em>399</em></span>
+						<div class="purchase-num">
+							<em class="purchase-num-reduce"></em>
+							<em class="purchase-num-del" style="display: none;"></em>
+							<input type="text" value="2" disabled="disabled" class="num"/>
+							<em class="purchase-num-add"></em>
+						</div>
+					</dd>
+				</dl>
+			</div>
+			<div class="goods-list-item">
+				<span class="checkone check-all-wxz"></span>
+				<dl class="goods-list-dl">
+					<dt><img src="images/purchase-layer-img.png" alt="1"/></dt>
+					<dd>
+						<h2 class="goods-dl-name">越甲科技20寸旅行箱</h2>
+						<span class="goods-dl-tips">规格：21寸</span>
+						<span class="goods-dl-price">&yen;<em>299</em></span>
+						<div class="purchase-num">
+							<em class="purchase-num-reduce"></em>
+							<em class="purchase-num-del" style="display: none;"></em>
+							<input type="text" value="2" class="num"/>
+							<em class="purchase-num-add"></em>
+						</div>
+					</dd>
+				</dl>
+			</div>
+		</div>
+		<!--main end-->
+		
+		<!--footer start-->
+		<div class="footer">
+			<div class="footer-lt">
+				<label class="footer-lt-text check-all-wxz" id="checkAll">全选</label>
+				<span class="total-price">&yen;<em>0</em></span>
+			</div>
+			<a href="javascript:void(0);" class="purchase-btn">立即购买</a>
+		</div>
+		<!--footer end-->
+		
+		<!-- delete-layer start -->
+		<div class="delete-layer" style="display: none;">
+			<div class="delete-layer-bg"></div>
+			<div class="delete-layer-con">
+				<h2 class="delete-layer-title">确定删除该商品么？</h2>
+				<p class="delete-layer-tips">删除的商品将不会出现在购物车中</p>
+				<p class="delete-layer-p">
+					<a href="javascript:void(0);" class="delete-layer-cancel">取消</a>
+					<a href="javascript:void(0);" class="delete-layer-confirm">确定</a>
+				</p>
+			</div>
+		</div>
+		
+		<!--引入js-->
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/size.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/shoppingCart.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

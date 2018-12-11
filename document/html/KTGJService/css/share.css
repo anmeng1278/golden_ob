@@ -1,0 +1,49 @@
+html,body{ background: #222131;}
+
+.main{ position: relative; z-index: 100;}
+/*head statr*/
+.head{ width: 6.66rem; height: 6.66rem; filter:progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#F84C4C,endColorStr=#D63535); background-image: -webkit-linear-gradient(-219deg, #F84C4C 0%, #D63535 77%); background-image: -moz-linear-gradient(-219deg, #F84C4C 0%, #D63535 77%); background-image: -o-linear-gradient(-219deg, #F84C4C 0%, #D63535 77%); background-image: linear-gradient(-219deg, #F84C4C 0%, #D63535 77%); margin: 0.6rem auto 0; position: relative;}
+
+/*----------- head-con ---------- */
+.head-line-one{ display: block; width: 6.48rem; height: 6.48rem; border: 1px solid #CB0000; position: absolute; top: 50%; left: 50%; margin: -3.24rem 0 0 -3.24rem; z-index: 1;}
+.head-con{ display: block; width: 6.32rem; height: 6.32rem; border: 1px solid #CB0000; position: absolute; top: 50%; left: 50%; margin: -3.16rem 0 0 -3.16rem; z-index: 2;}
+.head-nav{ height: 0.48rem; margin: 0.26rem 0.4rem;}
+.head-nav li{ height: 0.44rem; line-height: 0.44rem; padding: 0 0.2rem; font-size: 0.28rem; color: #EDC188; border: 1px solid #EDC188; border-radius: 30px; float: left; margin-left: 0.2rem;}
+.head-nav li:first-child{ margin: 0;}
+.head-nav .head-nav-cur{ color: #F34949; background: #EDC188;}
+.head-wrap-item{ width: 6.12rem; height: 3.76rem; background: #FFF4E5; border-radius: 5px; margin: auto; display: none;}
+.blessings{ height: 2.6rem; text-align: center; line-height: 1.4; font-size: 0.36rem; color: #2C1F20; display: flex; justify-content: center; align-items: center; align-content: center;}
+.blessings-btn{ display: block; height: 0.76rem; margin-top: 0.4rem; text-align: center;}
+.blessings-btn span{ font-size: 0.28rem; color: #C2191F; border-bottom: 1px solid #C2191F;}
+
+/*----------- head-con-bot ---------- */
+.head-con-bot{ width: 6.66rem; padding-top: 0.48rem; margin-left: -0.19rem; position: relative;}
+.head-con-bot-line{ display: block; height: 0.18rem; background: #EDC188;}
+.head-con-bot-bow{ height: 1.22rem; position: absolute; top: 0.2rem; right: -0.3rem;}
+.head-con-bot-tips{ font-size: 0.26rem; color: #F2C4C4; text-align: center; padding-top: 0.3rem;}
+/*head end*/
+
+/*goods start*/
+.goods{ width: 6.5rem; padding-bottom: 0.1rem; border-radius: 0 0 5px 5px; box-shadow:#6C0000 0 0.3rem 0.26rem -0.1rem inset; background: #DC3A3D; margin: auto; position: relative;}
+.goods-box-shadow{ display: block; width:0;  height:0; border-style:solid; position: absolute;}
+.box-shadow-lt{ border-width:4px 0 4px 4px; border-color:transparent transparent transparent #80110F; top: -0.08rem; left: -0.06rem; -moz-transform: rotate(-45deg); -ms-transform: rotate(-45deg); -o-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); transform: rotate(-45deg);}
+.box-shadow-rt{ border-width:4px 4px 4px 0;border-color:transparent #80110F transparent transparent; top: -0.08rem; right: -0.06rem; -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); -webkit-transform: rotate(45deg); transform: rotate(45deg);}
+.goods-con{ width: 5.9rem; padding: 0.26rem 0.2rem 0.1rem; box-shadow:#6C0000 0 0.3rem 0.26rem -0.1rem inset; border-radius:  0 0 5px 5px; background: #AC2422; margin: auto;}
+.goods-con-height{ width: 100%; height: 2.28rem; overflow: auto; -webkit-overflow-scrolling: touch;}
+.goods-con-hei-con{ width: 1000%;}
+.goods-con-hei-ul li{ width: 1.4rem; height: 2.28rem; background: #D78A81; border-radius: 3px; display: flex; justify-content: center; align-items: center; align-content: center; float: left; margin-left: 0.1rem; position: relative;}
+.goods-con-hei-ul li:first-child{ margin: 0;}
+.goods-img{ width: 1rem;}
+.goods-tips{ height: 0.4rem; line-height: 0.4rem; padding: 0 0.1rem 0 0.3rem; font-size: 0.24rem; color: #fff; background: #DC3939; border-radius: 0 0 0 30px; position: absolute; top: 0; right: 0;}
+/*goods end*/
+
+/*footer start*/
+.footer{ margin: 0.8rem 0.2rem 0.2rem;}
+.footer a{ display: block; width: 48.5%; height: 0.88rem; line-height: 0.88rem; text-align: center; font-size: 0.36rem; color: #CD2D31; background: #EDC188; border-radius: 5px;}
+.footer .footer-share-btn{ float: left;}
+.footer .footer-welfare-btn{ float: right;}
+/*footer end*/
+
+/*footer-bg start*/
+.footer-bg{ height: 4.3rem; background: #CE2E32; position: fixed; left: 0; bottom: 0; right: 0; z-index: 1;}
+/*footer-bg end*/

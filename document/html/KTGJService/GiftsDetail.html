@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <meta name="apple-mobile-web-app-capable" content="yes" />
+	    <meta name="format-detection" content="telephone=no" />
+	    <meta name="format-detection" content="email=no" />
+	    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+	    <title>优惠券</title>
+	    <link rel="stylesheet" type="text/css" href="css/public.css"/>
+	    <link rel="stylesheet" type="text/css" href="css/GiftsDetail.css"/>
+	</head>
+	<body>
+		<!--content satrt-->
+		<div class="content">
+			<!--head start-->
+			<div class="head">
+				<p class="head-p">
+					<span class="head-p-span">抢到啦！手气不错！</span>
+					<a href="javascript:void(0);" class="head-p-look">去查看 ></a>
+				</p>
+				<!--coupon start-->
+				<div class="coupon">
+					<div class="coupon-back">
+						<div class="coupon-lt">
+							<p class="coupon-price">50<span>&yen;</span></p>
+							<p class="coupon-price-tips">满1000元可用</p>
+						</div>
+						<div class="coupon-rt">
+							<p class="coupon-name">满减券</p>
+							<p class="coupon-time">至2018-11-11过期</p>
+							<p class="coupon-rule-btn">使用规则</p>
+						</div>
+					</div>
+					<span class="coupon-tips">立即使用</span>
+				</div>
+				<!--coupon end-->
+				<a href="javascript:void(0);" class="activity-rule-btn">活动规则</a>
+			</div>
+			<!--head end-->
+			
+			<!--coupon-no-con start ---没有抢到礼物状态---  -->
+			<div class="coupon-no-con" style="display: none;">
+				<div class="coupon-no-div">
+					<img src="images/coupon_no_icon.png" class="coupon-no-img"/>
+					<p class="coupon-no-tips">你来晚啦！红包已被抢完！</p>
+				</div>
+				<a href="javascript:void(0);" class="look-btn">逛逛金色严选</a>
+			</div>
+			<!--coupon-no-con end-->			
+			
+			<!--main start-->
+			<div class="main clear">
+				<h2 class="gifts-title">看看朋友们的手气</h2>
+				<div class="gifts">
+					<dl class="gifts-dl clear">
+						<dt><img src="images/card_img1.png" alt=""/></dt>
+						<dd>
+							<span class="gifts-dl-name">张鑫</span>
+							<span class="gifts-dl-price">抢到5元</span>
+						</dd>
+					</dl>
+					<dl class="gifts-dl clear">
+						<dt><img src="images/card_img1.png" alt=""/></dt>
+						<dd>
+							<span class="gifts-dl-name">张鑫</span>
+							<span class="gifts-dl-price">抢到5元</span>
+						</dd>
+					</dl>
+				</div>
+			</div>
+			<!--main end-->
+		</div>
+		<!--content end-->
+		
+		<!--footer-tips start-->
+		<fieldset class="footer-tips">
+			<legend>金色严选 用心甄选</legend>
+		</fieldset>
+		<!--footer-tips end-->
+		
+		<!--关注微信公众号 start-->
+		<div class="QR-code-layer" style="display: none;">
+			<div class="QR-code-layer-bg"></div>
+			<div class="QR-code-layer-con">
+				<h2 class="QR-code-title">继续使用请关注公众号</h2>
+				<img src="images/code_img.png" alt="1" class="QR-code-img"/>
+				<p class="QR-code-tips">长按识别关注</p>
+			</div>
+		</div>
+		<!--关注微信公众号 end-->
+		
+		<!--引入js-->
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/size.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/GiftsDetail.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>
