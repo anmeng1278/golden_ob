@@ -1,5 +1,6 @@
 package com.jsj.member.ob.controller.index;
 
+import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
@@ -19,16 +20,17 @@ import java.util.List;
 @ApiIgnore
 @Controller
 @RequestMapping("/")
-public class IndexController {
+public class IndexController extends BaseController {
 
     @GetMapping(value = {""})
     public String index(HttpServletRequest request) {
-
+        
         //品质出行
         List<ProductDto> qualityTravels = ProductLogic.GetProductDtos(1, 4);
         request.setAttribute("qualityTravels", qualityTravels);
 
         //限时秒杀
+        //获取秒杀活动排序第 个数据
         List<ActivityProductDto> secKills = new ArrayList<>();
         ActivityDto activityDto = ActivityLogic.GetActivity(ActivityType.SECKILL);
         int secKillTime = 0;

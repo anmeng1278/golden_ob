@@ -92,6 +92,7 @@ public class BannerLogic extends BaseLogic {
      */
     public static List<Banner> GetBanner(int typeId){
         EntityWrapper<Banner> wrapper = new EntityWrapper<>();
+        wrapper.where("ifpass = 1");
         wrapper.where("delete_time is null and type_id={0}",typeId);
         List<Banner> banners = bannerLogic.bannerService.selectList(wrapper);
         return banners;

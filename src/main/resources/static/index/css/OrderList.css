@@ -1,0 +1,17 @@
+html,body{ background: #F5F5F5;}
+
+/*main start*/
+
+/*---------- order-item ----------*/
+.order-item{ padding: 0 0.3rem; background: #fff; margin-bottom: 0.2rem;}
+.order-item-head{ height: 1.1rem; line-height: 1.1rem; font-family: "microsoft yahei",arial; border-bottom: 1px solid #eee;}
+.order-num{ font-size: 0.3rem; color: #666; float: left;}
+.order-price{ font-size: 0.3rem; color: #C2191F; float: right;}
+.order-item-dl{ padding: 0.4rem 0; position: relative;}
+.order-item-dl dt{ width: 2.4rem; height: 2.4rem; position: absolute; top: 0.4rem; left: 0;}
+.order-item-dl dt img{ width: 2.4rem; height: 2.4rem;}
+.order-item-dl dd{ min-height: 2.4rem; margin: 0 0.3rem 0 2.7rem; font-family: "microsoft yahei",arial; position: relative;}
+.order-dd-name{ font-size: 0.36rem; color: #333; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.order-dd-tips{ line-height: 1.2; font-size: 0.3rem; color: #999;}
+.order-dd-time{ height: 0.6rem; line-height: 0.6rem; font-size: 0.3rem; color: #666; position: absolute; left: 0; bottom: 0; right: 0;}
+/*main end*/

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<head th:fragment="common_header(title,links)">
+    <title th:text="${title}">The awesome application</title>
+    <!-- Common styles and scripts -->
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/awesomeapp.css}">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}">
+    <script type="text/javascript" th:src="@{/sh/scripts/codebase.js}"></script>
+    <!--/* Per-page placeholder for additional links */-->
+    <th:block th:text="${links}"/>
+</head>
+
+<div th:fragment="title2">
+    this is title
+</div>
+<div th:fragment="link">
+    this is link
+</div>
+
+<div th:fragment="frag (onevar,twovar)">
+    <p th:text="${onevar} + ' - ' + ${twovar}">...</p>
+</div>
+
+<div th:replace="::frag (${id},${id})">...</div>
+
+
+
+</body>
+</html>

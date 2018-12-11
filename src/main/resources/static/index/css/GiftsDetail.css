@@ -1,0 +1,61 @@
+/*head start*/
+.head{ padding: 0 0.2rem 0.3rem; background: #F5F5F5;}
+
+/*--------- head-p ---------*/
+.head-p{ line-height: 0.5rem; overflow: hidden; padding: 0.6rem 0 0.1rem;}
+.head-p-span{ font-size: 0.36rem; color: #333; font-weight: 700; float: left;}
+.head-p-look{ font-size: 0.3rem; color: #C2191F; float: right;}
+
+/*--------- coupon ---------*/
+.coupon{ height: 2.06rem; margin-top: 0.3rem; border-radius: 5px; box-shadow: 0 0 15px #E8E8E8; position: relative; background-image: -webkit-linear-gradient(-220deg, #658BFF 0%, #7B58FF 100%); background-image: -moz-linear-gradient(-220deg, #658BFF 0%, #7B58FF 100%); background-image: -o-linear-gradient(-220deg, #658BFF 0%, #7B58FF 100%); background-image: linear-gradient(-220deg, #658BFF 0%, #7B58FF 100%);}
+.coupon-back{ overflow: hidden; width: 90%; height: 2.06rem; border-radius: 5px; background: #fff; position: relative;}
+.coupon-back:after,.coupon-back:before{ content: ""; position: absolute; top: 50%; margin-top: -0.15rem; width: 0.3rem; height: 0.3rem; border-radius: 50%;}
+.coupon-back:after{ left: -0.15rem; background: #F5F5F5; box-shadow:-5px -5px 5px #E8E8E8 inset;}
+.coupon-back:before{ right: -0.15rem; background: #7665FF;}
+.coupon-lt{ width: 2.6rem; height: 1.6rem; text-align: center; border-right: 1px dashed #ECECEC; position: absolute; top: 50%; left: 0; margin-top: -0.8rem;}
+.coupon-price{ font-size: 1.12rem; color: #151515; font-weight: 700; position: relative;}
+.coupon-price span{ font-size: 0.36rem; color: #333; position: absolute; top: 0;}
+.coupon-price-tips{ font-size: 0.24rem; color: #999; padding-top: 0.16rem;}
+.coupon-rt{ margin: 0.42rem 0 0 3.2rem;}
+.coupon-name{ font-size: 0.38rem; color: #333; font-weight: 700;}
+.coupon-time{ font-size: 0.24rem; color: #666; padding: 0.18rem 0;}
+.coupon-rule-btn{ display: inline-block; font-size: 0.24rem; color: #C2191F; border: 1px solid #C2191F; border-radius: 30px; padding: 1px 5px 2px;}
+.coupon-tips{ display: block; width: 0.4rem; text-align: center; line-height: 1.2; font-size: 0.3rem; color: #fff; position: absolute; top: 50%; right: 0.18rem; margin-top: -0.7rem; z-index: 1;}
+
+.activity-rule-btn{ display: block; line-height: 1.4; font-size: 0.28rem; color: #666; background: url(../images/rule_icon.png) no-repeat left; background-size: 0.36rem 0.36rem; padding-left: 0.46rem; margin-top: 0.3rem;}
+
+/*---------- coupon-no-con -----------*/
+.coupon-no-con{ background: #F5F5F5; padding: 0.3rem 0.7rem 0.4rem;}
+.coupon-no-div{ height: 2.06rem; text-align: center; margin-top: 0.3rem; border-radius: 5px; position: relative; background-image: -webkit-linear-gradient(-220deg, #7B58FF 0%, #658BFF 100%); background-image: -moz-linear-gradient(-220deg, #7B58FF 0%, #658BFF 100%); background-image: -o-linear-gradient(-220deg, #7B58FF 0%, #658BFF 100%); background-image: linear-gradient(-220deg, #7B58FF 0%, #658BFF 100%); position: relative;}
+.coupon-no-div:after,.coupon-no-div:before{ content: ""; position: absolute; top: 50%; margin-top: -0.15rem; width: 0.3rem; height: 0.3rem; border-radius: 50%; background: #F5F5F5;}
+.coupon-no-div:after{ left: -0.15rem;}
+.coupon-no-div:before{ right: -0.15rem;}
+.coupon-no-img{ width: 0.82rem; margin: 0.3rem 0 0.2rem;}
+.coupon-no-tips{ font-size: 0.36rem; color: #fff; font-weight: 700;}
+.look-btn{ display: block; width: 4rem; height: 0.88rem; line-height: 0.88rem; text-align: center; font-size: 0.36rem; color: #fff; background: #C2191F; border-radius: 30px; margin: 0.4rem auto 0;}
+/*head end*/
+
+/*main start*/
+.main{ margin-bottom: 1.2rem;}
+.gifts-title{ line-height: 1.2; margin: 0.6rem 0.3rem 0.3rem; font-size: 0.32rem; color: #333; font-weight: 700; border-left: 2px solid #C2191F; padding-left: 0.1rem;}
+.gifts{ border-top: 1px solid #eee; padding-left: 0.3rem;}
+.gifts-dl{ padding: 0.3rem 0; border-bottom: 1px solid #eee; position: relative;}
+.gifts-dl dt{ width: 0.9rem; height: 0.9rem; position: absolute; top: 0.3rem; left: 0;}
+.gifts-dl dt img{ width: 0.9rem; height: 0.9rem; border-radius: 50%;}
+.gifts-dl dd{ height: 0.9rem; line-height: 0.9rem; font-family: "microsoft yahei",arial; margin: 0 0.3rem 0 1.2rem;}
+.gifts-dl-name{ font-size: 0.3rem; color: #333; float: left;}
+.gifts-dl-price{ font-size: 0.32rem; color: #333; font-weight: 700; float: right;}
+/*main end*/
+
+/*footer-tips start*/
+.footer-tips{ width: 60%; border-top: 1px solid #DEDEDE; text-align: center;}
+.footer-tips legend{ font-size: 0.24rem; color: #C6C6C6; padding: 0 0.3rem;}
+/*footer-tips end*/
+
+/*QR-code-layer start*/
+.QR-code-layer-bg{ width: 100%; background: #000; filter:alpha(opacity=50); -moz-opacity:0.5; -khtml-opacity: 0.5;  opacity: 0.5; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100;}
+.QR-code-layer-con{ text-align: center; background: #fff; position: fixed; left: 0; right: 0; bottom: 0; z-index: 101;}
+.QR-code-title{ line-height: 1.2; font-size: 0.4rem; color: #333; font-weight: 700; padding: 0.8rem 0;}
+.QR-code-img{ width: 3.08rem;}
+.QR-code-tips{ font-size: 0.28rem; color: #666; padding: 0.4rem 0 0.6rem;}
+/*QR-code-layer end*/
