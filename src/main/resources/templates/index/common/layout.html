@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head th:fragment="header(title,keys,descripion)">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="format-detection" content="email=no"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"/>
+    <title th:text="${title}">金色严选</title>
+    <link rel="stylesheet" th:href="@{/index/css/public.css}"></link>
+    <th:block layout:fragment="css"></th:block>
+
+    <!--引入的js-->
+    <script type="text/javascript" th:src="@{/index/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/index/js/size.js}"></script>
+
+    <th:block layout:fragment="script"></th:block>
+
+</head>
+<body>
+
+<div layout:fragment="content"></div>
+
+
+</body>
+</html>

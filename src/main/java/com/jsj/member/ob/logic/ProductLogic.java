@@ -2,6 +2,7 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
@@ -57,6 +58,16 @@ public class ProductLogic extends BaseLogic {
     public static ProductDto GetProduct(int productId) {
 
         Product entity = productLogic.productService.selectById(productId);
+        return ProductLogic.ToDto(entity);
+    }
+
+    /**
+     * 实体转换
+     *
+     * @param entity
+     * @return
+     */
+    public static ProductDto ToDto(Product entity) {
 
         //商品实体
         ProductDto productDto = new ProductDto();
@@ -77,11 +88,11 @@ public class ProductLogic extends BaseLogic {
         productDto.setUseIntro(entity.getUseIntro());
 
         //商品图片
-        List<ProductImgDto> productImgDtos = ProductLogic.GetProductImgDtos(productId);
+        List<ProductImgDto> productImgDtos = ProductLogic.GetProductImgDtos(entity.getProductId());
         productDto.setProductImgDtos(productImgDtos);
 
         //商品规格
-        List<ProductSpecDto> productSpecDtos = ProductLogic.GetProductSpecDtos(productId);
+        List<ProductSpecDto> productSpecDtos = ProductLogic.GetProductSpecDtos(entity.getProductId());
         productDto.setProductSpecDtos(productSpecDtos);
         productDto.setStockCount(0);
 
@@ -100,7 +111,6 @@ public class ProductLogic extends BaseLogic {
             productDto.setStockCount(totalStock);
 
         }
-
 
         return productDto;
 
@@ -206,12 +216,25 @@ public class ProductLogic extends BaseLogic {
      * @return
      */
     public static List<ProductImgDto> GetProductImgDtos(int productId) {
+        return productLogic.GetProductImgDtos(productId, null);
+    }
+
+    /**
+     * 获取商品图片
+     *
+     * @param productId
+     * @return
+     */
+    public static List<ProductImgDto> GetProductImgDtos(int productId, ProductImgType productImgType) {
 
         List<ProductImgDto> productImgDtos = new ArrayList<>();
 
         //商品图片
         Wrapper<ProductImg> productImgWrapper = new EntityWrapper<com.jsj.member.ob.entity.ProductImg>();
         productImgWrapper.where("product_id={0} and delete_time is null", productId);
+        if (productImgType != null) {
+            productImgWrapper.where("type_id = {0}", productImgType.getValue());
+        }
         productImgWrapper.orderBy("update_time desc");
 
         List<ProductImg> productImgs = productLogic.productImgService.selectList(productImgWrapper);
@@ -372,6 +395,33 @@ public class ProductLogic extends BaseLogic {
             }
         }
 
+
+    }
+
+
+    /**
+     * 根据类型获取商品
+     *
+     * @param typeId
+     * @param limit
+     * @return
+     */
+    public static List<ProductDto> GetProductDtos(int typeId, int limit) {
+
+        EntityWrapper<Product> wrapper = new EntityWrapper<>();
+
+        wrapper.where("type_id = {0}", typeId);
+        wrapper.where("ifpass = 1 ");
+        wrapper.orderBy("sort asc, update_time desc");
+
+        Page<Product> products = productLogic.productService.selectPage(new Page<>(1, limit), wrapper);
+        List<ProductDto> productDtos = new ArrayList<>();
+
+        for (Product p : products.getRecords()) {
+            productDtos.add(ProductLogic.ToDto(p));
+        }
+
+        return productDtos;
 
     }
 

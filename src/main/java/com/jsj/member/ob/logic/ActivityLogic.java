@@ -97,9 +97,25 @@ public class ActivityLogic extends BaseLogic {
      */
     public static ActivityDto GetActivity(int activityId) {
 
-        ActivityDto dto = new ActivityDto();
-
         Activity entity = activityLogic.activityService.selectById(activityId);
+        return ActivityLogic.ToDto(entity);
+
+    }
+    //endregion
+
+    /**
+     * 实体转换
+     *
+     * @param entity
+     * @return
+     */
+    public static ActivityDto ToDto(Activity entity) {
+
+        if (entity == null) {
+            return null;
+        }
+
+        ActivityDto dto = new ActivityDto();
 
         dto.setActivityId(entity.getActivityId());
         dto.setActivityName(entity.getActivityName());
@@ -120,9 +136,7 @@ public class ActivityLogic extends BaseLogic {
         dto.setNumber(entity.getNumber());
 
         return dto;
-
     }
-    //endregion
 
     //region (public) 削减活动库存 ReductionActivityStock
 
@@ -210,6 +224,8 @@ public class ActivityLogic extends BaseLogic {
             dto.setProductSpecId(ap.getProductSpecId());
             dto.setUpdateTime(ap.getUpdateTime());
             dto.setStockCount(ap.getStockCount());
+
+            dto.setProductDto(ProductLogic.GetProduct(ap.getProductId()));
 
             activityProductDtos.add(dto);
         }
@@ -359,6 +375,25 @@ public class ActivityLogic extends BaseLogic {
     }
     //endregion
 
+    /**
+     * 根据活动类型获取首个活动
+     *
+     * @param activityType
+     * @return
+     */
+    public static ActivityDto GetActivity(ActivityType activityType) {
+
+        Wrapper<Activity> wrapper = new EntityWrapper<>();
+        wrapper.where("ifpass = 1");
+        wrapper.where("type_id = {0}", activityType.getValue());
+        wrapper.orderBy("sort asc, update_time desc");
+
+        Activity entity = activityLogic.activityService.selectOne(wrapper);
+        ActivityDto dto = ActivityLogic.ToDto(entity);
+
+        return dto;
+    }
+
     @Autowired
     JedisPool jedisPool;
 
@@ -456,6 +491,8 @@ public class ActivityLogic extends BaseLogic {
             System.gc();
         }
     }
+
+
 }
 //endregion
 
