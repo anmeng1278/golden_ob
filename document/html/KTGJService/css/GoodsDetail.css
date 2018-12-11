@@ -36,7 +36,7 @@ html,body{ background: #F5F5F5;}
 .purchase-show-btn{ background: #C2191F;}
 .purchase-show-btn-no,.purchase-show-btn-end{ background: #AEAEAE;}
 .purchase-btn{ width: 40%; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #fff; background: #C2191F; float: left;}
-/*footer end*/
+/*footer end*/ 
 
 /*purchase-layer start*/
 .purchase-layer-bg{ width: 100%; background: #000; filter:alpha(opacity=50); -moz-opacity:0.5; -khtml-opacity: 0.5;  opacity: 0.5; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 200;}
