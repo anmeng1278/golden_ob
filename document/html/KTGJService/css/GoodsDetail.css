@@ -57,6 +57,7 @@ html,body{ background: #F5F5F5;}
 /*---------- purchase-layer-p ----------*/
 .purchase-layer-p span{ display: inline-block; width: 1.2rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.28rem; color: #333; background: #fff; border: 1px solid #DEDEDE; border-radius: 3px; margin-right: 0.1rem;}
 .purchase-layer-p .active{ color: #C2191F; border: 1px solid #C2191F;}
+.purchase-layer-p .disabled{ background: #F7F7F7;}
 
 /*---------- purchase-num ----------*/
 .purchase-num{ border: 1px solid #DEDEDE; border-radius: 3px; width: 2.1rem; line-height: 0.6rem; overflow: hidden; float: left;}
