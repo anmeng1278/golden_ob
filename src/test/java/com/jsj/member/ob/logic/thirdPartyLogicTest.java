@@ -27,6 +27,14 @@ public class thirdPartyLogicTest {
         System.out.println(JSON.toJSONString(resp));
     }
 
+    @Test
+    public void getAccessTokenDev() {
+
+        GetAccessTokenRequ requ = new GetAccessTokenRequ();
+        GetAccessTokenResp resp = ThirdPartyLogic.GetAccessTokenDev(requ);
+        System.out.println(JSON.toJSONString(resp));
+    }
+
     //获取ticket
     @Test
     public void getJsApiTicket() {

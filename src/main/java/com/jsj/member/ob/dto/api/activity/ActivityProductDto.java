@@ -1,5 +1,7 @@
 package com.jsj.member.ob.dto.api.activity;
 
+import com.jsj.member.ob.dto.api.product.ProductDto;
+
 public class ActivityProductDto {
 
     /**
@@ -43,6 +45,11 @@ public class ActivityProductDto {
      * 删除时间
      */
     private Integer deleteTime;
+
+    /**
+     * 商品信息
+     */
+    private ProductDto productDto;
 
     public Integer getStockCount() {
         return stockCount;
@@ -114,5 +121,13 @@ public class ActivityProductDto {
 
     public void setSalePrice(double salePrice) {
         this.salePrice = salePrice;
+    }
+
+    public ProductDto getProductDto() {
+        return productDto;
+    }
+
+    public void setProductDto(ProductDto productDto) {
+        this.productDto = productDto;
     }
 }

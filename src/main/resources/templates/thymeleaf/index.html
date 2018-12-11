@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+>
+
+
+<head th:replace="thymeleaf/templates :: common_header(${id}, ${id})">
+
+</head>
+<body>
+
+
+<p th:text="|a=${param.a[0]}|" th:if="${param.a != null and #lists.size(param.a) > 0}"></p>
+
+<a data-id="123" id="a123" th:whatever="${id}" th:href="@{${url}(id=${id},ddd=xxx)}">123123</a>
+<a th:href="@{'/details/'+${id}(orderId=${id})}">view</a>
+
+<script>
+    $(function () {
+        $("#a123").click(function () {
+            alert($(this).data("id"))
+            return false;
+        });
+    });
+</script>
+
+<script th:inline="javascript">
+
+    var user = /*[[${session.user}]]*/ null;
+    alert(user);
+    var id = /*[[${id}]]*/;
+    var name = /*[[${param.ddd}]]*/;
+</script>
+
+<th:block th:replace="thymeleaf/templates::title2"></th:block>
+<div th:replace="thymeleaf/templates::frag (${id},${id})">...</div>
+
+<text th:inline="text">
+    Dear [(${id})]
+</text>
+
+</body>
+</html>
+

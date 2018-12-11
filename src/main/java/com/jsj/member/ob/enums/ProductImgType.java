@@ -9,7 +9,7 @@ public enum ProductImgType {
 
     PRODUCT(1, "商品图片"),
 
-    SECKILL(2,"秒杀展示图片");
+    SECKILL(2,"秒杀图片");
 
     private Integer value;
 
