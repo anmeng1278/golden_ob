@@ -37,6 +37,26 @@ public class Webconfig {
 
     private String ReqURL;
 
+    private  String   appId;
+
+    private String appSecrect;
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getAppSecrect() {
+        return appSecrect;
+    }
+
+    public void setAppSecrect(String appSecrect) {
+        this.appSecrect = appSecrect;
+    }
+
     public String getReqURL() {
         return ReqURL;
     }

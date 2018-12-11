@@ -1,10 +1,12 @@
 package com.jsj.member.ob.logic;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.thirdParty.SmsDto;
 import com.jsj.member.ob.dto.thirdParty.TemplateDto;
 import com.jsj.member.ob.dto.thirdParty.*;
+import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.HttpUtils;
 import com.jsj.member.ob.utils.Md5Utils;
 import org.apache.commons.collections4.map.LinkedMap;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +35,7 @@ public class ThirdPartyLogic extends BaseLogic {
 
     /**
      * 获取AccessToken
+     *
      * @param requ
      * @return
      */
@@ -63,7 +67,50 @@ public class ThirdPartyLogic extends BaseLogic {
     }
 
     /**
+     * 获取开发环境token
+     * @param requ
+     * @return
+     */
+    public static GetAccessTokenResp GetAccessTokenDev(GetAccessTokenRequ requ) {
+
+        GetAccessTokenResp resp = new GetAccessTokenResp();
+
+        GetAccessTokenResp.ResponseBody responseBody = resp.new ResponseBody();
+        resp.setResponseBody(responseBody);
+
+        String url = "http://172.16.5.63:9999/api/accesstoken?timestamp=%d&sign=%s";
+        int timestamp = DateUtils.getCurrentUnixTime();
+        String signKey = "jsjwechat*$(@^^^^)";
+
+        String sign = Md5Utils.MD5(timestamp + "" + signKey);
+        sign = sign.toLowerCase();
+
+        url = String.format(url, timestamp, sign);
+
+        try {
+
+            String s = HttpUtils.get(url);
+            JSONObject jsonObject = JSON.parseObject(s);
+
+            Object access_token = jsonObject.getInnerMap().get("access_token");
+            resp.getResponseBody().setAccessToken(access_token.toString());
+
+            ResponseHead responseHead = new ResponseHead();
+            responseHead.setCode("0000");
+            responseHead.setMessage("请求成功");
+
+            resp.setResponseHead(responseHead);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return resp;
+    }
+
+    /**
      * 获取公众号的 jsapi_ticket
+     *
      * @param requ
      * @return
      */
@@ -76,7 +123,7 @@ public class ThirdPartyLogic extends BaseLogic {
             LinkedMap<String, String> map = new LinkedMap<>();
             map.put("TimeStamp", requ.getRequestHead().getTimeStamp());
             map.put("SourceFrom", requ.getRequestHead().getSourceFrom());
-            map.put("AccessToken",requ.getRequestBody().getAccessToken());
+            map.put("AccessToken", requ.getRequestBody().getAccessToken());
 
             String sign = thirdPartyLogic.GetMd5str(map, "#wugf543sxcv5*$#");
             sign = Md5Utils.MD5(sign);
@@ -98,6 +145,7 @@ public class ThirdPartyLogic extends BaseLogic {
 
     /**
      * 通过 code 换取网页授权 access_token
+     *
      * @param requ
      * @return
      */
@@ -110,7 +158,7 @@ public class ThirdPartyLogic extends BaseLogic {
             LinkedMap<String, String> map = new LinkedMap<>();
             map.put("TimeStamp", requ.getRequestHead().getTimeStamp());
             map.put("SourceFrom", requ.getRequestHead().getSourceFrom());
-            map.put("Code",requ.getRequestBody().getCode());
+            map.put("Code", requ.getRequestBody().getCode());
 
             String sign = thirdPartyLogic.GetMd5str(map, "#wugf543sxcv5*$#");
             sign = Md5Utils.MD5(sign);
@@ -132,6 +180,7 @@ public class ThirdPartyLogic extends BaseLogic {
 
     /**
      * 微信公众号下单接口，使用返回参数调起微信客户端支付
+     *
      * @param requ
      * @return
      */
@@ -149,7 +198,7 @@ public class ThirdPartyLogic extends BaseLogic {
             map.put("SourceWay", requ.getRequestBody().getSourceWay());
             map.put("SourceApp", requ.getRequestBody().getSourceApp());
             map.put("PayMethod", requ.getRequestBody().getPayAmount());
-            map.put("OutTradeId",requ.getRequestBody().getOutTradeId());
+            map.put("OutTradeId", requ.getRequestBody().getOutTradeId());
             map.put("PayAmount", requ.getRequestBody().getPayAmount());
             map.put("OpenId", requ.getRequestBody().getOpenId());
             map.put("OrderTimeOut", requ.getRequestBody().getOrderTimeOu());
@@ -238,9 +287,9 @@ public class ThirdPartyLogic extends BaseLogic {
     }
 
 
-
     /**
      * 签名字符串处理
+     *
      * @param map
      * @param secret
      * @return

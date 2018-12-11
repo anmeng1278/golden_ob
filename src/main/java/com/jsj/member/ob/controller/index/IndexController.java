@@ -1,38 +1,27 @@
 package com.jsj.member.ob.controller.index;
 
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.jsj.member.ob.dto.RestResponseBo;
-import com.jsj.member.ob.dto.api.activity.ActivityDto;
-import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.entity.Activity;
 import com.jsj.member.ob.entity.Banner;
-import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.entity.Product;
 import com.jsj.member.ob.enums.BannerType;
-import com.jsj.member.ob.enums.DictType;
-import com.jsj.member.ob.enums.SecKillStatus;
-import com.jsj.member.ob.logic.ActivityLogic;
-import com.jsj.member.ob.logic.BannerLogic;
-import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.service.BannerService;
 import com.jsj.member.ob.service.DictService;
 import com.jsj.member.ob.service.ProductService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Random;
 
 @Controller
-@RequestMapping("/index")
+@RequestMapping("/")
 public class IndexController {
 
     @Autowired
@@ -48,7 +37,7 @@ public class IndexController {
     ProductService productService;
 
 
-    @GetMapping("/index")
+    @GetMapping("")
     public String index(Model model,@RequestParam(value = "openId", defaultValue = "111") String openId) {
         //活动信息
         EntityWrapper<Activity> wrapper = new EntityWrapper<>();
