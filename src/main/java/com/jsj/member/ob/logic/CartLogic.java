@@ -216,7 +216,7 @@ public class CartLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static int GetProductAmount(String openId){
+    public static int GetCartProductCount(String openId){
         int amount = 0;
         List<CartProduct> cartProducts = CartLogic.GetCartProducts(openId);
         for (CartProduct cartProduct : cartProducts) {

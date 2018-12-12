@@ -384,7 +384,7 @@ public class ActivityLogic extends BaseLogic {
     public static ActivityDto GetActivity(ActivityType activityType) {
 
         Wrapper<Activity> wrapper = new EntityWrapper<>();
-        wrapper.where("ifpass = 1");
+        wrapper.where("ifpass = 1 and delete_time is null");
         wrapper.where("type_id = {0}", activityType.getValue());
         wrapper.orderBy("sort asc, update_time desc");
 
@@ -392,6 +392,46 @@ public class ActivityLogic extends BaseLogic {
         ActivityDto dto = ActivityLogic.ToDto(entity);
 
         return dto;
+    }
+
+    /**
+     * 根据活动类型活动活动信息
+     * @param activityType
+     * @return
+     */
+    public static List<ActivityDto> GetActivityByType(ActivityType activityType){
+
+        Wrapper<Activity> wrapper = new EntityWrapper<>();
+        wrapper.where("ifpass = 1 and delete_time is null");
+        wrapper.where("type_id = {0}", activityType.getValue());
+        wrapper.orderBy("sort asc, update_time desc");
+
+        List<Activity> activities = activityLogic.activityService.selectList(wrapper);
+
+        List<ActivityDto> dtos = new ArrayList<>();
+
+        for (Activity activity : activities) {
+            ActivityDto dto = new ActivityDto();
+            dto.setShowTime(activity.getShowTime());
+            dto.setNumber(activity.getNumber());
+            dto.setActivityId(activity.getActivityId());
+            dto.setActivityName(activity.getActivityName());
+            dto.setBeginTime(activity.getBeginTime());
+            dto.setActivityType(ActivityType.valueOf(activity.getTypeId()));
+            dto.setEndTime(activity.getEndTime());
+            dto.setIfpass(activity.getIfpass());
+            dto.setImgPath(activity.getImgPath());
+            dto.setCreateTime(activity.getCreateTime());
+            dto.setStockCount(activity.getStockCount());
+            dto.setUpdateTime(activity.getUpdateTime());
+            dto.setOriginalPrice(activity.getOriginalPrice());
+            dto.setSalePrice(activity.getSalePrice());
+            dto.setIntroduce(activity.getIntroduce());
+            dto.setTypeId(activity.getTypeId());
+            dtos.add(dto);
+        }
+
+        return dtos;
     }
 
     @Autowired

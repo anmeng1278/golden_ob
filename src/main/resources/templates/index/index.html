@@ -29,15 +29,11 @@
     <div class="banner">
         <div class="swiper-container">
             <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <img th:src="@{/index/images/banner.png}" alt="1" width="100%"/>
-                </div>
-                <div class="swiper-slide">
-                    <img th:src="@{/index/images/banner.png}" alt="1" width="100%"/>
-                </div>
-                <div class="swiper-slide">
-                    <img th:src="@{/index/images/banner.png}" alt="1" width="100%"/>
-                </div>
+                <th:block th:each="banner:${banners}">
+                    <div class="swiper-slide">
+                        <img th:src="@{${banner.bannerPath}}" alt="1" width="100%"/>
+                    </div>
+                </th:block>
             </div>
         </div>
     </div>
@@ -81,10 +77,10 @@
                                 <img th:src="${info.productImgDtos[0].imgPath}" alt="1" width="100%"/>
                             </dt>
                             <dd>
-                                <h2 class="section-dl-title" th:text="${info.productName}">逸站通卡</h2>
-                                <p class="section-dl-tips" th:text="${info.introduce}">畅享全国机场/高铁金高铁金高铁金</p>
+                                <h2 class="section-dl-title" th:text="${info.productName}"></h2>
+                                <p class="section-dl-tips" th:text="${info.introduce}"></p>
                                 <p th:if="${!#lists.isEmpty(info.productSpecDtos)}" class="section-dl-price">&yen;<em
-                                        th:text="${info.productSpecDtos[0].salePrice}">898</em></p>
+                                        th:text="${info.productSpecDtos[0].salePrice}"></em></p>
                             </dd>
                         </dl>
                     </a>
@@ -114,14 +110,14 @@
                         <th:block th:each="info : ${secKills}">
                             <a href="javascript:void(0);">
                                 <dl class="section-con-dl">
-                                    <th:block th:with="img=${productLogic.GetProductImgDtos(info.productId, 2)}">
+                                    <th:block th:with="img=${productLogic.GetProductImgDtos(info.productId,2)}">
                                         <dt th:if="${img != null && !#lists.isEmpty(img)}">
                                             <img th:src="${img[0].imgPath}" alt="1" width="100%"/>
                                         </dt>
                                     </th:block>
                                     <dd>
-                                        <h2 class="section-dl-title" th:text="${info.productDto.productName}">大闸蟹</h2>
-                                        <p class="section-dl-price">&yen;<em th:text="${info.salePrice}">898</em></p>
+                                        <h2 class="section-dl-title" th:text="${info.productDto.productName}"></h2>
+                                        <p class="section-dl-price">&yen;<em th:text="${info.salePrice}"></em></p>
                                     </dd>
                                 </dl>
                             </a>
@@ -137,54 +133,21 @@
         <div id="section3" class="section clear">
             <h2 class="section-title">爆款单品</h2>
             <!--section-con start-->
-            <a href="javascript:void(0);">
-                <dl class="section-con-dl">
-                    <dt>
-                        <img th:src="@{/index/images/card_img1.png}" alt="1" width="100%"/>
-                    </dt>
-                    <dd>
-                        <h2 class="section-dl-title">逸站通卡</h2>
-                        <p class="section-dl-tips">畅享全国机场/高铁金高铁金高铁金</p>
-                        <p class="section-dl-price">&yen;<em>898</em></p>
-                    </dd>
-                </dl>
-            </a>
-            <a href="javascript:void(0);">
-                <dl class="section-con-dl">
-                    <dt>
-                        <img th:src="@{/index/i
-            <div class="section-con">mages/card_img2.png}" alt="1" width="100%"/>
-                        </dt>
-                        <dd>
-                            <h2 class="section-dl-title">逸站通卡</h2>
-                            <p class="section-dl-tips">畅享全国机场/高铁金高铁金高铁金</p>
-                            <p class="section-dl-price">&yen;<em>898</em></p>
-                        </dd>
-                    </dl>
-                </a>
+            <div class="section-con">
                 <a href="javascript:void(0);">
-                    <dl class="section-con-dl">
-                        <dt>
-                            <img th:src="@{/index/images/card_img3.png}" alt="1" width="100%"/>
-                        </dt>
-                        <dd>
-                            <h2 class="section-dl-title">超级空客•月体验</h2>
-                            <p class="section-dl-tips">畅享全国机场/高铁金高铁金高铁金</p>
-                            <p class="section-dl-price">&yen;<em>898</em></p>
-                        </dd>
-                    </dl>
-                </a>
-                <a href="javascript:void(0);">
-                    <dl class="section-con-dl">
-                        <dt>
-                            <img th:src="@{/index/images/card_img4.png}" alt="1" width="100%"/>
-                        </dt>
-                        <dd>
-                            <h2 class="section-dl-title">金色逸站通用券</h2>
-                            <p class="section-dl-tips">畅享全国机场/高铁金高铁金高铁金</p>
-                            <p class="section-dl-price">&yen;<em>898</em></p>
-                        </dd>
-                    </dl>
+                    <th:block th:each="info:${hotProducts}">
+                        <dl class="section-con-dl">
+                            <dt th:if="${!#lists.isEmpty(info.productImgDtos)}">
+                                <img th:src="${info.productImgDtos[0].imgPath}" alt="1" width="100%"/>
+                            </dt>
+                            <dd>
+                                <h2 class="section-dl-title" th:text="${info.productName}"></h2>
+                                <p class="section-dl-tips" th:text="${info.introduce}"></p>
+                                <p class="section-dl-price" th:if="${!#lists.isEmpty(info.productSpecDtos)}">&yen;
+                                    <em th:text="${info.productSpecDtos[0].salePrice}"></em></p>
+                            </dd>
+                        </dl>
+                    </th:block>
                 </a>
             </div>
             <!--section-con end-->
@@ -192,33 +155,24 @@
         <!--爆款单品 end-->
 
         <!--组合优惠 start-->
-        <div id="section4" class="section clear">
+        <div id="section4" class="section clear" th:if="${!#lists.isEmpty(setSales)}">
             <h2 class="section-title">组合优惠</h2>
             <!--section-con start-->
             <div class="section-con">
                 <a href="javascript:void(0);">
+                    <th:block th:each="info:${setSales}">
                     <dl class="section-con-dl">
                         <dt>
-                            <img th:src="@{/index/images/card_img1.png}" alt="1" width="100%"/>
+                            <img th:src="${info.imgPath}" alt="1" width="100%"/>
                         </dt>
                         <dd>
-                            <h2 class="section-dl-title">逸站通卡</h2>
-                            <p class="section-dl-tips">畅享全国机场/高铁金高铁金高铁金</p>
-                            <p class="section-dl-price">&yen;<em>898</em><span>￥580</span></p>
+                            <h2 class="section-dl-title" th:text="${info.activityName}"></h2>
+                            <p class="section-dl-tips" th:text="${info.introduce}"></p>
+                            <p class="section-dl-price">&yen;<em th:text="${info.salePrice}"></em><span
+                                    th:text="${info.originalPrice}">￥</span></p>
                         </dd>
                     </dl>
-                </a>
-                <a href="javascript:void(0);">
-                    <dl class="section-con-dl">
-                        <dt>
-                            <img th:src="@{/index/images/card_img2.png}" alt="1" width="100%"/>
-                        </dt>
-                        <dd>
-                            <h2 class="section-dl-title">逸站通卡</h2>
-                            <p class="section-dl-tips">畅享全国机场/高铁金高铁金高铁金</p>
-                            <p class="section-dl-price">&yen;<em>898</em><span>￥580</span></p>
-                        </dd>
-                    </dl>
+                    </th:block>
                 </a>
             </div>
             <!--section-con end-->
@@ -236,7 +190,7 @@
     <!--shopping-cart start-->
     <div class="shopping-cart">
         <img th:src="@{/index/images/shoppingCart.png}" alt="1" class="shopping-icon"/>
-        <span class="shopping-num">0</span>
+        <span class="shopping-num" th:text="${count}"></span>
     </div>
     <!--shopping-cart start-->
 
