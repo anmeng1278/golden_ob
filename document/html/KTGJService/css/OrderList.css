@@ -1,17 +1,31 @@
 html,body{ background: #F5F5F5;}
 
 /*main start*/
-
 /*---------- order-item ----------*/
-.order-item{ padding: 0 0.3rem; background: #fff; margin-bottom: 0.2rem;}
-.order-item-head{ height: 1.1rem; line-height: 1.1rem; font-family: "microsoft yahei",arial; border-bottom: 1px solid #eee;}
-.order-num{ font-size: 0.3rem; color: #666; float: left;}
-.order-price{ font-size: 0.3rem; color: #C2191F; float: right;}
-.order-item-dl{ padding: 0.4rem 0; position: relative;}
-.order-item-dl dt{ width: 2.4rem; height: 2.4rem; position: absolute; top: 0.4rem; left: 0;}
-.order-item-dl dt img{ width: 2.4rem; height: 2.4rem;}
-.order-item-dl dd{ min-height: 2.4rem; margin: 0 0.3rem 0 2.7rem; font-family: "microsoft yahei",arial; position: relative;}
-.order-dd-name{ font-size: 0.36rem; color: #333; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
-.order-dd-tips{ line-height: 1.2; font-size: 0.3rem; color: #999;}
-.order-dd-time{ height: 0.6rem; line-height: 0.6rem; font-size: 0.3rem; color: #666; position: absolute; left: 0; bottom: 0; right: 0;}
+.order-item{ background: #fff; margin-bottom: 0.2rem;}
+.order-item-head{ padding: 0 0.3rem; height: 1.1rem; font-family: "microsoft yahei",arial;}
+.order-num{ line-height: 1.1rem; font-size: 0.3rem; color: #666; float: left;}
+.order-price{ line-height: 1.1rem; font-size: 0.3rem; color: #C2191F; float: right;}
+
+/*---------- order-item-dl ----------*/
+.order-item-dl{ padding: 0.2rem 0.3rem; border-top: 1px solid #eee; position: relative;}
+.order-item-dl dt{ width: 1.8rem; height: 1.8rem; position: absolute; top: 0.2rem; left: 0.3rem;}
+.order-item-dl dt img{ width: 1.8rem; height: 1.8rem;}
+.order-item-dl dd{ min-height: 1.6rem; margin: 0.2rem 0 0 2.1rem; font-family: "microsoft yahei",arial; position: relative;}
+.order-dd-name{ font-size: 0.32rem; color: #333; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.order-dd-tips{ line-height: 1.2; font-size: 0.28rem; color: #888;}
+.order-dd-time{ height: 0.6rem; line-height: 0.6rem; font-size: 0.28rem;}
+.order-dd-time span:nth-child(1){ color: #888; float: left;}
+.order-dd-time span:nth-child(2){ color: #333; float: right;}
+
+/*---------- order-item-bot ----------*/
+.order-item-bot{ padding: 0 0.3rem; height: 1.2rem; border-top: 1px solid #eee;}
+.order-bot-price{ line-height: 1.2rem; font-size: 0.24rem; color: #C2191F; font-family: "microsoft yahei",arial; float: left;}
+.order-bot-price span{ font-size: 0.44rem; font-weight: 700;}
+.order-bot-p{ float: right; margin-top: 0.28rem;}
+.order-bot-p a{ display: block; width: 1.7rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.28rem; border-radius: 30px; float: left; margin-left: 0.2rem;}
+.order-bot-p a:first-child{ margin: 0;}
+.order-bot-p .cancel-btn{ background: #fff; border: 1px solid #eee; color: #333;}
+.order-bot-p .pay-btn{ background: #C2191F; border: 1px solid #C2191F; color: #fff;}
+
 /*main end*/
