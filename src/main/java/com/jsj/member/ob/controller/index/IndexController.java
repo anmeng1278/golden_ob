@@ -7,6 +7,7 @@ import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Banner;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.BannerType;
+import com.jsj.member.ob.enums.ProductType;
 import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.BannerLogic;
 import com.jsj.member.ob.logic.CartLogic;
@@ -35,11 +36,11 @@ public class IndexController extends BaseController {
 
 
         //品质出行
-        List<ProductDto> qualityTravels = ProductLogic.GetProductDtos(1, 4);
+        List<ProductDto> qualityTravels = ProductLogic.GetProductDtos(ProductType.QUALITYTRAVELS.getValue(), 4);
         request.setAttribute("qualityTravels", qualityTravels);
 
         //爆款单品
-        List<ProductDto> hotProducts = ProductLogic.GetProductDtos(839033, 4);
+        List<ProductDto> hotProducts = ProductLogic.GetProductDtos(ProductType.HOTPRODUCT.getValue(), 4);
         request.setAttribute("hotProducts", hotProducts);
 
 
