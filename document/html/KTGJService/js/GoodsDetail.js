@@ -27,6 +27,7 @@ $(function(){
     
     //选规格的点击事件
     $('.purchase-layer-p span').on('click',function(){
+    	return;
     	$(this).addClass('active').siblings().removeClass('active');
     });
     
