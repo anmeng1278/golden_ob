@@ -5,9 +5,11 @@ import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.entity.Stock;
+import com.jsj.member.ob.enums.OrderFlag;
 import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.order.OrderBase;
@@ -70,9 +72,14 @@ public class OrderLogic extends BaseLogic {
 
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
         List<OrderProduct> orderProducts = orderLogic.orderProductService.selectList(new EntityWrapper<OrderProduct>().where("order_id={0}", orderId));
+
         orderProducts.forEach(op -> {
 
             OrderProductDto dto = new OrderProductDto();
+
+            ProductDto productDto = ProductLogic.GetProduct(op.getProductId());
+
+            dto.setProductDto(productDto);
             dto.setNumber(op.getNumber());
             dto.setProductSpecId(op.getProductSpecId());
             dto.setProductId(op.getProductId());
@@ -189,6 +196,57 @@ public class OrderLogic extends BaseLogic {
 
         EntityWrapper<Order> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null and open_id={0}", openId);
+
+        List<Order> orders = orderLogic.orderService.selectList(wrapper);
+
+        List<OrderDto> orderDtos = new ArrayList<>();
+
+        for (Order order : orders) {
+            OrderDto dto = new OrderDto();
+
+            //订单中的商品数
+            EntityWrapper<OrderProduct> orderWrapper = new EntityWrapper<>();
+            wrapper.where("open_id={1}", order.getOrderId());
+            int count = orderLogic.orderProductService.selectCount(orderWrapper);
+
+            dto.setCount(count);
+
+            dto.setOpenId(order.getOpenId());
+            dto.setOrderId(order.getOrderId());
+            dto.setRemarks(order.getRemarks());
+            dto.setAmount(order.getAmount());
+            dto.setPayAmount(order.getAmount() - order.getCouponPrice());
+            dto.setStatus(order.getStatus());
+            dto.setTransactionId(order.getTransactionId());
+            dto.setWechatCouponId(order.getWechatCouponId());
+            dto.setCouponPrice(order.getCouponPrice());
+            dto.setActivityId(order.getActivityId());
+            dto.setActivityOrderId(order.getActivityOrderId());
+            dto.setTypeId(order.getTypeId());
+            dto.setPayTime(order.getPayTime());
+            dto.setExpiredTime(order.getExpiredTime());
+            dto.setUpdateTime(order.getUpdateTime());
+            List<OrderProductDto> orderProductDtos = OrderLogic.GetOrderProducts(order.getOrderId());
+            dto.setOrderProductDtos(orderProductDtos);
+            orderDtos.add(dto);
+        }
+        return orderDtos;
+    }
+
+    /**
+     * 获得用户所有订单或所有待支付订单
+     * @param openId
+     * @return
+     */
+    public static List<OrderDto> GetMyOrder(String openId, int orderFlag) {
+
+        EntityWrapper<Order> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null and open_id={0}", openId);
+
+        if(orderFlag == OrderFlag.UNPAIDORDERS.getValue()){
+            wrapper.where("status in (0,20)");
+        }
+
         List<Order> orders = orderLogic.orderService.selectList(wrapper);
 
         List<OrderDto> orderDtos = new ArrayList<>();
