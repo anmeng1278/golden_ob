@@ -12,7 +12,7 @@ public enum OrderStatus {
 
     PAYFAIL(20, "支付失败"),
 
-    CANCEL(60, "取消订单");
+    CANCEL(60, "订单已取消");
 
     private Integer value;
 

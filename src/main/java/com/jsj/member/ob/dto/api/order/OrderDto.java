@@ -83,8 +83,9 @@ public class OrderDto {
      */
     private Integer count;
 
-
     private List<ProductDto> productDtos;
+
+    private List<OrderProductDto> orderProductDtos;
 
     public Integer getCount() {
         return count;
@@ -93,8 +94,6 @@ public class OrderDto {
     public void setCount(Integer count) {
         this.count = count;
     }
-
-    private List<OrderProductDto> orderProductDtos;
 
     public List<OrderProductDto> getOrderProductDtos() {
         return orderProductDtos;
