@@ -34,8 +34,9 @@ html,body{ background: #F5F5F5;}
 .footer-rt a{ display: block; width: 50%; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #fff; float: left;}
 .shopping-cart-btn{ background: #F1A01B;}
 .purchase-show-btn{ background: #C2191F;}
+.purchase-show-btn-no,.purchase-show-btn-end{ background: #AEAEAE;}
 .purchase-btn{ width: 40%; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #fff; background: #C2191F; float: left;}
-/*footer end*/
+/*footer end*/ 
 
 /*purchase-layer start*/
 .purchase-layer-bg{ width: 100%; background: #000; filter:alpha(opacity=50); -moz-opacity:0.5; -khtml-opacity: 0.5;  opacity: 0.5; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 200;}
@@ -56,6 +57,7 @@ html,body{ background: #F5F5F5;}
 /*---------- purchase-layer-p ----------*/
 .purchase-layer-p span{ display: inline-block; width: 1.2rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.28rem; color: #333; background: #fff; border: 1px solid #DEDEDE; border-radius: 3px; margin-right: 0.1rem;}
 .purchase-layer-p .active{ color: #C2191F; border: 1px solid #C2191F;}
+.purchase-layer-p .disabled{ background: #F7F7F7;}
 
 /*---------- purchase-num ----------*/
 .purchase-num{ border: 1px solid #DEDEDE; border-radius: 3px; width: 2.1rem; line-height: 0.6rem; overflow: hidden; float: left;}

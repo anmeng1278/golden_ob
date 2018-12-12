@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<!-- 首页 \document\html\KTGJService\index.html -->
+<head th:replace="index/common/layout :: header('金色严选-商品详情', '', '')"></head>
+
+<th:block layout:fragment="script">
+    <!--引入的js-->
+    <script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="@{/index/js/GoodsDetail.js}" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" th:inline="javascript">
+        TX.INIT(function () {
+
+            $(".purchase-num-reduce").addClass("disabled");
+            $(".purchase-num-add").addClass("disabled");
+
+            $("p.purchase-layer-p span").click(function () {
+
+                var parent = $(this).parents("div.shopping-cart:first");
+                if ($(this).hasClass("disabled")) {
+                    return;
+                }
+
+                $(".purchase-num-reduce", parent).addClass("disabled");
+                $(".purchase-num-add", parent).addClass("disabled");
+                window.specStockCount = 0;
+                $(":text[name='num']", parent).val(0);
+                $(this).siblings().removeClass("active");
+                $(this).addClass("active");
+
+                var stockCount = parseInt($(this).attr("data-spec-stockCount"), 10) || 0;
+                stockCount = stockCount < 0 ? 0 : stockCount;
+
+                if (stockCount > 0) {
+
+                    $(":text[name='num']", parent).val(1);
+                    window.specStockCount = stockCount;
+
+                    $(".purchase-num-reduce", parent).removeClass("disabled");
+                    $(".purchase-num-add", parent).removeClass("disabled");
+
+                }
+            });
+
+            $("p.purchase-layer-p").each(function () {
+
+                $("span", $(this)).each(function () {
+                    if (!$(this).hasClass('disabled')) {
+                        $(this).click();
+                        return false;
+                    }
+                });
+
+            });
+
+
+            //立即购买
+            $(".purchase-btn").click(function () {
+                alert(123);
+            });
+
+            //加入购物车
+            $(".shopping-cart-confirm").click(function () {
+
+                var parent = $(this).parents("div.shopping-cart:first");
+                //购买数量
+                var num = parseInt($(":text[name='num']", parent).val());
+                if (num <= 0) {
+                    TX.MSG.msg("请选择商品数", {icon: 2});
+                    return;
+                }
+                if ($("span.active", parent).length == 0) {
+                    TX.MSG.msg("请选择商品规格", {icon: 2});
+                    return;
+                }
+                var productSpecId = $("span.active", parent).attr("data-spec-id");
+
+                //添加购物车
+                TX.CORE.p({
+                    data: {
+                        num: num,
+                        productSpecId: productSpecId,
+                        productId:[[${info.productId}]]
+                    },
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
+
+            });
+        });
+    </script>
+
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="@{/index/js/swiper/css/swiper.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/index/css/GoodsDetail.css}"/>
+</th:block>
+
+<div layout:fragment="content">
+
+    <!--banner start-->
+    <div class="banner">
+        <!-- 轮播 start -->
+        <div class="swiper-container" th:if="${!#lists.isEmpty(info.productImgDtos)}">
+            <div class="swiper-wrapper">
+                <th:block th:each="img : ${info.productImgDtos}">
+                    <div class="swiper-slide">
+                        <img th:src="${img.imgPath}" alt="1" width="100%"/>
+                    </div>
+                </th:block>
+            </div>
+            <!-- Add Pagination -->
+            <div class="swiper-pagination"></div>
+        </div>
+        <!-- 轮播 end -->
+
+        <!--只限时秒杀商品才显示-->
+        <!--<p class="banner-SecKill"><span>限时秒杀</span></p>-->
+    </div>
+    <!--banner end-->
+
+    <!--goods-introduce start-->
+    <div class="goods-introduce">
+        <h2 class="goods-name" th:text="${info.productName}">素园野生素食参谜</h2>
+        <p class="goods-tips" th:text="${info.introduce}">旅行者百色行李箱，百变色彩，多色可选</p>
+        <span class="goods-num" th:text="|剩余${stockCount}${info.unit}|"></span>
+        <span class="goods-price">&yen;<em th:text="${salePrice}">898</em></span>    <!--只限时秒杀商品才显示-->
+    </div>
+    <!--goods-introduce end-->
+
+    <!--main start-->
+    <div class="main">
+        <h2 class="goods-detail"><span>商品详情</span></h2>
+        <p th:text="${info.useIntro}"></p>
+    </div>
+    <!--main end-->
+
+    <!--footer start-->
+    <div class="footer">
+        <p class="footer-lt">
+            <span class="shopping-price">&yen;<em th:text="${salePrice}">898</em></span>
+        </p>
+        <p class="footer-rt">
+            <a href="javascript:void(0);" class="shopping-cart-btn">加入购物车</a>
+            <a href="javascript:void(0);" class="purchase-show-btn">立即购买</a>
+        </p>
+
+    </div>
+    <!--footer end-->
+
+    <!-- purchase-layer start -->
+    <div class="purchase-layer" style="display: none;">
+        <div class="purchase-layer-bg"></div>
+        <div class="purchase-layer-con">
+            <!--purchase-layer-main start-->
+            <div class="purchase-layer-main">
+                <dl class="purchase-layer-dl">
+                    <dt th:if="${!#lists.isEmpty(info.productImgDtos)}">
+                        <img th:src="${info.productImgDtos[0].imgPath}"/>
+                    </dt>
+                    <dd>
+                        <h2 class="purchase-goods-name" th:text="${info.productName}">素园野生素食参谜</h2>
+                        <p class="purchase-goods-tips" th:text="${info.introduce}">健康好参 立等即食</p>
+                    </dd>
+                </dl>
+                <div class="purchase-layer-div">
+                    <span class="purchase-layer-lable">规格</span>
+                    <p class="purchase-layer-p">
+                        <th:block th:each="spec,current : ${info.productSpecDtos}">
+                            <span th:attr="data-spec-id=${spec.productSpecId}"
+                                  th:classappend="${spec.stockCount > 0 ?'':'disabled'}"
+                                  th:text="${spec.specName}"></span>
+                        </th:block>
+                    </p>
+                </div>
+                <div class="purchase-layer-div">
+                    <span class="purchase-layer-lable">购买数量</span>
+                    <div class="purchase-num">
+                        <em class="purchase-num-reduce"></em>
+                        <input type="text" value="0" class="num" name="num"/>
+                        <em class="purchase-num-add"></em>
+                    </div>
+                    <!--<p class="purchase-num-tips">每个账号限购1件</p>  -->
+                    <!--秒杀时提示购买数量限制-->
+                </div>
+                <div class="purchase-layer-div">
+                    <span class="purchase-layer-lable">优惠券</span>
+                    <ul class="purchase-coupon">
+                        <li class="active">
+                            <span class="coupon-price">30<em>&yen;</em></span>
+                            <p class="coupon-tips">满300元可用</p>
+                        </li>
+                        <li>
+                            <span class="coupon-price">90<em>&yen;</em></span>
+                            <p class="coupon-tips">满1000元可用</p>
+                        </li>
+                        <li>
+                            <span class="coupon-price">10<em>&yen;</em></span>
+                            <p class="coupon-tips">满150元可用</p>
+                        </li>
+                    </ul>
+                    <p class="coupon-none clear" style="display: none;">无可用优惠券</p>    <!--没有优惠券才显示-->
+                </div>
+            </div>
+            <!--purchase-layer-main end-->
+
+            <!--purchase-footer start-->
+            <div class="purchase-footer">
+                <p class="purchase-footer-lt">
+                    <span class="shopping-price">&yen;<em>898</em></span>
+                    <span class="shopping-price-org">￥898</span>
+                    <span class="shopping-price-dis">已优惠￥<em>30</em></span>    <!--购买时使用优惠券才显示-->
+                </p>
+                <a href="javascript:void(0);" class="purchase-btn">立即购买</a>
+            </div>
+            <!--purchase-footer end-->
+        </div>
+    </div>
+    <!-- purchase-layer end -->
+
+    <!--shopping-cart start-->
+    <div class="shopping-cart" style="display: none;">
+        <div class="shopping-cart-bg"></div>
+        <div class="shopping-cart-con">
+            <!--purchase-layer-main start-->
+            <div class="purchase-layer-main">
+                <dl class="purchase-layer-dl">
+                    <dt th:if="${!#lists.isEmpty(info.productImgDtos)}">
+                        <img th:src="${info.productImgDtos[0].imgPath}"/>
+                    </dt>
+                    <dd>
+                        <h2 class="purchase-goods-name" th:text="${info.productName}">素园野生素食参谜</h2>
+                        <p class="purchase-goods-tips" th:text="${info.introduce}">健康好参 立等即食</p>
+                    </dd>
+                </dl>
+                <div class="purchase-layer-div">
+                    <span class="purchase-layer-lable">规格</span>
+                    <p class="purchase-layer-p">
+                        <th:block th:each="spec,current : ${info.productSpecDtos}">
+                            <span th:attr="data-spec-id=${spec.productSpecId}, data-spec-stockCount=${spec.stockCount}"
+                                  th:classappend="${spec.stockCount > 0 ?'':'disabled'}"
+                                  th:text="${spec.specName}"></span>
+                        </th:block>
+                    </p>
+                </div>
+                <div class="purchase-layer-div">
+                    <span class="purchase-layer-lable">购买数量</span>
+                    <div class="purchase-num">
+                        <em class="purchase-num-reduce"></em>
+                        <input type="text" value="0" class="num" name="num"/>
+                        <em class="purchase-num-add"></em>
+                    </div>
+                    <!--<p class="purchase-num-tips">每个账号限购1件</p>     -->
+                    <!--秒杀时提示购买数量限制-->
+                </div>
+            </div>
+            <!--purchase-layer-main end-->
+
+            <!--purchase-footer start-->
+            <a href="javascript:void(0);" class="shopping-cart-confirm">确定</a>
+            <!--purchase-footer end-->
+        </div>
+    </div>
+    <!--shopping-cart end-->
+
+
+</div>
