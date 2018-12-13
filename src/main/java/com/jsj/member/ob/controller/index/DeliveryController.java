@@ -2,11 +2,7 @@ package com.jsj.member.ob.controller.index;
 
 import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
-import com.jsj.member.ob.dto.api.express.ExpressRequ;
-import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.logic.DeliveryLogic;
-import com.jsj.member.ob.logic.ExpressApiLogic;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +14,7 @@ import java.util.List;
 
 @ApiIgnore
 @Controller
-@RequestMapping("/delivery")
+@RequestMapping("${webconfig.virtualPath}/delivery")
 public class DeliveryController extends BaseController {
 
 
@@ -29,7 +25,7 @@ public class DeliveryController extends BaseController {
      * @return
      */
     @GetMapping("")
-    public String delivery(HttpServletRequest request) {
+    public String index(HttpServletRequest request) {
 
         String openId = this.OpenId();
 
@@ -42,25 +38,25 @@ public class DeliveryController extends BaseController {
     /**
      * 查看物流
      *
-     * @param expressNumber
+     * @param deliveryId
      * @param request
      * @return
      */
-    @GetMapping("/logistics/{expressNumber}")
-    public String checkLogistics(@PathVariable("expressNumber") String expressNumber, HttpServletRequest request) {
+    @GetMapping("/{deliveryId}")
+    public String info(@PathVariable("deliveryId") int deliveryId, HttpServletRequest request) {
 
-        //查询配送的物流信息
-        ExpressRequ requ = new ExpressRequ();
-        requ.setText(expressNumber);
+        ////查询配送的物流信息
+        //ExpressRequ requ = new ExpressRequ();
+        //requ.setText(expressNumber);
+        //
+        //ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
+        //
+        //List data = resp.getData();
+        //
+        //request.setAttribute("data", data);
+        //request.setAttribute("expressNumber", expressNumber);
 
-        ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
-
-        List data = resp.getData();
-
-        request.setAttribute("data", data);
-        request.setAttribute("expressNumber", expressNumber);
-
-        return "index/logisticsInfo";
+        return "index/deliveryDetail";
     }
 
 
