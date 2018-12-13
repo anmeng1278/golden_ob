@@ -60,7 +60,7 @@ public class DeliveryDto {
     /**
      * 配送的库存信息
      */
-    private List<StockDto> stockDto;
+    private List<StockDto> stockDtos;
 
     /**
      * 配送的商品信息
@@ -147,12 +147,12 @@ public class DeliveryDto {
         this.remarks = remarks;
     }
 
-    public List<StockDto> getStockDto() {
-        return stockDto;
+    public List<StockDto> getStockDtos() {
+        return stockDtos;
     }
 
-    public void setStockDto(List<StockDto> stockDto) {
-        this.stockDto = stockDto;
+    public void setStockDtos(List<StockDto> stockDtos) {
+        this.stockDtos = stockDtos;
     }
 
     public Integer getProvinceId() {

@@ -13,7 +13,7 @@ html,body{ background: #F5F5F5;}
 .order-item-dl dd{ min-height: 2.4rem; margin: 0 0.3rem 0 2.7rem; font-family: "microsoft yahei",arial; position: relative;}
 .order-dd-name{ font-size: 0.36rem; color: #333; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .order-dd-tips{ line-height: 1.2; font-size: 0.3rem; color: #999;}
-.order-dd-time{ height: 0.6rem; line-height: 0.6rem; font-size: 0.28rem; color: #666; position: absolute; left: 0; bottom: 0; right: 0;}
+.order-dd-time{ height: 0.6rem; line-height: 0.6rem; font-size: 0.26rem; color: #666; position: absolute; left: 0; bottom: 0; right: 0;}
 
 /*----------- state-list ----------*/
 .state-list{ height: 0.6rem; padding: 0.3rem 0;}
