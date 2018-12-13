@@ -9,6 +9,7 @@ import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
+import com.jsj.member.ob.entity.Stock;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.DeliveryService;
@@ -86,7 +87,7 @@ public class DeliveryLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static List<DeliveryDto> GetMyDelivery(String openId) {
+    public static List<DeliveryDto> GetDelivery(String openId) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
@@ -106,7 +107,7 @@ public class DeliveryLogic extends BaseLogic {
                 ProductDto productDto = ProductLogic.GetProduct(stockDto.getProductId());
                 productDtos.add(productDto);
             }
-            deliveryDto.setStockDto(stockDtos);
+            deliveryDto.setStockDtos(stockDtos);
             deliveryDto.setProductDtos(productDtos);
 
             deliveryDto.setAddress(delivery.getAddress());
