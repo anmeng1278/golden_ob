@@ -56,12 +56,12 @@ public class StockLogic extends BaseLogic {
     //region (public) 获取我的库存 GetMyStock
 
     /**
-     * 获取我的库存
+     * 获取库存
      *
      * @param openId
      * @return
      */
-    public static HashSet<StockDto> GetMyStock(String openId) {
+    public static HashSet<StockDto> GetStock(String openId) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
