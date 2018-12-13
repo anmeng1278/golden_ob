@@ -33,7 +33,6 @@
                         <dl class="order-item-dl">
 
                             <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(pro.productId))}">
-
                                 <img th:src="${productLogic.GetProductImgDtos(pro.productId)[0].imgPath}"/>
                             </dt>
 
