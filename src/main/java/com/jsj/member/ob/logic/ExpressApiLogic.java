@@ -17,12 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Base64;
-import java.util.Map;
 import java.util.Random;
 
 @Component
@@ -54,6 +51,7 @@ public class ExpressApiLogic extends BaseLogic {
         String getText = GetText(requ.getText());
 
         // 通过快递公司及快递单号获取物流信息。
+        //TODO 格式化这里需要修改
         String url = String.format("http://www.kuaidi100.com/query?type=" + getText + "&postid=" + requ.getText() + "&temp=" + new Random().nextDouble());
 
         String expressResult = HttpUtils.get(url);

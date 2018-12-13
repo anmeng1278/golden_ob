@@ -4,11 +4,8 @@ import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
-import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
-import com.jsj.member.ob.logic.OrderLogic;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,6 +52,8 @@ public class DeliveryController extends BaseController {
         ExpressRequ requ = new ExpressRequ();
         requ.setText(expressNumber);
         ExpressResp resp = null;
+
+        //TODO 这里去掉抛出异常
         try {
             resp = ExpressApiLogic.GetExpressHundred(requ);
         } catch (IOException e) {

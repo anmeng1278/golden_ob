@@ -18,7 +18,7 @@
     <!--main start-->
     <div class="main">
         <!-- 已发货 -->
-        <th:block th:if="{info.status == 10}">
+        <th:block th:if="${info.status == 10}">
             <th:block th:each="info:${deliveryDtos}">
 
                 <div class="order-item">
@@ -63,7 +63,7 @@
         </th:block>
 
         <!--未发货,已签收-->
-        <th:block th:if="{info.status != 10}">
+        <th:block th:if="${info.status != 10}">
             <th:block th:each="info:${deliveryDtos}">
 
                 <div class="order-item">
