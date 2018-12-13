@@ -210,4 +210,9 @@ public class OrderSeckill extends OrderBase {
         return resp;
 
     }
+
+    @Override
+    public CreateOrderResp CalculateOrder(CreateOrderRequ requ) {
+        throw new TipException("方法暂未实现");
+    }
 }

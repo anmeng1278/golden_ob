@@ -61,6 +61,14 @@ public abstract class OrderBase {
     public abstract CreateOrderResp CreateOrder(CreateOrderRequ requ);
 
     /**
+     * 计算商品应付金额
+     *
+     * @param requ
+     * @return
+     */
+    public abstract CreateOrderResp CalculateOrder(CreateOrderRequ requ);
+
+    /**
      * 订单支付成功
      */
     public void PaySuccessed(int orderId, NotifyModelOuterClass.NotifyModel notifyModel) {

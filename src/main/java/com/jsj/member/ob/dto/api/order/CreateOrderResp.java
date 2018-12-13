@@ -27,6 +27,33 @@ public class CreateOrderResp {
      */
     public int expiredTime;
 
+
+    /**
+     * 优惠金额
+     */
+    private double couponAmount;
+
+    /**
+     * 原金额
+     */
+    private double originalAmount;
+
+    public double getCouponAmount() {
+        return couponAmount;
+    }
+
+    public void setCouponAmount(double couponAmount) {
+        this.couponAmount = couponAmount;
+    }
+
+    public double getOriginalAmount() {
+        return originalAmount;
+    }
+
+    public void setOriginalAmount(double originalAmount) {
+        this.originalAmount = originalAmount;
+    }
+
     public double getAmount() {
         return amount;
     }
