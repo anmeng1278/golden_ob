@@ -1,5 +1,7 @@
 package com.jsj.member.ob.dto.api.order;
 
+import com.jsj.member.ob.dto.api.product.ProductDto;
+
 public class OrderProductDto {
 
     /**
@@ -16,6 +18,19 @@ public class OrderProductDto {
      * 规格型号编号
      */
     private int productSpecId;
+
+    /**
+     * 商品信息
+     */
+    private ProductDto productDto;
+
+    public ProductDto getProductDto() {
+        return productDto;
+    }
+
+    public void setProductDto(ProductDto productDto) {
+        this.productDto = productDto;
+    }
 
     public int getProductId() {
         return productId;

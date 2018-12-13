@@ -1,6 +1,7 @@
 package com.jsj.member.ob.dto.api.delivery;
 
 
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 
 import java.util.List;
@@ -56,7 +57,23 @@ public class DeliveryDto {
      */
     private String remarks;
 
+    /**
+     * 配送的库存信息
+     */
     private List<StockDto> stockDto;
+
+    /**
+     * 配送的商品信息
+     */
+    private List<ProductDto> productDtos;
+
+    public List<ProductDto> getProductDtos() {
+        return productDtos;
+    }
+
+    public void setProductDtos(List<ProductDto> productDtos) {
+        this.productDtos = productDtos;
+    }
 
     public Integer getDeliveryId() {
         return deliveryId;

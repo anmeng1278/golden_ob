@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
@@ -96,11 +97,17 @@ public class DeliveryLogic extends BaseLogic {
         List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
 
         List<DeliveryDto> deliveryDtos = new ArrayList<>();
+        List<ProductDto> productDtos = new ArrayList<>();
         for (Delivery delivery : deliveries) {
             DeliveryDto deliveryDto = new DeliveryDto();
 
             List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
+            for (StockDto stockDto : stockDtos) {
+                ProductDto productDto = ProductLogic.GetProduct(stockDto.getProductId());
+                productDtos.add(productDto);
+            }
             deliveryDto.setStockDto(stockDtos);
+            deliveryDto.setProductDtos(productDtos);
 
             deliveryDto.setAddress(delivery.getAddress());
             deliveryDto.setCityId(delivery.getCityId());
