@@ -6,6 +6,7 @@ import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 
 @ApiIgnore
@@ -28,15 +28,15 @@ public class DeliveryController extends BaseController {
      * @param request
      * @return
      */
-    @GetMapping("/delivery")
+    @GetMapping("")
     public String delivery(HttpServletRequest request) {
 
         String openId = this.OpenId();
 
-        List<DeliveryDto> deliveryDtos = DeliveryLogic.GetMyDelivery(openId);
+        List<DeliveryDto> deliveryDtos = DeliveryLogic.GetDelivery(openId);
         request.setAttribute("deliveryDtos", deliveryDtos);
 
-        return "index/DeliveryList";
+        return "index/delivery";
     }
 
     /**
@@ -48,23 +48,19 @@ public class DeliveryController extends BaseController {
      */
     @GetMapping("/logistics/{expressNumber}")
     public String checkLogistics(@PathVariable("expressNumber") String expressNumber, HttpServletRequest request) {
+
         //查询配送的物流信息
         ExpressRequ requ = new ExpressRequ();
         requ.setText(expressNumber);
-        ExpressResp resp = null;
 
-        //TODO 这里去掉抛出异常
-        try {
-            resp = ExpressApiLogic.GetExpressHundred(requ);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
+
         List data = resp.getData();
 
         request.setAttribute("data", data);
         request.setAttribute("expressNumber", expressNumber);
 
-        return "index/LogisticsInformation";
+        return "index/logisticsInfo";
     }
 
 

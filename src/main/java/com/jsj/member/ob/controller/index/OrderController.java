@@ -5,6 +5,7 @@ import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.enums.OrderFlag;
 import com.jsj.member.ob.logic.OrderLogic;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -27,7 +28,7 @@ public class OrderController extends BaseController {
     public String index(HttpServletRequest request) {
 
         OrderFlag orderFlag = OrderFlag.ALLORDERS;
-        if (!org.apache.commons.lang3.StringUtils.isEmpty(request.getParameter("orderFlag"))) {
+        if (!StringUtils.isEmpty(request.getParameter("orderFlag"))) {
             orderFlag = OrderFlag.valueOf(Integer.parseInt(request.getParameter("orderFlag")));
         }
 
@@ -48,7 +49,7 @@ public class OrderController extends BaseController {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         OrderLogic.CancelOrder(orderId);
 
-        return RestResponseBo.ok();
+        return RestResponseBo.ok("订单取消成功");
     }
 
 }
