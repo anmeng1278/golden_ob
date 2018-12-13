@@ -36,6 +36,8 @@ webconfig:
   # 公众号 appSecrect
   appSecrect: a8eb3f7e02ed7cb761220cb4363ff2b6
 
+  virtualPath: "/ob"
+
 redis:
   host: 172.16.5.64
   port: 6379

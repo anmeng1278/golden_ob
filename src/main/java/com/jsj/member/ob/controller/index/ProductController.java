@@ -30,7 +30,7 @@ import java.util.List;
 
 @ApiIgnore
 @Controller
-@RequestMapping("/product")
+@RequestMapping("${webconfig.virtualPath}/product")
 public class ProductController extends BaseController {
 
     /**

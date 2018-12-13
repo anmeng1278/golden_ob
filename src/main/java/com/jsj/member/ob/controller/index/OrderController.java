@@ -15,7 +15,7 @@ import java.util.List;
 
 @ApiIgnore
 @Controller
-@RequestMapping("/order")
+@RequestMapping("${webconfig.virtualPath}/order")
 public class OrderController extends BaseController {
 
     /**

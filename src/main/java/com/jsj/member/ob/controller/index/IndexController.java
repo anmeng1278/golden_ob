@@ -27,7 +27,7 @@ import java.util.List;
 
 @ApiIgnore
 @Controller
-@RequestMapping("/")
+@RequestMapping("${webconfig.virtualPath}")
 public class IndexController extends BaseController {
 
     @GetMapping(value = {""})
@@ -88,10 +88,10 @@ public class IndexController extends BaseController {
         requ.getRequestBody().setSourceWay("20");
         requ.getRequestBody().setSourceApp("600");
         requ.getRequestBody().setPayMethod("22");
-        requ.getRequestBody().setOutTradeId("95346343321");
+        requ.getRequestBody().setOutTradeId("95346343322");
         requ.getRequestBody().setPayAmount("0.1");
         requ.getRequestBody().setOpenId(openId);
-        requ.getRequestBody().setOrderTimeOut("20181212175900");
+        requ.getRequestBody().setOrderTimeOut("20181220175900");
 
         GetPayTradeResp resp = ThirdPartyLogic.GetPayTrade(requ);
         System.out.println(JSON.toJSONString(resp));
@@ -110,12 +110,12 @@ public class IndexController extends BaseController {
             String signType = jsonObject.get("signType").toString();
             String paySign = jsonObject.get("paySign").toString();
 
-            request.setAttribute("appId", appId);
-            request.setAttribute("timestamp", timeStamp);
-            request.setAttribute("nonceStr", nonceStr);
-            request.setAttribute("package", packageStr);
-            request.setAttribute("signType", signType);
-            request.setAttribute("paySign", paySign);
+            request.setAttribute("pappId", appId);
+            request.setAttribute("ptimestamp", timeStamp);
+            request.setAttribute("pnonceStr", nonceStr);
+            request.setAttribute("ppackage", packageStr);
+            request.setAttribute("psignType", signType);
+            request.setAttribute("ppaySign", paySign);
         }
 
         //

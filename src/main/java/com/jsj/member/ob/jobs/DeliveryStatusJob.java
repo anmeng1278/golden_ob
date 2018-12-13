@@ -1,7 +1,6 @@
 package com.jsj.member.ob.jobs;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.entity.Delivery;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -34,20 +32,16 @@ public class DeliveryStatusJob {
         wrapper.where("status = {0} and type_id = {1}",DeliveryStatus.DELIVERED.getValue(), DeliveryType.DISTRIBUTE.getValue());
         List<Delivery> deliveries = deliveryService.selectList(wrapper);
         for (Delivery delivery : deliveries) {
-            try {
-                //查询订单的物流节点，若已签收修改订单状态为已签收
-                ExpressRequ requ = new ExpressRequ();
-                requ.setText(delivery.getExpressNumber());
-                ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
-                if (resp.getState().equals("3")) {
-                    //已签收
-                    delivery.setStatus(DeliveryStatus.SIGNED.getValue());
-                    deliveryService.updateById(delivery);
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
+            //查询订单的物流节点，若已签收修改订单状态为已签收
+            ExpressRequ requ = new ExpressRequ();
+            requ.setText(delivery.getExpressNumber());
+            ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
+            if (resp.getState().equals("3")) {
+                //已签收
+                delivery.setStatus(DeliveryStatus.SIGNED.getValue());
+                deliveryService.updateById(delivery);
             }
+
         }
     }
 }

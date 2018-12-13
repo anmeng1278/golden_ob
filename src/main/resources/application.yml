@@ -91,3 +91,4 @@ webconfig:
 
   ReqURL: http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx
 
+  virtualPath: ""

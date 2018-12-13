@@ -60,7 +60,6 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
             if (request.getParameter("code") == null || request.getParameter("code").isEmpty()) {
 
                 String lastAccessUrl = getFullURL(request);
-                lastAccessUrl = "http://h5.ktgj.com/ob/pay";
                 String url = SnsAPI.connectOauth2Authorize(webconfig.getAppId(), lastAccessUrl, true, null);
                 response.sendRedirect(url);
 

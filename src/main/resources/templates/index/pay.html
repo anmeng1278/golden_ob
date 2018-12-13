@@ -9,13 +9,27 @@
 
         wx.ready(function () {
             alert("准备唤起支付")
+            var appId = [[${pappId}]];
+            var timestamp = [[${ptimestamp}]];
+            var nonceStr = [[${pnonceStr}]];
+            var package = [[${ppackage}]];
+            var signType = [[${psignType}]];
+            var paySign = [[${ppaySign}]];
+
+            alert(appId);
+            alert(timestamp);
+            alert(nonceStr);
+            alert(package);
+            alert(signType);
+            alert(paySign);
+
             wx.chooseWXPay({
-                appId: [[${appId}]],
-                timestamp: [[${timeStamp}]],
-                nonceStr: [[${nonceStr}]],
-                package: [[${package}]],
-                signType: [[${signType}]],
-                paySign: [[${paySign}]],
+                appId: appId,
+                timestamp: timestamp,
+                nonceStr: nonceStr,
+                package: package,
+                signType: signType,
+                paySign: paySign,
                 success: function (res) {
                     alert(JSON.stringify(res));
                 },
