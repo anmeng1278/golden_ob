@@ -1,10 +1,21 @@
 package com.jsj.member.ob.controller.index;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
+import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
+import com.jsj.member.ob.dto.api.wechat.WechatDto;
+import com.jsj.member.ob.entity.GiftStock;
+import com.jsj.member.ob.entity.Stock;
+import com.jsj.member.ob.enums.StockType;
 import com.jsj.member.ob.logic.GiftLogic;
+import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.logic.StockLogic;
+import com.jsj.member.ob.logic.WechatLogic;
+import com.jsj.member.ob.service.GiftStockService;
+import com.jsj.member.ob.service.StockService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,12 +26,20 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.jsj.member.ob.logic.StockLogic.stockLogic;
 
 @ApiIgnore
 @Controller
 @RequestMapping("${webconfig.virtualPath}/gift")
 public class GiftController extends BaseController {
 
+    @Autowired
+    StockService stockService;
+
+    @Autowired
+    GiftStockService giftStockService;
 
     /**
      * 配送列表
@@ -34,13 +53,14 @@ public class GiftController extends BaseController {
         String openId = this.OpenId();
 
         //用户所有赠送的
-        List<GiftDto> giveStocks = GiftLogic.GetGive(openId);
+        List<GiftDto> giveStocks = GiftLogic.GetGives(openId);
 
-        request.setAttribute("giveStocks",giveStocks);
+        request.setAttribute("giveStocks", giveStocks);
 
         //用户所有领取的
-        HashSet<StockDto> receiveStocks = GiftLogic.GetReceived(openId);;
-        request.setAttribute("receiveStocks",receiveStocks);
+        HashSet<StockDto> receiveStocks = GiftLogic.GetReceived(openId);
+
+        request.setAttribute("receiveStocks", receiveStocks);
 
         return "index/gift";
     }
@@ -59,6 +79,7 @@ public class GiftController extends BaseController {
         List<StockDto> giveStocks = GiftLogic.GetGiftStocks(giftId);
 
         //领取库存信息
+        /*HashSet<StockDto> receiveStocks = new HashSet<>();*/
         List<StockDto> receiveStocks = new ArrayList<>();
         for (StockDto stockDto : giveStocks) {
             StockDto dto = StockLogic.GetChild(stockDto.getStockId());
@@ -66,10 +87,9 @@ public class GiftController extends BaseController {
                 receiveStocks.add(dto);
             }
         }
-        request.setAttribute("receiveStocks",receiveStocks);
+        request.setAttribute("receiveStocks", receiveStocks);
         request.setAttribute("giveStocks", giveStocks);
-
-        request.setAttribute("giftId",giftId);
+        request.setAttribute("giftId", giftId);
 
         return "index/giftDetail";
     }
@@ -96,7 +116,7 @@ public class GiftController extends BaseController {
                 receiveStocks.add(dto);
             }
         }
-        request.setAttribute("receiveStocks",receiveStocks);
+        request.setAttribute("receiveStocks", receiveStocks);
         request.setAttribute("giveStocks", giveStocks);
         request.setAttribute("giftId", giftId);
 
