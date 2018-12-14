@@ -6,13 +6,13 @@
 <head th:replace="index/common/layout :: header('赠送领取列表', '', '')"></head>
 
 <th:block layout:fragment="script">
-    <script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="@{/index/js/GiveList.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/GiveList.js')}" type="text/javascript" charset="utf-8"></script>
 </th:block>
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" type="text/css" th:href="@{/index/js/swiper/css/swiper.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/index/css/GiveList.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css')}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GiveList.css')}"/>
 </th:block>
 
 <div layout:fragment="content">
@@ -42,7 +42,7 @@
                             <img th:if="${giftLogic.GetGiftStockCount(info.giftId) le 1}"
                                  th:src="${productLogic.GetProductImgDtos(giftLogic.GetGiftStocks(info.giftId).get(0).productId)[0].imgPath}">
                             <img th:if="${giftLogic.GetGiftStockCount(info.giftId) gt 1}"
-                                 src="/index/images/give_default_img.png" alt="1"/>
+                                 th:src="${ob.Img('/index/images/give_default_img.png')}" alt="1"/>
                         </dt>
                         <dd>
                             <p class="give-dd-p">
@@ -66,7 +66,7 @@
                             <img th:if="${giftLogic.GetGiftStockCount(info.giftId) le 1}"
                                  th:src="${productLogic.GetProductImgDtos(giftLogic.GetGiftStocks(info.giftId)[0].productId)[0].imgPath}">
                             <img th:if="${giftLogic.GetGiftStockCount(info.giftId) gt 1}"
-                                 src="/index/images/give_default_img.png" alt="1"/>
+                                 th:src="${ob.Img('/index/images/give_default_img.png')}" alt="1"/>
                         </dt>
                         <dd>
                             <p class="give-dd-p">

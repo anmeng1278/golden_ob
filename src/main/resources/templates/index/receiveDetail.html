@@ -6,14 +6,14 @@
 <head th:replace="index/common/layout :: header('领取详情', '', '')"></head>
 
 <th:block layout:fragment="script">
-    <script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="@{/index/js/nav.js}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="@{/index/js/ReceiveDetail.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/nav.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/ReceiveDetail.js')}" type="text/javascript" charset="utf-8"></script>
 </th:block>
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" type="text/css" th:href="@{/index/js/swiper/css/swiper.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/index/css/ReceiveDetail.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css')}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/ReceiveDetail.css')}"/>
 </th:block>
 
 <div layout:fragment="content">
@@ -21,8 +21,8 @@
     <div class="banner start">
         <!-- 轮播 start -->
         <div class="swiper-container">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide" th:if="${!#lists.isEmpty(giveStocks)}" th:each="info:${giveStocks}">
+            <div class="swiper-wrapper" th:if="${!#lists.isEmpty(giveStocks)}">
+                <div class="swiper-slide" th:each="info:${giveStocks}">
                     <dl class="banner-dl">
                         <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(info.productId))}">
                             <img th:src="${productLogic.GetProductImgDtos(info.productId)[0].imgPath}"/>
@@ -47,21 +47,21 @@
         <!--blessings start-->
         <div class="blessings">
             <div class="blessings-con">
-                <img src="/index/images/icon_douhao_lt.png" alt="1" class="icon-douhao-lt"/>
-                <img src="/index/images/icon_douhao_rt.png" alt="1" class="icon-douhao-rt"/>
-                <p class="blessings-p" th:text="${giftLogic.GetGift(giftId).blessings}">天气凉了<br/>这份礼物带有我的温度~</p>
+                <img th:src="${ob.Img('/index/images/icon_douhao_lt.png')}" alt="1" class="icon-douhao-lt"/>
+                <img th:src="${ob.Img('/index/images/icon_douhao_rt.png')}" alt="1" class="icon-douhao-rt"/>
+                <p class="blessings-p" th:text="${giftDto.blessings}">天气凉了<br/>这份礼物带有我的温度~</p>
             </div>
             <p class="give-come-from">
-                <img src="/index/images/card_img1.png" class="give-head-img"/>
-                <span class="give-come-from-text" th:text="${giftLogic.GetGift(giftId).wechatDto.nickname}">张鑫</span>
+                <img th:src="${giftDto.wechatDto.headimgurl}" class="give-head-img"/>
+                <span class="give-come-from-text" th:text="${giftDto.wechatDto.nickname}">张鑫</span>
             </p>
         </div>
         <!--blessings end-->
 
         <!--receive-detail start-->
-        <div class="receive-detail">
-            <h2 class="receive-title" th:if="${giftLogic.GetGift(giftId).giftStatus.value == 40}"
-                th:text="|您来晚了，礼物已被抢完啦！(${giftLogic.GetGiftStockCount(giftId)}/${giftLogic.GetGiftStockCount(giftId)})|">
+        <div class="receive-detail" th:if="${giftDto.giftStatus.value == 40}">
+            <h2 class="receive-title"
+                th:text="|您来晚了，礼物已被抢完啦！(${giftLogic.GetGiftStockCount(giftDto.giftId)}/${giftLogic.GetGiftStockCount(giftDto.giftId)})|">
                 您来晚了，礼物已被抢完啦！(2/2)
             </h2>
             <dl class="receive-dl" th:if="${!#lists.isEmpty(receiveStocks)}" th:each="info:${receiveStocks}">
