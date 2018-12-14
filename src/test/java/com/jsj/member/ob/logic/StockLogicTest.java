@@ -42,7 +42,7 @@ public class StockLogicTest {
         GetMyStockResp resp = new GetMyStockResp();
         resp.setStockDtoList(stockDtoList);*/
 
-        StockLogic.GetStock("111");
+        //StockLogic.ets("111");
     }
 
     @Test

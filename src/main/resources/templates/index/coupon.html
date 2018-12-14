@@ -17,8 +17,8 @@
 
 <div layout:fragment="content">
     <!-- coupon-list start-->
-    <div class="coupon-list">
-        <th:block th:if="${!#lists.isEmpty(wechatCouponDtos)}" th:each="info:${wechatCouponDtos}">
+    <div class="coupon-list" th:if="${!#lists.isEmpty(wechatCouponDtos)}" >
+        <th:block th:each="info:${wechatCouponDtos}">
             <!--未使用-->
             <th:block th:if="${info.couponStatus.value == 0}">
                 <div class="coupon-item">
@@ -65,7 +65,7 @@
     <!--coupon-list end-->
 
     <!--coupon-no-list start-->
-    <dl class="coupon-no-list" style="display: none;" th:if="${#lists.isEmpty(wechatCouponDtos)}">
+    <dl class="coupon-no-list" th:if="${#lists.isEmpty(wechatCouponDtos)}">
         <dt><img src="images/coupon_icon.png" alt="1" width="62px"/></dt>
         <dd>您暂时还没优惠券</dd>
     </dl>

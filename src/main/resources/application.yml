@@ -5,7 +5,7 @@ server:
 #spring
 spring:
   profiles:
-    active: pub
+    active: dev
   http:
     multipart:
       max-file-size: 10MB
@@ -98,4 +98,4 @@ webconfig:
 
   ReqURL: http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx
 
-  virtualPath: ""
+  virtualPath: "/ob"

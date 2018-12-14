@@ -29,7 +29,6 @@ public class CouponController extends BaseController {
         String openId = this.OpenId();
 
         List<WechatCouponDto> wechatCouponDtos = CouponLogic.GetWechatCoupons(openId);
-
         request.setAttribute("wechatCouponDtos",wechatCouponDtos);
 
         return "index/coupon";
