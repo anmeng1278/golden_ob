@@ -221,29 +221,11 @@ public class OrderLogic extends BaseLogic {
         List<Order> orders = orderLogic.orderService.selectList(wrapper);
         List<OrderDto> orderDtos = new ArrayList<>();
 
-        for (Order order : orders) {
+        for (Order entity : orders) {
 
-            OrderDto dto = new OrderDto();
+            OrderDto dto = OrderLogic.ToDto(entity);
 
-            dto.setOpenId(order.getOpenId());
-            dto.setOrderId(order.getOrderId());
-            dto.setRemarks(order.getRemarks());
-            dto.setAmount(order.getAmount());
-            dto.setPayAmount(order.getAmount() - order.getCouponPrice());
-
-            dto.setStatus(order.getStatus());
-            dto.setTransactionId(order.getTransactionId());
-            dto.setWechatCouponId(order.getWechatCouponId());
-            dto.setCouponPrice(order.getCouponPrice());
-            dto.setActivityId(order.getActivityId());
-
-            dto.setActivityOrderId(order.getActivityOrderId());
-            dto.setTypeId(order.getTypeId());
-            dto.setPayTime(order.getPayTime());
-            dto.setExpiredTime(order.getExpiredTime());
-            dto.setUpdateTime(order.getUpdateTime());
-
-            List<OrderProductDto> orderProductDtos = OrderLogic.GetOrderProducts(order.getOrderId());
+            List<OrderProductDto> orderProductDtos = OrderLogic.GetOrderProducts(entity.getOrderId());
             dto.setOrderProductDtos(orderProductDtos);
 
             orderDtos.add(dto);
@@ -251,4 +233,37 @@ public class OrderLogic extends BaseLogic {
         return orderDtos;
     }
 
+    public static OrderDto ToDto(Order entity) {
+
+        OrderDto dto = new OrderDto();
+
+        dto.setOpenId(entity.getOpenId());
+        dto.setOrderId(entity.getOrderId());
+        dto.setRemarks(entity.getRemarks());
+        dto.setAmount(entity.getAmount());
+        dto.setPayAmount(entity.getPayAmount());
+
+        dto.setStatus(OrderStatus.valueOf(entity.getStatus()));
+        dto.setTransactionId(entity.getTransactionId());
+        dto.setWechatCouponId(entity.getWechatCouponId());
+        dto.setCouponPrice(entity.getCouponPrice());
+        dto.setActivityId(entity.getActivityId());
+
+        dto.setActivityOrderId(entity.getActivityOrderId());
+        dto.setTypeId(entity.getTypeId());
+        dto.setPayTime(entity.getPayTime());
+        dto.setExpiredTime(entity.getExpiredTime());
+        dto.setUpdateTime(entity.getUpdateTime());
+
+        return dto;
+
+    }
+
+    public static OrderDto GetOrder(int orderId) {
+
+        Order entity = orderLogic.orderService.selectById(orderId);
+        OrderDto dto = OrderLogic.ToDto(entity);
+
+        return dto;
+    }
 }

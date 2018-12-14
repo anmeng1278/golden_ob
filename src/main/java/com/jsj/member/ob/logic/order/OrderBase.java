@@ -13,6 +13,7 @@ import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.CouponLogic;
+import com.jsj.member.ob.logic.RedpacketLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.service.ActivityOrderService;
 import com.jsj.member.ob.service.ActivityService;
@@ -104,6 +105,8 @@ public abstract class OrderBase {
         }
         StockLogic.AddOrderStock(stocks);
 
+        //红包
+        RedpacketLogic.CreateOrderRedpacket(orderId);
 
         //修改订单状态
         order.setStatus(OrderStatus.PAYSUCCESS.getValue());

@@ -11,7 +11,8 @@ Namespace.register = function (fullNS) {
             sEval += "if (typeof(" + sNS + ") == 'undefined') " + sNS + " = new Object();";
         } else {
             sEval += "delete " + sNS + ";" + sNS + " = new Object();";
-        };
+        }
+        ;
     }
     if (sEval != "") eval(sEval);
 };
@@ -48,7 +49,13 @@ Namespace.register("TX.TEMP");
             TX.TEMP.submit_token = 1;
 
             if (!options.disabledLoading) {
-                TX.TEMP.LOAD = layer.load(1, { shade: [0.1, '#fff'] });//0.1透明度的白色背景
+                TX.TEMP.LOAD = layer.load(1, {shade: [0.1, '#fff']});//0.1透明度的白色背景
+            }
+
+            if (options.url && options.url.length > 0 && options.url.substring(0, 1) == "/") {
+                if (typeof virtualPath != "undefined") {
+                    options.url = virtualPath + options.url;
+                }
             }
 
             $.ajax({

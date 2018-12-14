@@ -1,8 +1,16 @@
 package com.jsj.member.ob.controller;
 
+import com.jsj.member.ob.config.Webconfig;
+import com.jsj.member.ob.dto.api.order.OrderDto;
+import com.jsj.member.ob.dto.thirdParty.GetPayTradeRequ;
+import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.BaseLogic;
+import com.jsj.member.ob.logic.OrderLogic;
+import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.jsj.member.ob.redis.AccessKey;
 import com.jsj.member.ob.redis.RedisService;
+import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.SpringContextUtils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
@@ -113,6 +121,102 @@ public abstract class BaseController {
                 throw new NotImplementedException("未获取到登录用户信息");
             }
         }
+    }
+
+    @Autowired
+    Webconfig webconfig;
+
+    /**
+     * 跳转实际路径
+     *
+     * @param path
+     * @return
+     */
+    protected String Redirect(String path) {
+        return String.format("redirect:%s%s", webconfig.getVirtualPath(), path);
+    }
+
+    /**
+     * 获取资源文件路径
+     *
+     * @param url
+     * @param enabledCache
+     * @return
+     */
+    protected String Url(String url, boolean enabledCache) {
+        String format = "%s%s";
+        url = String.format(format, webconfig.getVirtualPath(), url);
+        if (enabledCache) {
+            int timeStamp = DateUtils.getCurrentUnixTime();
+            if (url.indexOf("?") > -1) {
+                url = String.format("%s&%d", url, timeStamp);
+            } else {
+                url = String.format("%s?%d", url, timeStamp);
+            }
+        }
+        return url;
+    }
+
+    /**
+     * 获取资源文件路径
+     *
+     * @param url
+     * @return
+     */
+    protected String Url(String url) {
+        return Url(url, true);
+    }
+
+    /**
+     * 获取图片路径
+     *
+     * @param url
+     * @return
+     */
+    protected String Img(String url) {
+        return Url(url, false);
+    }
+
+    /**
+     * 获取跳转链接
+     *
+     * @param url
+     * @return
+     */
+    protected String Nav(String url) {
+        return Url(url, false);
+    }
+
+    /**
+     * 创建微信支付订单
+     *
+     * @param orderId
+     * @return
+     */
+    public GetPayTradeResp createPay(int orderId) {
+
+        String openId = this.OpenId();
+        OrderDto orderDto = OrderLogic.GetOrder(orderId);
+
+        if (!orderDto.getOpenId().equals(openId)) {
+            throw new TipException("非操作人订单不允许支付");
+        }
+
+        GetPayTradeRequ requ = new GetPayTradeRequ();
+
+        requ.getRequestBody().setOutTradeId(orderDto.getOrderId() + "");
+        requ.getRequestBody().setPayAmount(orderDto.getPayAmount() + "");
+        requ.getRequestBody().setOpenId(openId);
+        requ.getRequestBody().setOrderTimeOut(DateUtils.formatDateByUnixTime(Long.parseLong(orderDto.getExpiredTime() + ""), "yyyyMMddHHmmss"));
+
+        GetPayTradeResp resp = ThirdPartyLogic.GetPayTrade(requ);
+
+        if (!resp.getResponseHead().getCode().equals("0000")) {
+            throw new TipException(resp.getResponseHead().getMessage());
+        }
+
+        return resp;
+
     }
 
 

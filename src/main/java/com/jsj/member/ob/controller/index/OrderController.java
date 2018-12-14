@@ -33,7 +33,6 @@ public class OrderController extends BaseController {
         }
 
         String openId = this.OpenId();
-
         List<OrderDto> orderDtos = OrderLogic.GetOrders(openId, orderFlag);
 
         request.setAttribute("orderDtos", orderDtos);

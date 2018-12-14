@@ -1,31 +1,38 @@
 package com.jsj.member.ob.controller.pay;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.constant.Constant;
+import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.proto.NotifyModelOuterClass;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
 import com.jsj.member.ob.utils.HttpUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 
 /**
  * 支付回调控制器
  */
 @Controller
-@RequestMapping("/paycallback")
-public class PayCallbackController {
+@RequestMapping("${webconfig.virtualPath}/pay")
+public class PayController extends BaseController {
 
-    @PostMapping(value = {""})
+
+    @Autowired
+    Webconfig webconfig;
+
+
+    @PostMapping(value = {"/callback"})
     @ResponseBody
     @Transactional(Constant.DBTRANSACTIONAL)
-    public String index(HttpServletRequest request) throws InvalidProtocolBufferException {
+    public String callback(HttpServletRequest request) throws InvalidProtocolBufferException {
 
         byte[] bytes = HttpUtils.readAsBytes(request);
         if (bytes == null || bytes.length == 0) {
@@ -54,6 +61,20 @@ public class PayCallbackController {
 
         return "SUCCESS";
     }
+
+    @GetMapping(value = {"/success/{obs}"})
+    public String paySuccessed(
+            @PathVariable(name = "obs", required = true) String obs,
+            HttpServletRequest request) throws UnsupportedEncodingException {
+
+        //分享红包地址
+        String shareUrl = String.format("%s/share/redPacket/%s", webconfig.getVirtualPath(), obs);
+        request.setAttribute("shareUrl", shareUrl);
+
+        return "index/paySuccessed";
+    }
+
+
 
 
 }

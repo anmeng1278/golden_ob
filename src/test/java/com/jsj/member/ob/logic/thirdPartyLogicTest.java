@@ -82,6 +82,14 @@ public class thirdPartyLogicTest {
 
         GetPayTradeResp resp = ThirdPartyLogic.GetPayTrade(requ);
         System.out.println(JSON.toJSONString(resp));
+
+        System.out.println(resp.getResponseBody().getAppId());
+        System.out.println(resp.getResponseBody().get_package());
+        System.out.println(resp.getResponseBody().getNonceStr());
+        System.out.println(resp.getResponseBody().getPaySign());
+        System.out.println(resp.getResponseBody().getSignType());
+        System.out.println(resp.getResponseBody().getTimeStamp());
+
     }
 
 
@@ -100,7 +108,6 @@ public class thirdPartyLogicTest {
     @Test
     public void sendWxTemplate() {
 
-        //TODO 功能未写完
         TemplateDto dto = new TemplateDto();
 
         //dto.setToUser("o2JcesyPo-ogMyVD58egyvRfAfYg");

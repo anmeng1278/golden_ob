@@ -19,7 +19,7 @@ public class EncryptUtils {
     public static final String CIPHER_ALGORITHM = "DES/ECB/PKCS5Padding";
 
     //加密KEY
-    public static final String SIGN_KEY = "A1B2C3D4E5F60987";
+    public static final String SIGN_KEY = "*$(@^^^^E5F60987";
 
     /**
      * 生成密钥key对象

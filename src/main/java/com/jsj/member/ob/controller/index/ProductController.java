@@ -9,16 +9,18 @@ import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
+import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.enums.ActivityType;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.CartLogic;
 import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
+import com.jsj.member.ob.utils.EncryptUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +28,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @ApiIgnore
@@ -36,13 +39,13 @@ public class ProductController extends BaseController {
     /**
      * 商品详情
      *
-     * @param productId
      * @param request
      * @return
      */
-    @RequestMapping(value = "/{productId}", method = RequestMethod.GET)
-    public String productDetail(@PathVariable("productId") Integer productId,
-                                HttpServletRequest request) {
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String productDetail(HttpServletRequest request) {
+
+        int productId = Integer.parseInt(request.getParameter("productId"));
 
         //用户OpenId
         String openId = this.OpenId();
@@ -148,7 +151,7 @@ public class ProductController extends BaseController {
      */
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
     @ResponseBody
-    public RestResponseBo createOrder(HttpServletRequest request) {
+    public RestResponseBo createOrder(HttpServletRequest request) throws Exception {
 
         String openId = this.OpenId();
 
@@ -179,7 +182,28 @@ public class ProductController extends BaseController {
         requ.setOrderProductDtos(orderProducts);
 
         CreateOrderResp resp = orderBase.CreateOrder(requ);
-        return RestResponseBo.ok(resp);
+
+        if (!resp.isSuccess()) {
+            throw new TipException("创建订单失败");
+        }
+
+        HashMap<String, Object> data = new HashMap<>();
+        if (resp.getAmount() > 0) {
+            //调起微信支付
+            GetPayTradeResp pay = this.createPay(resp.getOrderId());
+            if (!pay.getResponseHead().getCode().equals("0000")) {
+                throw new TipException(pay.getResponseHead().getMessage());
+            }
+            data.put("pay", pay);
+        }
+        data.put("resp", resp);
+
+        String obs = EncryptUtils.encrypt(resp.getOrderId() + "");
+        String successUrl = String.format("/pay/success/%s", obs);
+        data.put("successUrl", this.Url(successUrl));
+
+        String url = this.Url("/order");
+        return RestResponseBo.ok("创建订单成功", url, data);
 
     }
 

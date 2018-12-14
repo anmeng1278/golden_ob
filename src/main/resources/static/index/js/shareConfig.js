@@ -1,8 +1,6 @@
-
-
-if(typeof shareConfig == "undefined" ){
+if (typeof shareConfig == "undefined") {
     shareConfig = {
-        title:document && document.title,
+        title: document && document.title,
         desc: "",
         link: location.href,
         //TODO 上线修改
@@ -11,6 +9,13 @@ if(typeof shareConfig == "undefined" ){
 }
 
 wx.ready(function () {
+
+    if (shareConfig.link) {
+        if (shareConfig.link.indexOf(location.host) == -1) {
+            var url = location.protocol + "//" + location.host;
+            shareConfig.link = url + shareConfig.link;
+        }
+    }
 
     wx.onMenuShareAppMessage({
         title: shareConfig.title, // 分享标题

@@ -12,15 +12,16 @@
     </script>
 
     <!--js-->
-    <script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="@{/index/js/nav.js}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="@{/index/js/index.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js', false)}" type="text/javascript"
+            charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/nav.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/index.js')}" type="text/javascript" charset="utf-8"></script>
 
 </th:block>
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" type="text/css" th:href="@{/index/js/swiper/css/swiper.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/index/css/index.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css', false)}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/index.css')}"/>
 </th:block>
 
 <div layout:fragment="content">
@@ -134,8 +135,8 @@
             <h2 class="section-title">爆款单品</h2>
             <!--section-con start-->
             <div class="section-con">
-                <a href="javascript:void(0);">
-                    <th:block th:each="info:${hotProducts}">
+                <th:block th:each="info:${hotProducts}">
+                    <a th:href="${ob.Url('/product?productId='+info.productId)}">
                         <dl class="section-con-dl">
                             <dt th:if="${!#lists.isEmpty(info.productImgDtos)}">
                                 <img th:src="${info.productImgDtos[0].imgPath}" alt="1" width="100%"/>
@@ -147,8 +148,8 @@
                                     <em th:text="${info.productSpecDtos[0].salePrice}"></em></p>
                             </dd>
                         </dl>
-                    </th:block>
-                </a>
+                    </a>
+                </th:block>
             </div>
             <!--section-con end-->
         </div>
@@ -161,17 +162,17 @@
             <div class="section-con">
                 <a href="javascript:void(0);">
                     <th:block th:each="info:${setSales}">
-                    <dl class="section-con-dl">
-                        <dt>
-                            <img th:src="${info.imgPath}" alt="1" width="100%"/>
-                        </dt>
-                        <dd>
-                            <h2 class="section-dl-title" th:text="${info.activityName}"></h2>
-                            <p class="section-dl-tips" th:text="${info.introduce}"></p>
-                            <p class="section-dl-price">&yen;<em th:text="${info.salePrice}"></em><span
-                                    th:text="${info.originalPrice}">￥</span></p>
-                        </dd>
-                    </dl>
+                        <dl class="section-con-dl">
+                            <dt>
+                                <img th:src="${info.imgPath}" alt="1" width="100%"/>
+                            </dt>
+                            <dd>
+                                <h2 class="section-dl-title" th:text="${info.activityName}"></h2>
+                                <p class="section-dl-tips" th:text="${info.introduce}"></p>
+                                <p class="section-dl-price">&yen;<em th:text="${info.salePrice}"></em><span
+                                        th:text="${info.originalPrice}">￥</span></p>
+                            </dd>
+                        </dl>
                     </th:block>
                 </a>
             </div>
@@ -189,7 +190,7 @@
 
     <!--shopping-cart start-->
     <div class="shopping-cart">
-        <img th:src="@{/index/images/shoppingCart.png}" alt="1" class="shopping-icon"/>
+        <img th:src="${ob.Img('/index/images/shoppingCart.png')}" alt="1" class="shopping-icon"/>
         <span class="shopping-num" th:text="${count}"></span>
     </div>
     <!--shopping-cart start-->

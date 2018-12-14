@@ -331,7 +331,7 @@ public class ProductLogic extends BaseLogic {
     public static Integer GetUnPassProduct() {
 
         EntityWrapper<Product> productWrapper = new EntityWrapper<>();
-        productWrapper.where("ifpass is false and delete_time is null");
+        productWrapper.where("ifpass = 0 and delete_time is null");
 
         return productLogic.productService.selectCount(productWrapper);
 

@@ -4,38 +4,57 @@
 
 
 <th:block layout:fragment="script">
-
     <script th:inline="javascript">
 
-        wx.ready(function () {
-            alert("准备唤起支付")
-            var appId = [[${pappId}]];
-            var timestamp = [[${ptimestamp}]];
-            var nonceStr = [[${pnonceStr}]];
-            var package = [[${ppackage}]];
-            var signType = [[${psignType}]];
-            var paySign = [[${ppaySign}]];
+        TX.INIT(function () {
+            wx.ready(function () {
+                $.ajax({
+                    url: location.href,
+                    type: "post",
+                    dataType: "json",
+                    success: function (resp) {
 
-            alert(appId);
-            alert(timestamp);
-            alert(nonceStr);
-            alert(package);
-            alert(signType);
-            alert(paySign);
+                        if (resp.baseResp.success) {
 
-            wx.chooseWXPay({
-                appId: appId,
-                timestamp: timestamp,
-                nonceStr: nonceStr,
-                package: package,
-                signType: signType,
-                paySign: paySign,
-                success: function (res) {
-                    alert(JSON.stringify(res));
-                },
-                fail: function (res) {
-                    alert('支付请求失败');
-                }
+                            var url = resp.baseResp.url;
+
+                            var appId = resp.datas.appId;
+                            var timestamp = resp.datas.timeStamp;
+                            var nonceStr = resp.datas.nonceStr;
+                            var package = resp.datas.package;
+                            var signType = resp.datas.signType;
+                            var paySign = resp.datas.paySign;
+
+                            wx.chooseWXPay({
+                                appId: appId,
+                                timestamp: timestamp,
+                                nonceStr: nonceStr,
+                                package: package,
+                                signType: signType,
+                                paySign: paySign,
+                                success: function (resp) {
+                                    location.href = url;
+                                },
+                                fail: function (resp) {
+                                    TX.MSG.msg("对不起，支付失败了！", {time: 1500}, function () {
+                                        location.href = [[${ob.Nav("/order")}]];
+                                    });
+                                },
+                                cancel: function (resp) {
+                                    TX.MSG.msg("您已取消支付！", {time: 1500}, function () {
+                                        location.href = [[${ob.Nav("/order")}]];
+                                    });
+                                }
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2}, function () {
+                                location.href = [[${ob.Nav("/order")}]];
+                            });
+                        }
+
+                    }
+                });
+
             });
         });
     </script>

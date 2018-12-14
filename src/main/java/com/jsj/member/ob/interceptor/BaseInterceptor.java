@@ -1,6 +1,8 @@
 package com.jsj.member.ob.interceptor;
 
+import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.logic.BaseLogic;
+import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         for (BaseLogic bl : baseLogics) {
             httpServletRequest.setAttribute(StringUtils.camelCase(bl.getClass().getSimpleName()), bl);
         }
+        httpServletRequest.setAttribute("ob", this);
     }
 
     @Override
@@ -43,5 +46,61 @@ public class BaseInterceptor implements HandlerInterceptor {
                                 Object o, Exception e) throws Exception {
 
     }
+
+
+    @Autowired
+    Webconfig webconfig;
+
+    /**
+     * 获取资源文件路径
+     *
+     * @param url
+     * @param enabledCache
+     * @return
+     */
+    public String Url(String url, boolean enabledCache) {
+        String format = "%s%s";
+        url = String.format(format, webconfig.getVirtualPath(), url);
+        if (enabledCache) {
+            int timeStamp = DateUtils.getCurrentUnixTime();
+            if (url.indexOf("?") > -1) {
+                url = String.format("%s&%d", url, timeStamp);
+            } else {
+                url = String.format("%s?%d", url, timeStamp);
+            }
+        }
+        return url;
+    }
+
+    /**
+     * 获取资源文件路径
+     *
+     * @param url
+     * @return
+     */
+    public String Url(String url) {
+        return Url(url, true);
+    }
+
+    /**
+     * 获取图片路径
+     *
+     * @param url
+     * @return
+     */
+    public String Img(String url) {
+        return Url(url, false);
+    }
+
+    /**
+     * 获取跳转链接
+     *
+     * @param url
+     * @return
+     */
+    public String Nav(String url) {
+        return Url(url, false);
+    }
+
 
 }

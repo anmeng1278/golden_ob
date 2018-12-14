@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<!-- 首页 \document\html\KTGJService\GiftsDetail.html -->
+<head th:replace="index/common/layout :: header('金色严选-领取红包', '', '')"></head>
+
+<th:block layout:fragment="script">
+
+    <!--引入js-->
+    <script th:src="${ob.Url('/index/js/GiftsDetail.js')}" type="text/javascript"
+            charset="utf-8"></script>
+
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GiftsDetail.css')}"/>
+</th:block>
+
+<div layout:fragment="content">
+
+    <!--content satrt-->
+    <div class="content">
+        <!--head start-->
+        <div class="head" th:if="${couponDto != null}">
+            <p class="head-p">
+                <span class="head-p-span">抢到啦！手气不错！</span>
+                <a th:href="${ob.Nav('/coupon')}" class="head-p-look">去查看 ></a>
+            </p>
+            <!--coupon start-->
+            <div class="coupon">
+                <div class="coupon-back">
+                    <div class="coupon-lt">
+                        <p class="coupon-price" th:text="${couponDto.amount}">50<span>&yen;</span></p>
+                        <p class="coupon-price-tips" th:text="${couponDto.couponType.message}"></p>
+                    </div>
+                    <div class="coupon-rt">
+                        <p class="coupon-name" th:text="${couponDto.couponType.message}">满减券</p>
+                        <p class="coupon-time"
+                           th:text="|至${dateUtils.formatDateByUnixTime(couponDto.wechatCouponDto.expiredTime, 'yyyy-MM-dd')}过期|">
+                            至2018-11-11过期</p>
+                        <p class="coupon-rule-btn" th:utext="${couponDto.couponDto.couponUseRange.message}">使用规则</p>
+                    </div>
+                </div>
+                <span class="coupon-tips">立即使用</span>
+            </div>
+            <!--coupon end-->
+            <a href="javascript:void(0);" class="activity-rule-btn">活动规则</a>
+        </div>
+        <!--head end-->
+
+        <!--coupon-no-con start ---没有抢到礼物状态---  -->
+        <div class="coupon-no-con" th:if="${couponDto == null}">
+            <div class="coupon-no-div">
+                <img th:src="${ob.Img('/index/images/coupon_no_icon.png')}" class="coupon-no-img"/>
+                <p class="coupon-no-tips">你来晚啦！红包已被抢完！</p>
+            </div>
+            <a th:href="${ob.Nav('/')}" class="look-btn">逛逛金色严选</a>
+        </div>
+        <!--coupon-no-con end-->
+
+        <!--main start-->
+        <div class="main clear" th:if="${!#lists.isEmpty(redpacketCoupons)}">
+            <h2 class="gifts-title">看看朋友们的手气</h2>
+            <div class="gifts">
+                <th:block th:each="cc : ${redpacketCoupons}">
+                    <dl class="gifts-dl clear">
+                        <dt><img th:src="${cc.wechatDto.headimgurl}" alt=""/></dt>
+                        <dd>
+                            <span class="gifts-dl-name" th:text="${cc.wechatDto.nickname}">张鑫</span>
+                            <span class="gifts-dl-price" th:text="|抢到${cc.amount}元券|"
+                                  th:if="${cc.couponType.value==1}"></span>
+                            <span class="gifts-dl-price" th:text="|抢到${cc.amount}折券|"
+                                  th:if="${cc.couponType.value==2}"></span>
+                        </dd>
+                    </dl>
+                </th:block>
+
+            </div>
+        </div>
+        <!--main end-->
+    </div>
+    <!--content end-->
+
+    <!--footer-tips start-->
+    <fieldset class="footer-tips">
+        <legend>金色严选 用心甄选</legend>
+    </fieldset>
+    <!--footer-tips end-->
+
+    <!--关注微信公众号 start-->
+    <div class="QR-code-layer" style="display: none;">
+        <div class="QR-code-layer-bg"></div>
+        <div class="QR-code-layer-con">
+            <h2 class="QR-code-title">继续使用请关注公众号</h2>
+            <img th:src="${ob.Img('/index/images/code_img.png')}" alt="1" class="QR-code-img"/>
+            <p class="QR-code-tips">长按识别关注</p>
+        </div>
+    </div>
+    <!--关注微信公众号 end-->
+
+</div>
+
+</html>

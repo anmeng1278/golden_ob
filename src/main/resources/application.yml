@@ -5,7 +5,7 @@ server:
 #spring
 spring:
   profiles:
-    active: dev
+    active: pub
   http:
     multipart:
       max-file-size: 10MB
@@ -65,6 +65,8 @@ logging:
           ob:
             dao: debug
 
+
+
 webconfig:
   # 图片服务器
   imgServerURL: http://img.jsjinfo.cn/upload
@@ -80,8 +82,13 @@ webconfig:
   payTradeUrl: http://zs5.jsjinfo.cn/v5/ParTrade.ashx
 
   #授权码
-  PlatformAppId: wssccaf9-2341-1234-87c1-6ababc10aab3
-  PlatformToken: wsscr6zfppd8v46b5678f8fxh2xdhv0d22xlx08h8btn6ttxxx4aab3
+#  PlatformAppId: wssccaf9-2341-1234-87c1-6ababc10aab3
+#  PlatformToken: wsscr6zfppd8v46b5678f8fxh2xdhv0d22xlx08h8btn6ttxxx4aab3
+
+  #授权码
+  PlatformAppId: ws975af9-2341-1234-9751-6ababc10aab3
+  PlatformToken: wsscr975ppd8v46b5678f8fxh2xdhv0975xlx08h8btn6tt9754aab3
+
   #密钥
   token: #wugf543sxcv5*$#
 

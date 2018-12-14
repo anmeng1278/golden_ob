@@ -68,6 +68,7 @@ public class ThirdPartyLogic extends BaseLogic {
 
     /**
      * 获取开发环境token
+     *
      * @param requ
      * @return
      */
@@ -190,6 +191,12 @@ public class ThirdPartyLogic extends BaseLogic {
 
         try {
 
+            requ.getRequestHead().setTimeStamp(DateUtils.getCurrentUnixTime() + "");
+            requ.getRequestHead().setSourceFrom("KTGJ");
+            requ.getRequestBody().setSourceWay("20");
+            requ.getRequestBody().setSourceApp("600");
+            requ.getRequestBody().setPayMethod("22");
+
             LinkedMap<String, String> map = new LinkedMap<>();
             map.put("TimeStamp", requ.getRequestHead().getTimeStamp());
             map.put("SourceFrom", requ.getRequestHead().getSourceFrom());
@@ -210,12 +217,27 @@ public class ThirdPartyLogic extends BaseLogic {
             sign = Md5Utils.MD5(sign);
             requ.getRequestHead().setSign(sign);
 
-            String js =  JSON.toJSONString(requ);
-            System.out.println(js);
+            String js = JSON.toJSONString(requ);
 
             //设置签名
-            String result = HttpUtils.json(thirdPartyLogic.webconfig.getPayTradeUrl(),js);
+            String result = HttpUtils.json(thirdPartyLogic.webconfig.getPayTradeUrl(), js);
             resp = JSON.parseObject(result, GetPayTradeResp.class);
+
+            if (resp.getResponseHead().getCode().equals("0000")) {
+                resp.getResponseBody().Parse();
+            }
+
+            /*
+            {
+                "ResponseBody": {
+                    "ResponseText": "{\"appId\":\"wx555b169abb4d62ce\",\"timeStamp\":\"1544802746\",\"nonceStr\":\"1m40kqqdjzrbtx7yl4vxymroeerxkj84\",\"package\":\"prepay_id=wx141552270715285f9854d2e10606969281\",\"signType\":\"MD5\",\"paySign\":\"13CA39013606BA1062BE1E1517B6EEC1\"}"
+                },
+                "ResponseHead": {
+                    "Code": "0000",
+                    "Message": "SUCCESS"
+                }
+            }
+             */
 
         } catch (Exception ex) {
             resp.getResponseHead().setCode("0001");
