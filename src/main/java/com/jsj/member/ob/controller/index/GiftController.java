@@ -75,11 +75,13 @@ public class GiftController extends BaseController {
     @GetMapping("/give/{giftId}")
     public String giveInfo(@PathVariable("giftId") int giftId, HttpServletRequest request) {
 
+        //礼包信息
+        GiftDto giftDto = GiftLogic.GetGift(giftId);
+
         //赠送的库存
         List<StockDto> giveStocks = GiftLogic.GetGiftStocks(giftId);
 
         //领取库存信息
-        /*HashSet<StockDto> receiveStocks = new HashSet<>();*/
         List<StockDto> receiveStocks = new ArrayList<>();
         for (StockDto stockDto : giveStocks) {
             StockDto dto = StockLogic.GetChild(stockDto.getStockId());
@@ -89,7 +91,7 @@ public class GiftController extends BaseController {
         }
         request.setAttribute("receiveStocks", receiveStocks);
         request.setAttribute("giveStocks", giveStocks);
-        request.setAttribute("giftId", giftId);
+        request.setAttribute("giftDto", giftDto);
 
         return "index/giftDetail";
     }
@@ -105,6 +107,9 @@ public class GiftController extends BaseController {
     @GetMapping("/received/{giftId}")
     public String receivedInfo(@PathVariable("giftId") int giftId, HttpServletRequest request) {
 
+        //礼包信息
+        GiftDto giftDto = GiftLogic.GetGift(giftId);
+
         //赠送的库存
         List<StockDto> giveStocks = GiftLogic.GetGiftStocks(giftId);
 
@@ -118,7 +123,7 @@ public class GiftController extends BaseController {
         }
         request.setAttribute("receiveStocks", receiveStocks);
         request.setAttribute("giveStocks", giveStocks);
-        request.setAttribute("giftId", giftId);
+        request.setAttribute("giftDto", giftDto);
 
         return "index/receiveDetail";
     }
