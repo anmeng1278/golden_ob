@@ -39,32 +39,32 @@ public class GetPayTradeRequ {
 
     public class RequestBody{
 
-        @JSONField(name = "RequestHead")
+        @JSONField(name = "PlatformAppId")
         private String PlatformAppId;
 
-        @JSONField(name = "RequestHead")
+        @JSONField(name = "PlatformToken")
         private String PlatformToken;
 
-        @JSONField(name = "RequestHead")
+        @JSONField(name = "SourceWay")
         private String  SourceWay;
 
-        @JSONField(name = "RequestHead")
+        @JSONField(name = "SourceApp")
         private String SourceApp;
 
-        @JSONField(name = "RequestHead")
+        @JSONField(name = "PayMethod")
         private String PayMethod;
 
-        @JSONField(name = "RequestHead")
+        @JSONField(name = "OutTradeId")
         private String OutTradeId;
 
-        @JSONField(name = "RequestHead")
+        @JSONField(name = "PayAmount")
         private String PayAmount;
 
-        @JSONField(name = "RequestHead")
+        @JSONField(name = "OpenId")
         private String OpenId;
 
-        @JSONField(name = "RequestHead")
-        private String OrderTimeOu;
+        @JSONField(name = "OrderTimeOut")
+        private String OrderTimeOut;
 
         public String getPlatformAppId() {
             return PlatformAppId;
@@ -130,12 +130,12 @@ public class GetPayTradeRequ {
             OpenId = openId;
         }
 
-        public String getOrderTimeOu() {
-            return OrderTimeOu;
+        public String getOrderTimeOut() {
+            return OrderTimeOut;
         }
 
-        public void setOrderTimeOu(String orderTimeOu) {
-            OrderTimeOu = orderTimeOu;
+        public void setOrderTimeOut(String orderTimeOut) {
+            OrderTimeOut = orderTimeOut;
         }
     }
 }

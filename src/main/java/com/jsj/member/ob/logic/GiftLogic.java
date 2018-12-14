@@ -4,13 +4,11 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.gift.*;
+import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.entity.*;
-import com.jsj.member.ob.enums.GiftShareType;
-import com.jsj.member.ob.enums.GiftStatus;
-import com.jsj.member.ob.enums.StockFlowType;
-import com.jsj.member.ob.enums.StockStatus;
+import com.jsj.member.ob.enums.*;
 import com.jsj.member.ob.exception.FatalException;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.GiftService;
@@ -23,8 +21,10 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Component
 public class GiftLogic extends BaseLogic {
@@ -470,10 +470,43 @@ public class GiftLogic extends BaseLogic {
 
         EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
         wrapper.where("gift_id={0}", giftId);
+        int count = giftLogic.giftStockService.selectCount(wrapper);
 
-        return giftLogic.giftStockService.selectCount(wrapper);
+        return count;
 
     }
     //endregion
+
+    /**
+     * 获得用户赠送列表
+     * @param openId
+     * @return
+     */
+    public static List<GiftDto> GetGive(String openId){
+
+        EntityWrapper<Gift> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null and open_id={0}",openId);
+        List<Gift> gifts = giftLogic.giftService.selectList(wrapper);
+
+        List<GiftDto> giftDtos = new ArrayList<>();
+        for (Gift gift : gifts) {
+            GiftDto giftDto = GiftLogic.GetGift(gift.getGiftId());
+            giftDtos.add(giftDto);
+        }
+
+        return giftDtos;
+    }
+
+    /**
+     * 获得用户领取列表
+     * @param openId
+     * @return
+     */
+    public static HashSet<StockDto> GetReceived(String openId){
+
+        HashSet<StockDto> stockDtos = StockLogic.GetStocks(openId, StockType.GIFT, null);
+
+        return stockDtos;
+    }
 
 }

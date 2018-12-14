@@ -47,6 +47,13 @@ $(function () {
             return;
         }
         $(this).prev().val(num);
+
+        if ($(this).parents("div.purchase-layer").length > 0) {
+            if (typeof calculateOrder != "undefined") {
+                calculateOrder();
+            }
+        }
+
     });
 
     //购买数量减的点击事件
@@ -61,10 +68,22 @@ $(function () {
             return
         }
         $(this).next().val(num);
+
+        if ($(this).parents("div.purchase-layer").length > 0) {
+            if (typeof calculateOrder != "undefined") {
+                calculateOrder();
+            }
+        }
+
     });
 
     //选优惠券的点击事件
     $('.purchase-coupon li').on('click', function () {
         $(this).addClass('active').siblings().removeClass('active');
+
+        if (typeof calculateOrder != "undefined") {
+            calculateOrder();
+        }
+
     });
 })

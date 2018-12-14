@@ -2,11 +2,6 @@ package com.jsj.member.ob.logic;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.jsj.member.ob.dto.api.cart.CartProductDto;
-import com.jsj.member.ob.dto.api.cart.GetCartProductsRequ;
-import com.jsj.member.ob.dto.api.cart.GetCartProductsResp;
-import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Cart;
 import com.jsj.member.ob.entity.CartProduct;
 import com.jsj.member.ob.exception.TipException;
@@ -87,11 +82,11 @@ public class CartLogic extends BaseLogic {
 
 
     /**
-     *
      * 给用户创建购物车
+     *
      * @param openId
      */
-    public static void CreateCart(String openId){
+    public static Cart CreateCart(String openId) {
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
@@ -101,16 +96,21 @@ public class CartLogic extends BaseLogic {
         cart.setCreateTime(DateUtils.getCurrentUnixTime());
         cart.setUpdateTime(DateUtils.getCurrentUnixTime());
         cartLogic.cartService.insert(cart);
+
+        return cart;
     }
+
     /**
      * 添加或修改购物车
      *
      * @param openId
      * @param productId
      * @param number
+     * @param method    添加方式 add为累加  update为更新
      * @return
      */
-    public static void AddUpdateCartProduct(String openId, int productId, int productSpecId, int number) {
+    public static void AddUpdateCartProduct(String openId, int productId, int productSpecId, int number, String method) {
+
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
@@ -130,38 +130,43 @@ public class CartLogic extends BaseLogic {
         //判断当前用户是否有购物车，没有则创建购物车
         Cart cart = cartLogic.cartService.selectOne(cartWrapper);
         if (cart == null) {
-            CartLogic.CreateCart(openId);
+            cart = CartLogic.CreateCart(openId);
         }
 
         //查询购物车中的商品信息
-        EntityWrapper<CartProduct> cartProductWrapper = new EntityWrapper<CartProduct>();
-        Wrapper<CartProduct> where = cartProductWrapper.where("cart_id={0} and product_id={1} and product_spec_id={2}",
+        EntityWrapper<CartProduct> queryWrapper = new EntityWrapper<CartProduct>();
+        queryWrapper.where("cart_id={0} and product_id={1} and product_spec_id={2}",
                 cart.getCartId(),
                 productId,
                 productSpecId
         );
 
-        CartProduct cartProduct = cartLogic.cartProductService.selectOne(where);
+        //商品数为0时，删除购物车中商品
+        if (number == 0) {
+            cartLogic.cartProductService.delete(queryWrapper);
+        } else {
+            CartProduct cartProduct = cartLogic.cartProductService.selectOne(queryWrapper);
+            //如果购物车中没有此商品，添加此商品
+            if (cartProduct == null) {
 
-        //如果购物车中没有此商品，添加此商品
-        if (cartProduct == null) {
-
-            cartProduct = new CartProduct();
-            cartProduct.setCartId(cart.getCartId());
-            cartProduct.setProductId(productId);
-            cartProduct.setProductSpecId(productSpecId);
-            cartProduct.setNumber(number);
-            cartProduct.setCreateTime(DateUtils.getCurrentUnixTime());
-            cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
-
-            cartLogic.cartProductService.insert(cartProduct);
-        } else {   //含有此商品，修改商品数量
-            if (number <= 0) {
-                CartLogic.DeleteCartProduct(cartProduct.getCartProductId());
-            } else {
+                cartProduct = new CartProduct();
+                cartProduct.setCartId(cart.getCartId());
+                cartProduct.setProductId(productId);
+                cartProduct.setProductSpecId(productSpecId);
                 cartProduct.setNumber(number);
+                cartProduct.setCreateTime(DateUtils.getCurrentUnixTime());
+                cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+                cartLogic.cartProductService.insert(cartProduct);
+            } else {   //含有此商品，修改商品数量
+                if (method == "add") {
+                    cartProduct.setNumber(cartProduct.getNumber() + number);
+                } else {
+                    cartProduct.setNumber(number);
+                }
                 cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
                 cartLogic.cartProductService.updateById(cartProduct);
+
             }
         }
 
@@ -213,16 +218,17 @@ public class CartLogic extends BaseLogic {
 
     /**
      * 获得用户购物车中商品数量
+     *
      * @param openId
      * @return
      */
-    public static int GetCartProductCount(String openId){
+    public static int GetCartProductCount(String openId) {
         int amount = 0;
         List<CartProduct> cartProducts = CartLogic.GetCartProducts(openId);
         for (CartProduct cartProduct : cartProducts) {
             amount += cartProduct.getNumber();
         }
-        return  amount;
+        return amount;
     }
 
 }

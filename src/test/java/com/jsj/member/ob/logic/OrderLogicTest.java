@@ -195,7 +195,7 @@ public class OrderLogicTest {
 
     @Test
     public void geyMyOrder(){
-        List<OrderDto> orderDtos = OrderLogic.GetMyOrder("111");
+        List<OrderDto> orderDtos = OrderLogic.GetOrders("111");
     }
 
 }

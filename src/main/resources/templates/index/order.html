@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<head th:replace="index/common/layout :: header('订单记录', '', '')"></head>
+
+<th:block layout:fragment="script">
+    <script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="@{/index/js/OrderList.js}" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" th:inline="javascript">
+
+        TX.INIT(function () {
+
+            $("a.cancel-btn").click(function () {
+
+                var orderId = $(this).attr("data-order-id");
+
+                TX.CORE.p({
+                    url: "/order/cancel",
+                    data: {orderId:orderId},
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                location.href = location.href;
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
+            });
+        })
+
+    </script>
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="@{/index/js/swiper/css/swiper.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/index/css/OrderList.css}"/>
+</th:block>
+
+<div layout:fragment="content">
+    <!--main start-->
+    <div class="main">
+
+
+        <th:block th:each="info:${orderDtos}">
+
+            <!--待支付，支付失败-->
+            <th:block th:if="${info.status == 0 || info.status == 20}">
+                <div class="order-item" th:fragment="unPayOrders">
+                    <div class="order-item-head">
+                           <span class="order-num" th:text="|订单号:${info.orderId}|">
+                           </span>
+                        <p class="order-price"><span class="joinm">30</span>分<span class="joins">0</span>秒后失效</p>
+                    </div>
+                    <div class="order-item-main">
+                        <th:block th:if="${!#lists.isEmpty(info.orderProductDtos)}"
+                                  th:each="pro:${info.orderProductDtos}">
+                            <dl class="order-item-dl">
+                                <dt th:if="${!#lists.isEmpty(pro.productDto.productImgDtos)}">
+                                    <img th:src="${pro.productDto.productImgDtos[0].imgPath}" alt="1" width="100%"/>
+                                </dt>
+                                <dd>
+                                    <h2 class="order-dd-name" th:text="${pro.productDto.productName}">素园野生素食参谜</h2>
+                                    <p class="order-dd-tips"
+                                       th:text="|规格：${productLogic.GetProductSpec(pro.productSpecId).specName}|">
+                                    </p>
+                                    <p class="order-dd-time">
+                                        <span th:text="|数量：${pro.number}|"></span>
+                                        <span th:text="|&yen;${pro.productDto.salePrice}|"></span>
+                                    </p>
+                                </dd>
+                            </dl>
+                        </th:block>
+                    </div>
+                    <div class="order-item-bot">
+                        <p class="order-bot-price">待支付&yen;<span th:text="|${info.payAmount}|">650</span></p>
+                        <p class="order-bot-p">
+                            <a class="cancel-btn" th:attr="data-order-id=${info.orderId}">取消订单</a>
+                            <a href="javascript:void(0);" class="pay-btn">去支付</a>
+                        </p>
+                    </div>
+                </div>
+            </th:block>
+
+            <!--支付成功-->
+            <th:block th:if="${info.status == 10}">
+                <div class="order-item" th:fragment="paidOrders">
+                    <p class="order-item-head">
+                 <span class="order-num" th:text="|订单号:${info.orderId}|"></span>
+                        <span class="order-price" th:text="${enumLogic.GetOrderStatus(info.status).message}"></span>
+                    </p>
+                    <th:block th:if="${!#lists.isEmpty(info.orderProductDtos)}"
+                              th:each="pro:${info.orderProductDtos}">
+                        <dl class="order-item-dl">
+                            <dt th:if="${!#lists.isEmpty(pro.productDto.productImgDtos)}">
+                                <img th:src="${pro.productDto.productImgDtos[0].imgPath}" alt="1" width="100%"/>
+                            </dt>
+                            <dd>
+                                <h2 class="order-dd-name" th:text="${pro.productDto.productName}">越甲科技20寸旅行箱</h2>
+                                <p class="order-dd-tips"
+                                   th:text="|规格：${productLogic.GetProductSpec(pro.productSpecId).specName}|"></p>
+                                <p class="order-dd-time">
+                                    <span th:text="|数量：${pro.number}|"></span>
+                                    <span th:text="|&yen;${pro.productDto.salePrice}|"></span>
+                                </p>
+                            </dd>
+                        </dl>
+                    </th:block>
+                    <div class="order-item-bot">
+                        <p class="order-bot-price">实付款&yen;<span th:text="${info.payAmount}">650</span></p>
+                    </div>
+                </div>
+            </th:block>
+
+            <!--已取消-->
+            <th:block th:if="${info.status == 60}">
+                <div class="order-item" th:fragment="cancelOrders">
+                    <p class="order-item-head">
+                        <span class="order-num" th:text="|订单号:${info.orderId}|">  </span>
+                        <span class="order-price" th:text="${enumLogic.GetOrderStatus(info.status).message}"></span>
+                    </p>
+                    <th:block th:if="${!#lists.isEmpty(info.orderProductDtos)}"
+                              th:each="pro:${info.orderProductDtos}">
+                        <dl class="order-item-dl">
+                            <dt th:if="${!#lists.isEmpty(pro.productDto.productImgDtos)}">
+                                <img th:src="${pro.productDto.productImgDtos[0].imgPath}" alt="1" width="100%"/>
+                            </dt>
+                            <dd>
+                                <h2 class="order-dd-name" th:text="${pro.productDto.productName}">越甲科技20寸旅行箱</h2>
+                                <p class="order-dd-tips"
+                                   th:text="|规格：${productLogic.GetProductSpec(pro.productSpecId).specName}|"></p>
+                                <p class="order-dd-time">
+                                    <span th:text="|数量：${pro.number}|"></span>
+                                    <span th:text="|&yen;${pro.productDto.salePrice}|"></span>
+                                </p>
+                            </dd>
+                        </dl>
+                    </th:block>
+                </div>
+            </th:block>
+
+        </th:block>
+
+
+    </div>
+
+    <!--main end-->
+</div>
+</html>

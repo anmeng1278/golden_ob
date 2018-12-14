@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<head th:replace="index/common/layout :: header('配送记录', '', '')"></head>
+
+<th:block layout:fragment="script">
+    <script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="@{/index/js/DeliveryList.js}" type="text/javascript" charset="utf-8"></script>
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="@{/index/js/swiper/css/swiper.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/index/css/DeliveryList.css}"/>
+</th:block>
+
+<div layout:fragment="content">
+    <!--main start-->
+    <div class="main">
+
+        <th:block th:each="info:${deliveryDtos}">
+            <!-- 已发货 ,配送方式配送-->
+            <th:block th:if="${info.status == 10 && info.typeId == 2}">
+
+                <div class="order-item">
+                    <p class="order-item-head">
+                        <span class="order-num" th:text="|收货人：${info.contactName}|"></span>
+                        <span class="order-price"
+                              th:text="${enumLogic.GetDeliveryStatus(info.status).message}">已发货</span>
+                    </p>
+                    <th:block th:if="${!#lists.isEmpty(info.stockDtos)}"
+                              th:each="pro:${info.stockDtos}">
+                        <dl class="order-item-dl">
+
+                            <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(pro.productId))}">
+                                <img th:src="${productLogic.GetProductImgDtos(pro.productId)[0].imgPath}"/>
+                            </dt>
+
+                            <dd>
+                                <h2 class="order-dd-name"
+                                    th:text="${productLogic.GetProduct(pro.productId).productName}">越甲科技20寸旅行箱</h2>
+                                <p class="order-dd-tips" th:text="|共${pro.number}件|"></p>
+                                <p class="order-dd-time"
+                                   th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(pro.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></p>
+                            </dd>
+                        </dl>
+                    </th:block>
+                    <div class="state-list clear">
+                        <p class="state-list-p">
+                            <a th:href="@{'/delivery/logistics/'+${info.expressNumber}}" class="look-btn">查看物流</a>
+                            <a href="javascript:void(0);" class="confirm-btn">确认收货</a>
+                        </p>
+                    </div>
+                </div>
+
+            </th:block>
+
+            <!--未发货,已签收,配送方式自提-->
+            <th:block th:if="${info.status != 10 || info.typeId == 1}">
+
+                <div class="order-item">
+                    <p class="order-item-head">
+                        <span class="order-num" th:text="|收货人：${info.contactName}|"></span>
+                        <span class="order-price"
+                              th:text="${enumLogic.GetDeliveryStatus(info.status).message}">已发货</span>
+                    </p>
+                    <th:block th:if="${!#lists.isEmpty(info.stockDtos)}"
+                              th:each="pro:${info.stockDtos}">
+                        <dl class="order-item-dl">
+
+                            <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(pro.productId))}">
+
+                                <img th:src="${productLogic.GetProductImgDtos(pro.productId)[0].imgPath}"/>
+                            </dt>
+
+                            <dd>
+                                <h2 class="order-dd-name"
+                                    th:text="${productLogic.GetProduct(pro.productId).productName}">越甲科技20寸旅行箱</h2>
+                                <p class="order-dd-tips" th:text="|共${pro.number}件|"></p>
+                                <p class="order-dd-time"
+                                   th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(pro.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></p>
+                            </dd>
+                        </dl>
+                    </th:block>
+                </div>
+
+            </th:block>
+
+        </th:block>
+
+    </div>
+    <!--main end-->
+</div>

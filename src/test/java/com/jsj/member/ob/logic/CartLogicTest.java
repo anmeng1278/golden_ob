@@ -36,7 +36,7 @@ public class CartLogicTest {
 
     @Test
     public void  saveAndUpdate(){
-        CartLogic.AddUpdateCartProduct("3",2,4,1);;
+        CartLogic.AddUpdateCartProduct("3",2,4,1, "add");;
     }
 
     @Test

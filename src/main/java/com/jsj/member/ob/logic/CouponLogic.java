@@ -1,6 +1,7 @@
 package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.dto.api.coupon.*;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Coupon;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class CouponLogic  extends BaseLogic {
+public class CouponLogic extends BaseLogic {
 
 
     public static CouponLogic couponLogic;
@@ -96,6 +97,9 @@ public class CouponLogic  extends BaseLogic {
             //折扣券
             case DISCOUNT: {
                 //支付金额 = 请求金额 * 折扣
+                if (wechatCoupon.getAmount() >= 1) {
+                    wechatCoupon.setAmount(1d);
+                }
                 payAmount = requ.getUseAmount() * wechatCoupon.getAmount();
                 discountAmount = (requ.getUseAmount() - payAmount);
             }
@@ -129,6 +133,20 @@ public class CouponLogic  extends BaseLogic {
     public static CouponDto GetCoupon(int couponId) {
 
         Coupon entity = couponLogic.couponService.selectById(couponId);
+        return CouponLogic.ToDto(entity);
+
+    }
+    //endregion
+
+    //region (public) 代金券实体转换 ToDto
+
+    /**
+     * 代金券实体转换
+     *
+     * @param entity
+     * @return
+     */
+    public static CouponDto ToDto(Coupon entity) {
 
         CouponDto coupon = new CouponDto();
 
@@ -172,13 +190,15 @@ public class CouponLogic  extends BaseLogic {
     }
     //endregion
 
+    //region (public) 获得用户可使用的优惠券 GetWechatCouponDtos
+
     /**
      * 获得用户可使用的优惠券
      *
      * @param openId
      * @return
      */
-    public static List<WechatCouponDto> GetMyAvailableCoupon(String openId) {
+    public static List<WechatCouponDto> GetWechatCouponDtos(String openId) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId不能为空");
@@ -192,41 +212,62 @@ public class CouponLogic  extends BaseLogic {
 
         List<WechatCouponDto> wechatCouponDtos = new ArrayList<>();
 
-        for (WechatCoupon wechatCoupon : wechatCoupons) {
-
-            WechatCouponDto wechatCouponDto = new WechatCouponDto();
+        for (WechatCoupon entity : wechatCoupons) {
 
             //获取优惠券详情
-            CouponDto couponDto = CouponLogic.GetCoupon(wechatCoupon.getCouponId());
+            CouponDto couponDto = CouponLogic.GetCoupon(entity.getCouponId());
+
+            WechatCouponDto wechatCouponDto = CouponLogic.ToWechatCouponDto(entity);
             wechatCouponDto.setCouponDto(couponDto);
 
-            wechatCouponDto.setAmount(wechatCoupon.getAmount());
-            wechatCouponDto.setCouponId(wechatCoupon.getCouponId());
-            wechatCouponDto.setCouponType(CouponType.valueOf(wechatCoupon.getTypeId()));
-            wechatCouponDto.setExpiredTime(wechatCoupon.getExpiredTime());
-            wechatCouponDto.setOpenId(wechatCoupon.getOpenId());
-            wechatCouponDto.setCouponStatus(CouponStatus.valueOf(wechatCoupon.getStatus()));
-            wechatCouponDto.setWechatCouponId(wechatCoupon.getWechatCouponId());
             wechatCouponDtos.add(wechatCouponDto);
         }
         return wechatCouponDtos;
 
     }
+    //endregion
+
+    //region (public) 用户代金券实体转换 ToWechatCouponDto
+
+    /**
+     * 用户代金券实体转换
+     *
+     * @param entity
+     * @return
+     */
+    public static WechatCouponDto ToWechatCouponDto(WechatCoupon entity) {
+
+        WechatCouponDto wechatCouponDto = new WechatCouponDto();
+
+        wechatCouponDto.setAmount(entity.getAmount());
+        wechatCouponDto.setCouponId(entity.getCouponId());
+        wechatCouponDto.setCouponType(CouponType.valueOf(entity.getTypeId()));
+        wechatCouponDto.setExpiredTime(entity.getExpiredTime());
+        wechatCouponDto.setOpenId(entity.getOpenId());
+        wechatCouponDto.setCouponStatus(CouponStatus.valueOf(entity.getStatus()));
+        wechatCouponDto.setWechatCouponId(entity.getWechatCouponId());
+
+        return wechatCouponDto;
+    }
+    //endregion
+
+    //region (public) 获取优惠券可使用的商品 GetCouponProduct
 
     /**
      * 获取优惠券可使用的商品
+     *
      * @param couponId
      * @return
      */
-    public static List<CouponProductDto> GetCouponProduct(int couponId){
-        if(couponId < 0){
+    public static List<CouponProductDto> GetCouponProduct(int couponId) {
+        if (couponId < 0) {
             throw new TipException("参数不正确！");
         }
 
         EntityWrapper<CouponProduct> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null and coupon_id={0}",couponId);
+        wrapper.where("delete_time is null and coupon_id={0}", couponId);
         List<CouponProduct> couponProducts = couponLogic.couponProductService.selectList(wrapper);
-        if(couponProducts.size() == 0){
+        if (couponProducts.size() == 0) {
             throw new TipException("该优惠券适用于全部商品！");
         }
 
@@ -247,87 +288,55 @@ public class CouponLogic  extends BaseLogic {
 
         return couponProductDtos;
     }
+    //endregion
+
+
+    //region (public) 获得商品的可用优惠券 GetWechatCoupons
 
     /**
-     * 获取用户失效不可用的优惠券
-     * @param openId
-     * @return
-     */
-    public static List<WechatCouponDto> GetMyInvalidCoupon(String openId){
-        if (StringUtils.isBlank(openId)) {
-            throw new TipException("参数不合法，用户openId不能为空");
-        }
-        EntityWrapper<WechatCoupon> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null and open_id={0}", openId);
-        wrapper.gt("expired_time", DateUtils.getCurrentUnixTime());
-        wrapper.or("status in (10,60)");
-        List<WechatCoupon> wechatCoupons = couponLogic.wechatCouponService.selectList(wrapper);
-        List<WechatCouponDto> wechatCouponDtos = new ArrayList<>();
-
-        for (WechatCoupon wechatCoupon : wechatCoupons) {
-
-            WechatCouponDto wechatCouponDto = new WechatCouponDto();
-
-            //获取优惠券详情
-            CouponDto couponDto = CouponLogic.GetCoupon(wechatCoupon.getCouponId());
-            wechatCouponDto.setCouponDto(couponDto);
-
-            wechatCouponDto.setAmount(wechatCoupon.getAmount());
-            wechatCouponDto.setCouponId(wechatCoupon.getCouponId());
-            wechatCouponDto.setCouponType(CouponType.valueOf(wechatCoupon.getTypeId()));
-            wechatCouponDto.setExpiredTime(wechatCoupon.getExpiredTime());
-            wechatCouponDto.setOpenId(wechatCoupon.getOpenId());
-            wechatCouponDto.setCouponStatus(CouponStatus.valueOf(wechatCoupon.getStatus()));
-            wechatCouponDto.setWechatCouponId(wechatCoupon.getWechatCouponId());
-            wechatCouponDtos.add(wechatCouponDto);
-        }
-        return wechatCouponDtos;
-
-    }
-
-
-    /**
-     * 获得商品可用优惠券
-     * @param productId
-     * @return
-     */
-    public static List<CouponDto> GetProductCoupon(int productId){
-
-        if(productId < 0){
-            throw new TipException("参数不正确！");
-        }
-
-        EntityWrapper<CouponProduct> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null and product_id={0}",productId);
-        List<CouponProduct> couponProducts = couponLogic.couponProductService.selectList(wrapper);
-        List<CouponDto> couponDtos = new ArrayList<>();
-        for (CouponProduct couponProduct : couponProducts) {
-            CouponDto couponDto = CouponLogic.GetCoupon(couponProduct.getCouponId());
-            couponDtos.add(couponDto);
-        }
-        return couponDtos;
-    }
-
-
-    /**
-     * 获得该用户选中商品的可用优惠券
+     * 获得商品的可用优惠券
+     *
      * @param productId
      * @param openId
-     * @return
+     * @return select * from _wechat_coupon as a
+     * where
+     * a.`status` = 0 and
+     * a.open_id = '111' and
+     * a.delete_time is null and
+     * a.expired_time <= UNIX_TIMESTAMP() and
+     * (
+     * (select b.user_range from _coupon as b where b.coupon_id = a.coupon_id ) = 1 or
+     * exists( select * from _coupon_product as cp where cp.coupon_id = a.coupon_id and cp.product_id = 7 )
+     * )
      */
-    public static List<CouponDto> GetUserProductCoupon(int productId,String openId){
+    public static List<WechatCouponDto> GetWechatCoupons(int productId, String openId) {
 
-        List<CouponDto> couponDtos = new ArrayList<>();
-        List<WechatCouponDto> wechatCouponDtos = CouponLogic.GetMyAvailableCoupon(openId);
-        for (WechatCouponDto wechatCouponDto : wechatCouponDtos) {
-            List<CouponProductDto> couponProductDtos = CouponLogic.GetCouponProduct(wechatCouponDto.getCouponId());
-            for (CouponProductDto couponProductDto : couponProductDtos) {
-                if(couponProductDto.getProductId() == productId){
-                    CouponDto couponDto = CouponLogic.GetCoupon(couponProductDto.getCouponId());
-                    couponDtos.add(couponDto);
-                }
-            }
-        }
-        return couponDtos;
+        List<WechatCouponDto> dtos = new ArrayList<>();
+
+        Wrapper wrapper = new EntityWrapper<WechatCoupon>();
+        wrapper.where("_wechat_coupon.status = 0");
+        wrapper.where("_wechat_coupon.open_id = {0}", openId);
+        wrapper.where("_wechat_coupon.delete_time is null");
+        wrapper.where("_wechat_coupon.expired_time >= UNIX_TIMESTAMP()");
+        wrapper.where("( (select b.user_range from _coupon as b where b.coupon_id = _wechat_coupon.coupon_id ) = {0} or\n" +
+                        "exists( select * from _coupon_product as cp where cp.coupon_id = _wechat_coupon.coupon_id and cp.product_id = {1} ) )",
+                CouponUseRange.ALL.getValue(), productId);
+
+        wrapper.orderBy("_wechat_coupon.expired_time asc");
+
+        List<WechatCoupon> coupons = couponLogic.wechatCouponService.selectList(wrapper);
+        coupons.forEach(entity -> {
+
+            Integer couponId = entity.getCouponId();
+            CouponDto dto = CouponLogic.GetCoupon(couponId);
+
+            WechatCouponDto wechatCouponDto = CouponLogic.ToWechatCouponDto(entity);
+            wechatCouponDto.setCouponDto(dto);
+
+            dtos.add(wechatCouponDto);
+
+        });
+        return dtos;
     }
+    //endregion
 }

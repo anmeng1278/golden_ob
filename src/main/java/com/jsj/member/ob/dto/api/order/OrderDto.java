@@ -78,21 +78,7 @@ public class OrderDto {
      */
     private Integer deleteTime;
 
-    /**
-     * 订单中的商品数量
-     */
-    private Integer count;
-
-
     private List<ProductDto> productDtos;
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
 
     private List<OrderProductDto> orderProductDtos;
 

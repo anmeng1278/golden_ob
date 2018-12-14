@@ -1,0 +1,47 @@
+server:
+  port: 80
+
+#spring
+spring:
+  datasource:
+      type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:mysql://172.16.5.102:3306/golden_ob?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      username: zhangning
+      password: zhangning123
+      driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: 172.16.5.64
+    port: 6379
+    timeout: 10000
+    pool:
+      max-idle: 500
+      max-wait: 500
+      max-active: 1000
+  rabbitmq:
+    host: 172.16.5.64
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
+
+webconfig:
+  # 图片服务器
+  imgServerURL: http://img.jsjinfo.cn/upload
+  # 是否上传到图片服务器 (true为上传到图片服务器 false为上传到本地服务器)
+  imgServerSwitch: false
+  # 公众号appid
+  appId: wx555b169abb4d62ce
+  # 公众号 appSecrect
+  appSecrect: a8eb3f7e02ed7cb761220cb4363ff2b6
+
+  virtualPath: "/ob"
+
+redis:
+  host: 172.16.5.64
+  port: 6379
+  timeout: 10000
+  pool-max-total: 1000
+  pool-max-idle: 500
+  pool-max-wait: 500

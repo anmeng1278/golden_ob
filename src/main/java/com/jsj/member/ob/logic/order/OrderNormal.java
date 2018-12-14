@@ -1,6 +1,8 @@
 package com.jsj.member.ob.logic.order;
 
 import com.jsj.member.ob.constant.Constant;
+import com.jsj.member.ob.dto.api.coupon.UseCouponRequ;
+import com.jsj.member.ob.dto.api.coupon.UseCouponResp;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
@@ -10,6 +12,7 @@ import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.ActivityOrderService;
 import com.jsj.member.ob.service.ActivityService;
@@ -137,5 +140,65 @@ public class OrderNormal extends OrderBase {
         return resp;
 
     }
+
+    /**
+     * 计算商品应付金额
+     *
+     * @param requ
+     * @return
+     */
+    @Override
+    public CreateOrderResp CalculateOrder(CreateOrderRequ requ) {
+
+        //通用验证
+        super.validateCreateRequ(requ);
+
+        //参数校验
+        if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
+            throw new TipException("用户编号不能为空");
+        }
+        if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().size() == 0) {
+            throw new TipException("购买商品不能为空");
+        }
+
+        //订单应支付金额
+        double orderAmount = 0d;
+
+        for (OrderProductDto op : requ.getOrderProductDtos()) {
+            //获取商品规格
+            ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(op.getProductSpecId());
+            //获取规格金额
+            orderAmount += productSpecDto.getSalePrice() * op.getNumber();
+        }
+
+        //原价
+        double originalAmount = orderAmount;
+
+        //优惠金额
+        double couponAmount = 0d;
+
+        if (requ.getWechatCouponId() > 0) {
+            //使用优惠券
+            UseCouponRequ useCouponRequ = new UseCouponRequ();
+            useCouponRequ.setUseAmount(orderAmount);
+            useCouponRequ.setUse(false);
+            useCouponRequ.setWechatCouponId(requ.getWechatCouponId());
+
+            UseCouponResp useCouponResp = CouponLogic.UseCoupon(useCouponRequ);
+
+            orderAmount = useCouponResp.getPayAmount();
+            couponAmount = useCouponResp.getDiscountAmount();
+        }
+
+        CreateOrderResp resp = new CreateOrderResp();
+
+        resp.setAmount(orderAmount);
+        resp.setCouponAmount(couponAmount);
+        resp.setOriginalAmount(originalAmount);
+        resp.setSuccess(true);
+
+        return resp;
+    }
+
 
 }

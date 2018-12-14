@@ -5,18 +5,24 @@ import com.jsj.member.ob.dto.thirdParty.GetAccessTokenRequ;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenResp;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.jsj.member.ob.logic.WechatLogic;
+import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.SpringContextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import weixin.popular.api.SnsAPI;
+import weixin.popular.api.TicketAPI;
 import weixin.popular.api.UserAPI;
 import weixin.popular.bean.sns.SnsToken;
+import weixin.popular.bean.ticket.Ticket;
 import weixin.popular.bean.user.User;
+import weixin.popular.util.JsUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 /**
  * 微信授权拦截
@@ -116,4 +122,33 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     }
 
 
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object o, ModelAndView modelAndView) throws Exception {
+
+        GetAccessTokenResp getAccessTokenResp = null;
+
+        if (SpringContextUtils.getActiveProfile().equals("dev")) {
+            getAccessTokenResp = ThirdPartyLogic.GetAccessTokenDev(null);
+        } else {
+            getAccessTokenResp = ThirdPartyLogic.GetAccessToken(new GetAccessTokenRequ());
+        }
+
+        String timestamp = DateUtils.getCurrentUnixTime() + "";
+        String noncestr = UUID.randomUUID().toString();
+        String url = this.getFullURL(request);
+        String signature = "";
+
+        Ticket ticket = TicketAPI.ticketGetticket(getAccessTokenResp.getResponseBody().getAccessToken());
+        if (!StringUtils.isEmpty(ticket.getErrcode())) {
+            String ticket1 = ticket.getTicket();
+            signature = JsUtil.generateConfigSignature(noncestr, ticket1, timestamp, url);
+        }
+
+        request.setAttribute("signature", signature);
+        request.setAttribute("appId", webconfig.getAppId());
+        request.setAttribute("timestamp", timestamp);
+        request.setAttribute("noncestr", noncestr);
+
+
+    }
 }

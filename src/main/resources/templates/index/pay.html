@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+
+        wx.ready(function () {
+            alert("准备唤起支付")
+            var appId = [[${pappId}]];
+            var timestamp = [[${ptimestamp}]];
+            var nonceStr = [[${pnonceStr}]];
+            var package = [[${ppackage}]];
+            var signType = [[${psignType}]];
+            var paySign = [[${ppaySign}]];
+
+            alert(appId);
+            alert(timestamp);
+            alert(nonceStr);
+            alert(package);
+            alert(signType);
+            alert(paySign);
+
+            wx.chooseWXPay({
+                appId: appId,
+                timestamp: timestamp,
+                nonceStr: nonceStr,
+                package: package,
+                signType: signType,
+                paySign: paySign,
+                success: function (res) {
+                    alert(JSON.stringify(res));
+                },
+                fail: function (res) {
+                    alert('支付请求失败');
+                }
+            });
+        });
+    </script>
+
+</th:block>
+
+</html>

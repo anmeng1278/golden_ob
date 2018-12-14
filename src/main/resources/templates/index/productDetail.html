@@ -8,7 +8,6 @@
 <th:block layout:fragment="script">
     <!--引入的js-->
     <script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="@{/index/js/GoodsDetail.js}" type="text/javascript" charset="utf-8"></script>
 
     <script type="text/javascript" th:inline="javascript">
         TX.INIT(function () {
@@ -16,7 +15,8 @@
             $(".purchase-num-reduce").addClass("disabled");
             $(".purchase-num-add").addClass("disabled");
 
-            $("p.purchase-layer-p span").click(function () {
+            //购物车规格型号点击事件
+            $("div.shopping-cart p.purchase-layer-p span").click(function () {
 
                 var parent = $(this).parents("div.shopping-cart:first");
                 if ($(this).hasClass("disabled")) {
@@ -44,21 +44,92 @@
                 }
             });
 
-            $("p.purchase-layer-p").each(function () {
+            //购买规格型号点击事件
+            $("div.purchase-layer p.purchase-layer-p span").click(function () {
 
+                var parent = $(this).parents("div.purchase-layer:first");
+                if ($(this).hasClass("disabled")) {
+                    return;
+                }
+
+                $(".purchase-num-reduce", parent).addClass("disabled");
+                $(".purchase-num-add", parent).addClass("disabled");
+                window.specStockCount = 0;
+                $(":text[name='num']", parent).val(0);
+                $(this).siblings().removeClass("active");
+                $(this).addClass("active");
+
+                var stockCount = parseInt($(this).attr("data-spec-stockCount"), 10) || 0;
+                stockCount = stockCount < 0 ? 0 : stockCount;
+
+                if (stockCount > 0) {
+
+                    $(":text[name='num']", parent).val(1);
+                    window.specStockCount = stockCount;
+
+                    $(".purchase-num-reduce", parent).removeClass("disabled");
+                    $(".purchase-num-add", parent).removeClass("disabled");
+
+                }
+
+                calculateOrder();
+
+            });
+
+            //初始化规格型号点击
+            $("p.purchase-layer-p").each(function () {
                 $("span", $(this)).each(function () {
                     if (!$(this).hasClass('disabled')) {
                         $(this).click();
                         return false;
                     }
                 });
-
             });
-
 
             //立即购买
             $(".purchase-btn").click(function () {
-                alert(123);
+
+                if ($("div.purchase-layer p.purchase-layer-p span.active").length == 0) {
+                    TX.MSG.msg("商品售完啦");
+                    return;
+                }
+                var productId = [[${info.productId}]];
+                var productSpecId = $("div.purchase-layer p.purchase-layer-p span.active").attr("data-spec-id");
+                var num = parseInt($("div.purchase-layer div.purchase-num :text[name='num']").val() || 0, 10);
+                var wechatCouponId = 0;
+
+                if (num == 0) {
+                    TX.MSG.msg("至少购买一个商品");
+                }
+
+                if ($("ul.purchase-coupon li.active").length > 0) {
+                    wechatCouponId = $("ul.purchase-coupon li.active").attr("data-wechatCoupon-id");
+                }
+
+                TX.CORE.p({
+                    url: "/product/createOrder",
+                    data: {
+                        num: num,
+                        productSpecId: productSpecId,
+                        productId: [[${info.productId}]],
+                        wechatCouponId: wechatCouponId
+                    },
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg("订单创建成功", {time: 1500}, function () {
+                                //调起微信支付
+                                if (resp.datas.amount > 0) {
+
+                                } else {
+                                    location.href = "/order/order";
+                                }
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
+
             });
 
             //加入购物车
@@ -79,15 +150,16 @@
 
                 //添加购物车
                 TX.CORE.p({
+                    url: "/product/addCart",
                     data: {
                         num: num,
                         productSpecId: productSpecId,
-                        productId:[[${info.productId}]]
+                        productId: [[${info.productId}]]
                     },
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-
+                                location.href = location.href;
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
@@ -96,8 +168,57 @@
                 });
 
             });
+
         });
+
+        //计算订单价格
+        function calculateOrder() {
+
+            $("p.purchase-footer-lt span.shopping-price em").html(0);
+            $("p.purchase-footer-lt span.shopping-price-org").html("￥0");
+            $("p.purchase-footer-lt span.shopping-price-dis em").html(0);
+
+            if ($("div.purchase-layer p.purchase-layer-p span.active").length == 0) {
+                return;
+            }
+            var productId = [[${info.productId}]];
+            var productSpecId = $("div.purchase-layer p.purchase-layer-p span.active").attr("data-spec-id");
+            var num = parseInt($("div.purchase-layer div.purchase-num :text[name='num']").val() || 0, 10);
+            var wechatCouponId = 0;
+
+            if (num == 0) {
+                return;
+            }
+
+            if ($("ul.purchase-coupon li.active").length > 0) {
+                wechatCouponId = $("ul.purchase-coupon li.active").attr("data-wechatCoupon-id");
+            }
+
+            TX.CORE.p({
+                url: "/product/calculateOrder",
+                data: {
+                    num: num,
+                    productSpecId: productSpecId,
+                    productId: [[${info.productId}]],
+                    wechatCouponId: wechatCouponId
+                },
+                success: function (resp) {
+                    if (resp.baseResp.success) {
+                        $("p.purchase-footer-lt span.shopping-price em").html(resp.datas.amount);
+                        $("p.purchase-footer-lt span.shopping-price-org").html("￥" + resp.datas.originalAmount);
+                        $("p.purchase-footer-lt span.shopping-price-dis em").html(resp.datas.couponAmount);
+                    } else {
+                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                    }
+                }
+            });
+
+
+        }
+
     </script>
+
+    <script th:src="@{/index/js/GoodsDetail.js}" type="text/javascript" charset="utf-8"></script>
 
 </th:block>
 
@@ -141,7 +262,7 @@
     <!--main start-->
     <div class="main">
         <h2 class="goods-detail"><span>商品详情</span></h2>
-        <p th:text="${info.useIntro}"></p>
+        <p th:utext="${info.useIntro}"></p>
     </div>
     <!--main end-->
 
@@ -177,7 +298,7 @@
                     <span class="purchase-layer-lable">规格</span>
                     <p class="purchase-layer-p">
                         <th:block th:each="spec,current : ${info.productSpecDtos}">
-                            <span th:attr="data-spec-id=${spec.productSpecId}"
+                            <span th:attr="data-spec-id=${spec.productSpecId}, data-spec-stockCount=${spec.stockCount}"
                                   th:classappend="${spec.stockCount > 0 ?'':'disabled'}"
                                   th:text="${spec.specName}"></span>
                         </th:block>
@@ -195,21 +316,21 @@
                 </div>
                 <div class="purchase-layer-div">
                     <span class="purchase-layer-lable">优惠券</span>
-                    <ul class="purchase-coupon">
-                        <li class="active">
-                            <span class="coupon-price">30<em>&yen;</em></span>
-                            <p class="coupon-tips">满300元可用</p>
-                        </li>
-                        <li>
-                            <span class="coupon-price">90<em>&yen;</em></span>
-                            <p class="coupon-tips">满1000元可用</p>
-                        </li>
-                        <li>
-                            <span class="coupon-price">10<em>&yen;</em></span>
-                            <p class="coupon-tips">满150元可用</p>
-                        </li>
+                    <ul class="purchase-coupon" th:if="${!#lists.isEmpty(coupons)}">
+                        <th:block th:each="coupon :${coupons}">
+                            <!--class="active"-->
+                            <li th:attr="data-wechatCoupon-id=${coupon.wechatCouponId}">
+                                <span class="coupon-price">
+                                    <th:block th:text="${coupon.amount}"></th:block>
+                                    <em th:if="${coupon.couponType.value == 1}">&yen;</em>
+                                    <em th:if="${coupon.couponType.value == 2}">折</em>
+                                </span>
+                                <p class="coupon-tips" th:text="${coupon.couponType.message}"></p>
+                            </li>
+                        </th:block>
                     </ul>
-                    <p class="coupon-none clear" style="display: none;">无可用优惠券</p>    <!--没有优惠券才显示-->
+                    <p class="coupon-none clear" th:if="${#lists.isEmpty(coupons)}">无可用优惠券</p>
+                    <!--没有优惠券才显示-->
                 </div>
             </div>
             <!--purchase-layer-main end-->
@@ -217,9 +338,9 @@
             <!--purchase-footer start-->
             <div class="purchase-footer">
                 <p class="purchase-footer-lt">
-                    <span class="shopping-price">&yen;<em>898</em></span>
-                    <span class="shopping-price-org">￥898</span>
-                    <span class="shopping-price-dis">已优惠￥<em>30</em></span>    <!--购买时使用优惠券才显示-->
+                    <span class="shopping-price">&yen;<em>0</em></span>
+                    <span class="shopping-price-org">￥0</span>
+                    <span class="shopping-price-dis">已优惠￥<em>0</em></span>    <!--购买时使用优惠券才显示-->
                 </p>
                 <a href="javascript:void(0);" class="purchase-btn">立即购买</a>
             </div>

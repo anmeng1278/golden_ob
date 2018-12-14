@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
-import com.jsj.member.ob.dto.api.stock.GetMyStockRequ;
-import com.jsj.member.ob.dto.api.stock.GetMyStockResp;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.stock.StockFlowDto;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
@@ -28,6 +26,7 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 获取我的库存
@@ -56,12 +55,26 @@ public class StockLogic extends BaseLogic {
     //region (public) 获取我的库存 GetMyStock
 
     /**
-     * 获取我的库存
+     * 获取用户库存
      *
      * @param openId
      * @return
      */
-    public static HashSet<StockDto> GetMyStock(String openId) {
+    public static HashSet<StockDto> GetStocks(String openId) {
+
+        HashSet<StockDto> stockDtos = StockLogic.GetStocks(openId, null, StockStatus.UNUSE);
+        return stockDtos;
+    }
+    //endregion
+
+    /**
+     * 获取库存
+     * @param openId
+     * @param stockType
+     * @param stockStatus
+     * @return
+     */
+    public static HashSet<StockDto> GetStocks(String openId,StockType stockType,StockStatus stockStatus) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
@@ -69,10 +82,21 @@ public class StockLogic extends BaseLogic {
 
         HashSet<StockDto> stockDtos = new HashSet<>();
 
-        //查询该用户下所有库存
         EntityWrapper<Stock> stockWrapper = new EntityWrapper<>();
-        stockWrapper.where("open_id={0} and status = {1} and delete_time is null", openId, StockStatus.UNUSE.getValue());
+        stockWrapper.where("open_id={0} and delete_time is null", openId);
+
+        if(stockStatus != null) {
+            stockWrapper.where("status={0}", stockStatus.getValue());
+        }
+
+        if(stockType != null) {
+            stockWrapper.where("type_id={0}", stockType.getValue());
+        }
+
         List<Stock> stockList = stockLogic.stockService.selectList(stockWrapper);
+
+        List<Integer> stockIds = stockList.stream().map(Stock::getStockId).collect(Collectors.toList());
+
         if (stockList.size() == 0) {
             return stockDtos;
         }
@@ -81,8 +105,10 @@ public class StockLogic extends BaseLogic {
 
             //获得库存中每样商品总量
             EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
-            productWrapper.where("product_id={0} and open_id={1}", stock.getProductId(), openId);
+            productWrapper.where("product_id={0}", stock.getProductId(), stock.getStockId());
+            productWrapper.in("stock_id",stockIds);
             int number = stockLogic.stockService.selectCount(productWrapper);
+            stockDto.setNumber(number);
 
             ProductSpecDto dto = ProductLogic.GetProductSpec(stock.getProductSpecId());
             stockDto.setProductSpecDto(dto);
@@ -90,12 +116,28 @@ public class StockLogic extends BaseLogic {
             stockDto.setOrderId(stock.getOrderId());
             stockDto.setProductId(stock.getProductId());
             stockDto.setStockId(stock.getStockId());
-            stockDto.setNumber(number);
+            stockDto.setProductSpecId(stock.getProductSpecId());
+            stockDto.setStockType(StockType.valueOf(stock.getTypeId()));
+
+            WechatDto wechatDto = WechatLogic.GetWechat(openId);
+            stockDto.setWechatDto(wechatDto);
+            stockDto.setCreateTime(stock.getCreateTime());
+            stockDto.setParentStockId(stock.getParentStockId());
+
+            EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
+            wrapper.where("stock_id={0}", stock.getStockId());
+            wrapper.orderBy("create_time desc");
+
+            GiftStock giftStock = stockLogic.giftStockService.selectOne(wrapper);
+            if (giftStock != null) {
+                GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
+                stockDto.setGiftDto(giftDto);
+            }
             stockDtos.add(stockDto);
         }
         return stockDtos;
     }
-    //endregion
+
 
     //region (public) 订单支付成功添加库存 AddOrderStock
 
@@ -237,6 +279,21 @@ public class StockLogic extends BaseLogic {
 
     //region (public) 获取库存流转 GetStockFlows
 
+
+    /**
+     * 获得库存取赠送信息
+     *
+     * @param parentStockId
+     * @return
+     */
+    public static StockDto GetParent(int parentStockId) {
+        Stock stock = stockLogic.stockService.selectOne(new EntityWrapper<Stock>().where("stock_id", parentStockId));
+        if (stock != null) {
+            return StockLogic.GetStock(stock.getStockId());
+        }
+        return null;
+    }
+
     /**
      * 获取库存流转
      *
@@ -313,6 +370,7 @@ public class StockLogic extends BaseLogic {
         stockDto.setStockStatus(StockStatus.valueOf(stock.getStatus()));
         stockDto.setStockType(StockType.valueOf(stock.getTypeId()));
         stockDto.setCreateTime(stock.getCreateTime());
+        stockDto.setParentStockId(stock.getParentStockId());
 
         stockDto.setWechatDto(wechatDto);
 

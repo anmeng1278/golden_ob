@@ -1,6 +1,7 @@
 package com.jsj.member.ob.dto.api.stock;
 
 import com.jsj.member.ob.dto.api.gift.GiftDto;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.enums.StockStatus;
@@ -71,6 +72,12 @@ public class StockDto {
      */
     private WechatDto wechatDto;
 
+    /**
+     * 父编号
+     */
+    private int parentStockId;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,6 +89,14 @@ public class StockDto {
     @Override
     public int hashCode() {
         return Objects.hash(productId);
+    }
+
+    public int getParentStockId() {
+        return parentStockId;
+    }
+
+    public void setParentStockId(int parentStockId) {
+        this.parentStockId = parentStockId;
     }
 
     public Integer getStockId() {

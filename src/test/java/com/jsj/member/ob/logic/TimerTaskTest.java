@@ -14,8 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = App.class)
@@ -49,19 +51,14 @@ public class TimerTaskTest {
                 wrapper.where("status = 10 and type_is = 20");
                 List<Delivery> deliveries = deliveryService.selectList(wrapper);
                 for (Delivery delivery : deliveries) {
-                    try {
-                        //查询订单的物流节点，若已签收修改订单状态为已签收
-                        ExpressRequ requ = new ExpressRequ();
-                        requ.setText(delivery.getExpressNumber());
-                        ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
-                        if(resp.getState().equals(3)){
-                            //已签收
-                            delivery.setStatus(DeliveryStatus.SIGNED.getValue());
-                            deliveryService.updateById(delivery);
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    //查询订单的物流节点，若已签收修改订单状态为已签收
+                    ExpressRequ requ = new ExpressRequ();
+                    requ.setText(delivery.getExpressNumber());
+                    ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
+                    if(resp.getState().equals(3)){
+                        //已签收
+                        delivery.setStatus(DeliveryStatus.SIGNED.getValue());
+                        deliveryService.updateById(delivery);
                     }
 
                 }

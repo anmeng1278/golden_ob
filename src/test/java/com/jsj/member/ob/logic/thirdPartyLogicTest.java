@@ -6,6 +6,7 @@ import com.jsj.member.ob.dto.thirdParty.SmsDto;
 import com.jsj.member.ob.dto.thirdParty.TemplateDto;
 import com.jsj.member.ob.dto.thirdParty.*;
 import com.jsj.member.ob.enums.SmsLevel;
+import com.jsj.member.ob.utils.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -68,15 +69,16 @@ public class thirdPartyLogicTest {
 
 
         GetPayTradeRequ requ = new GetPayTradeRequ();
-        requ.getRequestBody().setPlatformAppId(ThirdPartyLogic.thirdPartyLogic.webconfig.getPlatformAppId());
-        requ.getRequestBody().setPlatformToken(ThirdPartyLogic.thirdPartyLogic.webconfig.getPlatformToken());
-        requ.getRequestBody().setOpenId("oeQDZtzvDoD-0mTmyJH6rGAX8odc");
+        requ.getRequestHead().setTimeStamp(DateUtils.getCurrentUnixTime() + "");
+        requ.getRequestHead().setSourceFrom("KTGJ");
+
         requ.getRequestBody().setSourceWay("20");
-        requ.getRequestBody().setPayAmount("0.1");
-        requ.getRequestBody().setPayMethod("22");
-        requ.getRequestBody().setOutTradeId("9534634332");
-        requ.getRequestBody().setOrderTimeOu("20180328173342");
         requ.getRequestBody().setSourceApp("600");
+        requ.getRequestBody().setPayMethod("22");
+        requ.getRequestBody().setOutTradeId("95346343321");
+        requ.getRequestBody().setPayAmount("0.1");
+        requ.getRequestBody().setOpenId("oeQDZtzvDoD-0mTmyJH6rGAX8odc");
+        requ.getRequestBody().setOrderTimeOut("20181212175900");
 
         GetPayTradeResp resp = ThirdPartyLogic.GetPayTrade(requ);
         System.out.println(JSON.toJSONString(resp));

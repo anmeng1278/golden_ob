@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
+import com.jsj.member.ob.entity.Stock;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.DeliveryService;
@@ -85,7 +87,7 @@ public class DeliveryLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static List<DeliveryDto> GetMyDelivery(String openId) {
+    public static List<DeliveryDto> GetDelivery(String openId) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
@@ -96,11 +98,17 @@ public class DeliveryLogic extends BaseLogic {
         List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
 
         List<DeliveryDto> deliveryDtos = new ArrayList<>();
+        List<ProductDto> productDtos = new ArrayList<>();
         for (Delivery delivery : deliveries) {
             DeliveryDto deliveryDto = new DeliveryDto();
 
             List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
-            deliveryDto.setStockDto(stockDtos);
+            for (StockDto stockDto : stockDtos) {
+                ProductDto productDto = ProductLogic.GetProduct(stockDto.getProductId());
+                productDtos.add(productDto);
+            }
+            deliveryDto.setStockDtos(stockDtos);
+            deliveryDto.setProductDtos(productDtos);
 
             deliveryDto.setAddress(delivery.getAddress());
             deliveryDto.setCityId(delivery.getCityId());

@@ -17,12 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Base64;
-import java.util.Map;
 import java.util.Random;
 
 @Component
@@ -46,17 +43,21 @@ public class ExpressApiLogic extends BaseLogic {
      * @return
      * @throws IOException
      */
-    public static ExpressResp GetExpressHundred(ExpressRequ requ) throws IOException {
+    public static ExpressResp GetExpressHundred(ExpressRequ requ) {
+
         if (StringUtils.isBlank(requ.getText())) {
             throw new TipException("快递单号不能为空！");
         }
 
-        String getText = GetText(requ.getText());
+        String expressResult = null;
+        try {
+            String getText = GetText(requ.getText());
+            String url = String.format("http://www.kuaidi100.com/query?type=" + getText + "&postid=" + requ.getText() + "&temp=" + new Random().nextDouble());
+            expressResult = HttpUtils.get(url);
 
-        // 通过快递公司及快递单号获取物流信息。
-        String url = String.format("http://www.kuaidi100.com/query?type=" + getText + "&postid=" + requ.getText() + "&temp=" + new Random().nextDouble());
-
-        String expressResult = HttpUtils.get(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         ExpressResp resp = JSON.parseObject(expressResult, ExpressResp.class);
         return resp;
     }

@@ -197,18 +197,24 @@ public class ThirdPartyLogic extends BaseLogic {
             map.put("PlatformToken", thirdPartyLogic.webconfig.getPlatformToken());
             map.put("SourceWay", requ.getRequestBody().getSourceWay());
             map.put("SourceApp", requ.getRequestBody().getSourceApp());
-            map.put("PayMethod", requ.getRequestBody().getPayAmount());
+            map.put("PayMethod", requ.getRequestBody().getPayMethod());
             map.put("OutTradeId", requ.getRequestBody().getOutTradeId());
             map.put("PayAmount", requ.getRequestBody().getPayAmount());
             map.put("OpenId", requ.getRequestBody().getOpenId());
-            map.put("OrderTimeOut", requ.getRequestBody().getOrderTimeOu());
+            map.put("OrderTimeOut", requ.getRequestBody().getOrderTimeOut());
+
+            requ.getRequestBody().setPlatformAppId(thirdPartyLogic.webconfig.getPlatformAppId());
+            requ.getRequestBody().setPlatformToken(thirdPartyLogic.webconfig.getPlatformToken());
 
             String sign = thirdPartyLogic.GetMd5str(map, "#wugf543sxcv5*$#");
             sign = Md5Utils.MD5(sign);
             requ.getRequestHead().setSign(sign);
 
+            String js =  JSON.toJSONString(requ);
+            System.out.println(js);
+
             //设置签名
-            String result = HttpUtils.json(thirdPartyLogic.webconfig.getWeChatAccessTokenUrl(), JSON.toJSONString(requ));
+            String result = HttpUtils.json(thirdPartyLogic.webconfig.getPayTradeUrl(),js);
             resp = JSON.parseObject(result, GetPayTradeResp.class);
 
         } catch (Exception ex) {

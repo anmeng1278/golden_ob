@@ -1,5 +1,6 @@
 package com.jsj.member.ob.logic;
 
+import com.alibaba.fastjson.JSON;
 import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.api.coupon.CouponProductDto;
 import com.jsj.member.ob.dto.api.coupon.WechatCouponDto;
@@ -8,22 +9,13 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-
-import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = App.class)
 @WebAppConfiguration
 public class CouponLogicTest {
 
-    @Test
-    public void getMyCoupon() {
-        List<WechatCouponDto> wechatCouponDtos = CouponLogic.GetMyAvailableCoupon("111");
-        wechatCouponDtos.stream().forEach(s->s.getOpenId());
-    }
 
     @Test
     public void getCouponProduct(){
@@ -32,4 +24,11 @@ public class CouponLogicTest {
             System.out.println(couponProductDto.getCouponId());
         }
     }
+
+    @Test
+    public void TestGetCoupons() {
+        List<WechatCouponDto> dtos = CouponLogic.GetWechatCoupons(7, "111");
+        System.out.println(JSON.toJSONString(dtos));
+    }
+
 }
