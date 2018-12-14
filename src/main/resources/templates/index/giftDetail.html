@@ -23,20 +23,18 @@
         <div class="swiper-container">
 
             <div class="swiper-wrapper">
-                <th:block th:each="info:${giveStocks}">
-                    <div class="swiper-slide">
-                        <dl class="banner-dl">
-                            <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(info.productId))}">
-                                <img th:src="${productLogic.GetProductImgDtos(info.productId)[0].imgPath}"/>
-                            </dt>
-                            <dd>
-                                <h2 class="banner-dl-name"
-                                    th:text="${productLogic.GetProduct(info.productId).productName}">越甲科技20寸旅行箱</h2>
-                                <p class="banner-dl-tips" th:text="|共${info.number}件|">共2件商品</p>
-                            </dd>
-                        </dl>
-                    </div>
-                </th:block>
+                <div class="swiper-slide" th:if="${!#lists.isEmpty(giveStocks)}" th:each="info:${giveStocks}">
+                    <dl class="banner-dl">
+                        <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(info.productId))}">
+                            <img th:src="${productLogic.GetProductImgDtos(info.productId)[0].imgPath}"/>
+                        </dt>
+                        <dd>
+                            <h2 class="banner-dl-name"
+                                th:text="${productLogic.GetProduct(info.productId).productName}">越甲科技20寸旅行箱</h2>
+                            <p class="banner-dl-tips" th:text="|共${info.number}件|">共2件商品</p>
+                        </dd>
+                    </dl>
+                </div>
             </div>
 
 
@@ -72,21 +70,19 @@
 
         <!--receive-detail start-->
         <div class="receive-detail">
-            <th:block th:if="${!#lists.isEmpty(receiveStocks)}" th:each="info:${receiveStocks}">
-                <dl class="receive-dl">
-                    <dt><img th:src="${info.wechatDto.headimgurl}" alt="1"/></dt>
-                    <dd>
-                        <p class="receive-dl-p">
-                            <span class="receive-name" th:text="${info.wechatDto.nickname}">张鑫</span>
-                            <span class="receive-time"
-                                  th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}">11-20 13:30</span>
-                        </p>
-                        <p class="receive-dl-tips clear"
-                           th:text="|领取了${productLogic.GetProduct(info.productId).productName}x${info.number}|">
-                            领取了越甲科技20kg旅行箱×1</p>
-                    </dd>
-                </dl>
-            </th:block>
+            <dl class="receive-dl" th:if="${!#lists.isEmpty(receiveStocks)}" th:each="info:${receiveStocks}">
+                <dt><img th:src="${info.wechatDto.headimgurl}" alt="1"/></dt>
+                <dd>
+                    <p class="receive-dl-p">
+                        <span class="receive-name" th:text="${info.wechatDto.nickname}">张鑫</span>
+                        <span class="receive-time"
+                              th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}">11-20 13:30</span>
+                    </p>
+                    <p class="receive-dl-tips clear"
+                       th:text="|领取了${productLogic.GetProduct(info.productId).productName}x${info.number}|">
+                        领取了越甲科技20kg旅行箱×1</p>
+                </dd>
+            </dl>
         </div>
         <!--receive-detail end-->
     </div>

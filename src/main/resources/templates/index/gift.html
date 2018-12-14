@@ -39,7 +39,10 @@
                 <th:block th:if="${info.giftShareType.value == 2}">
                     <dl class="give-item-dl clear">
                         <dt>
-                            <img src="/index/images/give_default_img.png" alt="1"/>
+                            <img th:if="${giftLogic.GetGiftStockCount(info.giftId) le 1}"
+                                 th:src="${productLogic.GetProductImgDtos(giftLogic.GetGiftStocks(info.giftId).get(0).productId)[0].imgPath}">
+                            <img th:if="${giftLogic.GetGiftStockCount(info.giftId) gt 1}"
+                                 src="/index/images/give_default_img.png" alt="1"/>
                         </dt>
                         <dd>
                             <p class="give-dd-p">
@@ -57,17 +60,18 @@
                 </th:block>
 
                 <!-- 分享个人 -->
-               <th:block th:if="${info.giftShareType.value != 2}">
+                <th:block th:if="${info.giftShareType.value != 2}">
                     <dl class="give-item-dl clear">
                         <dt>
-                           <!-- <img th:if="${giftLogic.GetGiftStockCount(info.giftId) > 1}" ?
-                                  th:src="images/purchase-layer-img.png" :
-                                  th:src="${productLogic.GetProductImgDtos(info.productId)[0].imgPath}" alt="1"/>-->
-                            <img src="/index/images/give_default_img.png" alt="1"/>
+                            <img th:if="${giftLogic.GetGiftStockCount(info.giftId) le 1}"
+                                 th:src="${productLogic.GetProductImgDtos(giftLogic.GetGiftStocks(info.giftId)[0].productId)[0].imgPath}">
+                            <img th:if="${giftLogic.GetGiftStockCount(info.giftId) gt 1}"
+                                 src="/index/images/give_default_img.png" alt="1"/>
                         </dt>
                         <dd>
                             <p class="give-dd-p">
-                            <span class="give-dd-name" th:text="${info.wechatDto.nickname}">韩梅梅</span>
+                                <span class="give-dd-name"
+                                      th:text="${giftLogic.GetGiftStocks(info.giftId)[0].wechatDto.nickname}">韩梅梅</span>
 
                                 <span class="give-state-gray" th:text="${info.giftStatus.message}"></span>
 
@@ -80,7 +84,6 @@
                         </dd>
                     </dl>
                 </th:block>
-
 
             </th:block>
         </div>
@@ -95,7 +98,8 @@
                     </dt>
                     <dd>
                         <p class="give-dd-p">
-                            <span class="give-dd-name" th:text="|From:${stockLogic.GetParent(info.parentStockId).wechatDto.nickname}|">韩梅梅</span>
+                            <span class="give-dd-name"
+                                  th:text="|From:${stockLogic.GetParent(info.parentStockId).wechatDto.nickname}|">韩梅梅</span>
                             <span class="give-state-gray" th:text="${info.stockStatus}">已领取</span>
                         </p>
                         <p class="give-dd-tips clear" th:text="|共${info.number}件商品|">共2件商品</p>
