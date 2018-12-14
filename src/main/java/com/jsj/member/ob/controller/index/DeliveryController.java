@@ -45,6 +45,8 @@ public class DeliveryController extends BaseController {
     @GetMapping("/{deliveryId}")
     public String info(@PathVariable("deliveryId") int deliveryId, HttpServletRequest request) {
 
+
+
         ////查询配送的物流信息
         //ExpressRequ requ = new ExpressRequ();
         //requ.setText(expressNumber);
