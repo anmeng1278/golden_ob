@@ -287,7 +287,7 @@ public class StockLogic extends BaseLogic {
      * @return
      */
     public static StockDto GetParent(int parentStockId) {
-        Stock stock = stockLogic.stockService.selectOne(new EntityWrapper<Stock>().where("stock_id", parentStockId));
+        Stock stock = stockLogic.stockService.selectOne(new EntityWrapper<Stock>().where("stock_id={0}", parentStockId));
         if (stock != null) {
             return StockLogic.GetStock(stock.getStockId());
         }
@@ -352,6 +352,7 @@ public class StockLogic extends BaseLogic {
 
         ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(stock.getProductSpecId());
         WechatDto wechatDto = WechatLogic.GetWechat(stock.getOpenId());
+        stockDto.setWechatDto(wechatDto);
 
         EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
         wrapper.where("stock_id={0}", stockId);
@@ -370,9 +371,10 @@ public class StockLogic extends BaseLogic {
         stockDto.setStockStatus(StockStatus.valueOf(stock.getStatus()));
         stockDto.setStockType(StockType.valueOf(stock.getTypeId()));
         stockDto.setCreateTime(stock.getCreateTime());
-        stockDto.setParentStockId(stock.getParentStockId());
 
-        stockDto.setWechatDto(wechatDto);
+        if(stock.getParentStockId() != null) {
+            stockDto.setParentStockId(stock.getParentStockId());
+        }
 
         if (giftStock != null) {
             GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
