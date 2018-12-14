@@ -482,7 +482,7 @@ public class GiftLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static List<GiftDto> GetGive(String openId){
+    public static List<GiftDto> GetGives(String openId){
 
         EntityWrapper<Gift> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null and open_id={0}",openId);
