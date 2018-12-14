@@ -98,36 +98,64 @@ public class DeliveryLogic extends BaseLogic {
         List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
 
         List<DeliveryDto> deliveryDtos = new ArrayList<>();
-        List<ProductDto> productDtos = new ArrayList<>();
         for (Delivery delivery : deliveries) {
-            DeliveryDto deliveryDto = new DeliveryDto();
 
-            List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
-            for (StockDto stockDto : stockDtos) {
-                ProductDto productDto = ProductLogic.GetProduct(stockDto.getProductId());
-                productDtos.add(productDto);
-            }
-            deliveryDto.setStockDtos(stockDtos);
-            deliveryDto.setProductDtos(productDtos);
+            DeliveryDto dto = DeliveryLogic.ToDto(delivery);
 
-            deliveryDto.setAddress(delivery.getAddress());
-            deliveryDto.setCityId(delivery.getCityId());
-            deliveryDto.setProvinceId(delivery.getProvinceId());
-            deliveryDto.setContactName(delivery.getContactName());
-            deliveryDto.setDistrictId(delivery.getDistrictId());
-            deliveryDto.setOpenId(delivery.getOpenId());
-            deliveryDto.setExpressNumber(delivery.getExpressNumber());
-            deliveryDto.setMobile(delivery.getMobile());
-            deliveryDto.setStatus(delivery.getStatus());
-            deliveryDto.setTypeId(delivery.getTypeId());
-            deliveryDto.setRemarks(delivery.getRemarks());
-            deliveryDto.setDeliveryId(delivery.getDeliveryId());
-            deliveryDtos.add(deliveryDto);
+            deliveryDtos.add(dto);
 
         }
         return deliveryDtos;
 
     }
 
+    /**
+     * 获取配送信息
+     * @param deliveryId
+     * @return
+     */
+    public static DeliveryDto GetDelivery(int deliveryId){
+
+        Delivery delivery = deliveryLogic.deliveryService.selectById(deliveryId);
+
+        DeliveryDto dto = DeliveryLogic.ToDto(delivery);
+
+        return dto;
+
+    }
+
+    /**
+     * 实体转换
+     * @param delivery
+     * @return
+     */
+    public static DeliveryDto ToDto(Delivery delivery){
+
+        DeliveryDto dto = new DeliveryDto();
+
+        List<ProductDto> productDtos = new ArrayList<>();
+        List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
+        for (StockDto stockDto : stockDtos) {
+            ProductDto productDto = ProductLogic.GetProduct(stockDto.getProductId());
+            productDtos.add(productDto);
+        }
+        dto.setStockDtos(stockDtos);
+        dto.setProductDtos(productDtos);
+
+        dto.setAddress(delivery.getAddress());
+        dto.setCityId(delivery.getCityId());
+        dto.setProvinceId(delivery.getProvinceId());
+        dto.setContactName(delivery.getContactName());
+        dto.setDistrictId(delivery.getDistrictId());
+        dto.setOpenId(delivery.getOpenId());
+        dto.setExpressNumber(delivery.getExpressNumber());
+        dto.setMobile(delivery.getMobile());
+        dto.setStatus(delivery.getStatus());
+        dto.setTypeId(delivery.getTypeId());
+        dto.setRemarks(delivery.getRemarks());
+        dto.setDeliveryId(delivery.getDeliveryId());
+
+        return dto;
+    }
 
 }
