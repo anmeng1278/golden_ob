@@ -55,9 +55,20 @@ public class GiftController extends BaseController {
     @GetMapping("/give/{giftId}")
     public String giveInfo(@PathVariable("giftId") int giftId, HttpServletRequest request) {
 
-        List<StockDto> stockDtos = GiftLogic.GetGiftStocks(giftId);
+        //赠送的库存
+        List<StockDto> giveStocks = GiftLogic.GetGiftStocks(giftId);
 
-        request.setAttribute("stockDtos",stockDtos);
+        //领取库存信息
+        List<StockDto> receiveStocks = new ArrayList<>();
+        for (StockDto stockDto : giveStocks) {
+            StockDto dto = StockLogic.GetChild(stockDto.getStockId());
+            if (dto != null) {
+                receiveStocks.add(dto);
+            }
+        }
+        request.setAttribute("receiveStocks",receiveStocks);
+        request.setAttribute("giveStocks", giveStocks);
+
         request.setAttribute("giftId",giftId);
 
         return "index/giftDetail";
@@ -89,7 +100,7 @@ public class GiftController extends BaseController {
         request.setAttribute("giveStocks", giveStocks);
         request.setAttribute("giftId", giftId);
 
-        return "index/receivedDetail";
+        return "index/receiveDetail";
     }
 
 
