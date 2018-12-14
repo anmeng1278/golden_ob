@@ -6,5 +6,5 @@ $(function(){
 	//活动规则弹层隐藏
 	$('.four_close').on('click',function(){
 		$('.IllustrateLayer').hide();
-	}); 
+	});
 });
