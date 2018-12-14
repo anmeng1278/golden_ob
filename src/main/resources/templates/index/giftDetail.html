@@ -23,7 +23,7 @@
         <div class="swiper-container">
 
             <div class="swiper-wrapper">
-                <th:block th:each="info:${stockDtos}">
+                <th:block th:each="info:${giveStocks}">
                     <div class="swiper-slide">
                         <dl class="banner-dl">
                             <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(info.productId))}">
@@ -52,12 +52,12 @@
         <!--blessings satrt-->
         <div class="blessings">
             <div class="blessings-con">
-                <img src="images/icon_douhao_lt.png" alt="1" class="icon-douhao-lt"/>
-                <img src="images/icon_douhao_rt.png" alt="1" class="icon-douhao-rt"/>
+                <img src="/index/images/icon_douhao_lt.png" alt="1" class="icon-douhao-lt"/>
+                <img src="/index/images/icon_douhao_rt.png" alt="1" class="icon-douhao-rt"/>
                 <p class="blessings-p" th:text="${giftLogic.GetGift(giftId).blessings}"></p>
             </div>
             <p class="give-come-from">
-                <img src="images/card_img1.png" class="give-head-img"/>
+                <img src="/index/images/card_img1.png" class="give-head-img"/>
                 <span class="give-come-from-text" th:text="${giftLogic.GetGift(giftId).wechatDto.nickname}">张鑫</span>
             </p>
         </div>
@@ -70,7 +70,27 @@
         </div>
         <!--give-con end-->
 
+        <!--receive-detail start-->
+        <div class="receive-detail">
+            <th:block th:if="${!#lists.isEmpty(receiveStocks)}" th:each="info:${receiveStocks}">
+                <dl class="receive-dl">
+                    <dt><img th:src="${info.wechatDto.headimgurl}" alt="1"/></dt>
+                    <dd>
+                        <p class="receive-dl-p">
+                            <span class="receive-name" th:text="${info.wechatDto.nickname}">张鑫</span>
+                            <span class="receive-time"
+                                  th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}">11-20 13:30</span>
+                        </p>
+                        <p class="receive-dl-tips clear"
+                           th:text="|领取了${productLogic.GetProduct(info.productId).productName}x${info.number}|">
+                            领取了越甲科技20kg旅行箱×1</p>
+                    </dd>
+                </dl>
+            </th:block>
+        </div>
+        <!--receive-detail end-->
     </div>
+
     <!--main end-->
 
     <!--footer start-->
