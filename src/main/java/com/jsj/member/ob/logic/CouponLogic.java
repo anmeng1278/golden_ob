@@ -156,6 +156,9 @@ public class CouponLogic extends BaseLogic {
         coupon.setCouponType(CouponType.valueOf(entity.getTypeId()));
         coupon.setCouponUseRange(CouponUseRange.valueOf(entity.getUserRange()));
 
+        coupon.setInstruction(entity.getInstruction());
+        coupon.setRemarks(entity.getRemarks());
+
         coupon.setValidDays(entity.getValidDays());
 
         return coupon;
@@ -339,4 +342,34 @@ public class CouponLogic extends BaseLogic {
         return dtos;
     }
     //endregion
+
+    /**
+     * 获取用户优惠券列表
+     * @param openId
+     * @return
+     */
+    public static List<WechatCouponDto> GetWechatCoupons(String openId){
+
+        List<WechatCouponDto> dtos = new ArrayList<>();
+
+        EntityWrapper<WechatCoupon> wrapper = new EntityWrapper<>();
+        wrapper.where("open_id={0}",openId);
+        wrapper.where("delete_time is null ");
+        wrapper.orderBy("status asc");
+
+        List<WechatCoupon> coupons = couponLogic.wechatCouponService.selectList(wrapper);
+
+        coupons.forEach(entity -> {
+
+            Integer couponId = entity.getCouponId();
+            CouponDto dto = CouponLogic.GetCoupon(couponId);
+
+            WechatCouponDto wechatCouponDto = CouponLogic.ToWechatCouponDto(entity);
+            wechatCouponDto.setCouponDto(dto);
+
+            dtos.add(wechatCouponDto);
+
+        });
+        return dtos;
+    }
 }
