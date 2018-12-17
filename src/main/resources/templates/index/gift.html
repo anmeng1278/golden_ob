@@ -71,7 +71,11 @@
                         <dd>
                             <p class="give-dd-p">
                                 <span class="give-dd-name"
+                                      th:if="${!#lists.isEmpty(giftLogic.GetGiftStocks(info.giftId))}"
                                       th:text="${giftLogic.GetGiftStocks(info.giftId)[0].wechatDto.nickname}">韩梅梅</span>
+
+                                <span class="give-dd-name"
+                                      th:if="${#lists.isEmpty(giftLogic.GetGiftStocks(info.giftId))}">待领取</span>
 
                                 <span class="give-state-gray" th:text="${info.giftStatus.message}"></span>
 
@@ -93,16 +97,16 @@
         <div class="give-item">
             <th:block th:each="info:${receiveStocks}">
                 <dl class="give-item-dl clear">
-                    <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(info.productId))}">
-                        <img th:src="${productLogic.GetProductImgDtos(info.productId)[0].imgPath}"/>
+                    <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(info.stockDtos[0].productId))}">
+                        <img th:src="${productLogic.GetProductImgDtos(info.stockDtos[0].productId)[0].imgPath}"/>
                     </dt>
                     <dd>
                         <p class="give-dd-p">
                             <span class="give-dd-name"
-                                  th:text="|From:${stockLogic.GetParent(info.parentStockId).wechatDto.nickname}|">韩梅梅</span>
-                            <span class="give-state-gray" th:text="${info.stockStatus}">已领取</span>
+                                  th:text="|From:${info.wechatDto.nickname}|">韩梅梅</span>
+                            <span class="give-state-gray" th:text="${info.stockDtos[0].stockStatus.message}">已领取</span>
                         </p>
-                        <p class="give-dd-tips clear" th:text="|共${info.number}件商品|">共2件商品</p>
+                        <p class="give-dd-tips clear" th:text="|共${#lists.size(info.stockDtos)}件商品|">共2件商品</p>
                         <p class="give-dd-time"
                            th:text="|领取时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|">
                         </p>

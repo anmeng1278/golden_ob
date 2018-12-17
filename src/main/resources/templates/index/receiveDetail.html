@@ -59,11 +59,12 @@
         <!--blessings end-->
 
         <!--receive-detail start-->
-        <div class="receive-detail" th:if="${giftDto.giftStatus.value == 40}">
-            <h2 class="receive-title"
+        <div class="receive-detail">
+            <h2 class="receive-title" th:if="${giftDto.giftStatus.value == 40}"
                 th:text="|您来晚了，礼物已被抢完啦！(${giftLogic.GetGiftStockCount(giftDto.giftId)}/${giftLogic.GetGiftStockCount(giftDto.giftId)})|">
                 您来晚了，礼物已被抢完啦！(2/2)
             </h2>
+
             <dl class="receive-dl" th:if="${!#lists.isEmpty(receiveStocks)}" th:each="info:${receiveStocks}">
                 <dt><img th:src="${info.wechatDto.headimgurl}" alt="1"/></dt>
                 <dd>
