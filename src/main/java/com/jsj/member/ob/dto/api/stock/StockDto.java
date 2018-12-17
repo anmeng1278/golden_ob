@@ -83,12 +83,13 @@ public class StockDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StockDto stockDto = (StockDto) o;
-        return Objects.equals(productId, stockDto.productId);
+        return productSpecId == stockDto.productSpecId &&
+                Objects.equals(productId, stockDto.productId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productId);
+        return Objects.hash(productId, productSpecId);
     }
 
     public int getParentStockId() {

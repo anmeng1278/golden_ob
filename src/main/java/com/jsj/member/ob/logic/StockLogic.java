@@ -107,7 +107,7 @@ public class StockLogic extends BaseLogic {
 
             //获得库存中每样商品总量
             EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
-            productWrapper.where("product_id={0}", stock.getProductId());
+            productWrapper.where("product_id={0} and product_spec_id={1}", stock.getProductId(),stock.getProductSpecId());
             productWrapper.in("stock_id", stockIds);
             int number = stockLogic.stockService.selectCount(productWrapper);
             stockDto.setNumber(number);

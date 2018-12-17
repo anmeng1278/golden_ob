@@ -1,8 +1,11 @@
 package com.jsj.member.ob.dto.api.gift;
 
+import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.enums.GiftShareType;
 import com.jsj.member.ob.enums.GiftStatus;
+
+import java.util.List;
 
 public class GiftDto {
 
@@ -58,6 +61,8 @@ public class GiftDto {
      * 赠送用户
      */
     private WechatDto wechatDto;
+
+    private List<StockDto> stockDtos;
 
     public Integer getGiftId() {
         return giftId;
@@ -153,5 +158,13 @@ public class GiftDto {
 
     public void setWechatDto(WechatDto wechatDto) {
         this.wechatDto = wechatDto;
+    }
+
+    public List<StockDto> getStockDtos() {
+        return stockDtos;
+    }
+
+    public void setStockDtos(List<StockDto> stockDtos) {
+        this.stockDtos = stockDtos;
     }
 }

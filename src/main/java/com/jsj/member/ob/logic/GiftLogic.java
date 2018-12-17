@@ -20,11 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.jsj.member.ob.logic.StockLogic.stockLogic;
 
 @Component
 public class GiftLogic extends BaseLogic {
@@ -463,10 +462,11 @@ public class GiftLogic extends BaseLogic {
 
     /**
      * 获取赠送商品数量
+     *
      * @param giftId
      * @return
      */
-    public static Integer GetGiftStockCount(int giftId){
+    public static Integer GetGiftStockCount(int giftId) {
 
         EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
         wrapper.where("gift_id={0}", giftId);
@@ -479,13 +479,14 @@ public class GiftLogic extends BaseLogic {
 
     /**
      * 获得用户赠送列表
+     *
      * @param openId
      * @return
      */
-    public static List<GiftDto> GetGives(String openId){
+    public static List<GiftDto> GetGives(String openId) {
 
         EntityWrapper<Gift> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null and open_id={0}",openId);
+        wrapper.where("delete_time is null and open_id={0}", openId);
         List<Gift> gifts = giftLogic.giftService.selectList(wrapper);
 
         List<GiftDto> giftDtos = new ArrayList<>();
@@ -497,15 +498,76 @@ public class GiftLogic extends BaseLogic {
         return giftDtos;
     }
 
+
     /**
      * 获得用户领取列表
+     *
      * @param openId
      * @return
      */
-    public static HashSet<StockDto> GetReceived(String openId){
+    public static List<GiftDto> GetReceived(String openId) {
 
-        HashSet<StockDto> stockDtos = StockLogic.GetStocks(openId, StockType.GIFT, null);
+        if (StringUtils.isBlank(openId)) {
+            throw new TipException("参数不合法，用户openId为空");
+        }
+        //用户领取的库存
+        EntityWrapper<Stock> stockWrapper = new EntityWrapper<>();
+        stockWrapper.where("open_id={0} and delete_time is null", openId);
+        stockWrapper.where("type_id={0}", StockType.GIFT.getValue());
+        List<Stock> stockList = giftLogic.stockService.selectList(stockWrapper);
 
+        List<Integer> parentStockIds = stockList.stream().map(Stock::getParentStockId).collect(Collectors.toList());
+
+        //用户领取库存对应的礼包
+        EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null");
+        wrapper.in("stock_id", parentStockIds);
+        List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
+
+        List<GiftDto> giftDtos = new ArrayList<>();
+        for (GiftStock giftStock : giftStocks) {
+
+            GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
+            List<StockDto> stockDtos = GiftLogic.GetGiftRecevied(openId, giftStock.getGiftId());
+            giftDto.setStockDtos(stockDtos);
+            giftDtos.add(giftDto);
+
+        }
+
+        ArrayList<GiftDto> collect = giftDtos.stream().collect(
+                Collectors.collectingAndThen(
+                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(GiftDto::getGiftId))), ArrayList::new)
+        );
+
+        return collect;
+    }
+
+    /**
+     * 获得用户在这个礼包中的领取详情
+     *
+     * @param openId
+     * @param giftId
+     */
+    public static List<StockDto> GetGiftRecevied(String openId, int giftId) {
+
+        List<StockDto> giveStocks = GiftLogic.GetGiftStocks(giftId);
+
+        List<StockDto> stockDtos = new ArrayList<>();
+        for (StockDto giveStock : giveStocks) {
+
+            EntityWrapper<Stock> wrapper = new EntityWrapper<>();
+
+            if (!StringUtils.isBlank(openId)) {
+                wrapper.where("open_id={0}", openId);
+            }
+            wrapper.where("parent_stock_id={0}", giveStock.getStockId());
+            List<Stock> stocks = giftLogic.stockService.selectList(wrapper);
+            for (Stock stock : stocks) {
+                StockDto stockDto = StockLogic.ToDto(stock);
+                stockDtos.add(stockDto);
+            }
+
+        }
         return stockDtos;
     }
 
