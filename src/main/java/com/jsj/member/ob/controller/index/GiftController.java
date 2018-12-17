@@ -58,7 +58,7 @@ public class GiftController extends BaseController {
         request.setAttribute("giveStocks", giveStocks);
 
         //用户所有领取的
-        HashSet<StockDto> receiveStocks = GiftLogic.GetReceived(openId);
+        List<GiftDto> receiveStocks = GiftLogic.GetReceived(openId);
 
         request.setAttribute("receiveStocks", receiveStocks);
 
@@ -81,14 +81,9 @@ public class GiftController extends BaseController {
         //赠送的库存
         List<StockDto> giveStocks = GiftLogic.GetGiftStocks(giftId);
 
-        //领取库存信息
-        List<StockDto> receiveStocks = new ArrayList<>();
-        for (StockDto stockDto : giveStocks) {
-            StockDto dto = StockLogic.GetChild(stockDto.getStockId());
-            if (dto != null) {
-                receiveStocks.add(dto);
-            }
-        }
+        //领取的库存
+        List<StockDto> receiveStocks = GiftLogic.GetGiftRecevied(null, giftId);
+
         request.setAttribute("receiveStocks", receiveStocks);
         request.setAttribute("giveStocks", giveStocks);
         request.setAttribute("giftDto", giftDto);
@@ -113,14 +108,9 @@ public class GiftController extends BaseController {
         //赠送的库存
         List<StockDto> giveStocks = GiftLogic.GetGiftStocks(giftId);
 
-        //领取库存信息
-        List<StockDto> receiveStocks = new ArrayList<>();
-        for (StockDto stockDto : giveStocks) {
-            StockDto dto = StockLogic.GetChild(stockDto.getStockId());
-            if (dto != null) {
-                receiveStocks.add(dto);
-            }
-        }
+        //领取的库存
+        List<StockDto> receiveStocks = GiftLogic.GetGiftRecevied(null, giftId);
+
         request.setAttribute("receiveStocks", receiveStocks);
         request.setAttribute("giveStocks", giveStocks);
         request.setAttribute("giftDto", giftDto);

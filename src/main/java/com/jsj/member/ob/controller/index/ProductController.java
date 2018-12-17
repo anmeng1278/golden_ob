@@ -3,6 +3,8 @@ package com.jsj.member.ob.controller.index;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.RestResponseBo;
+import com.jsj.member.ob.dto.api.activity.ActivityDto;
+import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.dto.api.coupon.WechatCouponDto;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
@@ -12,6 +14,7 @@ import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.CartLogic;
 import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.ProductLogic;
@@ -21,9 +24,7 @@ import com.jsj.member.ob.utils.EncryptUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,6 +72,28 @@ public class ProductController extends BaseController {
 
         return "index/productDetail";
     }
+
+
+    /**
+     * 组合商品详情
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/{activityId}")
+    public String groupDetail(@PathVariable("activityId") int activityId, HttpServletRequest request) {
+
+        ActivityDto info = ActivityLogic.GetActivity(activityId);
+
+        //活动中的商品
+        List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(activityId);
+
+        request.setAttribute("info", info);
+        request.setAttribute("activityProductDtos", activityProductDtos);
+
+        return "index/groupDetail";
+    }
+
 
 
     /**
