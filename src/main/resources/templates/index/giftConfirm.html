@@ -7,7 +7,6 @@
 
 <th:block layout:fragment="script">
 
-
     <script th:inline="javascript">
 
         //分享到发礼物页面
@@ -26,8 +25,8 @@
 
             $("a[data-share-type]").click(function () {
 
-                //TODO 动态获取数据
-                var blessings = "天气凉了，这份礼物带有我的温度！";
+                //动态获取数据
+                var blessings =  $("div.head-wrap-item p.blessings").html();
                 var shareType = $(this).attr("data-share-type");
 
                 TX.CORE.p({
@@ -42,6 +41,33 @@
                 })
 
             });
+
+
+            //绑定方案类型点击事件
+            $(document).on("click", "ul.head-nav li", function () {
+
+                $(this).siblings().removeClass("head-nav-cur");
+                $(this).addClass("head-nav-cur");
+
+                getCopywriter();
+
+            });
+
+            $(document).on("click", "p.blessings-btn", function () {
+                getCopywriter();
+            });
+
+
+            function getCopywriter() {
+
+                var typeId = $("li[class='head-nav-cur']").attr("data-type-id");
+                console.log(typeId);
+
+                //TODO ajax通过 TypeId 请求返回方案内容
+                var content = "生日快乐 000";
+                $("div.head-wrap-item p.blessings").html(content);
+
+            }
 
         });
 
@@ -86,21 +112,13 @@
             <span class="head-line-one"></span>
             <div class="head-con">
                 <ul class="head-nav">
-                    <li class="head-nav-cur">寄一份想思</li>
-                    <li>生日快乐</li>
-                    <li>新年祝福</li>
+                    <li data-type-id="901" class="head-nav-cur">寄一份想思</li>
+                    <li data-type-id="902">生日快乐</li>
+                    <li data-type-id="903">新年祝福</li>
                 </ul>
                 <div class="head-wrap clear">
-                    <div class="head-wrap-item" style="display: block;">
-                        <p class="blessings">天气凉了<br/>这份礼物带有我的温度~</p>
-                        <p class="blessings-btn"><span>换一句</span></p>
-                    </div>
-                    <div class="head-wrap-item">
-                        <p class="blessings">生日快乐</p>
-                        <p class="blessings-btn"><span>换一句</span></p>
-                    </div>
-                    <div class="head-wrap-item">
-                        <p class="blessings">新年祝福</p>
+                    <div class="head-wrap-item" style="display: block">
+                        <p class="blessings">天气凉了，这份礼物带有我的温度~</p>
                         <p class="blessings-btn"><span>换一句</span></p>
                     </div>
                 </div>
