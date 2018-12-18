@@ -11,7 +11,7 @@ import java.io.Serializable;
  *   @description : OrderRedpacketCoupon 订单礼包代金券表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-05
+ *   @since 2018-12-18
  */
 @TableName("_order_redpacket_coupon")
 public class OrderRedpacketCoupon implements Serializable {
@@ -20,42 +20,42 @@ public class OrderRedpacketCoupon implements Serializable {
 
 	@TableId(value="order_redpacket_coupon_id", type= IdType.AUTO)
 	private Integer orderRedpacketCouponId;
-	/**
-	 * 订单表主键
-	 */
+    /**
+     * 订单表主键
+     */
 	@TableField("order_id")
 	private Integer orderId;
-	/**
-	 * 礼包代金券表主键
-	 */
+    /**
+     * 礼包代金券表主键
+     */
 	@TableField("redpacket_coupon_id")
 	private Integer redpacketCouponId;
-	/**
-	 * 代金券表主键
-	 */
+    /**
+     * 代金券表主键
+     */
 	@TableField("coupon_id")
 	private Integer couponId;
-	/**
-	 * 类型 1直减券  2折扣券 (值为2时折扣使用amount字段)
-	 */
+    /**
+     * 类型 1直减券  2折扣券 (值为2时折扣使用amount字段)
+     */
 	@TableField("type_id")
 	private Integer typeId;
-	/**
-	 * 代金券金额
-	 */
+    /**
+     * 代金券金额
+     */
 	private Double amount;
-	/**
-	 * 领取人编号
-	 */
+    /**
+     * 领取人编号
+     */
 	@TableField("open_id")
 	private String openId;
-	/**
-	 * 是否领取
-	 */
+    /**
+     * 是否领取
+     */
 	private Boolean ifreceived;
-	/**
-	 * 领取时间
-	 */
+    /**
+     * 领取时间
+     */
 	@TableField("received_time")
 	private Integer receivedTime;
     /**

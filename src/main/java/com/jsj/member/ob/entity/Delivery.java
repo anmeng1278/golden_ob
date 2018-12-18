@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Delivery 提货表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-05
+ *   @since 2018-12-18
  */
 @TableName("_delivery")
 public class Delivery implements Serializable {
@@ -35,7 +34,7 @@ public class Delivery implements Serializable {
 	@TableField("express_number")
 	private String expressNumber;
     /**
-     * 状态 0未发货 10已发货 20已签收
+     * 状态 0未发货 10已发货(已开卡、已获取活动码)  20已签收(已使用活动码)
      */
 	private Integer status;
     /**
@@ -44,7 +43,12 @@ public class Delivery implements Serializable {
 	@TableField("type_id")
 	private Integer typeId;
     /**
-     * 联系人
+     * 商品属性  1.实物 2.活动码 3.卡
+     */
+	@TableField("property_type_id")
+	private Integer propertyTypeId;
+    /**
+     * 联系人、真实姓名
      */
 	@TableField("contact_name")
 	private String contactName;
@@ -52,6 +56,26 @@ public class Delivery implements Serializable {
      * 手机号
      */
 	private Integer mobile;
+    /**
+     * 证件号(开卡时使用)
+     */
+	@TableField("id_number")
+	private String idNumber;
+    /**
+     * 航班号
+     */
+	@TableField("flight_number")
+	private String flightNumber;
+    /**
+     * 贵宾厅编号
+     */
+	@TableField("viphall_id")
+	private Integer viphallId;
+    /**
+     * 贵宾厅名称
+     */
+	@TableField("viphall_name")
+	private String viphallName;
     /**
      * 详细地址
      */
@@ -132,6 +156,14 @@ public class Delivery implements Serializable {
 		this.typeId = typeId;
 	}
 
+	public Integer getPropertyTypeId() {
+		return propertyTypeId;
+	}
+
+	public void setPropertyTypeId(Integer propertyTypeId) {
+		this.propertyTypeId = propertyTypeId;
+	}
+
 	public String getContactName() {
 		return contactName;
 	}
@@ -146,6 +178,38 @@ public class Delivery implements Serializable {
 
 	public void setMobile(Integer mobile) {
 		this.mobile = mobile;
+	}
+
+	public String getIdNumber() {
+		return idNumber;
+	}
+
+	public void setIdNumber(String idNumber) {
+		this.idNumber = idNumber;
+	}
+
+	public String getFlightNumber() {
+		return flightNumber;
+	}
+
+	public void setFlightNumber(String flightNumber) {
+		this.flightNumber = flightNumber;
+	}
+
+	public Integer getViphallId() {
+		return viphallId;
+	}
+
+	public void setViphallId(Integer viphallId) {
+		this.viphallId = viphallId;
+	}
+
+	public String getViphallName() {
+		return viphallName;
+	}
+
+	public void setViphallName(String viphallName) {
+		this.viphallName = viphallName;
 	}
 
 	public String getAddress() {
@@ -221,8 +285,13 @@ public class Delivery implements Serializable {
 			", expressNumber=" + expressNumber +
 			", status=" + status +
 			", typeId=" + typeId +
+			", propertyTypeId=" + propertyTypeId +
 			", contactName=" + contactName +
 			", mobile=" + mobile +
+			", idNumber=" + idNumber +
+			", flightNumber=" + flightNumber +
+			", viphallId=" + viphallId +
+			", viphallName=" + viphallName +
 			", address=" + address +
 			", remarks=" + remarks +
 			", provinceId=" + provinceId +
