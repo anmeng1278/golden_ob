@@ -1,5 +1,7 @@
 package com.jsj.member.ob.dto.api.product;
 
+import com.jsj.member.ob.enums.PropertyType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +28,9 @@ public class ProductDto {
     private Integer typeId;
 
     /**
-     * 商品属性  实物 次卡 月卡
+     * 商品属性
      */
-    private Integer propertyTypeId;
+    private PropertyType propertyType;
 
     /**
      * 简介
@@ -105,7 +107,6 @@ public class ProductDto {
      */
     private List<ProductSpecDto> productSpecDtos;
 
-
     public Integer getProductId() {
         return productId;
     }
@@ -130,12 +131,12 @@ public class ProductDto {
         this.typeId = typeId;
     }
 
-    public Integer getPropertyTypeId() {
-        return propertyTypeId;
+    public PropertyType getPropertyType() {
+        return propertyType;
     }
 
-    public void setPropertyTypeId(Integer propertyTypeId) {
-        this.propertyTypeId = propertyTypeId;
+    public void setPropertyType(PropertyType propertyType) {
+        this.propertyType = propertyType;
     }
 
     public String getIntroduce() {

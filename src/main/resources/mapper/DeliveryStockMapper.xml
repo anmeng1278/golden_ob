@@ -7,6 +7,7 @@
         <id column="delivery_stock_id" property="deliveryStockId" />
         <result column="delivery_id" property="deliveryId" />
         <result column="stock_id" property="stockId" />
+        <result column="activity_code" property="activityCode" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="delete_time" property="deleteTime" />
@@ -14,7 +15,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        delivery_stock_id AS deliveryStockId, delivery_id AS deliveryId, stock_id AS stockId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        delivery_stock_id AS deliveryStockId, delivery_id AS deliveryId, stock_id AS stockId, activity_code AS activityCode, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

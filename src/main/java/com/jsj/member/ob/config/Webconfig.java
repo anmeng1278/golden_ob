@@ -43,6 +43,8 @@ public class Webconfig {
 
     private String virtualPath;
 
+    private String qrcodeUrl;
+
     public String getAppId() {
         return appId;
     }
@@ -161,5 +163,13 @@ public class Webconfig {
 
     public void setVirtualPath(String virtualPath) {
         this.virtualPath = virtualPath;
+    }
+
+    public String getQrcodeUrl() {
+        return qrcodeUrl;
+    }
+
+    public void setQrcodeUrl(String qrcodeUrl) {
+        this.qrcodeUrl = qrcodeUrl;
     }
 }

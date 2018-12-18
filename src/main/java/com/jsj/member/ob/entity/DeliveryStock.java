@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : DeliveryStock 提货库存表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-05
+ *   @since 2018-12-18
  */
 @TableName("_delivery_stock")
 public class DeliveryStock implements Serializable {
@@ -31,6 +30,11 @@ public class DeliveryStock implements Serializable {
      */
 	@TableField("stock_id")
 	private Integer stockId;
+    /**
+     * 活动码
+     */
+	@TableField("activity_code")
+	private String activityCode;
     /**
      * 创建时间
      */
@@ -72,6 +76,14 @@ public class DeliveryStock implements Serializable {
 		this.stockId = stockId;
 	}
 
+	public String getActivityCode() {
+		return activityCode;
+	}
+
+	public void setActivityCode(String activityCode) {
+		this.activityCode = activityCode;
+	}
+
 	public Integer getCreateTime() {
 		return createTime;
 	}
@@ -103,6 +115,7 @@ public class DeliveryStock implements Serializable {
 			", deliveryStockId=" + deliveryStockId +
 			", deliveryId=" + deliveryId +
 			", stockId=" + stockId +
+			", activityCode=" + activityCode +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +

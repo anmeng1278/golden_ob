@@ -2,14 +2,15 @@ package com.jsj.member.ob.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
-
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : VArea VIEW实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-05
+ *   @since 2018-12-18
  */
 @TableName("_v_area")
 public class VArea implements Serializable {
@@ -19,7 +20,7 @@ public class VArea implements Serializable {
     /**
      * 主键
      */
-	@TableField(value="dict_id")
+	@TableField("dict_id")
 	private Integer dictId;
 	@TableField("province_id")
 	private Long provinceId;

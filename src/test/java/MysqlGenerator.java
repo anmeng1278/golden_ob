@@ -74,7 +74,6 @@ public class MysqlGenerator {
             "_delivery",
             "_delivery_stock",
             "_dict",
-            "_dict_copy",
             "_gift",
             "_gift_stock",
             "_order",

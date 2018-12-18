@@ -13,6 +13,7 @@ import com.jsj.member.ob.entity.ProductImg;
 import com.jsj.member.ob.entity.ProductSpec;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.ProductImgType;
+import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.exception.ProductStockException;
 import com.jsj.member.ob.service.ActivityProductService;
 import com.jsj.member.ob.service.ProductImgService;
@@ -80,7 +81,7 @@ public class ProductLogic extends BaseLogic {
 
         productDto.setProductId(entity.getProductId());
         productDto.setProductName(entity.getProductName());
-        productDto.setPropertyTypeId(entity.getPropertyTypeId());
+        productDto.setPropertyType(PropertyType.valueOf(entity.getPropertyTypeId()));
         productDto.setRemarks(entity.getRemarks());
 
         productDto.setTypeId(entity.getTypeId());
@@ -150,7 +151,7 @@ public class ProductLogic extends BaseLogic {
 
         productDto.setProductId(product.getProductId());
         productDto.setProductName(product.getProductName());
-        productDto.setPropertyTypeId(product.getPropertyTypeId());
+        productDto.setPropertyType(PropertyType.valueOf(product.getPropertyTypeId()));
         productDto.setRemarks(product.getRemarks());
 
         productDto.setTypeId(product.getTypeId());
