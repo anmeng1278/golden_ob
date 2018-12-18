@@ -35,13 +35,56 @@
             });
             $(document).on("click", "a.pay-btn", function () {
                 var orderId = $(this).attr("data-order-id");
-                var url = [[${ob.Nav("/pay")}]];
-                if (url.indexOf("?") > -1) {
-                    url += "&orderId=" + orderId;
-                } else {
-                    url += "?orderId=" + orderId;
-                }
-                location.href = url;
+
+                TX.CORE.p({
+                    url: "/order/createPay",
+                    data: {
+                        orderId: orderId
+                    },
+                    success: function (resp) {
+
+                        if (resp.baseResp.success) {
+
+                            var successUrl = resp.datas.successUrl;
+
+                            var appId = resp.datas.pay.responseBody.appId;
+                            var timestamp = resp.datas.pay.responseBody.timeStamp;
+                            var nonceStr = resp.datas.pay.responseBody.nonceStr;
+                            var package = resp.datas.pay.responseBody._package;
+                            var signType = resp.datas.pay.responseBody.signType;
+                            var paySign = resp.datas.pay.responseBody.paySign;
+
+                            if (typeof wx == "undefined") {
+                                TX.MSG.msg("当前环境无法调用微信客户端！", {time: 1500}, function () {
+                                });
+                                return;
+                            }
+
+                            //调起微信支付
+                            wx.chooseWXPay({
+                                appId: appId,
+                                timestamp: timestamp,
+                                nonceStr: nonceStr,
+                                package: package,
+                                signType: signType,
+                                paySign: paySign,
+                                success: function (resp) {
+                                    location.href = successUrl;
+                                },
+                                fail: function (resp) {
+                                    TX.MSG.msg("对不起，支付失败了！", {time: 1500});
+                                },
+                                cancel: function (resp) {
+                                    TX.MSG.msg("您已取消支付！", {time: 1500});
+                                }
+                            });
+
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
+
             });
 
         })

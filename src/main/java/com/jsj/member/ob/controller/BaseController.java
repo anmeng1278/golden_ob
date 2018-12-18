@@ -4,6 +4,7 @@ import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeRequ;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
+import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.BaseLogic;
 import com.jsj.member.ob.logic.OrderLogic;
@@ -200,6 +201,12 @@ public abstract class BaseController {
 
         if (!orderDto.getOpenId().equals(openId)) {
             throw new TipException("非操作人订单不允许支付");
+        }
+        if (orderDto.getPayAmount() <= 0) {
+            throw new TipException("当前订单不需要支付");
+        }
+        if (!orderDto.getStatus().equals(OrderStatus.UNPAY) && !orderDto.getStatus().equals(OrderStatus.PAYFAIL)) {
+            throw new TipException("当前订单状态不允许支付");
         }
 
         GetPayTradeRequ requ = new GetPayTradeRequ();

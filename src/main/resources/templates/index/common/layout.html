@@ -30,10 +30,7 @@
             signature: [[${signature}]],// 必填，签名，见附录1
             jsApiList: [
                 'onMenuShareTimeline',
-                'onMenuShareAppMessage',
-                'onMenuShareQQ',
-                'onMenuShareWeibo',
-                'onMenuShareQZone'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
 
     </script>
@@ -46,10 +43,15 @@
     <script th:src="${ob.Url('/common/js/tx.js')}"></script>
 
 
-
     <th:block layout:fragment="script"></th:block>
     <script type="text/javascript" th:src="${ob.Url('/index/js/shareConfig.js')}"></script>
-
+    <script>
+        $(function () {
+            $(document).on("click", "div.share-layer", function () {
+                $(this).hide();
+            })
+        })
+    </script>
 </head>
 <body>
 

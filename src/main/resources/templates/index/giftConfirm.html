@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<!-- 赠送领取列表 \document\html\KTGJService\share.html -->
+<head th:replace="index/common/layout :: header('赠送礼物', '', '')"></head>
+
+<th:block layout:fragment="script">
+
+
+    <script th:inline="javascript">
+
+        //分享到发礼物页面
+        var shareUrl = [[${shareUrl}]];
+        var shareTitle = "发礼物了";
+
+        shareConfig = {
+            title: shareTitle,
+            desc: "",
+            link: shareUrl,
+            imgUrl: ""
+        };
+
+
+        TX.INIT(function () {
+
+            $("a[data-share-type]").click(function () {
+
+                //TODO 动态获取数据
+                var blessings = "天气凉了，这份礼物带有我的温度！";
+                var shareType = $(this).attr("data-share-type");
+
+                TX.CORE.p({
+                    data: {
+                        op: "ready",
+                        blessings: blessings,
+                        shareType: shareType
+                    },
+                    success: function (resp) {
+                        $("div.share-layer").show();
+                    }
+                })
+
+            });
+
+        });
+
+        function shareSuccess() {
+
+            //分享成功
+            TX.CORE.p({
+                data: {
+                    op: "success"
+                },
+                success: function (resp) {
+                    if (resp.baseResp.success) {
+                        TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                            location.href = shareUrl;
+                        });
+                    } else {
+                        TX.MSG.msg(resp.baseResp.message, {icon: 2}, function () {
+                            location.href = shareUrl;
+                        });
+                    }
+                }
+            })
+        }
+
+    </script>
+
+    <script th:src="${ob.Url( '/index/js/share.js')}" type="text/javascript"
+            charset="utf-8"></script>
+
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/share.css')}"/>
+</th:block>
+
+<div layout:fragment="content">
+
+    <!--main start-->
+    <div class="main">
+        <!--head start-->
+        <div class="head">
+            <span class="head-line-one"></span>
+            <div class="head-con">
+                <ul class="head-nav">
+                    <li class="head-nav-cur">寄一份想思</li>
+                    <li>生日快乐</li>
+                    <li>新年祝福</li>
+                </ul>
+                <div class="head-wrap clear">
+                    <div class="head-wrap-item" style="display: block;">
+                        <p class="blessings">天气凉了<br/>这份礼物带有我的温度~</p>
+                        <p class="blessings-btn"><span>换一句</span></p>
+                    </div>
+                    <div class="head-wrap-item">
+                        <p class="blessings">生日快乐</p>
+                        <p class="blessings-btn"><span>换一句</span></p>
+                    </div>
+                    <div class="head-wrap-item">
+                        <p class="blessings">新年祝福</p>
+                        <p class="blessings-btn"><span>换一句</span></p>
+                    </div>
+                </div>
+                <div class="head-con-bot clear">
+                    <span class="head-con-bot-line"></span>
+                    <img th:src="${ob.Img('/index/images/share_bow_icon.png')}" alt="1"
+                         class="head-con-bot-bow"/>
+                    <p class="head-con-bot-tips">*如果超过24小时未被领取，则退回原账户</p>
+                </div>
+            </div>
+        </div>
+        <!--head end-->
+
+        <!--goods start-->
+        <div class="goods clear">
+            <span class="goods-box-shadow box-shadow-lt"></span>
+            <span class="goods-box-shadow box-shadow-rt"></span>
+            <div class="goods-con">
+                <div class="goods-con-height">
+                    <div class="goods-con-hei-con">
+                        <ul class="goods-con-hei-ul">
+                            <th:block th:each="stock, current : ${giftDto.stockDtos}">
+                                <li>
+                                    <img th:if="${!#lists.isEmpty(stock.productDto.productImgDtos)}"
+                                         th:src="${stock.productDto.productImgDtos[0].imgPath}" alt="1"
+                                         class="goods-img"/>
+                                    <p class="goods-tips" th:if="${current.last}">共<span
+                                            th:text="${#lists.size(giftDto.stockDtos)}">2</span>件</p>
+                                </li>
+                            </th:block>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <span class="goods-bot-bg"></span>
+        </div>
+        <!--goods end-->
+
+        <!--footer start-->
+        <div class="footer">
+            <a href="javascript:void(0);" class="footer-share-btn" data-share-type="1">送一个好友</a>
+            <a href="javascript:void(0);" class="footer-welfare-btn" data-share-type="2">发群福利</a>
+        </div>
+        <!--footer end-->
+    </div>
+    <!--main end-->
+
+    <!--footer-bg start-->
+    <div class="footer-bg"></div>
+    <!--footer-bg end-->
+
+
+    <div class="share-layer" style="display: none;">
+        <div class="share-layer-bg"></div>
+        <div class="share-layer-con">
+            <span class="share-layer-sanjiao"></span>
+            <p class="share-layer-p">点击右上角【•••】<br/>分享到朋友，朋友圈。<br/>让大家一起来试试手气吧</p>
+        </div>
+    </div>
+
+</div>
+</html>

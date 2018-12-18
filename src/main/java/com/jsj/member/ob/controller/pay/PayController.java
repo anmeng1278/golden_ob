@@ -68,13 +68,11 @@ public class PayController extends BaseController {
             HttpServletRequest request) throws UnsupportedEncodingException {
 
         //分享红包地址
-        String shareUrl = String.format("%s/share/redPacket/%s", webconfig.getVirtualPath(), obs);
+        String shareUrl = this.Url(String.format("/share/redPacket/%s", obs), false);
         request.setAttribute("shareUrl", shareUrl);
 
         return "index/paySuccessed";
     }
-
-
 
 
 }

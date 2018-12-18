@@ -17,6 +17,8 @@ wx.ready(function () {
         }
     }
 
+    shareConfig.desc = shareConfig.desc || "未设置分享描述";
+
     wx.onMenuShareAppMessage({
         title: shareConfig.title, // 分享标题
         desc: shareConfig.desc, // 分享描述
@@ -24,8 +26,11 @@ wx.ready(function () {
         imgUrl: shareConfig.imgUrl, // 分享图标
         type: '', // 分享类型,music、video或link，不填默认为link
         dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-        success: function () {
+        success: function (resp) {
             // 用户确认分享后执行的回调函数
+            if (typeof shareSuccess != "undefined") {
+                shareSuccess();
+            }
         },
         cancel: function () {
             // 用户取消分享后执行的回调函数
@@ -37,48 +42,14 @@ wx.ready(function () {
         title: shareConfig.title, // 分享标题
         link: shareConfig.link, // 分享链接
         imgUrl: shareConfig.imgUrl, // 分享图标
-        success: function () {
-            // 用户确认分享后执行的回调函数
+        success: function (resp) {
 
-        },
-        cancel: function () {
-            // 用户取消分享后执行的回调函数
-        }
-    });
+            alert(JSON.stringify(resp));
 
-    wx.onMenuShareQQ({
-        title: shareConfig.title, // 分享标题
-        desc: shareConfig.desc, // 分享描述
-        link: shareConfig.link, // 分享链接
-        imgUrl: shareConfig.imgUrl, // 分享图标
-        success: function () {
             // 用户确认分享后执行的回调函数
-        },
-        cancel: function () {
-            // 用户取消分享后执行的回调函数
-        }
-    });
-
-    wx.onMenuShareWeibo({
-        title: shareConfig.title, // 分享标题
-        desc: shareConfig.desc, // 分享描述
-        link: shareConfig.link, // 分享链接
-        imgUrl: shareConfig.imgUrl, // 分享图标
-        success: function () {
-            // 用户确认分享后执行的回调函数
-        },
-        cancel: function () {
-            // 用户取消分享后执行的回调函数
-        }
-    });
-
-    wx.onMenuShareQZone({
-        title: shareConfig.title, // 分享标题
-        desc: shareConfig.desc, // 分享描述
-        link: shareConfig.link, // 分享链接
-        imgUrl: shareConfig.imgUrl, // 分享图标
-        success: function () {
-            // 用户确认分享后执行的回调函数
+            if (typeof shareSuccess != "undefined") {
+                shareSuccess();
+            }
         },
         cancel: function () {
             // 用户取消分享后执行的回调函数

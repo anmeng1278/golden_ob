@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.gift.*;
-import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
-import com.jsj.member.ob.entity.*;
+import com.jsj.member.ob.entity.Gift;
+import com.jsj.member.ob.entity.GiftStock;
+import com.jsj.member.ob.entity.Stock;
+import com.jsj.member.ob.entity.StockFlow;
 import com.jsj.member.ob.enums.*;
 import com.jsj.member.ob.exception.FatalException;
 import com.jsj.member.ob.exception.TipException;
@@ -21,10 +23,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Component
 public class GiftLogic extends BaseLogic {
@@ -67,9 +67,9 @@ public class GiftLogic extends BaseLogic {
         if (requ.getGiftShareType() == null) {
             throw new TipException("请输入分享类型");
         }
-        if (StringUtils.isBlank(requ.getBlessings())) {
-            throw new TipException("请输入祝福语");
-        }
+        //if (StringUtils.isBlank(requ.getBlessings())) {
+        //    throw new TipException("请输入祝福语");
+        //}
 
         //用户编号
         String openId = requ.getBaseRequ().getOpenId();
@@ -78,6 +78,11 @@ public class GiftLogic extends BaseLogic {
         List<Stock> stocks = new ArrayList<>();
 
         for (GiftProductDto dto : requ.getGiftProductDtos()) {
+
+            int number = dto.getNumber();
+            if (number <= 0) {
+                continue;
+            }
 
             EntityWrapper<Stock> wrapper = new EntityWrapper<>();
 
@@ -88,10 +93,8 @@ public class GiftLogic extends BaseLogic {
 
             //待赠送列表
             List<Stock> currentStocks = giftLogic.stockService.selectList(wrapper);
-
-            int number = dto.getNumber();
             if (number > currentStocks.size()) {
-                number = currentStocks.size();
+                throw new TipException("库存不足，请重新赠送。");
             }
 
             for (int i = 0; i < number; i++) {
@@ -178,6 +181,14 @@ public class GiftLogic extends BaseLogic {
 
     /**
      * 领取礼物
+     * <p>
+     * 礼物分享逻辑
+     * 1、一个商品，只可选择赠送一个好友，送礼物者不可领取；
+     * 2、两个及以上商品，可选择赠送一个好友或发群福利,赠送者可以领取，每个用户限制只可领取一份；
+     * 3、赠送者可选择一种商品或多种商品赠送；
+     * 4、发群福利商品，如果是多款商品，用户打开群福利，随机获得；
+     * 6、礼物赠送未被领取，24小时后退回原账户商品库；
+     * 7、礼物未分享成功，在库存页面给提示；
      *
      * @param requ
      * @return
@@ -196,32 +207,39 @@ public class GiftLogic extends BaseLogic {
         //当前领取人
         String openId = requ.getBaseRequ().getOpenId();
 
-        Gift gift = GiftLogic.selectByUniqueCode(requ.getGiftUniqueCode());
+        GiftDto gift = GiftLogic.GetGift(requ.getGiftUniqueCode());
         int giftId = gift.getGiftId();
 
-        if (gift.getStatus() == GiftStatus.CANCEL.getValue()) {
+        if (gift.getGiftStatus().equals(GiftStatus.CANCEL)) {
             throw new TipException("用户已取消分享");
         }
-        if (gift.getStatus() == GiftStatus.BROUGHTOUT.getValue()) {
-            throw new TipException("来晚了，礼物被领完啦");
+        if (gift.getGiftStatus().equals(GiftStatus.BROUGHTOUT)) {
+            throw new TipException("您来晚了，礼物已被抢完啦！");
         }
 
         //可领取状态
         //GiftStatus.UNSHARE
         //GiftStatus.SHARED
         //GiftStatus.DRAWING
-        if (gift.getDeleteTime() != null) {
-            throw new TipException("没有找到分享信息");
+
+        if (gift.getStockDtos().size() == 1) {
+            if (gift.getOpenId().equals(openId)) {
+                throw new TipException("不能领取自己发出的礼物");
+            }
         }
-        if (gift.getOpenId().equals(openId)) {
-            throw new TipException("不能领取自己发出的礼物");
+
+        if (gift.getGiftShareType().equals(GiftShareType.FRIEND)) {
+            if (gift.getOpenId().equals(openId)) {
+                throw new TipException("不能领取自己发出的礼物");
+            }
         }
+
 
         //待领取的礼物
         //没有被领取过，当前状态已赠送
         List<GiftStock> giftStocks = GiftLogic.GetUnReceivedGiftstocks(gift.getGiftId());
         if (giftStocks.isEmpty()) {
-            throw new TipException("来晚了，礼物被领完啦");
+            throw new TipException("您来晚了，礼物已被抢完啦！");
         }
 
         //重复领取判断
@@ -235,7 +253,7 @@ public class GiftLogic extends BaseLogic {
         }
 
         //分享方式
-        GiftShareType giftShareType = GiftShareType.valueOf(gift.getShareType());
+        GiftShareType giftShareType = gift.getGiftShareType();
 
         //允许领取库存
         List<GiftStock> allowGiftStocks = new ArrayList<>();
@@ -301,13 +319,15 @@ public class GiftLogic extends BaseLogic {
         //未领取记录
         //更新领取状态
         giftStocks = GiftLogic.GetUnReceivedGiftstocks(giftId);
+
+        Gift entity = giftLogic.giftService.selectById(giftId);
         if (giftStocks.isEmpty()) {
-            gift.setStatus(GiftStatus.BROUGHTOUT.getValue());
+            entity.setStatus(GiftStatus.BROUGHTOUT.getValue());
         } else {
-            gift.setStatus(GiftStatus.DRAWING.getValue());
+            entity.setStatus(GiftStatus.DRAWING.getValue());
         }
         gift.setUpdateTime(DateUtils.getCurrentUnixTime());
-        giftLogic.giftService.updateById(gift);
+        giftLogic.giftService.updateById(entity);
 
         return resp;
 
@@ -413,6 +433,7 @@ public class GiftLogic extends BaseLogic {
 
         EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
         wrapper.where("gift_id={0}", giftId);
+        wrapper.orderBy("create_time desc");
 
         List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
         List<StockDto> stockDtos = new ArrayList<>();
@@ -435,26 +456,100 @@ public class GiftLogic extends BaseLogic {
      */
     public static GiftDto GetGift(int giftId) {
 
+        Gift entity = giftLogic.giftService.selectById(giftId);
+        return ToDto(entity);
+
+    }
+
+    /**
+     * 实体转换
+     *
+     * @param entity
+     * @return
+     */
+    public static GiftDto ToDto(Gift entity) {
+
         GiftDto dto = new GiftDto();
-        Gift gift = giftLogic.giftService.selectById(giftId);
-        WechatDto wechatDto = WechatLogic.GetWechat(gift.getOpenId());
 
-        dto.setBlessings(gift.getBlessings());
-        dto.setCreateTime(gift.getCreateTime());
-        dto.setDeleteTime(gift.getDeleteTime());
-        dto.setExpiredTime(gift.getExpiredTime());
-        dto.setGiftId(gift.getGiftId());
+        WechatDto wechatDto = WechatLogic.GetWechat(entity.getOpenId());
 
-        dto.setGiftShareType(GiftShareType.valueOf(gift.getShareType()));
-        dto.setGiftStatus(GiftStatus.valueOf(gift.getStatus()));
-        dto.setGiftUniqueCode(gift.getGiftUniqueCode());
-        dto.setOpenId(gift.getOpenId());
+        dto.setBlessings(entity.getBlessings());
+        dto.setCreateTime(entity.getCreateTime());
+        dto.setDeleteTime(entity.getDeleteTime());
+        dto.setExpiredTime(entity.getExpiredTime());
+        dto.setGiftId(entity.getGiftId());
 
-        dto.setRemarks(gift.getRemarks());
-        dto.setUpdateTime(gift.getUpdateTime());
+        dto.setGiftShareType(GiftShareType.valueOf(entity.getShareType()));
+        dto.setGiftStatus(GiftStatus.valueOf(entity.getStatus()));
+        dto.setGiftUniqueCode(entity.getGiftUniqueCode());
+        dto.setOpenId(entity.getOpenId());
+
+        dto.setRemarks(entity.getRemarks());
+        dto.setUpdateTime(entity.getUpdateTime());
         dto.setWechatDto(wechatDto);
 
         return dto;
+
+    }
+
+
+    /**
+     * 获取赠送详情
+     *
+     * @param giftUniqueCode
+     * @return
+     */
+    public static GiftDto GetGift(String giftUniqueCode) {
+
+        EntityWrapper<Gift> wrapper = new EntityWrapper<>();
+        wrapper.where("gift_unique_code = {0} and delete_time is null", giftUniqueCode);
+
+        Gift entity = giftLogic.giftService.selectOne(wrapper);
+        GiftDto dto = ToDto(entity);
+
+        //赠送的库存信息
+        List<StockDto> stockDtos = StockLogic.GetStocks(entity.getGiftId());
+        dto.setStockDtos(stockDtos);
+
+        return dto;
+    }
+
+
+    /**
+     * 根据赠送编号获取领取列表
+     *
+     * @param giftId
+     * @return
+     */
+    public static List<GiftStockDto> GetGiftStockDtos(int giftId) {
+
+        List<GiftStockDto> giftStockDtos = new ArrayList<>();
+
+        Wrapper<GiftStock> wrapper = new EntityWrapper<>();
+        wrapper.where("gift_id = {0} and delete_time is null", giftId);
+
+        List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
+        if (giftStocks.size() == 0) {
+            return giftStockDtos;
+        }
+
+        giftStocks.forEach(gs -> {
+
+            GiftStockDto dto = new GiftStockDto();
+
+            dto.setGiftId(gs.getGiftId());
+            dto.setGiftStockId(gs.getGiftStockId());
+            dto.setStockId(gs.getStockId());
+
+            Stock stock = giftLogic.stockService.selectOne(new EntityWrapper<Stock>().where("gift_stock_id = {0}", gs.getGiftStockId()));
+            if (stock != null) {
+                StockDto stockDto = StockLogic.ToDto(stock);
+                dto.setReceviedStockDto(stockDto);
+            }
+            giftStockDtos.add(dto);
+        });
+
+        return giftStockDtos;
 
     }
 
@@ -463,10 +558,11 @@ public class GiftLogic extends BaseLogic {
 
     /**
      * 获取赠送商品数量
+     *
      * @param giftId
      * @return
      */
-    public static Integer GetGiftStockCount(int giftId){
+    public static Integer GetGiftStockCount(int giftId) {
 
         EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
         wrapper.where("gift_id={0}", giftId);
@@ -479,13 +575,14 @@ public class GiftLogic extends BaseLogic {
 
     /**
      * 获得用户赠送列表
+     *
      * @param openId
      * @return
      */
-    public static List<GiftDto> GetGives(String openId){
+    public static List<GiftDto> GetGives(String openId) {
 
         EntityWrapper<Gift> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null and open_id={0}",openId);
+        wrapper.where("delete_time is null and open_id={0}", openId);
         List<Gift> gifts = giftLogic.giftService.selectList(wrapper);
 
         List<GiftDto> giftDtos = new ArrayList<>();
@@ -499,14 +596,52 @@ public class GiftLogic extends BaseLogic {
 
     /**
      * 获得用户领取列表
+     *
      * @param openId
      * @return
      */
-    public static HashSet<StockDto> GetReceived(String openId){
+    public static List<StockDto> GetReceived(String openId) {
 
-        HashSet<StockDto> stockDtos = StockLogic.GetStocks(openId, StockType.GIFT, null);
-
+        List<StockDto> stockDtos = StockLogic.GetStocks(openId, StockType.GIFT, null);
         return stockDtos;
+
+    }
+
+
+    /**
+     * 分享前更新分享数据
+     *
+     * @param giftUniqueCode
+     * @param giftShareType
+     * @param blessings
+     */
+    public static void GiftReadyToShare(String giftUniqueCode, GiftShareType giftShareType, String blessings) {
+
+        Gift gift = giftLogic.giftService.selectOne(new EntityWrapper<Gift>().where("gift_unique_code = {0}", giftUniqueCode));
+        GiftDto giftDto = ToDto(gift);
+
+        if (giftDto.getGiftStatus().equals(GiftStatus.UNSHARE)) {
+            gift.setBlessings(blessings);
+            gift.setShareType(giftShareType.getValue());
+            giftLogic.giftService.updateById(gift);
+        }
+    }
+
+    /**
+     * 分享成功后回调
+     *
+     * @param giftUniqueCode
+     */
+    public static void GiftShareSuccessed(String giftUniqueCode) {
+
+        Gift gift = giftLogic.giftService.selectOne(new EntityWrapper<Gift>().where("gift_unique_code = {0}", giftUniqueCode));
+        GiftDto giftDto = ToDto(gift);
+
+        if (giftDto.getGiftStatus().equals(GiftStatus.UNSHARE)) {
+            gift.setStatus(GiftStatus.SHARED.getValue());
+            giftLogic.giftService.updateById(gift);
+        }
+
     }
 
 }
