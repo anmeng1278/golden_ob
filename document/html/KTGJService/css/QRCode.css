@@ -1,0 +1,10 @@
+html,body{ background: #F7F7F7;}
+
+/*QRCode start*/
+.QRCode{ background: #fff; border-radius: 5px; box-shadow: 0 0 15px #EAEAEA; margin: 0.8rem 0.4rem;}
+.QRCode dt{ padding: 1.1rem 0; text-align: center; border-bottom: 1px solid #E5E5E5;}
+.QRCode-title{ line-height: 1.2; font-size: 0.5rem; color: 000; font-weight: 700;}
+.QRCode-tips{ font-size: 0.32rem; color: 666; padding-top: 0.3rem;}
+.QRCode dd{ text-align: center; padding: 1rem 0;}
+.QRCode-img{ width: 4.8rem;}
+/*QRCode end*/

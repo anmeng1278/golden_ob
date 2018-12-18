@@ -19,7 +19,6 @@
         $("._citys1:eq(1)").show();
         var lev = $(this).data("name");
         $("#city").html($(this).data("name")).css("color","#333");
-        $("#SelfCity").html($(this).data("name")).css("color","#333");
         $("#sheng").html(lev);
         $("#hproper").remove(); 
         $("#harea").remove();
@@ -57,7 +56,6 @@
             }
             var bc = $("#hcity").val();
             $("#city").html(bc+ "-" + $(this).data("name")).css("color","#333");
-            $("#SelfCity").html(bc+ "-" + $(this).data("name")).css("color","#333");
 
             var ar = getArea($(this));
 
@@ -87,7 +85,6 @@
                 var bp = $("#hproper").val();
 //              ths.value = bc + "-" + bp + "-" + $(this).data("name");
                 $("#city").html(bc + "-" + bp + "-" + $(this).data("name")).css("color","#333");
-                $("#SelfCity").html(bc + "-" + bp + "-" + $(this).data("name")).css("color","#333");
                 Iput.colse();
             });
 
