@@ -10,6 +10,7 @@
 	    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
 	    <title>我要使用</title>
 	    <link rel="stylesheet" type="text/css" href="css/public.css"/>
+	    <link rel="stylesheet" type="text/css" href="js/mSelect/css/mobile_date_ui.css"/>
 	    <link rel="stylesheet" type="text/css" href="css/GoodsUse.css"/>
 	</head>
 	<body>
@@ -60,10 +61,10 @@
 								<input type="tel" placeholder="填写联系电话" id="" value="" class="address-input" />
 							</p>
 						</div>
-						<div class="address-item">
+						<div class="address-item" id="test">
 							<span class="address-lable">所在地区：</span>
 							<p class="address-rt">
-								<input type="text" placeholder="选择所在地区" id="city" value="" class="address-input" />
+								<span id="city" class="address-input">选择所在地区</span>
 							</p>
 						</div>
 						<div class="address-item">
@@ -95,13 +96,13 @@
 						<div class="address-item">
 							<span class="address-lable">自提时间：</span>
 							<p class="address-rt">
-								<input type="text" placeholder="选择所在地区" id="" value="" class="address-input" />
+								<input type="text" placeholder="选择自提时间" id="birthdate" value="" class="address-input birthdate" />
 							</p>
 						</div>
 						<div class="address-item">
 							<span class="address-lable">自提地址：</span>
 							<p class="address-rt">
-								<input type="text" placeholder="选择所在地区" id="SelfCity" value="" class="address-input" />
+								<span id="SelfCity" class="address-input">选择所在地区</span>
 							</p>
 						</div>
 					</div>
@@ -110,47 +111,22 @@
 			</div>
 		</div>
 		<!--main end-->
-		
 		<!--confirm-btn start-->
 		<a href="javascript:void(0);" class="confirm-btn">确定</a>
 		<!--confirm-btn end-->
 		
-		<!--city-layer start-->
-		<div class="city-layer" style="display: none;">
-			<div class="city-layer-bg"></div>
-			<div class="city-layer-con">
-				<h2 class="city-title">配送地区</h2>
-				<img src="images/close_icon.png" alt="1" class="close-btn"/>
-				<p class="city-select">
-					<span>上海</span>
-					<span class="city-select-tips">请选择</span>
-				</p>
-				<ul class="city-list">
-					<li>北京</li>
-					<li class="active">上海</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-					<li>北京</li>
-				</ul>
-			</div>
-		</div>
-		<!--city-layer end-->
+		<!--选择日期-->
+		<div id="datePlugin"></div>
 		
 		<!--引入js-->
 		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/size.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/city/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/city/Popt.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/city/cityJson.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/city/citySet.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mSelect/js/iscroll.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="js/mSelect/js/jquery.mobile_date_ui.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/GoodsUse.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 </html>
