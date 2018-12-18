@@ -6,7 +6,7 @@ $(function(){
 	
 	//选择城市
 	$("#SelfCity").click(function (e) {
-		SelCity(this,e);
+		SelCity(this,e); 
 	});
 	
 	

@@ -41,6 +41,6 @@
 ._citys1 a {height: 35px; display: block; color: #666; padding-left: 6px; margin-top: 3px; line-height: 35px; cursor: pointer; font-size: 13px; overflow: hidden;}
 ._citys1 a:hover { color: #fff; background-color: #56b4f8;}
 .ui-content{border: 1px solid #EDEDED;}
-li{list-style-type: none;}
+li{list-style-type: none;} 
 /*city-layer end*/
 

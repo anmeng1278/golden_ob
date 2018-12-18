@@ -28,7 +28,7 @@ var Iput = {
         } else {
             window.event.cancelBubble = true; //IE
         }
-    },
+    }, 
     pop: function () {
         var $a = document.getElementsByTagName("body").item(0);
         var $c = document.createElement("iframe");

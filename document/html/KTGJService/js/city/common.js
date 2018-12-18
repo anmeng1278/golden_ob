@@ -1,20 +1,20 @@
-//╫Ш╣Тх╚╬жajax
+//О©╫О©╫О©╫х╚О©╫О©╫ajax
 $(document).bind("mobileinit", function() {
     //disable ajax nav
     $.mobile.ajaxEnabled=false
 });
-//отй╬╪стьфВ
-function showLoader(t,c) {/*t:ндвж  c:дзхщ*/
-    //отй╬╪стьфВ.for jQuery Mobile 1.2.0
+//О©╫О©╫й╬О©╫О©╫О©╫О©╫О©╫О©╫
+function showLoader(t,c) {/*t:О©╫О©╫О©╫О©╫  c:О©╫О©╫О©╫О©╫*/
+    //О©╫О©╫й╬О©╫О©╫О©╫О©╫О©╫О©╫.for jQuery Mobile 1.2.0
     $.mobile.loading('show', {
-        text: "", //╪стьфВжпотй╬╣дндвж
-        textVisible: true, //йг╥Яотй╬ндвж
-        theme: 'b',        //╪стьфВжВлБяЫй╫a-e
-        textonly: true,   //йг╥Яж╩отй╬ндвж
-        html: "<h1>"+t+"</h1><h1>"+c+"</h1>"   //р╙отй╬╣дhtmlдзхщё╛хГм╪ф╛╣х
+        text: "", //О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫й╬О©╫О©╫О©╫О©╫О©╫О©╫
+        textVisible: true, //О©╫г╥О©╫О©╫О©╫й╬О©╫О©╫О©╫О©╫
+        theme: 'b',        //О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫й╫a-e
+        textonly: true,   //О©╫г╥О©╫ж╩О©╫О©╫й╬О©╫О©╫О©╫О©╫
+        html: "<h1>"+t+"</h1><h1>"+c+"</h1>"   //р╙О©╫О©╫й╬О©╫О©╫htmlО©╫О©╫О©╫щёО©╫О©╫О©╫м╪ф╛О©╫О©╫
     });
-}
-//рЧ╡ь╪стьфВ.for jQuery Mobile 1.2.0
+} 
+//О©╫О©╫О©╫ь╪О©╫О©╫О©╫О©╫О©╫.for jQuery Mobile 1.2.0
 function hideLoader()
 {
     $.mobile.loading('hide');

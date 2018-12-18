@@ -21,7 +21,7 @@
         $("#city").html($(this).data("name")).css("color","#333");
         $("#SelfCity").html($(this).data("name")).css("color","#333");
         $("#sheng").html(lev);
-        $("#hproper").remove();
+        $("#hproper").remove(); 
         $("#harea").remove();
         if (document.getElementById("hcity") == null) {
             var hcitys = $('<input>', {
