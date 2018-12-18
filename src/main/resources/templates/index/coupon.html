@@ -6,13 +6,13 @@
 <head th:replace="index/common/layout :: header('优惠券列表', '', '')"></head>
 
 <th:block layout:fragment="script">
-    <script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="@{/index/js/CouponList.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/CouponList.js')}" type="text/javascript" charset="utf-8"></script>
 </th:block>
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" type="text/css" th:href="@{/index/js/swiper/css/swiper.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/index/css/CouponList.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css')}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/CouponList.css')}"/>
 </th:block>
 
 <div layout:fragment="content">
@@ -66,7 +66,7 @@
 
     <!--coupon-no-list start-->
     <dl class="coupon-no-list" th:if="${#lists.isEmpty(wechatCouponDtos)}">
-        <dt><img src="images/coupon_icon.png" alt="1" width="62px"/></dt>
+        <dt><img th:src="${ob.Img('/index/images/coupon_icon.png')" alt="1" width="62px"/></dt>
         <dd>您暂时还没优惠券</dd>
     </dl>
     <!--coupon-no-list end-->

@@ -3,7 +3,6 @@ package com.jsj.member.ob.logic;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
-import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.stock.StockFlowDto;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,6 +119,7 @@ public class StockLogic extends BaseLogic {
         if (stockStatus != null) {
             stockWrapper.where("status={0}", stockStatus.getValue());
         }
+
         if (stockType != null) {
             stockWrapper.where("type_id={0}", stockType.getValue());
         }
@@ -145,7 +146,9 @@ public class StockLogic extends BaseLogic {
             stockDto.setProductSpecDto(dto);
             stockDto.setOpenId(openId);
             stockDto.setOrderId(stock.getOrderId());
+            stockDto.setProductId(stock.getProductId());
             stockDto.setStockId(stock.getStockId());
+            stockDto.setProductSpecId(stock.getProductSpecId());
             stockDto.setStockType(StockType.valueOf(stock.getTypeId()));
 
             WechatDto wechatDto = WechatLogic.GetWechat(openId);
@@ -410,6 +413,8 @@ public class StockLogic extends BaseLogic {
     }
 
     /**
+     *
+     *
      * @param stock
      * @return
      */

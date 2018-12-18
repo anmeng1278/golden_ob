@@ -94,7 +94,7 @@ public class StockDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(productId);
+        return Objects.hash(productId, productSpecId);
     }
 
     public Integer getParentStockId() {

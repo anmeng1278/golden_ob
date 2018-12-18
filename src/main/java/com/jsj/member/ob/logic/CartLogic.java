@@ -2,6 +2,8 @@ package com.jsj.member.ob.logic;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.jsj.member.ob.dto.api.cart.CartProductDto;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Cart;
 import com.jsj.member.ob.entity.CartProduct;
 import com.jsj.member.ob.exception.TipException;
@@ -194,26 +196,41 @@ public class CartLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static List<CartProduct> GetCartProducts(String openId) {
+    public static List<CartProductDto> GetCartProducts(String openId) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
 
-        List<CartProduct> cartProducts = new ArrayList<>();
+        List<CartProductDto> cartProductDtos = new ArrayList<>();
 
         Cart cart = CartLogic.GetCart(openId);
         if (cart == null) {
-            return cartProducts;
+            return cartProductDtos;
         }
 
         EntityWrapper<CartProduct> wrapper = new EntityWrapper<>();
         wrapper.where("cart_id={0} and delete_time is null", cart.getCartId());
+        List<CartProduct> cartProducts = cartLogic.cartProductService.selectList(wrapper);
 
-        //获取购物车中商品
-        cartProducts = cartLogic.cartProductService.selectList(wrapper);
+        for (CartProduct cartProduct : cartProducts) {
 
-        return cartProducts;
+            CartProductDto dto = new CartProductDto();
+            ProductDto productDto = ProductLogic.GetProduct(cartProduct.getProductId());
+            dto.setProductDto(productDto);
+            dto.setCartId(cartProduct.getCartId());
+            dto.setNumber(cartProduct.getNumber());
+
+            dto.setCartProductId(cartProduct.getCartProductId());
+            dto.setOpenId(openId);
+            dto.setProductSpecId(cartProduct.getProductSpecId());
+            dto.setProductId(cartProduct.getProductId());
+
+            cartProductDtos.add(dto);
+        }
+
+
+        return cartProductDtos;
     }
 
     /**
@@ -224,8 +241,8 @@ public class CartLogic extends BaseLogic {
      */
     public static int GetCartProductCount(String openId) {
         int amount = 0;
-        List<CartProduct> cartProducts = CartLogic.GetCartProducts(openId);
-        for (CartProduct cartProduct : cartProducts) {
+        List<CartProductDto> cartProducts = CartLogic.GetCartProducts(openId);
+        for (CartProductDto cartProduct : cartProducts) {
             amount += cartProduct.getNumber();
         }
         return amount;
