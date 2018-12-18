@@ -596,12 +596,10 @@ public class GiftLogic extends BaseLogic {
             throw new TipException("参数不合法，用户openId为空");
         }
         //用户领取的库存
-        EntityWrapper<Stock> stockWrapper = new EntityWrapper<>();
-        stockWrapper.where("open_id={0} and delete_time is null", openId);
-        stockWrapper.where("type_id={0}", StockType.GIFT.getValue());
-        List<Stock> stockList = giftLogic.stockService.selectList(stockWrapper);
+        List<StockDto> stockDtos = StockLogic.GetStocks(openId, StockType.GIFT, null);
 
-        List<Integer> parentStockIds = stockList.stream().map(Stock::getParentStockId).collect(Collectors.toList());
+        //用户领取库存的父编号
+        List<Integer> parentStockIds = stockDtos.stream().map(StockDto::getParentStockId).collect(Collectors.toList());
 
         //用户领取库存对应的礼包
         EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
@@ -613,8 +611,8 @@ public class GiftLogic extends BaseLogic {
         for (GiftStock giftStock : giftStocks) {
 
             GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
-            List<StockDto> stockDtos = GiftLogic.GetGiftRecevied(openId, giftStock.getGiftId());
-            giftDto.setStockDtos(stockDtos);
+            List<StockDto> dtos = GiftLogic.GetGiftRecevied(openId, giftStock.getGiftId());
+            giftDto.setStockDtos(dtos);
             giftDtos.add(giftDto);
 
         }
