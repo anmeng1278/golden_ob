@@ -122,8 +122,8 @@ public class ActivityLogic extends BaseLogic {
         dto.setActivityType(ActivityType.valueOf(entity.getTypeId()));
         dto.setBeginTime(entity.getBeginTime());
         dto.setEndTime(entity.getEndTime());
-        dto.setShowTime(entity.getShowTime());
 
+        dto.setShowTime(entity.getShowTime());
         dto.setCreateTime(entity.getCreateTime());
         dto.setDeleteTime(entity.getDeleteTime());
         dto.setIfpass(entity.getIfpass());
@@ -134,6 +134,8 @@ public class ActivityLogic extends BaseLogic {
         dto.setStockCount(entity.getStockCount());
         dto.setUpdateTime(entity.getUpdateTime());
         dto.setNumber(entity.getNumber());
+        dto.setImgPath(entity.getImgPath());
+        dto.setIntroduce(entity.getIntroduce());
 
         return dto;
     }
@@ -245,7 +247,7 @@ public class ActivityLogic extends BaseLogic {
     public static Integer GetUnPassActivity() {
         EntityWrapper<Activity> activityWrapper = new EntityWrapper<>();
 
-        activityWrapper.where("ifpass is false and delete_time is null");
+        activityWrapper.where("ifpass = 0 and delete_time is null");
 
         return activityLogic.activityService.selectCount(activityWrapper);
     }

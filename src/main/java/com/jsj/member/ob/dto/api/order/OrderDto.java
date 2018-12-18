@@ -1,6 +1,7 @@
 package com.jsj.member.ob.dto.api.order;
 
 import com.jsj.member.ob.dto.api.product.ProductDto;
+import com.jsj.member.ob.enums.OrderStatus;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class OrderDto {
     /**
      * 订单状态，0：待支付 10：支付成功 20：支付失败 60：取消订单
      */
-    private Integer status;
+    private OrderStatus status;
     /**
      * 微信的支付订单号
      */
@@ -138,11 +139,11 @@ public class OrderDto {
         this.payAmount = payAmount;
     }
 
-    public Integer getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 

@@ -10,15 +10,14 @@
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"/>
     <title th:text="${title}">金色严选</title>
-    <link rel="stylesheet" th:href="@{/index/css/public.css}"></link>
+    <link rel="stylesheet" th:href="${ob.Url('/index/css/public.css')}"></link>
     <th:block layout:fragment="css"></th:block>
 
-
-    <script type="text/javascript" th:src="@{/common/plugins/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="${ob.Url('/common/plugins/layui/layui.js', false)}"></script>
 
     <!--引入的js-->
-    <script type="text/javascript" th:src="@{/index/js/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/index/js/size.js}"></script>
+    <script type="text/javascript" th:src="${ob.Url('/index/js/jquery.min.js', false)}"></script>
+    <script type="text/javascript" th:src="${ob.Url('/index/js/size.js')}"></script>
 
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script type="text/javascript" th:inline="javascript">
@@ -31,21 +30,28 @@
             signature: [[${signature}]],// 必填，签名，见附录1
             jsApiList: [
                 'onMenuShareTimeline',
-                'onMenuShareAppMessage',
-                'onMenuShareQQ',
-                'onMenuShareWeibo',
-                'onMenuShareQZone'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
 
     </script>
 
+    <script type="text/javascript" th:inline="javascript">
+        var virtualPath = [[${virtualPath}]];
+    </script>
 
-    <script th:src="@{/common/js/moment.min.js}"></script>
-    <script th:src="@{/common/js/tx.js}"></script>
+    <script th:src="${ob.Url('/common/js/moment.min.js', false)}"></script>
+    <script th:src="${ob.Url('/common/js/tx.js')}"></script>
+
 
     <th:block layout:fragment="script"></th:block>
-    <script type="text/javascript" th:src="@{/index/js/shareConfig.js}"></script>
-
+    <script type="text/javascript" th:src="${ob.Url('/index/js/shareConfig.js')}"></script>
+    <script>
+        $(function () {
+            $(document).on("click", "div.share-layer", function () {
+                $(this).hide();
+            })
+        })
+    </script>
 </head>
 <body>
 

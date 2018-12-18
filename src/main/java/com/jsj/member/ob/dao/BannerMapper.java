@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : Banner Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-05
+ *   @since 2018-12-18
  */
 @Repository
 public interface BannerMapper extends BaseMapper<Banner> {

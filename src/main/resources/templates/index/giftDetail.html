@@ -6,14 +6,14 @@
 <head th:replace="index/common/layout :: header('赠送详情', '', '')"></head>
 
 <th:block layout:fragment="script">
-    <script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="@{/index/js/nav.js}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="@{/index/js/GiveDetail.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/nav.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/GiveDetail.js')}" type="text/javascript" charset="utf-8"></script>
 </th:block>
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" type="text/css" th:href="@{/index/js/swiper/css/swiper.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/index/css/GiveDetail.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css')}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GiveDetail.css')}"/>
 </th:block>
 
 <div layout:fragment="content">
@@ -22,21 +22,19 @@
         <!-- 轮播 start -->
         <div class="swiper-container">
 
-            <div class="swiper-wrapper">
-                <th:block th:each="info:${stockDtos}">
-                    <div class="swiper-slide">
-                        <dl class="banner-dl">
-                            <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(info.productId))}">
-                                <img th:src="${productLogic.GetProductImgDtos(info.productId)[0].imgPath}"/>
-                            </dt>
-                            <dd>
-                                <h2 class="banner-dl-name"
-                                    th:text="${productLogic.GetProduct(info.productId).productName}">越甲科技20寸旅行箱</h2>
-                                <p class="banner-dl-tips" th:text="|共${info.number}件|">共2件商品</p>
-                            </dd>
-                        </dl>
-                    </div>
-                </th:block>
+            <div class="swiper-wrapper" th:if="${!#lists.isEmpty(giveStocks)}">
+                <div class="swiper-slide"  th:each="info:${giveStocks}">
+                    <dl class="banner-dl">
+                        <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(info.productId))}">
+                            <img th:src="${productLogic.GetProductImgDtos(info.productId)[0].imgPath}"/>
+                        </dt>
+                        <dd>
+                            <h2 class="banner-dl-name"
+                                th:text="${productLogic.GetProduct(info.productId).productName}">越甲科技20寸旅行箱</h2>
+                            <p class="banner-dl-tips" th:text="|共${info.number}件|">共2件商品</p>
+                        </dd>
+                    </dl>
+                </div>
             </div>
 
 
@@ -52,25 +50,43 @@
         <!--blessings satrt-->
         <div class="blessings">
             <div class="blessings-con">
-                <img src="images/icon_douhao_lt.png" alt="1" class="icon-douhao-lt"/>
-                <img src="images/icon_douhao_rt.png" alt="1" class="icon-douhao-rt"/>
-                <p class="blessings-p" th:text="${giftLogic.GetGift(giftId).blessings}"></p>
+                <img th:src="${ob.Img('/index/images/icon_douhao_lt.png')}" alt="1" class="icon-douhao-lt"/>
+                <img th:src="${ob.Img('/index/images/icon_douhao_rt.png')}" alt="1" class="icon-douhao-rt"/>
+                <p class="blessings-p" th:text="${giftDto.blessings}"></p>
             </div>
             <p class="give-come-from">
-                <img src="images/card_img1.png" class="give-head-img"/>
-                <span class="give-come-from-text" th:text="${giftLogic.GetGift(giftId).wechatDto.nickname}">张鑫</span>
+                <img th:src="${giftDto.wechatDto.headimgurl}" class="give-head-img"/>
+                <span class="give-come-from-text" th:text="${giftDto.wechatDto.nickname}">张鑫</span>
             </p>
         </div>
         <!--blessings end-->
 
         <!--give-con start-->
-        <div class="give-con" th:if="${giftLogic.GetGift(giftId).giftStatus == 30}">
+        <div class="give-con" th:if="${giftDto.giftStatus == 30}">
             <h2 class="give-con-title">礼物等待领取中</h2>
             <p class="give-con-tips">礼物赠送未被领取，24小时后退回原账户商品库；</p>
         </div>
         <!--give-con end-->
 
+        <!--receive-detail start-->
+        <div class="receive-detail"  th:if="${!#lists.isEmpty(receiveStocks)}">
+            <dl class="receive-dl" th:each="info:${receiveStocks}">
+                <dt><img th:src="${info.wechatDto.headimgurl}" alt="1"/></dt>
+                <dd>
+                    <p class="receive-dl-p">
+                        <span class="receive-name" th:text="${info.wechatDto.nickname}">张鑫</span>
+                        <span class="receive-time"
+                              th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}">11-20 13:30</span>
+                    </p>
+                    <p class="receive-dl-tips clear"
+                       th:text="|领取了${productLogic.GetProduct(info.productId).productName}x${info.number}|">
+                        领取了越甲科技20kg旅行箱×1</p>
+                </dd>
+            </dl>
+        </div>
+        <!--receive-detail end-->
     </div>
+
     <!--main end-->
 
     <!--footer start-->

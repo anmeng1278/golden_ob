@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * rest返回对象
- *^
+ * ^
+ *
  * @param <T>
  */
 
@@ -28,7 +29,7 @@ public class RestResponseBo<T> {
     /**
      * 基础响应
      */
-    private  BaseResp baseResp;
+    private BaseResp baseResp;
 
 
     public RestResponseBo() {
@@ -51,18 +52,18 @@ public class RestResponseBo<T> {
 
 
     @SuppressWarnings("rawtypes")
-	public static RestResponseBo ok() {
-    	RestResponseBo resp = new RestResponseBo();
+    public static RestResponseBo ok() {
+        RestResponseBo resp = new RestResponseBo();
         resp.getBaseResp().setSuccess(true);
-    	return resp;
+        return resp;
     }
-    
+
     @SuppressWarnings("rawtypes")
-	public static RestResponseBo ok(String msg) {
-    	RestResponseBo resp = new RestResponseBo();
+    public static RestResponseBo ok(String msg) {
+        RestResponseBo resp = new RestResponseBo();
         resp.getBaseResp().setSuccess(true);
         resp.getBaseResp().setMessage(msg);
-    	return resp;
+        return resp;
     }
 
     public static RestResponseBo ok(String msg, String url) {
@@ -73,8 +74,17 @@ public class RestResponseBo<T> {
         return resp;
     }
 
+    public static <T> RestResponseBo ok(String msg, String url, T data) {
+        RestResponseBo resp = new RestResponseBo();
+        resp.getBaseResp().setSuccess(true);
+        resp.getBaseResp().setMessage(msg);
+        resp.getBaseResp().setUrl(url);
+        resp.setDatas(data);
+        return resp;
+    }
 
-    public static  <T>  RestResponseBo ok(T data) {
+
+    public static <T> RestResponseBo ok(T data) {
         RestResponseBo resp = new RestResponseBo();
         resp.getBaseResp().setSuccess(true);
         resp.setDatas(data);
@@ -82,17 +92,26 @@ public class RestResponseBo<T> {
     }
 
     @SuppressWarnings("rawtypes")
-	public static RestResponseBo fail(String msg) {
+    public static RestResponseBo fail(String msg) {
         RestResponseBo resp = new RestResponseBo();
         resp.getBaseResp().setMessage(msg);
         resp.getBaseResp().setCode(-999);
         return resp;
     }
 
-    public static  <T>  RestResponseBo fail(String msg,T data) {
+    public static <T> RestResponseBo fail(String msg, T data) {
         RestResponseBo resp = new RestResponseBo();
         resp.getBaseResp().setMessage(msg);
         resp.getBaseResp().setCode(-999);
+        resp.setDatas(data);
+        return resp;
+    }
+
+    public static <T> RestResponseBo fail(String msg, T data, String url) {
+        RestResponseBo resp = new RestResponseBo();
+        resp.getBaseResp().setMessage(msg);
+        resp.getBaseResp().setCode(-999);
+        resp.getBaseResp().setUrl(url);
         resp.setDatas(data);
         return resp;
     }

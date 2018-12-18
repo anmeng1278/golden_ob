@@ -40,7 +40,7 @@ public class WechatLogic extends BaseLogic {
 
         Wechat wechat = wechatLogic.wechatService.selectById(openId);
         if (wechat == null) {
-            dto.setNickname("未知");
+            dto.setNickname("匿名");
             return dto;
         }
 

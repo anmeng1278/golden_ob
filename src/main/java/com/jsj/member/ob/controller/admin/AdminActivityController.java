@@ -6,10 +6,8 @@ import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.ActivityType;
-import com.jsj.member.ob.enums.CouponType;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.logic.ActivityLogic;
-import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
@@ -287,14 +285,14 @@ public class AdminActivityController {
 
         EntityWrapper<Product> wrapper = new EntityWrapper<>();
 
-        wrapper.where("delete_time is null and ifpass is true");
+        wrapper.where("delete_time is null and ifpass = 1");
         wrapper.where(!StringUtils.isBlank(keys), "(product_name LIKE concat(concat('%',{0}),'%') )", keys);
         wrapper.where("exists( select * from _product_spec where product_id = _product.product_id )");
-        if(typeId > 0){
-            wrapper.where("type_id={0}",typeId);
+        if (typeId > 0) {
+            wrapper.where("type_id={0}", typeId);
         }
-        if(propertyTypeId > 0){
-            wrapper.where("property_type_id={0}",propertyTypeId);
+        if (propertyTypeId > 0) {
+            wrapper.where("property_type_id={0}", propertyTypeId);
         }
         wrapper.orderBy("create_time desc");
 

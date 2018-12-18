@@ -5,50 +5,106 @@
 <head th:replace="index/common/layout :: header('订单记录', '', '')"></head>
 
 <th:block layout:fragment="script">
-    <script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="@{/index/js/OrderList.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url( '/index/js/swiper/js/swiper.min.js', false)}" type="text/javascript"
+            charset="utf-8"></script>
+    <script th:src="${ob.Url( '/index/js/OrderList.js')}" type="text/javascript"
+            charset="utf-8"></script>
 
     <script type="text/javascript" th:inline="javascript">
 
         TX.INIT(function () {
 
-            $("a.cancel-btn").click(function () {
+            $(document).on("click", "a.cancel-btn", function () {
 
+                var orderId = $(this).attr("data-order-id");
+                layer.confirm('确定取消订单吗?', {icon: 3}, function (index) {
+                    TX.CORE.p({
+                        url: "/order/cancel",
+                        data: {orderId: orderId},
+                        success: function (resp) {
+                            if (resp.baseResp.success) {
+                                TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                    location.href = location.href;
+                                });
+                            } else {
+                                TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                            }
+                        }
+                    });
+                });
+            });
+            $(document).on("click", "a.pay-btn", function () {
                 var orderId = $(this).attr("data-order-id");
 
                 TX.CORE.p({
-                    url: "/order/cancel",
-                    data: {orderId:orderId},
+                    url: "/order/createPay",
+                    data: {
+                        orderId: orderId
+                    },
                     success: function (resp) {
+
                         if (resp.baseResp.success) {
-                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                location.href = location.href;
+
+                            var successUrl = resp.datas.successUrl;
+
+                            var appId = resp.datas.pay.responseBody.appId;
+                            var timestamp = resp.datas.pay.responseBody.timeStamp;
+                            var nonceStr = resp.datas.pay.responseBody.nonceStr;
+                            var package = resp.datas.pay.responseBody._package;
+                            var signType = resp.datas.pay.responseBody.signType;
+                            var paySign = resp.datas.pay.responseBody.paySign;
+
+                            if (typeof wx == "undefined") {
+                                TX.MSG.msg("当前环境无法调用微信客户端！", {time: 1500}, function () {
+                                });
+                                return;
+                            }
+
+                            //调起微信支付
+                            wx.chooseWXPay({
+                                appId: appId,
+                                timestamp: timestamp,
+                                nonceStr: nonceStr,
+                                package: package,
+                                signType: signType,
+                                paySign: paySign,
+                                success: function (resp) {
+                                    location.href = successUrl;
+                                },
+                                fail: function (resp) {
+                                    TX.MSG.msg("对不起，支付失败了！", {time: 1500});
+                                },
+                                cancel: function (resp) {
+                                    TX.MSG.msg("您已取消支付！", {time: 1500});
+                                }
                             });
+
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
                         }
                     }
                 });
+
             });
+
         })
 
     </script>
 </th:block>
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" type="text/css" th:href="@{/index/js/swiper/css/swiper.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/index/css/OrderList.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css')}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/OrderList.css')}"/>
 </th:block>
 
 <div layout:fragment="content">
     <!--main start-->
     <div class="main">
 
-
         <th:block th:each="info:${orderDtos}">
 
             <!--待支付，支付失败-->
-            <th:block th:if="${info.status == 0 || info.status == 20}">
+            <th:block th:if="${info.status.value == 0 || info.status.value == 20}">
                 <div class="order-item" th:fragment="unPayOrders">
                     <div class="order-item-head">
                            <span class="order-num" th:text="|订单号:${info.orderId}|">
@@ -78,19 +134,19 @@
                     <div class="order-item-bot">
                         <p class="order-bot-price">待支付&yen;<span th:text="|${info.payAmount}|">650</span></p>
                         <p class="order-bot-p">
-                            <a class="cancel-btn" th:attr="data-order-id=${info.orderId}">取消订单</a>
-                            <a href="javascript:void(0);" class="pay-btn">去支付</a>
+                            <a href="javascript:;" class="cancel-btn" th:attr="data-order-id=${info.orderId}">取消订单</a>
+                            <a href="javascript:;" class="pay-btn" th:attr="data-order-id=${info.orderId}">去支付</a>
                         </p>
                     </div>
                 </div>
             </th:block>
 
             <!--支付成功-->
-            <th:block th:if="${info.status == 10}">
+            <th:block th:if="${info.status.value == 10}">
                 <div class="order-item" th:fragment="paidOrders">
                     <p class="order-item-head">
-                 <span class="order-num" th:text="|订单号:${info.orderId}|"></span>
-                        <span class="order-price" th:text="${enumLogic.GetOrderStatus(info.status).message}"></span>
+                        <span class="order-num" th:text="|订单号:${info.orderId}|"></span>
+                        <span class="order-price" th:text="${info.status.message}"></span>
                     </p>
                     <th:block th:if="${!#lists.isEmpty(info.orderProductDtos)}"
                               th:each="pro:${info.orderProductDtos}">
@@ -116,11 +172,11 @@
             </th:block>
 
             <!--已取消-->
-            <th:block th:if="${info.status == 60}">
+            <th:block th:if="${info.status.value == 60}">
                 <div class="order-item" th:fragment="cancelOrders">
                     <p class="order-item-head">
                         <span class="order-num" th:text="|订单号:${info.orderId}|">  </span>
-                        <span class="order-price" th:text="${enumLogic.GetOrderStatus(info.status).message}"></span>
+                        <span class="order-price" th:text="${info.status.message}"></span>
                     </p>
                     <th:block th:if="${!#lists.isEmpty(info.orderProductDtos)}"
                               th:each="pro:${info.orderProductDtos}">

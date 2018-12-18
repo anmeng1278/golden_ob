@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<!-- 优惠券列表 \document\html\KTGJService\coupon.html -->
+<head th:replace="index/common/layout :: header('优惠券列表', '', '')"></head>
+
+<th:block layout:fragment="script">
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/CouponList.js')}" type="text/javascript" charset="utf-8"></script>
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css')}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/CouponList.css')}"/>
+</th:block>
+
+<div layout:fragment="content">
+    <!-- coupon-list start-->
+    <div class="coupon-list" th:if="${!#lists.isEmpty(wechatCouponDtos)}" >
+        <th:block th:each="info:${wechatCouponDtos}">
+            <!--未使用-->
+            <th:block th:if="${info.couponStatus.value == 0}">
+                <div class="coupon-item">
+                    <div class="coupon-item-back">
+                        <div class="coupon-item-lt">
+                            <p class="coupon-item-price" th:text="|${info.amount}&yen;|">50<span>&yen;</span></p>
+                            <p class="coupon-price-tips" th:text="${info.couponDto.remarks}">满1000元可用</p>
+                        </div>
+                        <div class="coupon-item-rt">
+                            <p class="coupon-item-name" th:text="${info.couponType.message}">满减券</p>
+                            <p class="coupon-item-time"
+                               th:text="|至${dateUtils.formatDateByUnixTime(info.expiredTime, 'yyyy-MM-dd HH:mm:ss')}过期|">
+                                至2018-11-11过期</p>
+                            <p class="coupon-rule-btn">使用规则</p>
+                        </div>
+                    </div>
+                    <span class="coupon-item-tips">立即使用</span>
+                </div>
+            </th:block>
+
+            <!--已使用，已过期-->
+            <th:block th:if="${info.couponStatus.value != 0}">
+                <div class="coupon-item Invalid-item">
+                    <div class="coupon-item-back">
+                        <div class="coupon-item-lt">
+                            <p class="coupon-item-price" th:text="|${info.amount}&yen;|">50<span>&yen;</span></p>
+                            <p class="coupon-price-tips" th:text="${info.couponDto.remarks}">满1000元可用</p>
+                        </div>
+                        <div class="coupon-item-rt">
+                            <p class="coupon-item-name" th:text="${info.couponType.message}">满减券</p>
+                            <p class="coupon-item-time"
+                               th:text="|至${dateUtils.formatDateByUnixTime(info.expiredTime, 'yyyy-MM-dd HH:mm:ss')}过期|">
+                                至2018-11-11过期</p>
+                            <p class="coupon-rule-btn">使用规则</p>
+                        </div>
+                    </div>
+                    <span class="coupon-item-tips" th:text="${info.couponStatus.message}">已过期</span>
+                </div>
+            </th:block>
+
+        </th:block>
+
+    </div>
+    <!--coupon-list end-->
+
+    <!--coupon-no-list start-->
+    <dl class="coupon-no-list" th:if="${#lists.isEmpty(wechatCouponDtos)}">
+        <dt><img th:src="${ob.Img('/index/images/coupon_icon.png')" alt="1" width="62px"/></dt>
+        <dd>您暂时还没优惠券</dd>
+    </dl>
+    <!--coupon-no-list end-->
+</div>

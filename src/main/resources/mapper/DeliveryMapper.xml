@@ -9,8 +9,13 @@
         <result column="express_number" property="expressNumber" />
         <result column="status" property="status" />
         <result column="type_id" property="typeId" />
+        <result column="property_type_id" property="propertyTypeId" />
         <result column="contact_name" property="contactName" />
         <result column="mobile" property="mobile" />
+        <result column="id_number" property="idNumber" />
+        <result column="flight_number" property="flightNumber" />
+        <result column="viphall_id" property="viphallId" />
+        <result column="viphall_name" property="viphallName" />
         <result column="address" property="address" />
         <result column="remarks" property="remarks" />
         <result column="province_id" property="provinceId" />
@@ -23,7 +28,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        delivery_id AS deliveryId, open_id AS openId, express_number AS expressNumber, status, type_id AS typeId, contact_name AS contactName, mobile, address, remarks, province_id AS provinceId, city_id AS cityId, district_id AS districtId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        delivery_id AS deliveryId, open_id AS openId, express_number AS expressNumber, status, type_id AS typeId, property_type_id AS propertyTypeId, contact_name AS contactName, mobile, id_number AS idNumber, flight_number AS flightNumber, viphall_id AS viphallId, viphall_name AS viphallName, address, remarks, province_id AS provinceId, city_id AS cityId, district_id AS districtId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

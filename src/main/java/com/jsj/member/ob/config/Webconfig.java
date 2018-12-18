@@ -41,6 +41,10 @@ public class Webconfig {
 
     private String appSecrect;
 
+    private String virtualPath;
+
+    private String qrcodeUrl;
+
     public String getAppId() {
         return appId;
     }
@@ -151,5 +155,21 @@ public class Webconfig {
 
     public void setImgServerURL(String imgServerURL) {
         this.imgServerURL = imgServerURL;
+    }
+
+    public String getVirtualPath() {
+        return virtualPath;
+    }
+
+    public void setVirtualPath(String virtualPath) {
+        this.virtualPath = virtualPath;
+    }
+
+    public String getQrcodeUrl() {
+        return qrcodeUrl;
+    }
+
+    public void setQrcodeUrl(String qrcodeUrl) {
+        this.qrcodeUrl = qrcodeUrl;
     }
 }

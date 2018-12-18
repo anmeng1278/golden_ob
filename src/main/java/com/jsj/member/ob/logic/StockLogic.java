@@ -3,6 +3,7 @@ package com.jsj.member.ob.logic;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.stock.StockFlowDto;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,55 +60,87 @@ public class StockLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static HashSet<StockDto> GetStocks(String openId) {
+    public static List<StockDto> GetStocks(String openId) {
 
-        HashSet<StockDto> stockDtos = StockLogic.GetStocks(openId, null, StockStatus.UNUSE);
+        List<StockDto> stockDtos = StockLogic.GetStocks(openId, null, StockStatus.UNUSE);
+
         return stockDtos;
     }
     //endregion
 
+
+    public static List<StockDto> GetStocks(int giftId) {
+
+        List<StockDto> stockDtos = new ArrayList<>();
+        Wrapper<GiftStock> wrapper = new EntityWrapper<>();
+        wrapper.where("gift_id = {0} and delete_time is null", giftId);
+
+        List<GiftStock> giftStocks = stockLogic.giftStockService.selectList(wrapper);
+        if (giftStocks.size() == 0) {
+            return stockDtos;
+        }
+
+        List<Integer> stockIds = giftStocks.stream().map(gf -> gf.getStockId()).collect(Collectors.toList());
+
+        Wrapper<Stock> stockWrapper = new EntityWrapper<>();
+        stockWrapper.in("stock_id", stockIds);
+        stockWrapper.where("delete_time is null");
+
+        List<Stock> stocks = stockLogic.stockService.selectList(stockWrapper);
+
+        stocks.forEach(entity -> {
+            StockDto stockDto = ToDto(entity);
+            stockDtos.add(stockDto);
+        });
+
+        return stockDtos;
+
+    }
+
     /**
      * 获取库存
+     *
      * @param openId
      * @param stockType
      * @param stockStatus
      * @return
      */
-    public static HashSet<StockDto> GetStocks(String openId,StockType stockType,StockStatus stockStatus) {
+    public static List<StockDto> GetStocks(String openId, StockType stockType, StockStatus stockStatus) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
 
-        HashSet<StockDto> stockDtos = new HashSet<>();
+        List<StockDto> stockDtos = new ArrayList<>();
 
         EntityWrapper<Stock> stockWrapper = new EntityWrapper<>();
         stockWrapper.where("open_id={0} and delete_time is null", openId);
 
-        if(stockStatus != null) {
+        if (stockStatus != null) {
             stockWrapper.where("status={0}", stockStatus.getValue());
         }
 
-        if(stockType != null) {
+        if (stockType != null) {
             stockWrapper.where("type_id={0}", stockType.getValue());
         }
+        stockWrapper.orderBy("create_time desc");
 
         List<Stock> stockList = stockLogic.stockService.selectList(stockWrapper);
 
-        List<Integer> stockIds = stockList.stream().map(Stock::getStockId).collect(Collectors.toList());
-
-        if (stockList.size() == 0) {
-            return stockDtos;
-        }
         for (Stock stock : stockList) {
+
             StockDto stockDto = new StockDto();
+            stockDto.setProductId(stock.getProductId());
+            stockDto.setProductSpecId(stock.getProductSpecId());
+
+            if (stockDtos.contains(stockDto)) {
+                continue;
+            }
 
             //获得库存中每样商品总量
-            EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
-            productWrapper.where("product_id={0}", stock.getProductId(), stock.getStockId());
-            productWrapper.in("stock_id",stockIds);
-            int number = stockLogic.stockService.selectCount(productWrapper);
-            stockDto.setNumber(number);
+            Long number = stockList.stream().filter(x -> x.getProductId().equals(stock.getProductId()) &&
+                    x.getProductSpecId().equals(stock.getProductSpecId())).count();
+            stockDto.setNumber(number.intValue());
 
             ProductSpecDto dto = ProductLogic.GetProductSpec(stock.getProductSpecId());
             stockDto.setProductSpecDto(dto);
@@ -123,6 +155,9 @@ public class StockLogic extends BaseLogic {
             stockDto.setWechatDto(wechatDto);
             stockDto.setCreateTime(stock.getCreateTime());
             stockDto.setParentStockId(stock.getParentStockId());
+
+            ProductDto productDto = ProductLogic.GetProduct(stock.getProductId());
+            stockDto.setProductDto(productDto);
 
             EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
             wrapper.where("stock_id={0}", stock.getStockId());
@@ -270,9 +305,11 @@ public class StockLogic extends BaseLogic {
      * @return
      */
     public static StockDto GetChild(int stockId) {
+
         Stock stock = stockLogic.stockService.selectOne(new EntityWrapper<Stock>().where("parent_stock_id={0}", stockId));
+
         if (stock != null) {
-            return StockLogic.GetStock(stock.getStockId());
+            return StockLogic.ToDto(stock);
         }
         return null;
     }
@@ -287,7 +324,8 @@ public class StockLogic extends BaseLogic {
      * @return
      */
     public static StockDto GetParent(int parentStockId) {
-        Stock stock = stockLogic.stockService.selectOne(new EntityWrapper<Stock>().where("stock_id", parentStockId));
+
+        Stock stock = stockLogic.stockService.selectOne(new EntityWrapper<Stock>().where("stock_id={0}", parentStockId));
         if (stock != null) {
             return StockLogic.GetStock(stock.getStockId());
         }
@@ -347,43 +385,17 @@ public class StockLogic extends BaseLogic {
      */
     public static StockDto GetStock(int stockId) {
 
-        StockDto stockDto = new StockDto();
         Stock stock = stockLogic.stockService.selectById(stockId);
 
-        ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(stock.getProductSpecId());
-        WechatDto wechatDto = WechatLogic.GetWechat(stock.getOpenId());
+        StockDto stockDto = StockLogic.ToDto(stock);
 
-        EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
-        wrapper.where("stock_id={0}", stockId);
-        wrapper.orderBy("create_time desc");
-
-        GiftStock giftStock = stockLogic.giftStockService.selectOne(wrapper);
-
-        stockDto.setProductSpecDto(productSpecDto);
-        stockDto.setNumber(1);
-        stockDto.setOpenId(stock.getOpenId());
-        stockDto.setOrderId(stock.getOrderId());
-        stockDto.setProductId(stock.getProductId());
-
-        stockDto.setStockId(stock.getStockId());
-        stockDto.setProductSpecId(stock.getProductSpecId());
-        stockDto.setStockStatus(StockStatus.valueOf(stock.getStatus()));
-        stockDto.setStockType(StockType.valueOf(stock.getTypeId()));
-        stockDto.setCreateTime(stock.getCreateTime());
-        stockDto.setParentStockId(stock.getParentStockId());
-
-        stockDto.setWechatDto(wechatDto);
-
-        if (giftStock != null) {
-            GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
-            stockDto.setGiftDto(giftDto);
-        }
         return stockDto;
 
     }
 
     /**
      * 获取库存数
+     *
      * @param openId
      * @return
      */
@@ -398,6 +410,111 @@ public class StockLogic extends BaseLogic {
 
         return stockLogic.stockService.selectCount(wrapper);
 
+    }
+
+    /**
+     *
+     *
+     * @param stock
+     * @return
+     */
+    public static StockDto GetStockDto(StockDto stock, List<Integer> stockIds) {
+
+        StockDto stockDto = new StockDto();
+
+        ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(stock.getProductSpecId());
+        WechatDto wechatDto = WechatLogic.GetWechat(stock.getOpenId());
+        stockDto.setWechatDto(wechatDto);
+
+        EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
+        wrapper.where("stock_id={0}", stock.getStockId());
+        wrapper.orderBy("create_time desc");
+
+        GiftStock giftStock = stockLogic.giftStockService.selectOne(wrapper);
+
+        stockDto.setProductSpecDto(productSpecDto);
+
+        if (stockIds.size() != 0 && stockIds != null) {
+            //获得库存中每样商品总量
+            EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
+            productWrapper.where("product_id={0}", stock.getProductId());
+            productWrapper.in("stock_id", stockIds);
+            int number = stockLogic.stockService.selectCount(productWrapper);
+            stockDto.setNumber(number);
+        } else {
+            stockDto.setNumber(1);
+        }
+        stockDto.setOpenId(stock.getOpenId());
+        stockDto.setOrderId(stock.getOrderId());
+        stockDto.setProductId(stock.getProductId());
+
+        stockDto.setStockId(stock.getStockId());
+        stockDto.setProductSpecId(stock.getProductSpecId());
+        stockDto.setStockStatus(stock.getStockStatus());
+        stockDto.setStockType(stock.getStockType());
+        stockDto.setCreateTime(stock.getCreateTime());
+
+        if (stock.getParentStockId() > 0) {
+            stockDto.setParentStockId(stock.getParentStockId());
+        }
+
+        if (giftStock != null) {
+            GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
+            stockDto.setGiftDto(giftDto);
+        }
+        return stockDto;
+
+    }
+
+
+    /**
+     * 实体转换
+     *
+     * @param stock
+     * @return
+     */
+    public static StockDto ToDto(Stock stock) {
+
+        StockDto stockDto = new StockDto();
+
+        stockDto.setNumber(1);
+        stockDto.setOpenId(stock.getOpenId());
+        stockDto.setOrderId(stock.getOrderId());
+        stockDto.setProductId(stock.getProductId());
+
+        stockDto.setStockId(stock.getStockId());
+        stockDto.setProductSpecId(stock.getProductSpecId());
+        stockDto.setStockStatus(StockStatus.valueOf(stock.getStatus()));
+        stockDto.setStockType(StockType.valueOf(stock.getTypeId()));
+        stockDto.setCreateTime(stock.getCreateTime());
+
+        if (stock.getParentStockId() != null) {
+            stockDto.setParentStockId(stock.getParentStockId());
+        }
+
+        //商品信息
+        ProductDto productDto = ProductLogic.GetProduct(stock.getProductId());
+        stockDto.setProductDto(productDto);
+
+        //商品规格
+        ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(stock.getProductSpecId());
+        stockDto.setProductSpecDto(productSpecDto);
+
+        //库存人
+        WechatDto wechatDto = WechatLogic.GetWechat(stock.getOpenId());
+        stockDto.setWechatDto(wechatDto);
+
+        EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
+        wrapper.where("stock_id = {0}", stock.getStockId());
+        wrapper.orderBy("create_time desc");
+        GiftStock giftStock = stockLogic.giftStockService.selectOne(wrapper);
+        //赠送人
+        if (giftStock != null) {
+            GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
+            stockDto.setGiftDto(giftDto);
+        }
+
+        return stockDto;
     }
 
 }

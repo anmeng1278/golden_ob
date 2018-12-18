@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<!-- 首页 \document\html\KTGJService\PaySuccess.html -->
+<head th:replace="index/common/layout :: header('金色严选-订单支付成功', '', '')"></head>
+
+<th:block layout:fragment="script">
+
+    <!--引入js-->
+    <script th:src="${ob.Url('/index/js/PaySuccess.js')}" type="text/javascript"
+            charset="utf-8"></script>
+
+    <script th:inline="javascript">
+
+        var shareUrl = [[${shareUrl}]];
+        var shareTitle = "发红包啦";
+
+        shareConfig = {
+            title: shareTitle,
+            desc: "",
+            link: shareUrl,
+            imgUrl: ""
+        };
+
+    </script>
+
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/PaySuccess.css')}"/>
+</th:block>
+
+<div layout:fragment="content">
+
+    <div class="pay-success">
+        <span class="pay-success-title">支付成功 商品已放入库存</span>
+        <a th:href="${ob.Nav('/stock')}" class="look-stock-btn">查看库存</a>
+        <div class="share-hongbao">
+            <a href="javascript:void(0);" class="share-btn">分享给好友</a>
+        </div>
+    </div>
+
+    <div class="share-layer" style="display: none;">
+        <div class="share-layer-bg"></div>
+        <div class="share-layer-con">
+            <span class="share-layer-sanjiao"></span>
+            <p class="share-layer-p">点击右上角【•••】<br/>分享到朋友，朋友圈。<br/>让大家一起来试试手气吧</p>
+        </div>
+    </div>
+
+</div>
+
+</html>

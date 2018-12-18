@@ -19,5 +19,5 @@ html,body{ background: #F5F5F5;}
 .give-state-gray{ font-size: 0.3rem; color: #999; float: right;}
 .give-state-red{ font-size: 0.3rem; color: #C2191F; float: right;}
 .give-dd-tips{ line-height: 1.2; font-size: 0.3rem; color: #999;}
-.give-dd-time{ height: 0.6rem; line-height: 0.6rem; font-size: 0.3rem; color: #666; position: absolute; left: 0; bottom: 0; right: 0;}
+.give-dd-time{ height: 0.6rem; line-height: 0.6rem; font-size: 0.28rem; color: #666; position: absolute; left: 0; bottom: 0; right: 0;}
 /*main end*/

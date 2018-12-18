@@ -1,6 +1,13 @@
 server:
   port: 80
 
+logging:
+  level:
+    com:
+      jsj:
+        member:
+          ob:
+            dao: info
 #spring
 spring:
   datasource:
@@ -30,13 +37,17 @@ webconfig:
   # 图片服务器
   imgServerURL: http://img.jsjinfo.cn/upload
   # 是否上传到图片服务器 (true为上传到图片服务器 false为上传到本地服务器)
-  imgServerSwitch: false
+  imgServerSwitch: true
   # 公众号appid
   appId: wx555b169abb4d62ce
   # 公众号 appSecrect
   appSecrect: a8eb3f7e02ed7cb761220cb4363ff2b6
 
   virtualPath: "/ob"
+
+  #授权码
+  PlatformAppId: ws975af9-2341-1234-9751-6ababc10aab3
+  PlatformToken: wsscr975ppd8v46b5678f8fxh2xdhv0975xlx08h8btn6tt9754aab3
 
 redis:
   host: 172.16.5.64

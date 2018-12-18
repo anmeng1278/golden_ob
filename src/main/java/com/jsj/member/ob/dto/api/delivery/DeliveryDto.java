@@ -3,6 +3,7 @@ package com.jsj.member.ob.dto.api.delivery;
 
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
+import com.jsj.member.ob.enums.PropertyType;
 
 import java.util.List;
 
@@ -28,6 +29,12 @@ public class DeliveryDto {
      * 配送区分，1：自提，2：配送
      */
     private Integer typeId;
+
+    /**
+     * 商品属性
+     */
+    private PropertyType propertyType;
+
     /**
      * 联系人
      */
@@ -177,5 +184,13 @@ public class DeliveryDto {
 
     public void setDistrictId(Integer districtId) {
         this.districtId = districtId;
+    }
+
+    public PropertyType getPropertyType() {
+        return propertyType;
+    }
+
+    public void setPropertyType(PropertyType propertyType) {
+        this.propertyType = propertyType;
     }
 }

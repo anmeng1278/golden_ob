@@ -32,3 +32,16 @@
 .footer a{ display: block; width: 50%; height: 1.1rem; text-align: center; line-height: 1.1rem; font-size: 0.36rem; color: #666; background: #fff; float: left;}
 .footer .continue-btn{ background: #C2191F; color: #fff;}
 /*footer end*/
+
+/*----------- receive-detail -----------*/
+.receive-detail{ margin-top: 0.6rem;}
+.receive-title{ font-size: 0.36rem; color: #C2191F; font-weight: 700; font-family: "microsoft yahei",arial;}
+.receive-dl{ padding: 0.4rem 0; border-bottom: 1px solid #F7F7F7; position: relative;}
+.receive-dl dt{ width: 1rem; height: 1rem; position: absolute; top: 0.4rem; left: 0;}
+.receive-dl dt img{ width: 1rem; height: 1rem; border-radius: 50%;}
+.receive-dl dd{ min-height: 1rem; margin: 0 0.2rem 0 1.4rem; font-family: "microsoft yahei",arial;}
+.receive-dl-p{ padding: 0.18rem 0; overflow: hidden;}
+.receive-name{ font-size: 0.32rem; color: #333; font-weight: 700; float: left;}
+.receive-time{ font-size: 0.24rem; color: #999; float: right;}
+.receive-dl-tips{ font-size: 0.28rem; color: #666;}
+/*main end*/

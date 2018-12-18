@@ -5,20 +5,20 @@
 <head th:replace="index/common/layout :: header('物流信息', '', '')"></head>
 
 <th:block layout:fragment="script">
-	<script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
+	<script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
 </th:block>
 
 <th:block layout:fragment="css">
-	<link rel="stylesheet" type="text/css" th:href="@{/index/js/swiper/css/swiper.min.css}"/>
-	<link rel="stylesheet" type="text/css" th:href="@{/index/css/LogisticsInformation.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css')}"/>
+	<link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/LogisticsInformation.css')}"/>
 </th:block>
 
 <div layout:fragment="content">
 		<!--head start-->
 		<div class="head-het">
 			<div class="head">
-				<span class="head-lt">快递号：<th:block th:text="${expressNumber}"></th:block></span>
-				<span class="head-rt">已签收</span>
+				<span class="head-lt" th:text="|快递号：${deliveryDto.expressNumber}|"></span>
+				<span class="head-rt" th:text="${enumLogic.GetDeliveryStatus(deliveryDto.status).message}">已签收</span>
 			</div>
 		</div>
 		<!--head end-->

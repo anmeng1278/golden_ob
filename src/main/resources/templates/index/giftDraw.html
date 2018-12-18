@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<!-- 赠送领取列表 \document\html\KTGJService\share.html -->
+<head th:replace="index/common/layout :: header('赠送礼物', '', '')"></head>
+
+<th:block layout:fragment="script">
+    <script th:src="${ob.Url( '/index/js/ReceiveGifts.js')}" type="text/javascript" charset="utf-8"></script>
+
+    <script th:inline="javascript">
+
+        //分享到发礼物页面
+        var shareUrl = [[${shareUrl}]];
+        var shareTitle = "发礼物了";
+
+        shareConfig = {
+            title: shareTitle,
+            desc: "",
+            link: shareUrl,
+            imgUrl: ""
+        };
+
+        TX.INIT(function () {
+
+            $("a.receive-gifts-btn").click(function () {
+                TX.CORE.p({
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                location.href = resp.baseResp.url;
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2, time: 1500}, function () {
+                                location.href = resp.baseResp.url;
+                            });
+                        }
+                    }
+                });
+            });
+
+
+        });
+    </script>
+
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/ReceiveGifts.css')}"/>
+</th:block>
+
+<div layout:fragment="content">
+
+    <div class="receive-gifts">
+        <img th:src="${giftDto.wechatDto.headimgurl}" alt="1" class="give-head-img"/>
+        <p class="give-come-from">
+            <span>来自</span>
+            <span th:text="${giftDto.wechatDto.nickname}">张鑫</span>
+        </p>
+        <img th:src="${ob.Img('/index/images/give_default_img.png')}" alt="1" class="receive-gifts-img"/>
+        <p class="receive-gifts-tips">*如果超过24小时未被领取，则退回原账户</p>
+        <a href="javascript:void(0);" class="receive-gifts-btn">收下礼物</a>
+    </div>
+
+</div>
+</html>

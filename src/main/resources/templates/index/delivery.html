@@ -5,13 +5,13 @@
 <head th:replace="index/common/layout :: header('配送记录', '', '')"></head>
 
 <th:block layout:fragment="script">
-    <script th:src="@{/index/js/swiper/js/swiper.min.js}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="@{/index/js/DeliveryList.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/DeliveryList.js')}" type="text/javascript" charset="utf-8"></script>
 </th:block>
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" type="text/css" th:href="@{/index/js/swiper/css/swiper.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/index/css/DeliveryList.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css')}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/DeliveryList.css')}"/>
 </th:block>
 
 <div layout:fragment="content">
@@ -47,7 +47,7 @@
                     </th:block>
                     <div class="state-list clear">
                         <p class="state-list-p">
-                            <a th:href="@{'/delivery/logistics/'+${info.expressNumber}}" class="look-btn">查看物流</a>
+                            <a th:href="${ob.Url('/delivery/'+info.deliveryId)}" class="look-btn">查看物流</a>
                             <a href="javascript:void(0);" class="confirm-btn">确认收货</a>
                         </p>
                     </div>

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : Gift 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-05
+ *   @since 2018-12-18
  */
 @Service
 public class GiftServiceImpl extends ServiceImpl<GiftMapper, Gift> implements GiftService {

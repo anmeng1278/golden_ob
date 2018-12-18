@@ -155,6 +155,11 @@ public class CouponLogic extends BaseLogic {
         coupon.setCouponName(entity.getCouponName());
         coupon.setCouponType(CouponType.valueOf(entity.getTypeId()));
         coupon.setCouponUseRange(CouponUseRange.valueOf(entity.getUserRange()));
+        coupon.setInstruction(entity.getInstruction());
+        coupon.setRemarks(entity.getRemarks());
+
+        coupon.setInstruction(entity.getInstruction());
+        coupon.setRemarks(entity.getRemarks());
 
         coupon.setValidDays(entity.getValidDays());
 
@@ -171,24 +176,23 @@ public class CouponLogic extends BaseLogic {
      * @return
      */
     public static WechatCouponDto GetWechatCoupon(int wechatCouponId) {
-
         WechatCoupon entity = couponLogic.wechatCouponService.selectById(wechatCouponId);
-
-        WechatCouponDto wechatCouponDto = new WechatCouponDto();
-
-        wechatCouponDto.setAmount(entity.getAmount());
-        wechatCouponDto.setCouponId(entity.getCouponId());
-        wechatCouponDto.setCouponType(CouponType.valueOf(entity.getTypeId()));
-        wechatCouponDto.setExpiredTime(entity.getExpiredTime());
-        wechatCouponDto.setOpenId(entity.getOpenId());
-
-        wechatCouponDto.setCouponStatus(CouponStatus.valueOf(entity.getStatus()));
-        wechatCouponDto.setWechatCouponId(entity.getWechatCouponId());
-
-        return wechatCouponDto;
-
+        return ToWechatCouponDto(entity);
     }
     //endregion
+
+    /**
+     * 根据红包订单编号获取领取券详情
+     *
+     * @param orderRedpacketCouponId
+     * @return
+     */
+    public static WechatCouponDto GetWechatCouponByOrderRedpacketCouponId(int orderRedpacketCouponId) {
+
+        WechatCoupon entity = couponLogic.wechatCouponService.selectOne(new EntityWrapper<WechatCoupon>()
+                .where("order_redpacket_coupon_id = {0}", orderRedpacketCouponId));
+        return ToWechatCouponDto(entity);
+    }
 
     //region (public) 获得用户可使用的优惠券 GetWechatCouponDtos
 
@@ -236,6 +240,10 @@ public class CouponLogic extends BaseLogic {
      * @return
      */
     public static WechatCouponDto ToWechatCouponDto(WechatCoupon entity) {
+
+        if (entity == null) {
+            return null;
+        }
 
         WechatCouponDto wechatCouponDto = new WechatCouponDto();
 
@@ -339,4 +347,34 @@ public class CouponLogic extends BaseLogic {
         return dtos;
     }
     //endregion
+
+    /**
+     * 获取用户优惠券列表
+     * @param openId
+     * @return
+     */
+    public static List<WechatCouponDto> GetWechatCoupons(String openId){
+
+        List<WechatCouponDto> dtos = new ArrayList<>();
+
+        EntityWrapper<WechatCoupon> wrapper = new EntityWrapper<>();
+        wrapper.where("open_id={0}",openId);
+        wrapper.where("delete_time is null ");
+        wrapper.orderBy("status asc");
+
+        List<WechatCoupon> coupons = couponLogic.wechatCouponService.selectList(wrapper);
+
+        coupons.forEach(entity -> {
+
+            Integer couponId = entity.getCouponId();
+            CouponDto dto = CouponLogic.GetCoupon(couponId);
+
+            WechatCouponDto wechatCouponDto = CouponLogic.ToWechatCouponDto(entity);
+            wechatCouponDto.setCouponDto(dto);
+
+            dtos.add(wechatCouponDto);
+
+        });
+        return dtos;
+    }
 }

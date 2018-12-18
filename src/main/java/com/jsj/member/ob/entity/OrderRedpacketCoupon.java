@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : OrderRedpacketCoupon 订单礼包代金券表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-05
+ *   @since 2018-12-18
  */
 @TableName("_order_redpacket_coupon")
 public class OrderRedpacketCoupon implements Serializable {
@@ -49,7 +48,7 @@ public class OrderRedpacketCoupon implements Serializable {
      * 领取人编号
      */
 	@TableField("open_id")
-	private Integer openId;
+	private String openId;
     /**
      * 是否领取
      */
@@ -124,11 +123,11 @@ public class OrderRedpacketCoupon implements Serializable {
 		this.amount = amount;
 	}
 
-	public Integer getOpenId() {
+	public String getOpenId() {
 		return openId;
 	}
 
-	public void setOpenId(Integer openId) {
+	public void setOpenId(String openId) {
 		this.openId = openId;
 	}
 

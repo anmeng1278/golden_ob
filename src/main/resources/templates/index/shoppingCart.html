@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<!-- 首页 \document\html\KTGJService\shoppingCart.html -->
+<head th:replace="index/common/layout :: header('我的购物车', '', '')"></head>
+
+<th:block layout:fragment="script">
+
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js', false)}" type="text/javascript"
+            charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/shoppingCart.js')}" type="text/javascript" charset="utf-8"></script>
+
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css', false)}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/shoppingCart.css')}"/>
+</th:block>
+
+<div layout:fragment="content">
+    <!--head start-->
+    <div class="head">
+        <h2 class="head-title"><span>我的购物车</span></h2>
+    </div>
+    <!--head end-->
+
+    <!--main start-->
+    <div class="main">
+        <th:block th:if="{!#list.isEmpty(cartProductDtos)}" th:each="info:${cartProductDtos}">
+            <div class="goods-list-item">
+                <span class="checkone check-all-wxz"></span>
+                <dl class="goods-list-dl">
+                    <dt th:if="${!#lists.isEmpty(info.productDto.productImgDtos)}">
+                        <img th:src="${info.productDto.productImgDtos[0].imgPath}" alt="1" width="100%"/>
+                    </dt>
+                    <dd>
+                        <h2 class="goods-dl-name" th:text="${info.productDto.productName}">越甲科技20寸旅行箱</h2>
+                        <span class="goods-dl-tips"
+                              th:text="${productLogic.GetProductSpec(info.productSpecId).specName}">规格：21寸</span>
+                        <span class="goods-dl-price">&yen;<em th:text="info.productDto.salePrice">399</em></span>
+                        <div class="purchase-num">
+                            <em class="purchase-num-reduce"></em>
+                            <em class="purchase-num-del" style="display: none;"></em>
+                            <input type="text" value="2" disabled="disabled" class="num"/>
+                            <em class="purchase-num-add"></em>
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+        </th:block>
+    </div>
+    <!--main end-->
+
+    <!--footer start-->
+    <div class="footer">
+        <div class="footer-lt">
+            <label class="footer-lt-text check-all-wxz" id="checkAll">全选</label>
+            <span class="total-price">&yen;<em>0</em></span>
+        </div>
+        <a href="javascript:void(0);" class="purchase-btn">立即购买</a>
+    </div>
+    <!--footer end-->
+
+    <!-- delete-layer start -->
+    <div class="delete-layer" style="display: none;">
+        <div class="delete-layer-bg"></div>
+        <div class="delete-layer-con">
+            <h2 class="delete-layer-title">确定删除该商品么？</h2>
+            <p class="delete-layer-tips">删除的商品将不会出现在购物车中</p>
+            <p class="delete-layer-p">
+                <a href="javascript:void(0);" class="delete-layer-cancel">取消</a>
+                <a href="javascript:void(0);" class="delete-layer-confirm">确定</a>
+            </p>
+        </div>
+    </div>
+
+</div>

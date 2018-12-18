@@ -6,10 +6,3 @@
 .share-hongbao{ width: 6.42rem; height: 6.92rem; background: url(../images/share_hongbao_bg.png) no-repeat; background-size: 100% 100%; margin: auto; position: relative;}
 .share-btn{ display: block; width: 3.5rem; height: 0.7rem; line-height: 0.7rem; text-align: center; font-size: 0.36rem; color: #C12A2A; background: #F0D0A5; border-radius: 30px; position: absolute; left: 50%; margin-left: -1.75rem; bottom: 0.8rem;}
 /*pay-success end*/
-
-/*share-layer start*/
-.share-layer-bg{ width: 100%; background: #000; filter:alpha(opacity=50); -moz-opacity:0.5; -khtml-opacity: 0.5;  opacity: 0.5; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100;}
-.share-layer-con{ width: 5.2rem; background: #C2191F; border-radius: 5px; position: fixed; top: 0.5rem; right: 0.5rem; z-index: 101;}
-.share-layer-sanjiao{width:0; height:0; border-width:10px 0 10px 10px; border-style:solid; border-color:transparent transparent transparent #C2191F; -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); -webkit-transform: rotate(45deg); transform: rotate(45deg); position: absolute; top: -0.22rem; right: -0.04rem;z-index: 1;}
-.share-layer-p{ line-height: 1.4; font-size: 0.36rem; color: #fff; padding: 0.3rem 0.5rem;}
-/*share-layer end*/

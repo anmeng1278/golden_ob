@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : Wechat 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-05
+ *   @since 2018-12-18
  */
 @Service
 public class WechatServiceImpl extends ServiceImpl<WechatMapper, Wechat> implements WechatService {

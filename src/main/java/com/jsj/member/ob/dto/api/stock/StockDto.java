@@ -75,7 +75,12 @@ public class StockDto {
     /**
      * 父编号
      */
-    private int parentStockId;
+    private Integer parentStockId;
+
+    /**
+     * 商品信息
+     */
+    private ProductDto productDto;
 
 
     @Override
@@ -83,19 +88,20 @@ public class StockDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StockDto stockDto = (StockDto) o;
-        return Objects.equals(productId, stockDto.productId);
+        return Objects.equals(productId, stockDto.productId) &&
+                Objects.equals(productSpecId, stockDto.productSpecId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productId);
+        return Objects.hash(productId, productSpecId);
     }
 
-    public int getParentStockId() {
+    public Integer getParentStockId() {
         return parentStockId;
     }
 
-    public void setParentStockId(int parentStockId) {
+    public void setParentStockId(Integer parentStockId) {
         this.parentStockId = parentStockId;
     }
 
@@ -193,5 +199,13 @@ public class StockDto {
 
     public void setWechatDto(WechatDto wechatDto) {
         this.wechatDto = wechatDto;
+    }
+
+    public ProductDto getProductDto() {
+        return productDto;
+    }
+
+    public void setProductDto(ProductDto productDto) {
+        this.productDto = productDto;
     }
 }
