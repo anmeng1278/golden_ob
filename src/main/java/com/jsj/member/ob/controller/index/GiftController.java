@@ -1,18 +1,9 @@
 package com.jsj.member.ob.controller.index;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
-import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
-import com.jsj.member.ob.dto.api.wechat.WechatDto;
-import com.jsj.member.ob.entity.GiftStock;
-import com.jsj.member.ob.entity.Stock;
-import com.jsj.member.ob.enums.StockType;
 import com.jsj.member.ob.logic.GiftLogic;
-import com.jsj.member.ob.logic.ProductLogic;
-import com.jsj.member.ob.logic.StockLogic;
-import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.service.GiftStockService;
 import com.jsj.member.ob.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.jsj.member.ob.logic.StockLogic.stockLogic;
 
 @ApiIgnore
 @Controller
@@ -58,7 +44,7 @@ public class GiftController extends BaseController {
         request.setAttribute("giveStocks", giveStocks);
 
         //用户所有领取的
-        HashSet<StockDto> receiveStocks = GiftLogic.GetReceived(openId);
+        List<GiftDto> receiveStocks = GiftLogic.GetReceived(openId);
 
         request.setAttribute("receiveStocks", receiveStocks);
 

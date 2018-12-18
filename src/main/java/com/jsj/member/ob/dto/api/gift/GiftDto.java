@@ -5,6 +5,8 @@ import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.enums.GiftShareType;
 import com.jsj.member.ob.enums.GiftStatus;
 
+import java.util.List;
+
 public class GiftDto {
 
     public GiftDto() {
