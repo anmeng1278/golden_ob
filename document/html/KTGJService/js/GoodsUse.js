@@ -6,7 +6,7 @@ $(function(){
 
 	//选择日期
 	$('#birthdate').date( function () {
-        $("#birthdate").val(arguments[0]);
+        $("#birthdate").text(arguments[0]);
    });
 	
 	//导航tab切换
