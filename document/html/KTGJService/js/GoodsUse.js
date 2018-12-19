@@ -3,15 +3,9 @@ $(function(){
 	$("#city").click(function (e) {
 		SelCity(this,e);
 	});
-	
-	//选择城市
-	$("#SelfCity").click(function (e) {
-		SelCity(this,e); 
-	});
-	
-	
+
 	//选择日期
-	$('#birthdate').date({defaultTime: new Date()}, function () {
+	$('#birthdate').date( function () {
         $("#birthdate").val(arguments[0]);
    });
 	
@@ -21,4 +15,5 @@ $(function(){
 		$(this).addClass('active').siblings().removeClass('active');
 		$('.nav-wrap-item').eq(index).show().siblings().hide();
 	});
+	
 });

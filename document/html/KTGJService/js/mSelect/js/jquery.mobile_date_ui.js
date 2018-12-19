@@ -1,4 +1,4 @@
-﻿ /* 
+/* 
  * 日期插件
  * 滑动选取日期（年，月，日）
  * V1.1
@@ -8,12 +8,8 @@
         //插件默认选项
         var that = $(this);
         var docType = $(this).is('input');
-        var datetime = false;
+        var datetime = false;                                       
         var nowdate = new Date();
-        if (options.defaultTime != "") {
-            nowdate = new Date(options.defaultTime);
-        }
-
         var indexY = 2, indexM = 2, indexD = 2;
         var indexH = 1, indexI = 1, indexS = 0;
         var initY = parseInt((nowdate.getYear() + "").substr(1, 2));
@@ -29,18 +25,17 @@
         var yearScroll = null, monthScroll = null, dayScroll = null;
         var HourScroll = null, MinuteScroll = null, SecondScroll = null;
         $.fn.date.defaultOptions = {
-            beginyear: 2018,                 //日期--年--份开始
-            endyear: 2030,                   //日期--年--份结束
-            beginmonth: 1,                   //日期--月--份开始
-            endmonth: options.MaxMonth != undefined ? options.MaxMonth : new Date().getMonth() + 1,               //日期--月--份结束(12)
-            beginday: 1,                     //日期--日--份开始
-            endday: sumDay,               //日期--日--份结束
-//          endday: new Date().getDate(),    //日期--日--份结束
+            beginyear: 1900,                 //日期--年--份开始
+            endyear: 2050,                   //日期--年--份结束
+            beginmonth: 1,                   //日期--月--份结束
+            endmonth: 12,                    //日期--月--份结束
+            beginday: 1,                     //日期--日--份结束
+            endday: sumDay,                      //日期--日--份结束
             beginhour: 1,
             endhour: 12,
             beginminute: 00,
             endminute: 59,
-            curdate: false,                   //打开日期是否定位到当前日期
+            curdate: true,                   //打开日期是否定位到当前日期
             theme: "date",                    //控件样式（1：日期，2：日期+时间）
             mode: null,                       //操作模式（滑动模式）
             event: "click",                    //打开日期插件默认方式为点击后后弹出日期 
@@ -75,17 +70,7 @@
 
             resetInitDete();
             //定位避免和19XX年重复
-
-            var y = new Date(opts.defaultTime).getFullYear();
-            if (y < 2000) {
-                var c = y - 1900;
-
-                yearScroll.scrollTo(0, c * 43, 100, true);
-            } else {
-                yearScroll.scrollTo(0, initY * 43 + 43 * 100, 100, true);
-            }
-
-            //yearScroll.scrollTo(0, initY * 43 + 43 * 100, 100, true);
+            yearScroll.scrollTo(0, initY * 43 + 43 * 100, 100, true);
             monthScroll.scrollTo(0, initM * 43 - 43, 100, true);
             dayScroll.scrollTo(0, initD * 43 - 43, 100, true);
         }
@@ -145,12 +130,11 @@
                 }
                 $("#datePage").hide();
                 $("#dateshadow").hide();
-                opts.defaultTime = datestr;
             });
             $("#datecancle").click(function () {
                 $("#datePage").hide();
                 $("#dateshadow").hide();
-                //Ncallback(false);
+//              Ncallback(false);
             });
         }
         function extendOptions() {
@@ -164,20 +148,11 @@
             yearScroll = new iScroll("yearwrapper", {
                 snap: "li", vScrollbar: false,
                 onScrollEnd: function () {
-                    // if (opts.defaultTime == opts.tempdefaultTime) {
-                        // var y = new Date(opts.defaultTime).getFullYear();
-                        // if (y < 2000) {
-                            // var temp = y - 1900;
-                            // indexY = temp + 2;
-                        // } else {
-                            // indexY = (this.y / 43) * (-1) + 2;
-                        // }
-                    // } else {
-                        indexY = (this.y / 43) * (-1) + 2;
-                    //}
+                    //+2是因为最上面的option 有两个空格
+                    indexY = (this.y / 43) * (-1) + 2;
                     $("#yearwrapper ul li").removeClass("on");
                     $("#yearwrapper ul li:eq(" + Math.abs(indexY) + ")").addClass("on");
-                    //opts.endday = checkdays(strY, strM);
+                    opts.endday = checkdays(strY, strM);
                     $("#daywrapper ul").html(createDAY_UL());
                     dayScroll.refresh();
                 }
@@ -190,7 +165,7 @@
                     $("#monthwrapper ul li:eq(" + Math.abs(indexM) + ")").addClass("on");
                     //opts.endday = checkdays(indexY, indexM);
                     //修改原来通过配置参数生成，修改成通过自动获取生成
-                    //opts.endday = checkdays(indexY - 2, indexM - 1);
+                    opts.endday = checkdays(indexY - 2, indexM - 1);
                     $("#daywrapper ul").html(createDAY_UL());
                     dayScroll.refresh();
                     $("#daywrapper ul li").removeClass("on");
@@ -262,7 +237,7 @@
                 '<div id="dateshadow"></div>' +
                 '<div id="datePage" class="page">' +
                     '<section>' +
-                        '<div id="datetitle"><span id="datecancle">取消</span><h1>选择出生日期</h1><span id="dateconfirm">确定</span></div>' +
+                        '<div id="datetitle"><span id="datecancle">取消</span><h1>选择航班日期</h1><span id="dateconfirm">确定</span></div>' +
                         '<div id="datemark"><a id="markyear"></a><a id="markmonth"></a><a id="markday"></a></div>' +
                         '<div id="timemark"><a id="markhour"></a><a id="markminut"></a><a id="marksecond"></a></div>' +
                         '<div id="datescroll">' +
@@ -325,9 +300,6 @@
             $("#daywrapper ul").html("");
             var str = "<li>&nbsp;</li><li>&nbsp;</li>";
             for (var i = opts.beginday; i <= opts.endday; i++) {
-                if (i < 10) {
-                    i = "0" + i
-                }
                 str += '<li>' + i + '日</li>';
             }
             return str + "<li>&nbsp;</li><li>&nbsp;</li>";
