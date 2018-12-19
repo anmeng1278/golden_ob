@@ -25,8 +25,8 @@
         var yearScroll = null, monthScroll = null, dayScroll = null;
         var HourScroll = null, MinuteScroll = null, SecondScroll = null;
         $.fn.date.defaultOptions = {
-            beginyear: 1900,                 //日期--年--份开始
-            endyear: 2050,                   //日期--年--份结束
+            beginyear: parseInt(nowdate.getFullYear(), 10),                 //日期--年--份开始
+            endyear: parseInt(nowdate.getFullYear(), 10) + 1,                   //日期--年--份结束
             beginmonth: 1,                   //日期--月--份结束
             endmonth: 12,                    //日期--月--份结束
             beginday: 1,                     //日期--日--份结束

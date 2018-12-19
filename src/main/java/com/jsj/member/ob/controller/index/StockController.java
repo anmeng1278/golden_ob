@@ -9,19 +9,22 @@ import com.jsj.member.ob.dto.api.gift.CreateGiftRequ;
 import com.jsj.member.ob.dto.api.gift.CreateGiftResp;
 import com.jsj.member.ob.dto.api.gift.GiftProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
+import com.jsj.member.ob.dto.api.stock.UseProductDto;
+import com.jsj.member.ob.dto.api.airport.JsAirportDto;
 import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.GiftShareType;
 import com.jsj.member.ob.enums.PropertyType;
+import com.jsj.member.ob.enums.AirportType;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.GiftLogic;
 import com.jsj.member.ob.logic.StockLogic;
+import com.jsj.member.ob.logic.AirportLogic;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-import com.jsj.member.ob.dto.api.stock.UseProductDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -139,6 +142,13 @@ public class StockController extends BaseController {
         //不支持自提
         boolean unSupportPickup = stockDtos.stream().filter(s -> s.getProductDto().getIfpickup().equals(false)).findFirst().isPresent();
         request.setAttribute("unSupportPickup", unSupportPickup);
+
+        //机场贵宾厅
+        List<JsAirportDto> airport = AirportLogic.GetAirportDtos(AirportType.AIRPORT);
+        List<JsAirportDto> train = AirportLogic.GetAirportDtos(AirportType.TRAIN);
+
+        request.setAttribute("airports", airport);
+        request.setAttribute("trains", train);
 
         return "index/stockUse1";
     }

@@ -88,7 +88,8 @@ public class MysqlGenerator {
             "_stock_flow",
             "_v_area",
             "_wechat",
-            "_wechat_coupon"
+            "_wechat_coupon",
+            "_airport"
     };
     private static String[] prefix = new String[]{""};
     private static File file = new File(packageName);

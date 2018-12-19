@@ -21,6 +21,7 @@
             charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/GoodsUse.js')}" type="text/javascript" charset="utf-8"></script>
 
+    <script th:src="${ob.Url('/index/js/CityList.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:inline="javascript">
 
         TX.INIT(function () {
@@ -74,6 +75,80 @@
 
             });
 
+            $("#SelfCity").click(function () {
+                $("div.content-city").show();
+                $("div.content-form").hide();
+            });
+
+            //初始化贵宾厅数据
+            var airports = [];
+            $("span[data-airport-id]").each(function () {
+                var code = $(this).attr("data-airport-code");
+                var airportId = $(this).attr("data-airport-id");
+                var ifhot = $(this).attr("data-ifhot");
+                var airportName = $(this).html();
+                airports.push({id: airportId, name: airportName, code: code, ifhot: ifhot});
+            });
+
+            function getAirports(key) {
+                if (!key || $.trim(key).length == 0) {
+                    var items = [];
+                    var res = JSLINQ(airports).where(function () {
+                        return this.ifhot == "true";
+                    }).select(function () {
+                        return this;
+                    })
+                    return res.items;
+                } else {
+                    var res = JSLINQ(airports).where(function () {
+                        return this.name.indexOf(key) > -1 || this.code.toLowerCase().indexOf(key) > -1;
+                    }).select(function () {
+                        return this;
+                    });
+                    return res.items;
+                }
+            }
+
+            function createHtml(items, key) {
+                $("div.search_list ul li").remove();
+                if (!items || items.length == 0) {
+                    return;
+                }
+                var html = [];
+                $.each(items, function (i, item) {
+                    html.push("<li data-airport-id='" + item.id + "' data-airport-code='" + item.code + "'>" + item.name + "</li>")
+                });
+                $("div.search_list ul").append(html.join(""));
+            }
+
+            //搜索框事件
+            $("#txbName").keyup(function () {
+                var items = getAirports(this.value);
+                createHtml(items);
+            });
+
+            //点击服务网点
+            $("*[data-airport-id]").click(function () {
+
+                var airportId = $(this).attr("data-airport-id");
+                var airportName = $(this).html();
+                var airportCode = $(this).attr("data-airport-code");
+
+                $("div.content-city").hide();
+                $("div.content-form").show();
+
+                $("#SelfCity").html(airportName);
+                $(":hidden[name='airportName']").val(airportName);
+                $(":hidden[name='airportId']").val(airportId);
+
+            });
+
+            //网点关闭
+            $("div.content-city img.close-btn").click(function () {
+                $("div.content-city").hide();
+                $("div.content-form").show();
+            });
+
         });
 
     </script>
@@ -82,125 +157,258 @@
 <th:block layout:fragment="css">
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/mSelect/css/mobile_date_ui.css')}"/>
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GoodsUse.css')}"/>
+
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/CityList.css')}"/>
 </th:block>
 
 <div layout:fragment="content">
+    <div class="content-form">
+        <!--head start-->
+        <div class="head">
+            <div class="head-height">
+                <ul class="head-goods-list">
+                    <th:block th:each="info :${stockDtos}">
+                        <li>
+                            <th:block th:if="${!#lists.isEmpty(info.productDto.productImgDtos)}">
+                                <img th:src="${info.productDto.productImgDtos[0].imgPath}" alt="1"
+                                     class="head-goods-img"/>
+                            </th:block>
+                            <p class="head-goods-tips">已选<span th:text="${info.number}">0</span>件</p>
+                        </li>
+                    </th:block>
+                </ul>
+            </div>
+        </div>
+        <!--head end-->
 
-    <!--head start-->
-    <div class="head">
-        <div class="head-height">
-            <ul class="head-goods-list">
-                <th:block th:each="info :${stockDtos}">
-                    <li>
-                        <th:block th:if="${!#lists.isEmpty(info.productDto.productImgDtos)}">
-                            <img th:src="${info.productDto.productImgDtos[0].imgPath}" alt="1" class="head-goods-img"/>
+        <!--main start-->
+        <div class="main">
+            <div class="nav-list">
+                <ul class="nav-list-ul">
+                    <li class="active">快递配送</li>
+                    <li th:if="${!unSupportPickup}">我要自提</li>
+                </ul>
+            </div>
+
+            <div class="nav-wrap clear">
+
+                <!--快递配送 start-->
+                <div class="nav-wrap-item" style="display: block;">
+                    <form name="form1" id="form1" method="post">
+                        <h2 class="address-title">新建收货地址</h2>
+                        <div class="address">
+                            <div class="address-item">
+                                <span class="address-lable">收件人：</span>
+                                <p class="address-rt">
+                                    <input type="text" placeholder="填写收件人" name="contactName" value=""
+                                           class="address-input"/>
+                                </p>
+                            </div>
+                            <div class="address-item">
+                                <span class="address-lable">联系电话：</span>
+                                <p class="address-rt">
+                                    <input type="tel" placeholder="填写联系电话" name="mobile" maxlength="11" value=""
+                                           class="address-input"/>
+                                </p>
+                            </div>
+                            <div class="address-item" id="test">
+                                <span class="address-lable">所在地区：</span>
+                                <p class="address-rt">
+                                    <span id="city" class="address-input">选择所在地区</span>
+                                </p>
+                            </div>
+                            <div class="address-item">
+                                <span class="address-lable">详细地址：</span>
+                                <p class="address-rt">
+                                    <textarea placeholder="填写详细地址" name="address" class="address-textarea"></textarea>
+                                </p>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="deliveryType" value="2"/>
+                        <input type="hidden" name="provinceId" value="0"/>
+                        <input type="hidden" name="cityId" value="0"/>
+                        <input type="hidden" name="districtId" value="0"/>
+
+                    </form>
+                </div>
+                <!--快递配送 end-->
+
+                <!--我要自提 start-->
+                <div class="nav-wrap-item">
+                    <form name="form2" id="form2" method="post">
+                        <h2 class="address-title">填写自提信息</h2>
+                        <div class="address">
+                            <div class="address-item">
+                                <span class="address-lable">联系人：</span>
+                                <p class="address-rt">
+                                    <input type="text" placeholder="填写收件人" name="contactName" value=""
+                                           class="address-input"/>
+                                </p>
+                            </div>
+                            <div class="address-item">
+                                <span class="address-lable">联系电话：</span>
+                                <p class="address-rt">
+                                    <input type="tel" placeholder="填写联系电话" name="mobile" maxlength="11" value=""
+                                           class="address-input"/>
+                                </p>
+                            </div>
+                            <div class="address-item">
+                                <span class="address-lable">自提时间：</span>
+                                <p class="address-rt">
+                                    <input type="text" placeholder="选择自提时间" id="birthdate" name="effectiveDate" value=""
+                                           class="address-input birthdate"/>
+                                </p>
+                            </div>
+                            <div class="address-item">
+                                <span class="address-lable">自提网点：</span>
+                                <p class="address-rt">
+                                    <span id="SelfCity" class="address-input">选择自提网点</span>
+                                    <input type="hidden" name="airportId" value="0"/>
+                                    <input type="hidden" name="airportName" value=""/>
+                                </p>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="deliveryType" value="1"/>
+                    </form>
+                </div>
+                <!--我要自提 end-->
+            </div>
+        </div>
+        <!--main end-->
+        <!--confirm-btn start-->
+        <a href="javascript:void(0);" class="confirm-btn">确定</a>
+        <!--confirm-btn end-->
+
+        <!--选择日期-->
+        <div id="datePlugin"></div>
+    </div>
+
+    <div class="content-city" style="display: none;">
+        <!--city-list start-->
+        <div class="city-list">
+            <!--nav start-->
+            <div class="city-list-head">
+                <div class="city-list-nav">
+                    <ul class="city-list-ul">
+                        <li class="city-cur">机场</li>
+                        <li>高铁</li>
+                    </ul>
+                    <img th:src="${ob.Img('/index/images/search_icon.png')}" class="search-btn"/>
+                    <img th:src="${ob.Img('/index/images/close_icon.png')}" class="close-btn"/>
+                </div>
+            </div>
+            <!--nav end-->
+
+            <!--main start-->
+            <div class="city-list-wrap clear">
+                <!--机场 start-->
+                <div class="city-list-item" style="display: block;">
+                    <ul class="city-list-item-ul">
+                        <li style="display: none;">
+                            <a href="javascript:;" class="city-list-title" id="定位">定位</a>
+                            <div class="city-posi-div">
+                                <img th:src="${ob.Img('/index/images/address_icon.png')}" class="city-posi-img"/>
+                                <span class="city-posi-span">暂无</span>
+                            </div>
+                        </li>
+                        <th:block th:each="vip : ${airports}">
+                            <li>
+                                <a href="javascript:;" class="city-list-title" th:id="${vip.initials}"
+                                   th:text="${vip.initials}"></a>
+                                <div class="city-list-div">
+                                    <th:block th:each="vvip :${vip.airportDtos}">
+                                        <span th:attr="data-ifhot=${vvip.ifhot},data-airport-id=${vvip.airportId},data-airport-code=${vvip.airportCode}"
+                                              th:text="${vvip.airportName}"></span>
+                                    </th:block>
+                                </div>
+                            </li>
                         </th:block>
-                        <p class="head-goods-tips">已选<span th:text="${info.number}">0</span>件</p>
-                    </li>
-                </th:block>
-            </ul>
-        </div>
-    </div>
-    <!--head end-->
-
-    <!--main start-->
-    <div class="main">
-        <div class="nav-list">
-            <ul class="nav-list-ul">
-                <li class="active">快递配送</li>
-                <li th:if="${!unSupportPickup}">我要自提</li>
-            </ul>
-        </div>
-
-        <div class="nav-wrap clear">
-
-            <!--快递配送 start-->
-            <div class="nav-wrap-item" style="display: block;">
-                <form name="form1" id="form1" method="post">
-                    <h2 class="address-title">新建收货地址</h2>
-                    <div class="address">
-                        <div class="address-item">
-                            <span class="address-lable">收件人：</span>
-                            <p class="address-rt">
-                                <input type="text" placeholder="填写收件人" name="contactName" value=""
-                                       class="address-input"/>
-                            </p>
-                        </div>
-                        <div class="address-item">
-                            <span class="address-lable">联系电话：</span>
-                            <p class="address-rt">
-                                <input type="tel" placeholder="填写联系电话" name="mobile" value="" class="address-input"/>
-                            </p>
-                        </div>
-                        <div class="address-item" id="test">
-                            <span class="address-lable">所在地区：</span>
-                            <p class="address-rt">
-                                <span id="city" class="address-input">选择所在地区</span>
-                            </p>
-                        </div>
-                        <div class="address-item">
-                            <span class="address-lable">详细地址：</span>
-                            <p class="address-rt">
-                                <textarea placeholder="填写详细地址" name="address" class="address-textarea"></textarea>
-                            </p>
-                        </div>
+                    </ul>
+                    <div class="slider-nav">
+                        <ul>
+                            <th:block th:each="vip : ${airports}">
+                                <li>
+                                    <a th:href="|#${vip.initials}|" th:text="${vip.initials}"></a>
+                                </li>
+                            </th:block>
+                        </ul>
                     </div>
+                </div>
+                <!--机场 end-->
 
-                    <input type="hidden" name="deliveryType" value="2"/>
-                    <input type="hidden" name="provinceId" value="0"/>
-                    <input type="hidden" name="cityId" value="0"/>
-                    <input type="hidden" name="districtId" value="0"/>
-
-                </form>
-            </div>
-            <!--快递配送 end-->
-
-            <!--我要自提 start-->
-            <div class="nav-wrap-item">
-                <form name="form2" id="form2" method="post">
-                    <h2 class="address-title">填写自提信息</h2>
-                    <div class="address">
-                        <div class="address-item">
-                            <span class="address-lable">联系人：</span>
-                            <p class="address-rt">
-                                <input type="text" placeholder="填写收件人" name="contactName" value=""
-                                       class="address-input"/>
-                            </p>
-                        </div>
-                        <div class="address-item">
-                            <span class="address-lable">联系电话：</span>
-                            <p class="address-rt">
-                                <input type="tel" placeholder="填写联系电话" name="mobile" value="" class="address-input"/>
-                            </p>
-                        </div>
-                        <div class="address-item">
-                            <span class="address-lable">自提时间：</span>
-                            <p class="address-rt">
-                                <input type="text" placeholder="选择自提时间" id="birthdate" name="effectiveDate" value=""
-                                       class="address-input birthdate"/>
-                            </p>
-                        </div>
-                        <div class="address-item">
-                            <span class="address-lable">自提地址：</span>
-                            <p class="address-rt">
-                                <span id="SelfCity" class="address-input">选择所在地区</span>
-                            </p>
-                        </div>
+                <!--高铁 start-->
+                <div class="city-list-item">
+                    <ul class="city-list-item-ul">
+                        <li style="display: none;">
+                            <a href="javascript:;" class="city-list-title" id="定位-2">定位</a>
+                            <div class="city-posi-div">
+                                <img th:src="${ob.Img('/index/images/address_icon.png')}" class="city-posi-img"/>
+                                <span class="city-posi-span">暂无</span>
+                            </div>
+                        </li>
+                        <th:block th:each="vip : ${trains}">
+                            <li>
+                                <a href="javascript:;" class="city-list-title" th:id="${vip.initials}"
+                                   th:text="${vip.initials}"></a>
+                                <div class="city-list-div">
+                                    <th:block th:each="vvip :${vip.airportDtos}">
+                                        <span th:attr="data-ifhot=${vvip.ifhot},data-airport-id=${vvip.airportId},data-airport-code=${vvip.airportCode}"
+                                              th:text="${vvip.airportName}"></span>
+                                    </th:block>
+                                </div>
+                            </li>
+                        </th:block>
+                    </ul>
+                    <div class="slider-nav2">
+                        <ul>
+                            <th:block th:each="vip : ${trains}">
+                                <li>
+                                    <a th:href="|#${vip.initials}|" th:text="${vip.initials}"></a>
+                                </li>
+                            </th:block>
+                        </ul>
                     </div>
-
-                    <input type="hidden" name="deliveryType" value="1"/>
-                </form>
+                </div>
+                <!--高铁 end-->
             </div>
-            <!--我要自提 end-->
+            <!--main end-->
         </div>
-    </div>
-    <!--main end-->
-    <!--confirm-btn start-->
-    <a href="javascript:void(0);" class="confirm-btn">确定</a>
-    <!--confirm-btn end-->
+        <!--city-list end-->
 
-    <!--选择日期-->
-    <div id="datePlugin"></div>
+        <!--search-layer start-->
+        <div class="search-layer" style="display: none;">
+            <div class="sousu">
+                <p class="p-txt">
+                    <input type="text" placeholder="搜索" id="txbName" autofocus="autofocus">
+                    <span>
+		                <!--<em id="searchBtn">搜索</em>-->
+		                <em id="cancelBtn">取消</em>
+		            </span>
+                </p>
+                <div class="search_result">
+                    <!--无搜索结果-->
+                    <div class="no_result" style="display:none;">
+                        <label>无搜索结果</label>
+                    </div>
+                    <!--搜索列表结果-->
+                    <div class="search_list">
+                        <ul>
+                            <th:block th:each="vip :${airports}">
+                                <th:block th:each="vvip :${vip.airportDtos}">
+                                    <li th:if="${vvip.ifhot}"
+                                        th:attr="data-ifhot=${vvip.ifhot},data-airport-id=${vvip.airportId},data-airport-code=${vvip.airportCode}"
+                                        th:text="${vvip.airportName}"></li>
+                                </th:block>
+                            </th:block>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--search-layer end-->
+    </div>
 
 </div>
 

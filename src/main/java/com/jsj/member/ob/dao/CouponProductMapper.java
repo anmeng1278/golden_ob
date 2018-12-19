@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : CouponProduct Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-18
+ *   @since 2018-12-19
  */
 @Repository
 public interface CouponProductMapper extends BaseMapper<CouponProduct> {

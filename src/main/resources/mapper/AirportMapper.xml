@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsj.member.ob.dao.AirportMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.Airport">
+        <id column="airport_id" property="airportId" />
+        <result column="airport_name" property="airportName" />
+        <result column="airport_code" property="airportCode" />
+        <result column="ifhot" property="ifhot" />
+        <result column="initials" property="initials" />
+        <result column="type_id" property="typeId" />
+        <result column="sort" property="sort" />
+        <result column="city_id" property="cityId" />
+        <result column="city_name" property="cityName" />
+        <result column="remarks" property="remarks" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="delete_time" property="deleteTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        airport_id AS airportId, airport_name AS airportName, airport_code AS airportCode, ifhot, initials, type_id AS typeId, sort, city_id AS cityId, city_name AS cityName, remarks, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+    </sql>
+
+</mapper>
