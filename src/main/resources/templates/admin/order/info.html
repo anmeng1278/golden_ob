@@ -27,7 +27,7 @@
 
             <label class="layui-form-label">订单状态：</label>
             <div class="layui-input-inline layui-form-label-col">
-                <th:block th:utext="${enumLogic.GetOrderStatus(info.status).getFormat()}"></th:block>
+                <th:block th:utext="${info.status.message}"></th:block>
             </div>
         </div>
 
@@ -113,7 +113,7 @@
                         </tr>
                         </thead>
                         <tbody id="content">
-                        <th:block th:each="orderProduct : ${orderProducts}">
+                        <th:block th:each="orderProduct : ${info.orderProductDtos}">
                             <tr>
                                 <td>
                                     <th:block

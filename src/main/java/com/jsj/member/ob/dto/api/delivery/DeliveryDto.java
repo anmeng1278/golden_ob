@@ -100,6 +100,9 @@ public class DeliveryDto {
      */
     private List<StockDto> stockDtos;
 
+    //生效日期
+    private String effectiveDate;
+
     /**
      * 配送的商品信息
      */
@@ -271,5 +274,13 @@ public class DeliveryDto {
 
     public void setCreateTime(Integer createTime) {
         this.createTime = createTime;
+    }
+
+    public String getEffectiveDate() {
+        return effectiveDate;
+    }
+
+    public void setEffectiveDate(String effectiveDate) {
+        this.effectiveDate = effectiveDate;
     }
 }

@@ -1,15 +1,11 @@
 package com.jsj.member.ob.controller.common;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.Gift;
 import com.jsj.member.ob.entity.Order;
-import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.enums.*;
 import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.service.DeliveryService;
@@ -19,17 +15,17 @@ import com.jsj.member.ob.service.OrderService;
 import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.ExcelUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import static com.jsj.member.ob.logic.DictLogic.GetDict;
 
@@ -57,7 +53,7 @@ public class ExportExcelController {
                                HttpServletResponse response) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("配送信息表");
-        String[] headers = {"用户openId", "用户昵称", "快递号", "手机号", "联系人", "省", "市", "区", "详细地址", "创建时间", "配送方式", "物流状态","商品名称", "规格", "数量"};
+        String[] headers = {"用户openId", "用户昵称", "快递号", "手机号", "联系人", "省", "市", "区", "详细地址", "创建时间", "商品属性", "配送方式", "物流状态", "商品名称", "规格", "数量"};
 
         EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
@@ -79,31 +75,27 @@ public class ExportExcelController {
         for (Delivery delivery : deliveries) {
             row = sheet.createRow(rowNum);
             row.createCell(0).setCellValue(delivery.getOpenId());
-            row.createCell(0).setCellValue(WechatLogic.GetWechat(delivery.getOpenId()).getNickname());
-            row.createCell(1).setCellValue(delivery.getExpressNumber());
-            row.createCell(2).setCellValue(delivery.getMobile());
-            row.createCell(3).setCellValue(delivery.getContactName());
-            row.createCell(4).setCellValue(GetDict(delivery.getProvinceId()).getDictName());
-            row.createCell(5).setCellValue(GetDict(delivery.getCityId()).getDictName());
-            row.createCell(6).setCellValue(GetDict(delivery.getDistrictId()).getDictName());
-            row.createCell(7).setCellValue(delivery.getAddress());
-            row.createCell(8).setCellValue(DateUtils.formatDateByUnixTime(Long.valueOf(delivery.getCreateTime()), "yyyy-MM-dd HH:mm:ss"));
-            row.createCell(9).setCellValue(DeliveryType.valueOf(delivery.getTypeId()).getMessage());
-            row.createCell(10).setCellValue(DeliveryStatus.valueOf(delivery.getStatus()).getMessage());
+            row.createCell(1).setCellValue(WechatLogic.GetWechat(delivery.getOpenId()).getNickname());
+            row.createCell(2).setCellValue(delivery.getExpressNumber());
+            row.createCell(3).setCellValue(delivery.getMobile());
+            row.createCell(4).setCellValue(delivery.getContactName());
+            row.createCell(5).setCellValue(GetDict(delivery.getProvinceId()).getDictName());
+            row.createCell(6).setCellValue(GetDict(delivery.getCityId()).getDictName());
+            row.createCell(7).setCellValue(GetDict(delivery.getDistrictId()).getDictName());
+            row.createCell(8).setCellValue(delivery.getAddress());
+            row.createCell(9).setCellValue(DateUtils.formatDateByUnixTime(Long.valueOf(delivery.getCreateTime()), "yyyy-MM-dd HH:mm:ss"));
+            row.createCell(10).setCellValue(PropertyType.valueOf(delivery.getPropertyTypeId()).getMessage());
+            row.createCell(11).setCellValue(DeliveryType.valueOf(delivery.getTypeId()).getMessage());
+            row.createCell(12).setCellValue(DeliveryStatus.valueOf(delivery.getStatus()).getMessage());
 
             List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
-            List<OrderProduct> orderProducts = stockDtos.stream().map(s -> {
-                OrderProduct orderProduct = orderProductService.selectOne(new EntityWrapper<OrderProduct>().where("order_id={0} and product_id={1} and product_spec_id={2}", s.getOrderId(), s.getProductId(), s.getProductSpecId()));
-                return orderProduct;
-            }).collect(Collectors.toList());
-            for (OrderProduct orderProduct : orderProducts) {
-                row.createCell(8).setCellValue(ProductLogic.GetProduct(orderProduct.getProductId()).getProductName());
-                row.createCell(9).setCellValue(ProductLogic.GetProductSpec(orderProduct.getProductSpecId()).getSpecName());
-                row.createCell(10).setCellValue(orderProduct.getNumber());
+            for (StockDto stockDto : stockDtos) {
+                row.createCell(13).setCellValue(stockDto.getProductDto().getProductName());
+                row.createCell(14).setCellValue(ProductLogic.GetProductSpec(stockDto.getProductSpecId()).getSpecName());
+                row.createCell(15).setCellValue(stockDto.getNumber());
                 rowNum++;
                 row = sheet.createRow(rowNum);
             }
-
             rowNum++;
             sheet.autoSizeColumn(rowNum);
         }

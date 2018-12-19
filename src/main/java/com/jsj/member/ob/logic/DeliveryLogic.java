@@ -65,8 +65,8 @@ public class DeliveryLogic extends BaseLogic {
     public static List<StockDto> GetDeliveryStock(int deliveryId) {
 
         EntityWrapper<DeliveryStock> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where("delivery_id={0}", deliveryId);
         entityWrapper.where("delete_time is null");
+        entityWrapper.where("delivery_id={0}", deliveryId);
 
         List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(entityWrapper);
 
@@ -126,13 +126,14 @@ public class DeliveryLogic extends BaseLogic {
 
     /**
      * 获得DeliveryStock
+     *
      * @param deliverId
      * @return
      */
-    public static List<DeliveryStock> GetDeliveryStocks(int deliverId){
+    public static List<DeliveryStock> GetDeliveryStocks(int deliverId) {
 
         EntityWrapper<DeliveryStock> wrapper = new EntityWrapper<>();
-        wrapper.where("delivery_id={0}",deliverId);
+        wrapper.where("delivery_id={0}", deliverId);
 
         List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(wrapper);
 
@@ -163,6 +164,7 @@ public class DeliveryLogic extends BaseLogic {
         dto.setProvinceId(delivery.getProvinceId());
         dto.setContactName(delivery.getContactName());
         dto.setDistrictId(delivery.getDistrictId());
+        dto.setEffectiveDate(delivery.getEffectiveDate());
 
         dto.setOpenId(delivery.getOpenId());
         dto.setExpressNumber(delivery.getExpressNumber());

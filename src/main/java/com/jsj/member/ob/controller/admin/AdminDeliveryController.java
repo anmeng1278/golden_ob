@@ -2,6 +2,7 @@ package com.jsj.member.ob.controller.admin;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
@@ -10,9 +11,10 @@ import com.jsj.member.ob.dto.api.dict.GetAreasResp;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.entity.Delivery;
-import com.jsj.member.ob.entity.OrderProduct;
+import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
+import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
@@ -32,7 +34,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,6 +54,9 @@ public class AdminDeliveryController {
 
     @Autowired
     OrderProductService orderProductService;
+
+    @Autowired
+    Webconfig webconfig;
 
     /**
      * 查询所有配送列表
@@ -112,27 +116,24 @@ public class AdminDeliveryController {
     @GetMapping("/sendInfo/{deliveryId}")
     public String sendInfo(@PathVariable("deliveryId") Integer deliveryId, Model model) throws IOException {
 
-        Delivery delivery = deliveryService.selectById(deliveryId);
-
-        DeliveryDto deliveryDto = DeliveryLogic.ToDto(delivery);
+        DeliveryDto deliveryDto = DeliveryLogic.GetDelivery(deliveryId);
 
         //查询配送的物流信息
         List data = null;
-        if (!StringUtils.isBlank(delivery.getExpressNumber())) {
+        if (!StringUtils.isBlank(deliveryDto.getExpressNumber())) {
             ExpressRequ requ = new ExpressRequ();
-            requ.setText(delivery.getExpressNumber());
+            requ.setText(deliveryDto.getExpressNumber());
             ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
             data = resp.getData();
         }
 
-        //配送的库存
-        List<OrderProduct> orderProducts = new ArrayList<>();
-        deliveryDto.getStockDtos().stream().forEach(s -> {
-            OrderProduct orderProduct = orderProductService.selectOne(new EntityWrapper<OrderProduct>().where("order_id={0} and product_id={1} and product_spec_id={2}", s.getOrderId(), s.getProductId(), s.getProductSpecId()));
-            orderProducts.add(orderProduct);
-        });
+        if(deliveryDto.getPropertyType().getValue() == PropertyType.ACTIVITYCODE.getValue()){
+            List<DeliveryStock> deliveryStocks = DeliveryLogic.GetDeliveryStocks(deliveryId);
+            String activityCode = deliveryStocks.get(0).getActivityCode();
+            String qrcodeUrl = "http://mobile.qq.com/qrcode?url=%"+activityCode+"&width=300&height=300";
+            model.addAttribute("qrcodeUrl", qrcodeUrl);
+        }
 
-        model.addAttribute("orderProducts", orderProducts);
         model.addAttribute("data", data);
         model.addAttribute("info", deliveryDto);
         model.addAttribute("deliveryId", deliveryId);
