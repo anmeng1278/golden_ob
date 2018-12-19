@@ -49,4 +49,5 @@
 .selected-num{ display: inline-block; width: 0.6rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.32rem; color: #C2191F; font-weight: 700; background: #fff; border-radius: 50%;}
 .selected-title{ font-size: 0.26rem; color: #fff; padding-left: 0.1rem;}
 .share-btn,.use-btn{ display: block; font-size: 0.36rem; color: #fff; font-weight: 700;}
+.disabled-use-btn{background: #ccc;}
 /*footer end*/

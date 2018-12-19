@@ -29,7 +29,7 @@ public class StockDto {
     /**
      * 商品规格id
      */
-    private int productSpecId;
+    private Integer productSpecId;
 
     /**
      * 订单id
@@ -129,11 +129,11 @@ public class StockDto {
         this.productId = productId;
     }
 
-    public int getProductSpecId() {
+    public Integer getProductSpecId() {
         return productSpecId;
     }
 
-    public void setProductSpecId(int productSpecId) {
+    public void setProductSpecId(Integer productSpecId) {
         this.productSpecId = productSpecId;
     }
 

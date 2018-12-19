@@ -115,7 +115,7 @@ public abstract class BaseController {
         } else {
             if (SpringContextUtils.getActiveProfile().equals("dev")) {
                 User u = new User();
-                u.setOpenid("oeQDZtx7YcrYSkKAO7YOrl1CN_aI");
+                u.setOpenid("oeQDZt-rcgi9QhWm6F7o2mV3dSYY");
                 u.setNickname("测试账户");
                 return u;
             } else {

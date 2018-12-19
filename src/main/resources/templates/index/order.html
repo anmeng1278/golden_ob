@@ -14,6 +14,7 @@
 
         TX.INIT(function () {
 
+            //取消订单
             $(document).on("click", "a.cancel-btn", function () {
 
                 var orderId = $(this).attr("data-order-id");
@@ -33,6 +34,8 @@
                     });
                 });
             });
+
+            //订单支付
             $(document).on("click", "a.pay-btn", function () {
                 var orderId = $(this).attr("data-order-id");
 
@@ -87,7 +90,51 @@
 
             });
 
-        })
+            //Timer事件
+            $("p[data-expire-time]").each(function () {
+
+                var timeStamp = parseInt($(this).attr("data-expire-time"), 10) * 1000;
+                if (timeStamp <= 0) {
+                    return true;
+                }
+                var that = this;
+                //开始计时
+                countFunc(timeStamp, $(this));
+                var timerId = setInterval(function () {
+                    timeStamp = timeStamp - 1000;
+                    countFunc(timeStamp, $(that));
+                }, 1000);
+
+                $(this).data("timerId", timerId);
+
+                //计算时间
+                function countFunc(leftTime, obj) {
+                    if (leftTime >= 0) {
+                        var minutes = parseInt(leftTime / 1000 / 60 % 60, 10); //计算剩余的分钟
+                        var seconds = parseInt(leftTime / 1000 % 60, 10); //计算剩余的秒数
+                        minutes = checkTime(minutes);
+                        seconds = checkTime(seconds);
+                        $(".joinm", obj).html(minutes);
+                        $(".joins", obj).html(seconds);
+                    } else {
+                        var setTimer = obj.data("timerId");
+                        setTimer && clearInterval(setTimer);
+                        $(".joinm", obj).html("0");
+                        $(".joins", obj).html("0");
+                    }
+                }
+
+                //将0-9的数字前面加上0，例1变为01
+                function checkTime(i) {
+                    if (i < 10) {
+                        i = "0" + i;
+                    }
+                    return i;
+                }
+
+            });
+
+        });
 
     </script>
 </th:block>
@@ -109,7 +156,9 @@
                     <div class="order-item-head">
                            <span class="order-num" th:text="|订单号:${info.orderId}|">
                            </span>
-                        <p class="order-price"><span class="joinm">30</span>分<span class="joins">0</span>秒后失效</p>
+                        <p class="order-price"
+                           th:attr="data-expire-time=${info.expiredTime - dateUtils.getCurrentUnixTime()}"><span
+                                class="joinm">0</span>分<span class="joins">0</span>秒后失效</p>
                     </div>
                     <div class="order-item-main">
                         <th:block th:if="${!#lists.isEmpty(info.orderProductDtos)}"

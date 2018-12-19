@@ -36,6 +36,50 @@
 
             });
 
+            //我要使用
+            $("a.use-btn").click(function () {
+
+                if ($(this).hasClass("disabled-use-btn")) {
+                    return;
+                }
+
+                var products = [];
+                var propertyTypeIds = getPropertyTypeIds(function (obj) {
+                    var productId = $(":hidden[name='productId']", obj).val();
+                    var productSpecId = $(":hidden[name='productSpecId']", obj).val();
+                    var num = $(":text[name='num']", obj).val();
+                    products.push({pId: productId, sId: productSpecId, num: num});
+                });
+                if (propertyTypeIds.length == 0 || products.length == 0) {
+                    return;
+                }
+
+                var json = encodeURI(JSON.stringify(products));
+                var url = "";
+                switch (propertyTypeIds[0]) {
+
+                    //实物商品
+                    case 1:
+                        url = [[${ob.Nav('/stock/use1')}]]
+                        break;
+
+                    //活动码
+                    case 2:
+                        break;
+
+                    //会员卡
+                    case 3:
+                        break;
+
+                }
+
+                if (url) {
+                    url += "?p=" + json;
+                    location.href = url;
+                }
+
+            });
+
         })
 
     </script>
@@ -97,7 +141,7 @@
         <div class="strok-list">
             <form id="form1" method="post">
                 <th:block th:each="info :${stockDtos}">
-                    <dl class="strok-list-dl clear">
+                    <dl class="strok-list-dl clear" th:attr="data-property-type=${info.productDto.propertyType.value}">
                         <dt th:if="${!#lists.isEmpty(info.productDto.productImgDtos)}">
                             <img th:src="${info.productDto.productImgDtos[0].imgPath}" alt="1"/>
                             <a th:href="${ob.Nav('/product?productId='+info.productId)}" class="goods-detail"
@@ -115,6 +159,8 @@
 
                                     <input type="hidden" name="productId" th:value="${info.productId}"/>
                                     <input type="hidden" name="productSpecId" th:value="${info.productSpecId}"/>
+                                    <input type="hidden" name="propertyType"
+                                           th:value="${info.productDto.propertyType.value}"/>
                                 </div>
                             </div>
                         </dd>
