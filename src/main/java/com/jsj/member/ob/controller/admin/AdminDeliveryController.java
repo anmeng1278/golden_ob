@@ -13,7 +13,6 @@ import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
-import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
@@ -33,7 +32,9 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @ApiIgnore
 @Controller
@@ -194,7 +195,7 @@ public class AdminDeliveryController {
             //修改地址
             case 1:{
                 String contactName = request.getParameter("contactName");
-                Integer mobile = Integer.valueOf(request.getParameter("mobile"));
+                Long mobile = Long.valueOf(request.getParameter("mobile"));
 
                 Integer provinceId = 0, cityId = 0, districtId = 0;
                 if (!StringUtils.isBlank(request.getParameter("provinceId"))) {

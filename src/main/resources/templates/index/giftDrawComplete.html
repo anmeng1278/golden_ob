@@ -91,13 +91,24 @@
         <!--receive-detail start-->
         <div class="receive-detail">
 
-            <h2 class="receive-title" th:if="${#lists.isEmpty(received)}"
-                th:text="|礼物等待被领取中！(${receivedCount}/${totalCount})|"></h2>
+            <th:block th:if="${myDrawCount > 0}">
+                <h2 class="receive-title" th:text="|您已领取成功！(${receivedCount}/${totalCount})|"></h2>
+            </th:block>
 
-            <h2 class="receive-title" th:if="${myDrawCount == 0 && #lists.isEmpty(unReceived)}"
-                th:text="|您来晚了，礼物已被抢完啦！(${receivedCount}/${totalCount})|"></h2>
+            <th:block th:unless="${myDrawCount > 0}">
 
-            <h2 class="receive-title" th:if="${myDrawCount > 0}"   th:text="|您已领取成功！(${receivedCount}/${totalCount})|"></h2>
+                <th:block th:if="${giftDto.giftStatus.value != 60}">
+                    <h2 class="receive-title" th:if="${#lists.isEmpty(received)}"
+                        th:text="|礼物等待被领取中！(${receivedCount}/${totalCount})|"></h2>
+                    <h2 class="receive-title" th:if="${myDrawCount == 0 && #lists.isEmpty(unReceived)}"
+                        th:text="|您来晚了，礼物已被抢完啦！(${receivedCount}/${totalCount})|"></h2>
+                </th:block>
+
+                <th:block th:if="${giftDto.giftStatus.value == 60}">
+                    <h2 class="receive-title" th:text="|您来晚了，分享已被取消了！|"></h2>
+                </th:block>
+
+            </th:block>
 
             <th:block th:each=" info :${received}">
                 <dl class="receive-dl">
@@ -136,7 +147,7 @@
     </div>
     <!--footer end-->
 
-    <a th:if="${myDrawCount == 0}" href="javascript:void(0);" class="look-btn">去严选看看</a>
+    <a th:if="${myDrawCount == 0}" th:href="${ob.Nav('/')}" class="look-btn">去严选看看</a>
 
     <div class="share-layer" style="display: none;">
         <div class="share-layer-bg"></div>

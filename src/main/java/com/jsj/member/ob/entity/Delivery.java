@@ -55,7 +55,7 @@ public class Delivery implements Serializable {
     /**
      * 手机号
      */
-	private Integer mobile;
+	private Long mobile;
     /**
      * 证件号(开卡时使用)
      */
@@ -80,6 +80,11 @@ public class Delivery implements Serializable {
      * 详细地址
      */
 	private String address;
+    /**
+     * 卡生效日期、活动码使用日期
+     */
+	@TableField("effective_date")
+	private String effectiveDate;
     /**
      * 备注
      */
@@ -172,11 +177,11 @@ public class Delivery implements Serializable {
 		this.contactName = contactName;
 	}
 
-	public Integer getMobile() {
+	public Long getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(Integer mobile) {
+	public void setMobile(Long mobile) {
 		this.mobile = mobile;
 	}
 
@@ -218,6 +223,14 @@ public class Delivery implements Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getEffectiveDate() {
+		return effectiveDate;
+	}
+
+	public void setEffectiveDate(String effectiveDate) {
+		this.effectiveDate = effectiveDate;
 	}
 
 	public String getRemarks() {
@@ -293,6 +306,7 @@ public class Delivery implements Serializable {
 			", viphallId=" + viphallId +
 			", viphallName=" + viphallName +
 			", address=" + address +
+			", effectiveDate=" + effectiveDate +
 			", remarks=" + remarks +
 			", provinceId=" + provinceId +
 			", cityId=" + cityId +

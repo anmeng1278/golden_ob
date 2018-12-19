@@ -149,6 +149,18 @@ public class ShareController extends BaseController {
             return this.Redirect(String.format("/share/gift/%s", obs));
         }
 
+        //判断会员本人是否允许领取
+        String openId = this.OpenId();
+        if (!GiftLogic.userSelfCanDraw(giftDto, openId)) {
+            return this.Redirect(String.format("/share/gift/%s", obs));
+        }
+
+        //判断当前操作人是否已领取
+        if (GiftLogic.userIsDraw(giftDto.getGiftId(), openId)) {
+            return this.Redirect(String.format("/share/gift/%s", obs));
+        }
+
+        //分享链接
         String shareUrl = this.Url(String.format("/share/gift/%s/draw", obs), false);
         request.setAttribute("shareUrl", shareUrl);
 
@@ -175,6 +187,7 @@ public class ShareController extends BaseController {
         String shareUrl = this.Url(String.format("/share/gift/%s", obs), false);
 
         try {
+
             ReceivedGiftRequ requ = new ReceivedGiftRequ();
             requ.setGiftUniqueCode(obs);
             requ.getBaseRequ().setOpenId(openId);
@@ -209,11 +222,10 @@ public class ShareController extends BaseController {
             return this.Redirect("/");
         }
 
-        String openId = this.OpenId();
         List<GiftStockDto> giftStockDtos = GiftLogic.GetGiftStockDtos(giftDto.getGiftId());
 
-
-        //是否本人已领取
+        //是否本人领取数
+        String openId = this.OpenId();
         long myDrawCount = giftStockDtos.stream().filter(st -> st.getReceviedStockDto() != null &&
                 st.getReceviedStockDto().getOpenId().equals(openId)).count();
 
@@ -225,15 +237,13 @@ public class ShareController extends BaseController {
 
         //是否我已领取
         request.setAttribute("myDrawCount", myDrawCount);
-
         request.setAttribute("unReceived", unReceived);
         request.setAttribute("received", received);
         request.setAttribute("giftDto", giftDto);
+
         request.setAttribute("receivedCount", received.size());
         request.setAttribute("unReceivedCount", unReceived.size());
-
         request.setAttribute("totalCount", giftStockDtos.size());
-
 
         String shareUrl = this.Url(String.format("/share/gift/%s/draw", obs), false);
         request.setAttribute("shareUrl", shareUrl);
