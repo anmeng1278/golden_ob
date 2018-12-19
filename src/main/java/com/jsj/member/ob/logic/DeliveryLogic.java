@@ -1,6 +1,8 @@
 package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.jsj.member.ob.dto.api.delivery.CreateDeliveryRequ;
+import com.jsj.member.ob.dto.api.delivery.CreateDeliveryResp;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
@@ -9,6 +11,8 @@ import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.logic.delivery.DeliveryBase;
+import com.jsj.member.ob.logic.delivery.DeliveryFactory;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import org.apache.commons.lang3.StringUtils;
@@ -78,6 +82,7 @@ public class DeliveryLogic extends BaseLogic {
 
     /**
      * 获取我的配送记录
+     *
      * @param openId
      * @return
      */
@@ -105,10 +110,11 @@ public class DeliveryLogic extends BaseLogic {
 
     /**
      * 获取配送信息
+     *
      * @param deliveryId
      * @return
      */
-    public static DeliveryDto GetDelivery(int deliveryId){
+    public static DeliveryDto GetDelivery(int deliveryId) {
 
         Delivery delivery = deliveryLogic.deliveryService.selectById(deliveryId);
 
@@ -135,10 +141,11 @@ public class DeliveryLogic extends BaseLogic {
 
     /**
      * 实体转换
+     *
      * @param delivery
      * @return
      */
-    public static DeliveryDto ToDto(Delivery delivery){
+    public static DeliveryDto ToDto(Delivery delivery) {
 
         DeliveryDto dto = new DeliveryDto();
 
@@ -175,4 +182,15 @@ public class DeliveryLogic extends BaseLogic {
         return dto;
     }
 
+
+    /**
+     * 创建配送
+     *
+     * @param requ
+     * @return
+     */
+    public static CreateDeliveryResp CreateDelivery(CreateDeliveryRequ requ) {
+        DeliveryBase deliveryBase = DeliveryFactory.GetInstance(requ.getPropertyType());
+        return deliveryBase.CreateDelivery(requ);
+    }
 }

@@ -7,6 +7,7 @@ import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.stock.StockFlowDto;
+import com.jsj.member.ob.dto.api.stock.UseProductDto;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.entity.GiftStock;
 import com.jsj.member.ob.entity.Stock;
@@ -63,8 +64,8 @@ public class StockLogic extends BaseLogic {
     public static List<StockDto> GetStocks(String openId) {
 
         List<StockDto> stockDtos = StockLogic.GetStocks(openId, null, StockStatus.UNUSE);
-
         return stockDtos;
+
     }
     //endregion
 
@@ -91,6 +92,75 @@ public class StockLogic extends BaseLogic {
         stocks.forEach(entity -> {
             StockDto stockDto = ToDto(entity);
             stockDtos.add(stockDto);
+        });
+
+        return stockDtos;
+
+    }
+
+    /**
+     * 通过所选使用的编号获取库存信息
+     *
+     * @param openId
+     * @param useProductDtos
+     * @return
+     */
+    public static List<StockDto> GetStocks(String openId, List<UseProductDto> useProductDtos, boolean isShowGroup) {
+
+        if (StringUtils.isBlank(openId)) {
+            throw new TipException("参数不合法，用户openId为空");
+        }
+
+        List<StockDto> stockDtos = new ArrayList<>();
+        if (useProductDtos.size() == 0) {
+            return stockDtos;
+        }
+
+        //所选商品规格
+        List<Integer> productSpecIds = useProductDtos.stream().map(st -> st.getsId()).collect(Collectors.toList());
+
+        EntityWrapper<Stock> wrapper = new EntityWrapper<>();
+        wrapper.where("open_id={0} and delete_time is null", openId);
+        wrapper.where("status={0}", StockStatus.UNUSE.getValue());
+        wrapper.in("product_spec_id", productSpecIds);
+        wrapper.orderBy("create_time desc");
+
+        //查询符合规格所有库存
+        List<Stock> stocks = stockLogic.stockService.selectList(wrapper);
+        List<StockDto> totalStockDtos = new ArrayList<>();
+
+        //实体转换
+        stocks.forEach(st -> {
+            totalStockDtos.add(ToDto(st));
+        });
+
+        //在所选规格中筛选库存
+        useProductDtos.forEach(up -> {
+
+            //符合的库存
+            List<StockDto> collect = totalStockDtos.stream().filter(exist -> exist.getProductId().equals(up.getpId()) &&
+                    exist.getProductSpecId().equals(up.getsId())).collect(Collectors.toList());
+
+            if (collect.size() < up.getNum()) {
+                throw new TipException("所有商品库存不足，请重新选择");
+            }
+
+
+            if (isShowGroup) {
+                //分组展示
+                //选中其中一个库存，修改商品数
+                StockDto current = collect.get(0);
+                current.setNumber(up.getNum());
+
+                stockDtos.add(current);
+            } else {
+                //单行展示
+                for (int i = 0; i < up.getNum(); i++) {
+                    StockDto current = collect.get(i);
+                    stockDtos.add(current);
+                }
+            }
+
         });
 
         return stockDtos;
@@ -413,8 +483,6 @@ public class StockLogic extends BaseLogic {
     }
 
     /**
-     *
-     *
      * @param stock
      * @return
      */

@@ -42,7 +42,7 @@ public class DeliveryDto {
     /**
      * 手机号
      */
-    private Integer mobile;
+    private Long mobile;
     /**
      * 省
      */
@@ -161,11 +161,11 @@ public class DeliveryDto {
         this.contactName = contactName;
     }
 
-    public Integer getMobile() {
+    public Long getMobile() {
         return mobile;
     }
 
-    public void setMobile(Integer mobile) {
+    public void setMobile(Long mobile) {
         this.mobile = mobile;
     }
 

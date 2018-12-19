@@ -195,7 +195,7 @@ public class AdminDeliveryController {
             //修改地址
             case 1:{
                 String contactName = request.getParameter("contactName");
-                Integer mobile = Integer.valueOf(request.getParameter("mobile"));
+                Long mobile = Long.valueOf(request.getParameter("mobile"));
 
                 Integer provinceId = 0, cityId = 0, districtId = 0;
                 if (!StringUtils.isBlank(request.getParameter("provinceId"))) {

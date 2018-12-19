@@ -99,3 +99,5 @@ webconfig:
   ReqURL: http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx
 
   virtualPath: ""
+
+  qrcodeUrl: http://mobile.qq.com/qrcode?url=%s&width=300&height=300

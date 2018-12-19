@@ -17,6 +17,7 @@
         <result column="viphall_id" property="viphallId" />
         <result column="viphall_name" property="viphallName" />
         <result column="address" property="address" />
+        <result column="effective_date" property="effectiveDate" />
         <result column="remarks" property="remarks" />
         <result column="province_id" property="provinceId" />
         <result column="city_id" property="cityId" />
@@ -28,7 +29,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        delivery_id AS deliveryId, open_id AS openId, express_number AS expressNumber, status, type_id AS typeId, property_type_id AS propertyTypeId, contact_name AS contactName, mobile, id_number AS idNumber, flight_number AS flightNumber, viphall_id AS viphallId, viphall_name AS viphallName, address, remarks, province_id AS provinceId, city_id AS cityId, district_id AS districtId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        delivery_id AS deliveryId, open_id AS openId, express_number AS expressNumber, status, type_id AS typeId, property_type_id AS propertyTypeId, contact_name AS contactName, mobile, id_number AS idNumber, flight_number AS flightNumber, viphall_id AS viphallId, viphall_name AS viphallName, address, effective_date AS effectiveDate, remarks, province_id AS provinceId, city_id AS cityId, district_id AS districtId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>
