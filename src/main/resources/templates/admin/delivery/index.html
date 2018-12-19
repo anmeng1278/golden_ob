@@ -69,7 +69,8 @@
                         <td th:text="${wechatLogic.GetWechat(info.openId).getNickname()}"></td>
                         <td th:text="${info.expressNumber}"></td>
                         <td>
-                            <th:block th:text="${deliveryLogic.GetDeliveryStock(info.deliveryId)[0].orderId}"></th:block>
+                            <th:block th:text="${deliveryLogic.GetDeliveryStock(info.deliveryId).get(0).orderId}">
+                            </th:block>
                         </td>
                         </td>
                         <td>
@@ -80,8 +81,7 @@
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${enumLogic.GetPropertyType(info.propertyTypeId).message}"></td>
                         <td th:text="${enumLogic.GetDeliveryType(info.typeId).message}"></td>
-                        <td th:text="${enumLogic.GetDeliveryStatus(info.status).message}">
-                        <td>
+                        <td th:text="${enumLogic.GetDeliveryStatus(info.status).message}"><td>
                             <button th:title="|配送详情|"
                                     th:attr="data-tab-href=@{'/admin/delivery/sendInfo/'+${info.deliveryId}}"
                                     class="layui-btn layui-btn-normal layui-btn-xs">
@@ -116,22 +116,6 @@
         TX.INIT(function () {
 
             $("button[data-method='export']").click(function () {
-                /*  TX.CORE.p({
-                      url: "/excel/SubmitExcelData",
-                      type: "post",
-                      dataType: "json",
-                      data: paramData,
-                      success: function (data) {
-                          if (data && data.code == "1") {
-                              window.location.href = "/excel/DownloadExcel";
-                          } else {
-                              $.dialog.alert("下载失败!");
-                          }
-                      },
-                      error: function (err) {
-                          $.dialog.alert("下载失败");
-                      }
-                  });*/
                 var typeId = $("select[name='typeId']").val();
                 var status = $("select[name='status']").val();
                 var keys = $("input[name='keys']").val();

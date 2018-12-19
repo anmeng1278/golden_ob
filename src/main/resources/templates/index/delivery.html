@@ -20,18 +20,14 @@
 
         <th:block th:each="info:${deliveryDtos}">
 
-
-            <th:block th:text="${info.getStatusName()}"></th:block>
-
-
             <!-- 已发货 ,配送方式配送-->
-            <th:block th:if="${info.status == 10 && info.typeId == 2}">
+            <th:block th:if="${info.deliveryStatus.value == 10 && info.deliveryType.value == 2}">
 
                 <div class="order-item">
                     <p class="order-item-head">
                         <span class="order-num" th:text="|收货人：${info.contactName}|"></span>
                         <span class="order-price"
-                              th:text="${enumLogic.GetDeliveryStatus(info.status).message}">已发货</span>
+                              th:text="${info.getStatusName()}">已发货</span>
                         <span class="order-dd-time clear"
                               th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></span>
                     </p>
@@ -62,13 +58,13 @@
             </th:block>
 
             <!--未发货,已签收,配送方式自提-->
-            <th:block th:if="${info.status != 10 || info.typeId == 1}">
+            <th:block th:if="${info.deliveryStatus.value != 10 || info.deliveryType.value == 1}">
 
                 <div class="order-item">
                     <p class="order-item-head">
                         <span class="order-num" th:text="|收货人：${info.contactName}|"></span>
                         <span class="order-price"
-                              th:text="${enumLogic.GetDeliveryStatus(info.status).message}">已发货</span>
+                              th:text="${info.getStatusName()}">已发货</span>
                         <span class="order-dd-time clear"
                               th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></span>
                     </p>

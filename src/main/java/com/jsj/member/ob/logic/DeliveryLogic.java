@@ -9,6 +9,7 @@ import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.enums.DeliveryStatus;
+import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.delivery.DeliveryBase;
@@ -169,8 +170,8 @@ public class DeliveryLogic extends BaseLogic {
         dto.setOpenId(delivery.getOpenId());
         dto.setExpressNumber(delivery.getExpressNumber());
         dto.setMobile(delivery.getMobile());
-        dto.setStatus(delivery.getStatus());
-        dto.setTypeId(delivery.getTypeId());
+        dto.setDeliveryStatus(DeliveryStatus.valueOf(delivery.getStatus()));
+        dto.setDeliveryType(DeliveryType.valueOf(delivery.getTypeId()));
         dto.setRemarks(delivery.getRemarks());
 
         dto.setDeliveryId(delivery.getDeliveryId());
