@@ -42,8 +42,8 @@
                 <select name="propertyTypeId" lay-verify="req" title="商品属性">
                     <option value="">商品属性</option>
                     <th:block th:each="pps : ${productPerproties}">
-                        <option th:value="${pps.dictId}" th:selected="${info.propertyTypeId==pps.dictId}"
-                                th:text="${pps.dictName}"></option>
+                        <option th:value="${pps.value}" th:selected="${info.propertyTypeId==pps.value}"
+                                th:text="${pps.message}"></option>
                     </th:block>
                 </select>
             </div>

@@ -27,6 +27,8 @@
                         <span class="order-num" th:text="|收货人：${info.contactName}|"></span>
                         <span class="order-price"
                               th:text="${enumLogic.GetDeliveryStatus(info.status).message}">已发货</span>
+                        <span class="order-dd-time clear"
+                              th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></span>
                     </p>
                     <th:block th:if="${!#lists.isEmpty(info.stockDtos)}"
                               th:each="pro:${info.stockDtos}">
@@ -38,10 +40,9 @@
 
                             <dd>
                                 <h2 class="order-dd-name"
-                                    th:text="${productLogic.GetProduct(pro.productId).productName}">越甲科技20寸旅行箱</h2>
-                                <p class="order-dd-tips" th:text="|共${pro.number}件|"></p>
-                                <p class="order-dd-time"
-                                   th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(pro.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></p>
+                                    th:text="${pro.productDto.productName}">越甲科技20寸旅行箱</h2>
+                                <p class="order-dd-tips"  th:text="|规格:${productLogic.GetProductSpec(pro.productSpecId).specName}|"></p>
+                                <p class="order-dd-tips" th:text="|数量:${pro.number}|"></p>
                             </dd>
                         </dl>
                     </th:block>
@@ -63,22 +64,22 @@
                         <span class="order-num" th:text="|收货人：${info.contactName}|"></span>
                         <span class="order-price"
                               th:text="${enumLogic.GetDeliveryStatus(info.status).message}">已发货</span>
+                        <span class="order-dd-time clear"
+                              th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></span>
                     </p>
                     <th:block th:if="${!#lists.isEmpty(info.stockDtos)}"
                               th:each="pro:${info.stockDtos}">
                         <dl class="order-item-dl">
 
                             <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(pro.productId))}">
-
                                 <img th:src="${productLogic.GetProductImgDtos(pro.productId)[0].imgPath}"/>
                             </dt>
 
                             <dd>
                                 <h2 class="order-dd-name"
-                                    th:text="${productLogic.GetProduct(pro.productId).productName}">越甲科技20寸旅行箱</h2>
-                                <p class="order-dd-tips" th:text="|共${pro.number}件|"></p>
-                                <p class="order-dd-time"
-                                   th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(pro.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></p>
+                                    th:text="${pro.productDto.productName}">越甲科技20寸旅行箱</h2>
+                                <p class="order-dd-tips"  th:text="|规格:${productLogic.GetProductSpec(pro.productSpecId).specName}|"></p>
+                                <p class="order-dd-tips" th:text="|数量:${pro.number}|"></p>
                             </dd>
                         </dl>
                     </th:block>

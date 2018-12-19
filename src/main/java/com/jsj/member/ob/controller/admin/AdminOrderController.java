@@ -4,12 +4,9 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.order.OrderDto;
+import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
-import com.jsj.member.ob.dto.api.product.ProductSpecDto;
-import com.jsj.member.ob.entity.Coupon;
 import com.jsj.member.ob.entity.Order;
-import com.jsj.member.ob.entity.OrderProduct;
-import com.jsj.member.ob.entity.WechatCoupon;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
@@ -19,7 +16,6 @@ import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -132,38 +128,22 @@ public class AdminOrderController {
     @RequestMapping(value = "/{orderId}", method = RequestMethod.GET)
     public String info(@PathVariable("orderId") Integer orderId, Model model) {
 
-        OrderDto dto = new OrderDto();
         Order order = orderService.selectOne(new EntityWrapper<Order>().where("order_id={0}", orderId));
-        BeanUtils.copyProperties(order, dto);
-
-
-        //根据订单的领取优惠券id查找优惠券id查找优惠券名字
-        WechatCoupon wechatCoupon = wechatCouponService.selectById(order.getWechatCouponId());
-        if (wechatCoupon == null) {
-            dto.setCouponName("");
-        } else {
-            Coupon coupon = couponService.selectById(wechatCoupon.getCouponId());
-            dto.setCouponName(coupon.getCouponName());
-        }
+        OrderDto dto = OrderLogic.ToDto(order);
 
         //根据订单Id查找商品信息
+        List<OrderProductDto> orderProductDtos = OrderLogic.GetOrderProducts(dto.getOrderId());
+
         List<ProductDto> productDtos = new ArrayList<>();
-        List<ProductSpecDto> productSpecDtos = new ArrayList<>();
-        List<OrderProduct> orderProducts = orderProductService.selectList(new EntityWrapper<OrderProduct>().where("order_id={0}", orderId));
-        if (orderProducts == null && orderProducts.size() == 0) {
-            return "";
-        }
-        for (OrderProduct orderProduct : orderProducts) {
-            ProductDto productDto = ProductLogic.GetProduct(orderProduct.getProductId());
-            ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(orderProduct.getProductSpecId());
-            productSpecDtos.add(productSpecDto);
-            productDto.setProductSpecDtos(productSpecDtos);
+        orderProductDtos.forEach(orderProductDto -> {
+            ProductDto productDto = ProductLogic.GetProduct(orderProductDto.getProductId());
             productDtos.add(productDto);
-        }
+        });
+
+        dto.setOrderProductDtos(orderProductDtos);
         dto.setProductDtos(productDtos);
+
         model.addAttribute("info", dto);
-        model.addAttribute("orderProducts", orderProducts);
-        model.addAttribute("productDtos", productDtos);
 
         return "admin/order/info";
     }

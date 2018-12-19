@@ -9,6 +9,7 @@ import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.enums.DeliveryStatus;
+import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.delivery.DeliveryBase;
 import com.jsj.member.ob.logic.delivery.DeliveryFactory;
@@ -64,8 +65,8 @@ public class DeliveryLogic extends BaseLogic {
     public static List<StockDto> GetDeliveryStock(int deliveryId) {
 
         EntityWrapper<DeliveryStock> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where("delivery_id={0}", deliveryId);
         entityWrapper.where("delete_time is null");
+        entityWrapper.where("delivery_id={0}", deliveryId);
 
         List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(entityWrapper);
 
@@ -124,6 +125,22 @@ public class DeliveryLogic extends BaseLogic {
     }
 
     /**
+     * 获得DeliveryStock
+     *
+     * @param deliverId
+     * @return
+     */
+    public static List<DeliveryStock> GetDeliveryStocks(int deliverId) {
+
+        EntityWrapper<DeliveryStock> wrapper = new EntityWrapper<>();
+        wrapper.where("delivery_id={0}", deliverId);
+
+        List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(wrapper);
+
+        return deliveryStocks;
+    }
+
+    /**
      * 实体转换
      *
      * @param delivery
@@ -147,13 +164,22 @@ public class DeliveryLogic extends BaseLogic {
         dto.setProvinceId(delivery.getProvinceId());
         dto.setContactName(delivery.getContactName());
         dto.setDistrictId(delivery.getDistrictId());
+        dto.setEffectiveDate(delivery.getEffectiveDate());
+
         dto.setOpenId(delivery.getOpenId());
         dto.setExpressNumber(delivery.getExpressNumber());
         dto.setMobile(delivery.getMobile());
         dto.setStatus(delivery.getStatus());
         dto.setTypeId(delivery.getTypeId());
         dto.setRemarks(delivery.getRemarks());
+
         dto.setDeliveryId(delivery.getDeliveryId());
+        dto.setCreateTime(delivery.getCreateTime());
+        dto.setPropertyType(PropertyType.valueOf(delivery.getPropertyTypeId()));
+        dto.setFlightNumber(delivery.getFlightNumber());
+        dto.setViphallName(delivery.getViphallName());
+        dto.setIdNumber(delivery.getIdNumber());
+        dto.setViphallId(delivery.getViphallId());
 
         return dto;
     }

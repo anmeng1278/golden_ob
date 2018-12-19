@@ -4,8 +4,10 @@ import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
+import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
+import com.jsj.member.ob.logic.StockLogic;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @ApiIgnore
 @Controller
@@ -33,6 +39,22 @@ public class DeliveryController extends BaseController {
         String openId = this.OpenId();
 
         List<DeliveryDto> deliveryDtos = DeliveryLogic.GetDelivery(openId);
+        for (DeliveryDto deliveryDto : deliveryDtos) {
+
+            List<Integer> stockIds = deliveryDto.getStockDtos().stream().map(StockDto::getStockId).collect(Collectors.toList());
+
+            deliveryDto.getStockDtos().forEach(stockDto -> {
+                Integer count = StockLogic.GetProductCount(stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
+                stockDto.setNumber(count);
+                    }
+            );
+
+            ArrayList<StockDto> stockDto = deliveryDto.getStockDtos().stream().collect(
+                    Collectors.collectingAndThen(
+                            Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(StockDto::getProductSpecId))), ArrayList::new));
+            deliveryDto.setStockDtos(stockDto);
+        }
+
         request.setAttribute("deliveryDtos", deliveryDtos);
 
         return "index/delivery";

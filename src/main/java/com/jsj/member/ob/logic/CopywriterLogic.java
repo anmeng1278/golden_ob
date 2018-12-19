@@ -29,9 +29,10 @@ public class CopywriterLogic extends BaseLogic {
      *
      * @return
      */
-    public static List<Copywriter> GetCopywriter() {
+    public static List<Copywriter> GetCopywriter(int typeId) {
 
         EntityWrapper<Copywriter> wrapper = new EntityWrapper<>();
+        wrapper.where("type_id={0}",typeId);
         wrapper.where("ifpass = 1 and delete_time is null");
         wrapper.where("UNIX_TIMESTAMP() between begin_time and end_time");
 
@@ -44,10 +45,10 @@ public class CopywriterLogic extends BaseLogic {
      * 随机分配一条文案
      * @return
      */
-    public static Copywriter GetOneCopywriter() {
+    public static Copywriter GetOneCopywriter(int typeId) {
 
         //获取所有有效的文案
-        List<Copywriter> copywriters = CopywriterLogic.GetCopywriter();
+        List<Copywriter> copywriters = CopywriterLogic.GetCopywriter(typeId);
         if (copywriters.size() == 0) {
             throw new TipException("暂时没有可用的文案");
         }

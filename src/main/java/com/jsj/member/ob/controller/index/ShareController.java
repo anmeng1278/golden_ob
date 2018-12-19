@@ -8,9 +8,14 @@ import com.jsj.member.ob.dto.api.gift.GiftStockDto;
 import com.jsj.member.ob.dto.api.gift.ReceivedGiftRequ;
 import com.jsj.member.ob.dto.api.gift.ReceivedGiftResp;
 import com.jsj.member.ob.dto.api.redpacket.OrderRedpacketCouponDto;
+import com.jsj.member.ob.entity.Copywriter;
+import com.jsj.member.ob.entity.Dict;
+import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.enums.GiftShareType;
 import com.jsj.member.ob.enums.GiftStatus;
 import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.logic.CopywriterLogic;
+import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.logic.GiftLogic;
 import com.jsj.member.ob.logic.RedpacketLogic;
 import com.jsj.member.ob.utils.EncryptUtils;
@@ -122,11 +127,26 @@ public class ShareController extends BaseController {
             //不是本人操作的分享，不允查看
             return this.Redirect("/");
         }
+        //文案类型
+        List<Dict> dicts = DictLogic.GetDicts(DictType.COPYWRITER, 3);
 
         String shareUrl = this.Url(String.format("/share/gift/%s/draw", obs), false);
         request.setAttribute("shareUrl", shareUrl);
         request.setAttribute("giftDto", giftDto);
+        request.setAttribute("dicts", dicts);
         return "index/giftConfirm";
+    }
+
+    @PostMapping(value = {"/copywrite"})
+    @ResponseBody
+    public RestResponseBo getCopywrite(HttpServletRequest request){
+
+        int typeId = Integer.parseInt(request.getParameter("typeId"));
+
+        Copywriter copywriter = CopywriterLogic.GetOneCopywriter(typeId);
+
+        return RestResponseBo.ok(copywriter);
+
     }
 
 

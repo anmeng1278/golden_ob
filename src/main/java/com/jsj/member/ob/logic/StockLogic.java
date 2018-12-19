@@ -482,58 +482,24 @@ public class StockLogic extends BaseLogic {
 
     }
 
+
     /**
-     * @param stock
+     * 获得库存中没样商品的数量
+     * @param productId
+     * @param productSpecId
+     * @param stockIds
      * @return
      */
-    public static StockDto GetStockDto(StockDto stock, List<Integer> stockIds) {
+    public static Integer GetProductCount(int productId,int productSpecId,List<Integer> stockIds){
 
-        StockDto stockDto = new StockDto();
+        EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
+        productWrapper.where("product_id={0}", productId);
+        productWrapper.where("product_spec_id={0}", productSpecId);
+        productWrapper.in("stock_id", stockIds);
+        int number = stockLogic.stockService.selectCount(productWrapper);
 
-        ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(stock.getProductSpecId());
-        WechatDto wechatDto = WechatLogic.GetWechat(stock.getOpenId());
-        stockDto.setWechatDto(wechatDto);
-
-        EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
-        wrapper.where("stock_id={0}", stock.getStockId());
-        wrapper.orderBy("create_time desc");
-
-        GiftStock giftStock = stockLogic.giftStockService.selectOne(wrapper);
-
-        stockDto.setProductSpecDto(productSpecDto);
-
-        if (stockIds.size() != 0 && stockIds != null) {
-            //获得库存中每样商品总量
-            EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
-            productWrapper.where("product_id={0}", stock.getProductId());
-            productWrapper.in("stock_id", stockIds);
-            int number = stockLogic.stockService.selectCount(productWrapper);
-            stockDto.setNumber(number);
-        } else {
-            stockDto.setNumber(1);
-        }
-        stockDto.setOpenId(stock.getOpenId());
-        stockDto.setOrderId(stock.getOrderId());
-        stockDto.setProductId(stock.getProductId());
-
-        stockDto.setStockId(stock.getStockId());
-        stockDto.setProductSpecId(stock.getProductSpecId());
-        stockDto.setStockStatus(stock.getStockStatus());
-        stockDto.setStockType(stock.getStockType());
-        stockDto.setCreateTime(stock.getCreateTime());
-
-        if (stock.getParentStockId() > 0) {
-            stockDto.setParentStockId(stock.getParentStockId());
-        }
-
-        if (giftStock != null) {
-            GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
-            stockDto.setGiftDto(giftDto);
-        }
-        return stockDto;
-
+        return number;
     }
-
 
     /**
      * 实体转换

@@ -28,8 +28,8 @@
                         <select name="propertyTypeId" title="商品属性">
                             <option value="">商品属性</option>
                             <th:block th:each="property : ${productProperty}">
-                                <option th:value="${property.dictId}" th:text="${property.dictName}"
-                                        th:selected="${property.dictId == propertyTypeId}"></option>
+                                <option th:value="${property.value}" th:text="${property.message}"
+                                        th:selected="${property.value == propertyTypeId}"></option>
                             </th:block>
                         </select>
                     </div>
