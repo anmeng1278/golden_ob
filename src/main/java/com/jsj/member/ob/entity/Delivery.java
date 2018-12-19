@@ -1,12 +1,11 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Delivery 提货表实体类
@@ -70,13 +69,13 @@ public class Delivery implements Serializable {
     /**
      * 贵宾厅编号
      */
-	@TableField("viphall_id")
-	private Integer viphallId;
+	@TableField("airport_code")
+	private String airportCode;
     /**
      * 贵宾厅名称
      */
-	@TableField("viphall_name")
-	private String viphallName;
+	@TableField("airport_name")
+	private String airportName;
     /**
      * 详细地址
      */
@@ -202,20 +201,20 @@ public class Delivery implements Serializable {
 		this.flightNumber = flightNumber;
 	}
 
-	public Integer getViphallId() {
-		return viphallId;
+	public String getAirportCode() {
+		return airportCode;
 	}
 
-	public void setViphallId(Integer viphallId) {
-		this.viphallId = viphallId;
+	public void setAirportCode(String airportCode) {
+		this.airportCode = airportCode;
 	}
 
-	public String getViphallName() {
-		return viphallName;
+	public String getAirportName() {
+		return airportName;
 	}
 
-	public void setViphallName(String viphallName) {
-		this.viphallName = viphallName;
+	public void setAirportName(String airportName) {
+		this.airportName = airportName;
 	}
 
 	public String getAddress() {
@@ -304,8 +303,8 @@ public class Delivery implements Serializable {
 			", mobile=" + mobile +
 			", idNumber=" + idNumber +
 			", flightNumber=" + flightNumber +
-			", viphallId=" + viphallId +
-			", viphallName=" + viphallName +
+			", airportCode=" + airportCode +
+			", airportName=" + airportName +
 			", address=" + address +
 			", effectiveDate=" + effectiveDate +
 			", remarks=" + remarks +

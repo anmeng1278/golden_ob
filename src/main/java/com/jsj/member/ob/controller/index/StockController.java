@@ -181,14 +181,7 @@ public class StockController extends BaseController {
         String address = request.getParameter("address");
         String effectiveDate = request.getParameter("effectiveDate");
 
-        int vipHallId = 0;
-        String viphallName = "";
         DeliveryType deliveryType = DeliveryType.valueOf(Integer.parseInt(request.getParameter("deliveryType")));
-
-        if (!StringUtils.isEmpty(request.getParameter("viphallId"))) {
-            vipHallId = Integer.parseInt(request.getParameter("viphallId"));
-            viphallName = request.getParameter("viphallName");
-        }
 
         CreateDeliveryRequ requ = new CreateDeliveryRequ();
 
@@ -205,8 +198,8 @@ public class StockController extends BaseController {
         requ.setProvinceId(provinceId);
 
         requ.setUseProductDtos(useProductDtos);
-        requ.setViphallId(vipHallId);
-        requ.setViphallName(viphallName);
+        requ.setAirportCode(requ.getAirportCode());
+        requ.setAirportName(requ.getAirportName());
 
         CreateDeliveryResp resp = DeliveryLogic.CreateDelivery(requ);
         return RestResponseBo.ok("操作成功", this.Url("/delivery"), resp);

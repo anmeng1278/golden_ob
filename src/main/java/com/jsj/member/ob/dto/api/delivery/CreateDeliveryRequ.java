@@ -39,9 +39,9 @@ public class CreateDeliveryRequ {
 
     private String flightNumber;
 
-    private int viphallId;
+    private String airportCode;
 
-    private String viphallName;
+    private String airportName;
 
     private String address;
 
@@ -112,20 +112,20 @@ public class CreateDeliveryRequ {
         this.flightNumber = flightNumber;
     }
 
-    public int getViphallId() {
-        return viphallId;
+    public String getAirportCode() {
+        return airportCode;
     }
 
-    public void setViphallId(int viphallId) {
-        this.viphallId = viphallId;
+    public void setAirportCode(String airportCode) {
+        this.airportCode = airportCode;
     }
 
-    public String getViphallName() {
-        return viphallName;
+    public String getAirportName() {
+        return airportName;
     }
 
-    public void setViphallName(String viphallName) {
-        this.viphallName = viphallName;
+    public void setAirportName(String airportName) {
+        this.airportName = airportName;
     }
 
     public String getAddress() {

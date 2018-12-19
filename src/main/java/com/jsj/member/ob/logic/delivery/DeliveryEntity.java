@@ -69,8 +69,8 @@ public class DeliveryEntity extends DeliveryBase {
             if (StringUtils.isEmpty(requ.getEffectiveDate())) {
                 throw new TipException("请选择自提时间");
             }
-            if (requ.getViphallId() <= 0) {
-                throw new TipException("请选择自提地址");
+            if (StringUtils.isEmpty(requ.getAirportCode())) {
+                throw new TipException("请选择自提网点");
             }
         }
 
@@ -96,8 +96,8 @@ public class DeliveryEntity extends DeliveryBase {
         delivery.setPropertyTypeId(this.getPropertyType().getValue());
         delivery.setRemarks(requ.getRemarks());
         delivery.setTypeId(requ.getDeliveryType().getValue());
-        delivery.setViphallId(requ.getViphallId());
-        delivery.setViphallName(requ.getViphallName());
+        delivery.setAirportCode(requ.getAirportCode());
+        delivery.setAirportName(requ.getAirportName());
 
         //自提时间、生效日期
         delivery.setEffectiveDate(requ.getEffectiveDate());

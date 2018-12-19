@@ -81,14 +81,14 @@ public class DeliveryDto {
     private String flightNumber;
 
     /**
-     * 贵宾厅编号
+     * 机场三字码
      */
-    private Integer viphallId;
+    private String airportCode;
 
     /**
-     * 贵宾厅名称
+     * 机场名称
      */
-    private String viphallName;
+    private String airportName;
 
     /**
      * 创建时间
@@ -107,14 +107,6 @@ public class DeliveryDto {
      * 配送的商品信息
      */
     private List<ProductDto> productDtos;
-
-    public List<ProductDto> getProductDtos() {
-        return productDtos;
-    }
-
-    public void setProductDtos(List<ProductDto> productDtos) {
-        this.productDtos = productDtos;
-    }
 
     public Integer getDeliveryId() {
         return deliveryId;
@@ -156,6 +148,14 @@ public class DeliveryDto {
         this.typeId = typeId;
     }
 
+    public PropertyType getPropertyType() {
+        return propertyType;
+    }
+
+    public void setPropertyType(PropertyType propertyType) {
+        this.propertyType = propertyType;
+    }
+
     public String getContactName() {
         return contactName;
     }
@@ -170,30 +170,6 @@ public class DeliveryDto {
 
     public void setMobile(Long mobile) {
         this.mobile = mobile;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    public List<StockDto> getStockDtos() {
-        return stockDtos;
-    }
-
-    public void setStockDtos(List<StockDto> stockDtos) {
-        this.stockDtos = stockDtos;
     }
 
     public Integer getProvinceId() {
@@ -220,12 +196,20 @@ public class DeliveryDto {
         this.districtId = districtId;
     }
 
-    public PropertyType getPropertyType() {
-        return propertyType;
+    public String getAddress() {
+        return address;
     }
 
-    public void setPropertyType(PropertyType propertyType) {
-        this.propertyType = propertyType;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     public Integer getPropertyTypeId() {
@@ -252,20 +236,20 @@ public class DeliveryDto {
         this.flightNumber = flightNumber;
     }
 
-    public Integer getViphallId() {
-        return viphallId;
+    public String getAirportCode() {
+        return airportCode;
     }
 
-    public void setViphallId(Integer viphallId) {
-        this.viphallId = viphallId;
+    public void setAirportCode(String airportCode) {
+        this.airportCode = airportCode;
     }
 
-    public String getViphallName() {
-        return viphallName;
+    public String getAirportName() {
+        return airportName;
     }
 
-    public void setViphallName(String viphallName) {
-        this.viphallName = viphallName;
+    public void setAirportName(String airportName) {
+        this.airportName = airportName;
     }
 
     public Integer getCreateTime() {
@@ -276,11 +260,27 @@ public class DeliveryDto {
         this.createTime = createTime;
     }
 
+    public List<StockDto> getStockDtos() {
+        return stockDtos;
+    }
+
+    public void setStockDtos(List<StockDto> stockDtos) {
+        this.stockDtos = stockDtos;
+    }
+
     public String getEffectiveDate() {
         return effectiveDate;
     }
 
     public void setEffectiveDate(String effectiveDate) {
         this.effectiveDate = effectiveDate;
+    }
+
+    public List<ProductDto> getProductDtos() {
+        return productDtos;
+    }
+
+    public void setProductDtos(List<ProductDto> productDtos) {
+        this.productDtos = productDtos;
     }
 }

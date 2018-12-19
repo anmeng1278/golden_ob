@@ -139,7 +139,7 @@
 
                 $("#SelfCity").html(airportName);
                 $(":hidden[name='airportName']").val(airportName);
-                $(":hidden[name='airportId']").val(airportId);
+                $(":hidden[name='airportCode']").val(airportCode);
 
             });
 
@@ -264,7 +264,7 @@
                                 <span class="address-lable">自提网点：</span>
                                 <p class="address-rt">
                                     <span id="SelfCity" class="address-input">选择自提网点</span>
-                                    <input type="hidden" name="airportId" value="0"/>
+                                    <input type="hidden" name="airportCode" value=""/>
                                     <input type="hidden" name="airportName" value=""/>
                                 </p>
                             </div>

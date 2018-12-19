@@ -10,8 +10,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = App.class)
 @WebAppConfiguration
@@ -19,7 +17,7 @@ public class CopywriterLogicTest {
 
     @Test
     public void getCopywriter() {
-        List<Copywriter> copywriters = CopywriterLogic.GetCopywriter();
+        List<Copywriter> copywriters = CopywriterLogic.GetCopywriter(1);
         for (Copywriter copywriter : copywriters) {
             copywriters.forEach(s->s.getRemark());
         }
@@ -27,7 +25,7 @@ public class CopywriterLogicTest {
 
     @Test
     public void getOneCopywriter(){
-        Copywriter copywriter = CopywriterLogic.GetOneCopywriter();
+        Copywriter copywriter = CopywriterLogic.GetOneCopywriter(1);
         System.out.println(copywriter.getRemark());
     }
 }

@@ -177,9 +177,9 @@ public class DeliveryLogic extends BaseLogic {
         dto.setCreateTime(delivery.getCreateTime());
         dto.setPropertyType(PropertyType.valueOf(delivery.getPropertyTypeId()));
         dto.setFlightNumber(delivery.getFlightNumber());
-        dto.setViphallName(delivery.getViphallName());
+        dto.setAirportCode(delivery.getAirportCode());
         dto.setIdNumber(delivery.getIdNumber());
-        dto.setViphallId(delivery.getViphallId());
+        dto.setAirportName(delivery.getAirportName());
 
         return dto;
     }
