@@ -7,6 +7,7 @@ import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.DictType;
+import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
@@ -41,10 +42,9 @@ public class AdminActivityController {
     private DictService dictService;
 
 
-    //活动活动列表
 
     /**
-     * 查询所有字典列表
+     * 查询所有活动活动列表
      *
      * @param page  当前页
      * @param limit 每页显示条数
@@ -305,10 +305,7 @@ public class AdminActivityController {
         List<Dict> productType = dictService.selectList(typeWrapper);
 
         //商品属性
-        EntityWrapper<Dict> propertyWrapper = new EntityWrapper<>();
-        propertyWrapper.where("parent_dict_id={0} and delete_time is null", DictType.PRODUCTPERPROTY.getValue());
-        List<Dict> productProperty = dictService.selectList(propertyWrapper);
-
+        List<PropertyType> productProperty = Arrays.asList(PropertyType.values());
 
         request.setAttribute("infos", new CCPage<Dict>(pp, limit));
         request.setAttribute("typeId", typeId);
@@ -380,11 +377,9 @@ public class AdminActivityController {
 
         if (method.equals("ifpass")) {
             activity.setIfpass(!activity.getIfpass());
-            //activity.setUpdateTime(DateUtils.getCurrentUnixTime());
             activityService.updateById(activity);
         }
         if (method.equals("delete")) {
-            //activity.setUpdateTime(DateUtils.getCurrentUnixTime());
             activity.setDeleteTime(DateUtils.getCurrentUnixTime());
             activityService.updateById(activity);
         }

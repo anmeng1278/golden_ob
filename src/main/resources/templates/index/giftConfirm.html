@@ -26,7 +26,7 @@
             $("a[data-share-type]").click(function () {
 
                 //动态获取数据
-                var blessings =  $("div.head-wrap-item p.blessings").html();
+                var blessings = $("div.head-wrap-item p.blessings").html();
                 var shareType = $(this).attr("data-share-type");
 
                 TX.CORE.p({
@@ -61,14 +61,19 @@
             function getCopywriter() {
 
                 var typeId = $("li[class='head-nav-cur']").attr("data-type-id");
-                console.log(typeId);
 
-                //TODO ajax通过 TypeId 请求返回方案内容
-                var content = "生日快乐 000";
-                $("div.head-wrap-item p.blessings").html(content);
-
+                TX.CORE.p({
+                    url: "/share/copywrite",
+                    data: {typeId: typeId},
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            $("div.head-wrap-item p.blessings").html(resp.datas.remark);
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
             }
-
         });
 
         function shareSuccess() {
@@ -112,9 +117,11 @@
             <span class="head-line-one"></span>
             <div class="head-con">
                 <ul class="head-nav">
-                    <li data-type-id="901" class="head-nav-cur">寄一份想思</li>
-                    <li data-type-id="902">生日快乐</li>
-                    <li data-type-id="903">新年祝福</li>
+                    <th:block th:if="${!#lists.isEmpty(dicts)}" th:each="info:${dicts}">
+                        <li th:attr="data-type-id=${info.dictId}" class="head-nav-cur" th:text="${info.dictName}">
+                            寄一份想思
+                        </li>
+                    </th:block>
                 </ul>
                 <div class="head-wrap clear">
                     <div class="head-wrap-item" style="display: block">

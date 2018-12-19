@@ -1,16 +1,13 @@
 package com.jsj.member.ob.logic;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
-import com.jsj.member.ob.dto.api.express.ExpressRequ;
-import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
-import com.jsj.member.ob.entity.Stock;
 import com.jsj.member.ob.enums.DeliveryStatus;
+import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
@@ -19,11 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class DeliveryLogic extends BaseLogic {
@@ -125,6 +119,21 @@ public class DeliveryLogic extends BaseLogic {
     }
 
     /**
+     * 获得DeliveryStock
+     * @param deliverId
+     * @return
+     */
+    public static List<DeliveryStock> GetDeliveryStocks(int deliverId){
+
+        EntityWrapper<DeliveryStock> wrapper = new EntityWrapper<>();
+        wrapper.where("delivery_id={0}",deliverId);
+
+        List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(wrapper);
+
+        return deliveryStocks;
+    }
+
+    /**
      * 实体转换
      * @param delivery
      * @return
@@ -147,13 +156,21 @@ public class DeliveryLogic extends BaseLogic {
         dto.setProvinceId(delivery.getProvinceId());
         dto.setContactName(delivery.getContactName());
         dto.setDistrictId(delivery.getDistrictId());
+
         dto.setOpenId(delivery.getOpenId());
         dto.setExpressNumber(delivery.getExpressNumber());
         dto.setMobile(delivery.getMobile());
         dto.setStatus(delivery.getStatus());
         dto.setTypeId(delivery.getTypeId());
         dto.setRemarks(delivery.getRemarks());
+
         dto.setDeliveryId(delivery.getDeliveryId());
+        dto.setCreateTime(delivery.getCreateTime());
+        dto.setPropertyType(PropertyType.valueOf(delivery.getPropertyTypeId()));
+        dto.setFlightNumber(delivery.getFlightNumber());
+        dto.setViphallName(delivery.getViphallName());
+        dto.setIdNumber(delivery.getIdNumber());
+        dto.setViphallId(delivery.getViphallId());
 
         return dto;
     }

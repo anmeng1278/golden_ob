@@ -4,16 +4,15 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
+import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.dict.DictDto;
 import com.jsj.member.ob.dto.api.dict.GetAreasResp;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
-import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
-import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
@@ -33,7 +32,9 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @ApiIgnore
 @Controller
@@ -113,6 +114,8 @@ public class AdminDeliveryController {
 
         Delivery delivery = deliveryService.selectById(deliveryId);
 
+        DeliveryDto deliveryDto = DeliveryLogic.ToDto(delivery);
+
         //查询配送的物流信息
         List data = null;
         if (!StringUtils.isBlank(delivery.getExpressNumber())) {
@@ -123,17 +126,15 @@ public class AdminDeliveryController {
         }
 
         //配送的库存
-        List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(deliveryId);
-
         List<OrderProduct> orderProducts = new ArrayList<>();
-        stockDtos.stream().forEach(s -> {
+        deliveryDto.getStockDtos().stream().forEach(s -> {
             OrderProduct orderProduct = orderProductService.selectOne(new EntityWrapper<OrderProduct>().where("order_id={0} and product_id={1} and product_spec_id={2}", s.getOrderId(), s.getProductId(), s.getProductSpecId()));
             orderProducts.add(orderProduct);
         });
 
         model.addAttribute("orderProducts", orderProducts);
         model.addAttribute("data", data);
-        model.addAttribute("info", delivery);
+        model.addAttribute("info", deliveryDto);
         model.addAttribute("deliveryId", deliveryId);
         return "admin/delivery/info";
 

@@ -65,6 +65,37 @@ public class DeliveryDto {
     private String remarks;
 
     /**
+     * 商品属性  1.实物 2.活动码 3.卡
+     */
+    private Integer propertyTypeId;
+
+    /**
+     * 证件号(开卡时使用)
+     */
+    private String idNumber;
+
+
+    /**
+     * 航班号
+     */
+    private String flightNumber;
+
+    /**
+     * 贵宾厅编号
+     */
+    private Integer viphallId;
+
+    /**
+     * 贵宾厅名称
+     */
+    private String viphallName;
+
+    /**
+     * 创建时间
+     */
+    private Integer createTime;
+
+    /**
      * 配送的库存信息
      */
     private List<StockDto> stockDtos;
@@ -192,5 +223,53 @@ public class DeliveryDto {
 
     public void setPropertyType(PropertyType propertyType) {
         this.propertyType = propertyType;
+    }
+
+    public Integer getPropertyTypeId() {
+        return propertyTypeId;
+    }
+
+    public void setPropertyTypeId(Integer propertyTypeId) {
+        this.propertyTypeId = propertyTypeId;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
+
+    public String getFlightNumber() {
+        return flightNumber;
+    }
+
+    public void setFlightNumber(String flightNumber) {
+        this.flightNumber = flightNumber;
+    }
+
+    public Integer getViphallId() {
+        return viphallId;
+    }
+
+    public void setViphallId(Integer viphallId) {
+        this.viphallId = viphallId;
+    }
+
+    public String getViphallName() {
+        return viphallName;
+    }
+
+    public void setViphallName(String viphallName) {
+        this.viphallName = viphallName;
+    }
+
+    public Integer getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
     }
 }

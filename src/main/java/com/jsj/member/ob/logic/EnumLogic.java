@@ -156,12 +156,21 @@ public class EnumLogic extends BaseLogic {
     }
 
     /**
-     * 赠送文案类型
+     * 轮播图
      * @param value
      * @return
      */
     public static BannerType GetBannerType(Integer value) {
         return BannerType.valueOf(value);
+    }
+
+    /**
+     * 商品属性
+     * @param value
+     * @return
+     */
+    public static PropertyType GetPropertyType(Integer value) {
+        return PropertyType.valueOf(value);
     }
 
 }

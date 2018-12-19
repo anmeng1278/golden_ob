@@ -21,7 +21,7 @@
                         <select name="typeId" title="文案类型">
                             <option value="">文案类型</option>
                             <th:block th:each="copywriterType : ${copywriterTypes}">
-                                <option th:value="${copywriterType.value}" th:text="${copywriterType.message}" th:selected="${copywriterType.value == typeId}"></option>
+                                <option th:value="${copywriterType.dictId}" th:text="${copywriterType.dictName}" th:selected="${copywriterType.dictId == typeId}"></option>
                             </th:block>
                         </select>
                     </div>
@@ -59,7 +59,7 @@
                         <td th:text="${info.copywriterId}"></td>
                         <td th:text="${info.remark}"></td>
                         <td>
-                            <th:block th:text="${enumLogic.GetCopywriterType(info.typeId).message}"></th:block>
+                            <th:block th:text="${dictLogic.GetDict(info.typeId).dictName}"></th:block>
                         </td>
                         <td>
                             <th:block

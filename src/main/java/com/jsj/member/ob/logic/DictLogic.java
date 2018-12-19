@@ -1,6 +1,7 @@
 package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.dto.api.dict.DictDto;
 import com.jsj.member.ob.dto.api.dict.GetAreasRequ;
 import com.jsj.member.ob.dto.api.dict.GetAreasResp;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -62,6 +64,26 @@ public class DictLogic extends BaseLogic {
         entityWrapper.orderBy("sort asc, update_time desc");
 
         return dictLogic.dictService.selectList(entityWrapper);
+
+    }
+
+    public static List<Dict> GetDicts(DictType dictType,int limit){
+
+        EntityWrapper<Dict> entityWrapper = new EntityWrapper<>();
+
+        entityWrapper.where("parent_dict_id={0}", dictType.getValue());
+        entityWrapper.where("delete_time is null");
+        entityWrapper.orderBy("sort asc, update_time desc");
+
+        Page<Dict> dictPage = dictLogic.dictService.selectPage(new Page<Dict>(1, limit), entityWrapper);
+
+        List<Dict> dicts = new ArrayList<>();
+
+        for (Dict dict : dictPage.getRecords()){
+            dicts.add(DictLogic.GetDict(dict.getDictId()));
+        }
+
+        return  dicts;
 
     }
 

@@ -18,8 +18,8 @@
                 <select name="typeId" lay-verify="req" title="所属类型" th:disabled="${info.typeId>0}" >
                     <option value="">请选择</option>
                     <th:block th:each="pps : ${copywriterTypes}">
-                        <option th:value="${pps.value}" th:selected="${info.typeId==pps.value}"
-                                th:text="${pps.message}"></option>
+                        <option th:value="${pps.dictId}" th:selected="${info.typeId==pps.dictId}"
+                                th:text="${pps.dictName}"></option>
                     </th:block>
                 </select>
             </div>

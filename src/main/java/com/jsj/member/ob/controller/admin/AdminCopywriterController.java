@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.entity.Copywriter;
+import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.enums.CopywriterType;
+import com.jsj.member.ob.enums.DictType;
+import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.service.CopywriterService;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
@@ -57,7 +60,7 @@ public class AdminCopywriterController {
         Page<Copywriter> pageInfo = new Page<>();
         Page<Copywriter> pp = copywriterService.selectPage(pageInfo, wrapper);
 
-        List<CopywriterType> copywriterTypes = Arrays.asList(CopywriterType.values());
+        List<Dict> copywriterTypes = DictLogic.GetDicts(DictType.COPYWRITER);
 
         model.addAttribute("infos",new CCPage<Copywriter>(pp,limit));
         model.addAttribute("typeId",typeId);
@@ -84,7 +87,7 @@ public class AdminCopywriterController {
             copywriter = copywriterService.selectById(copywriterId);
         }
 
-        List<CopywriterType> copywriterTypes = Arrays.asList(CopywriterType.values());
+        List<Dict> copywriterTypes = DictLogic.GetDicts(DictType.COPYWRITER);
 
         model.addAttribute("copywriterTypes", copywriterTypes);
         model.addAttribute("info", copywriter);

@@ -11,6 +11,7 @@ import com.jsj.member.ob.entity.ProductImg;
 import com.jsj.member.ob.entity.ProductSpec;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.enums.ProductImgType;
+import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.ProductImgService;
@@ -29,6 +30,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ApiIgnore
@@ -64,6 +66,7 @@ public class AdminProductController {
                         @RequestParam(value = "ifpass", defaultValue = "") Integer ifpass,
                         @RequestParam(value = "keys", defaultValue = "") String keys,
                         @RequestParam(value = "typeId", defaultValue = "0") int typeId,
+                        @RequestParam(value = "propertyTypeId", defaultValue = "0") int propertyTypeId,
                         HttpServletRequest request) {
 
         EntityWrapper<Product> wrapper = new EntityWrapper<Product>();
@@ -75,10 +78,14 @@ public class AdminProductController {
             wrapper.where("ifpass={0}", ifpass);
         }
         wrapper.where(typeId > 0, "type_id={0}", typeId);
+        wrapper.where(propertyTypeId > 0, "property_type_id={0}", propertyTypeId);
         wrapper.orderBy("sort asc, update_time desc");
 
         Page<Product> pageInfo = new Page<>(page, limit);
         Page<Product> pp = productService.selectPage(pageInfo, wrapper);
+
+        //属性
+        List<PropertyType> productPerproties = Arrays.asList(PropertyType.values());
 
         //商品分类
         List<Dict> productTypes = DictLogic.GetDicts(DictType.PRODUCTTYPE);
@@ -89,7 +96,9 @@ public class AdminProductController {
         request.setAttribute("isSellout", isSellout);
         request.setAttribute("ifpass", ifpass);
         request.setAttribute("productTypes", productTypes);
+        request.setAttribute("productPerproties", productPerproties);
         request.setAttribute("typeId", typeId);
+        request.setAttribute("propertyTypeId", propertyTypeId);
 
 
         return "admin/product/index";
@@ -107,7 +116,8 @@ public class AdminProductController {
     public String info(@PathVariable("productId") Integer productId, HttpServletRequest request) {
 
         //属性
-        List<Dict> productPerproties = DictLogic.GetDicts(DictType.PRODUCTPERPROTY);
+        List<PropertyType> productPerproties = Arrays.asList(PropertyType.values());
+
         //商品分类
         List<Dict> productTypes = DictLogic.GetDicts(DictType.PRODUCTTYPE);
 
