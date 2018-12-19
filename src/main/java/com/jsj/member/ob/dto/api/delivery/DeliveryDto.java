@@ -108,6 +108,23 @@ public class DeliveryDto {
      */
     private List<ProductDto> productDtos;
 
+    private String statusName;
+
+    public String getStatusName() {
+        if(this.typeId == 1){
+            switch (this.status){
+                case 0:
+                    return "未提取";
+                case 10:
+                case 20:
+                    return "已提取";
+            }
+        }
+
+        return "未知";
+    }
+
+
     public Integer getDeliveryId() {
         return deliveryId;
     }

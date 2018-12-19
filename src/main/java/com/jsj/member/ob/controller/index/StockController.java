@@ -153,6 +153,11 @@ public class StockController extends BaseController {
         return "index/stockUse1";
     }
 
+    /**
+     * 实物使用
+     * @param request
+     * @return
+     */
     @PostMapping(value = {"/use1"})
     @ResponseBody
     public RestResponseBo saveStockUse1(HttpServletRequest request) {
@@ -181,6 +186,9 @@ public class StockController extends BaseController {
         String address = request.getParameter("address");
         String effectiveDate = request.getParameter("effectiveDate");
 
+        String airportCode = request.getParameter("airportCode");
+        String airportName = request.getParameter("airportName");
+
         DeliveryType deliveryType = DeliveryType.valueOf(Integer.parseInt(request.getParameter("deliveryType")));
 
         CreateDeliveryRequ requ = new CreateDeliveryRequ();
@@ -198,8 +206,8 @@ public class StockController extends BaseController {
         requ.setProvinceId(provinceId);
 
         requ.setUseProductDtos(useProductDtos);
-        requ.setAirportCode(requ.getAirportCode());
-        requ.setAirportName(requ.getAirportName());
+        requ.setAirportCode(airportCode);
+        requ.setAirportName(airportName);
 
         CreateDeliveryResp resp = DeliveryLogic.CreateDelivery(requ);
         return RestResponseBo.ok("操作成功", this.Url("/delivery"), resp);

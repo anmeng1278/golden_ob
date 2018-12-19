@@ -19,6 +19,11 @@
     <div class="main">
 
         <th:block th:each="info:${deliveryDtos}">
+
+
+            <th:block th:text="${info.getStatusName()}"></th:block>
+
+
             <!-- 已发货 ,配送方式配送-->
             <th:block th:if="${info.status == 10 && info.typeId == 2}">
 
