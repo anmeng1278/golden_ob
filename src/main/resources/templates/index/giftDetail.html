@@ -64,7 +64,7 @@
         <!--blessings end-->
 
         <!--give-con start-->
-        <div class="give-con" th:if="${giftDto.giftStatus == 30}">
+        <div class="give-con" th:if="${giftDto.giftStatus == 30 || #lists.isEmpty(receiveStocks)}">
             <h2 class="give-con-title">礼物等待领取中</h2>
             <p class="give-con-tips">礼物赠送未被领取，24小时后退回原账户商品库；</p>
         </div>

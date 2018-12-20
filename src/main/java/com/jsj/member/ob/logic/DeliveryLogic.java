@@ -196,4 +196,31 @@ public class DeliveryLogic extends BaseLogic {
         DeliveryBase deliveryBase = DeliveryFactory.GetInstance(requ.getPropertyType());
         return deliveryBase.CreateDelivery(requ);
     }
+
+    /**
+     * 获得配送集合
+     * @param deliveryStatus
+     * @param deliveryType
+     * @return
+     */
+    public static List<Delivery> GetDelivery(DeliveryStatus deliveryStatus,DeliveryType deliveryType,PropertyType propertyType){
+
+        EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null");
+
+        if(deliveryStatus != null){
+            wrapper.where("status = {0} ",deliveryStatus.getValue());
+        }
+        if(deliveryType != null){
+            wrapper.where("type_id = {0}",deliveryType);
+        }
+        if(propertyType != null){
+            wrapper.where("property_type_id = {0}",propertyType);
+        }
+
+        List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
+
+        return deliveries;
+
+    }
 }

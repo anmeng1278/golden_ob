@@ -21,12 +21,15 @@ import com.jsj.member.ob.service.StockFlowService;
 import com.jsj.member.ob.service.StockService;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -485,12 +488,13 @@ public class StockLogic extends BaseLogic {
 
     /**
      * 获得库存中没样商品的数量
+     *
      * @param productId
      * @param productSpecId
      * @param stockIds
      * @return
      */
-    public static Integer GetProductCount(int productId,int productSpecId,List<Integer> stockIds){
+    public static Integer GetProductCount(int productId, int productSpecId, List<Integer> stockIds) {
 
         EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
         productWrapper.where("product_id={0}", productId);
@@ -551,4 +555,26 @@ public class StockLogic extends BaseLogic {
         return stockDto;
     }
 
+
+    /**
+     * 库存数据去重计算数量
+     *
+     * @param lists
+     * @return
+     */
+    public static List<StockDto> FilterData(List<StockDto> lists) {
+
+        List<Integer> stockIds = lists.stream().map(StockDto::getStockId).collect(Collectors.toList());
+
+        lists.forEach(stockDto -> {
+            Integer count = StockLogic.GetProductCount(stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
+            stockDto.setNumber(count);
+        });
+
+        ArrayList<StockDto> stockDtos = lists.stream().collect(
+                Collectors.collectingAndThen(
+                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(StockDto::getProductSpecId))), ArrayList::new));
+
+        return stockDtos;
+    }
 }

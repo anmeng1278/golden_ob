@@ -59,6 +59,21 @@
                 </div>
             </th:block>
 
+
+            <!--活动说明 start-->
+            <div class="IllustrateLayer" style="display: none;">
+                <div class="IllustrateLayerCon">
+                    <h2 class="IllustrateTitle">使用说明</h2>
+                    <ul class="IllustrateList">
+                        <li th:text="${info.couponDto.instruction}"></li>
+                    </ul>
+                </div>
+                <p class="closeBtn_p">
+                    <img th:src="${ob.Img('/index/images/rule_close.png')}" alt="1" class="four_close"/>
+                </p>
+            </div>
+            <!--活动说明 end-->
+
         </th:block>
 
     </div>

@@ -4,6 +4,7 @@ import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.logic.GiftLogic;
+import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.service.GiftStockService;
 import com.jsj.member.ob.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @ApiIgnore
 @Controller
@@ -65,10 +70,15 @@ public class GiftController extends BaseController {
         GiftDto giftDto = GiftLogic.GetGift(giftId);
 
         //赠送的库存
-        List<StockDto> giveStocks = GiftLogic.GetGiftStocks(giftId);
+        List<StockDto> giveStock = GiftLogic.GetGiftStocks(giftId);
+        //去重计算数量
+        List<StockDto> giveStocks = StockLogic.FilterData(giveStock);
+
 
         //领取的库存
-        List<StockDto> receiveStocks = GiftLogic.GetGiftRecevied(null, giftId);
+        List<StockDto> receiveStock = GiftLogic.GetGiftRecevied(null, giftId);
+        //去重计算数量
+        List<StockDto> receiveStocks = StockLogic.FilterData(receiveStock);
 
         request.setAttribute("receiveStocks", receiveStocks);
         request.setAttribute("giveStocks", giveStocks);
@@ -92,10 +102,15 @@ public class GiftController extends BaseController {
         GiftDto giftDto = GiftLogic.GetGift(giftId);
 
         //赠送的库存
-        List<StockDto> giveStocks = GiftLogic.GetGiftStocks(giftId);
+        List<StockDto> giveStock = GiftLogic.GetGiftStocks(giftId);
+        //去重计算数量
+        List<StockDto> giveStocks = StockLogic.FilterData(giveStock);
+
 
         //领取的库存
-        List<StockDto> receiveStocks = GiftLogic.GetGiftRecevied(null, giftId);
+        List<StockDto> receiveStock = GiftLogic.GetGiftRecevied(null, giftId);
+        //去重计算数量
+        List<StockDto> receiveStocks = StockLogic.FilterData(receiveStock);
 
         request.setAttribute("receiveStocks", receiveStocks);
         request.setAttribute("giveStocks", giveStocks);

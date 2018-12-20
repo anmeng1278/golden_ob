@@ -116,7 +116,13 @@ public class OrderLogic extends BaseLogic {
     public static List<Integer> CancelOrder() {
 
         EntityWrapper<Order> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where("status={0}", OrderStatus.UNPAY.getValue());
+
+        List list = new ArrayList();
+        list.add(OrderStatus.UNPAY.getValue());
+        list.add(OrderStatus.PAYFAIL.getValue());
+
+        entityWrapper.in("status",list);
+        entityWrapper.where("delete_time is null");
         entityWrapper.where("expired_time < UNIX_TIMESTAMP()");
 
         List<Order> orders = orderLogic.orderService.selectList(entityWrapper);
@@ -146,7 +152,7 @@ public class OrderLogic extends BaseLogic {
     public static void CancelOrder(int orderId) {
 
         Order order = orderLogic.orderService.selectById(orderId);
-        if (OrderStatus.valueOf(order.getStatus()) != OrderStatus.UNPAY) {
+        if (OrderStatus.valueOf(order.getStatus()) != OrderStatus.UNPAY || OrderStatus.valueOf(order.getStatus()) != OrderStatus.PAYFAIL) {
             throw new TipException("当前订单不允许取消");
         }
 
