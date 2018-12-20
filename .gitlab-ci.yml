@@ -1,0 +1,14 @@
+stages:
+- build
+
+
+build_ob:
+  stage: build
+  tags:
+    - build
+  only:
+    - master
+  script:
+    - echo "开始编译"
+    - docker run -i --rm -v /opt/.m2:/root/.m2 -v "$(pwd)":/usr/src/mymaven -w /usr/src/mymaven maven:3.5.3-jdk-10 mvn clean package -DskipTests
+

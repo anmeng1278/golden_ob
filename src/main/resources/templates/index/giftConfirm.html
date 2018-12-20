@@ -49,6 +49,8 @@
                 $(this).siblings().removeClass("head-nav-cur");
                 $(this).addClass("head-nav-cur");
 
+                alert(1);
+
                 getCopywriter();
 
             });
@@ -62,6 +64,9 @@
             function getCopywriter() {
 
                 var typeId = $("li[class='head-nav-cur']").attr("data-type-id");
+                if (!typeId) {
+                    return;
+                }
 
                 TX.CORE.p({
                     url: "/share/copywrite",
@@ -118,8 +123,9 @@
             <span class="head-line-one"></span>
             <div class="head-con">
                 <ul class="head-nav">
-                    <th:block th:if="${!#lists.isEmpty(dicts)}" th:each="info:${dicts}">
-                        <li th:attr="data-type-id=${info.dictId}" th:text="${info.dictName}">
+                    <th:block th:if="${!#lists.isEmpty(dicts)}" th:each="info, current:${dicts}">
+                        <li th:attr="data-type-id=${info.dictId}" th:class="${current.first?'head-nav-cur':''}"
+                            th:text="${info.dictName}">
                             寄一份想思
                         </li>
                     </th:block>
