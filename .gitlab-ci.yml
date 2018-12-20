@@ -1,6 +1,5 @@
 stages:
 - build
-- deploy
 
 build_ob:
   stage: build
@@ -12,14 +11,7 @@ build_ob:
     - echo "开始编译"
     - echo $PWD
     - mvn clean package -DskipTests
-#
-deploy_ob:
-  stage: deploy
-  tags:
-      - build
-  only:
-      - master
-  script:
+
     - echo "开始发布"
     - pname="memberob"
     - if [ $(docker ps -a -q -f "name=test-$pname" | wc -l) -eq 1 ] ;
