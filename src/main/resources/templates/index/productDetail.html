@@ -126,6 +126,12 @@
 
                                 if (resp.datas.resp.amount > 0) {
 
+                                    if (typeof wx == "undefined") {
+                                        TX.MSG.msg("当前环境无法调用微信客户端！", {time: 1500}, function () {
+                                        });
+                                        return;
+                                    }
+
                                     var appId = resp.datas.pay.responseBody.appId;
                                     var timestamp = resp.datas.pay.responseBody.timeStamp;
                                     var nonceStr = resp.datas.pay.responseBody.nonceStr;
@@ -133,11 +139,6 @@
                                     var signType = resp.datas.pay.responseBody.signType;
                                     var paySign = resp.datas.pay.responseBody.paySign;
 
-                                    if (typeof wx == "undefined") {
-                                        TX.MSG.msg("当前环境无法调用微信客户端！", {time: 1500}, function () {
-                                        });
-                                        return;
-                                    }
 
                                     //调起微信支付
                                     wx.chooseWXPay({

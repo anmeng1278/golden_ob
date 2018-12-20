@@ -5,7 +5,7 @@ server:
 #spring
 spring:
   profiles:
-    active: pub
+    active: dev
   http:
     multipart:
       max-file-size: 10MB
