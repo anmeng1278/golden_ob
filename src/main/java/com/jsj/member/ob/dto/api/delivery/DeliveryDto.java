@@ -110,28 +110,17 @@ public class DeliveryDto {
 
     public String getStatusName() {
 
-        if (this.deliveryType == DeliveryType.PICKUP && this.propertyType == PropertyType.ENTITY) switch (this.deliveryStatus.getValue()) {
-            case 0:
-                return "未提取";
-            case 10:
-            case 20:
-                return "已提取";
-            default:
-                return "未知";
-        }
-
-        if (this.deliveryType == DeliveryType.DISTRIBUTE && this.propertyType == PropertyType.ENTITY) {
+        if (this.deliveryType == DeliveryType.PICKUP && this.propertyType == PropertyType.ENTITY) {
             switch (this.deliveryStatus.getValue()) {
                 case 0:
-                    return "未发货";
+                    return "未提取";
                 case 10:
-                    return "已发货";
                 case 20:
-                    return "已签收";
+                    return "已提取";
                 default:
+                    return "未知";
             }
         }
-
 
         if (this.propertyType == PropertyType.ACTIVITYCODE) {
             switch (this.deliveryStatus.getValue()) {
@@ -156,7 +145,7 @@ public class DeliveryDto {
                 default:
             }
         }
-        return "";
+        return deliveryStatus.getMessage();
     }
 
 

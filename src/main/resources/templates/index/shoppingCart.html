@@ -7,6 +7,33 @@
 
 <th:block layout:fragment="script">
 
+    <script th:inline="javascript">
+
+        TX.INIT(function () {
+            //删除购物车中的商品
+            $(document).on("click", "a.delete-layer-confirm", function () {
+                var cartProductId = $(this).attr("data-cart-id");
+                TX.CORE.p({
+                    url: "/cart/delete",
+                    data: {cartProductId: cartProductId},
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                location.href = location.href;
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2}, function () {
+                                location.href = location.href;
+                            });
+                        }
+                    }
+                });
+
+            });
+
+        });
+
+    </script>
     <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js', false)}" type="text/javascript"
             charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/shoppingCart.js')}" type="text/javascript" charset="utf-8"></script>
@@ -26,8 +53,9 @@
     <!--head end-->
 
     <!--main start-->
+
     <div class="main">
-        <th:block th:if="{!#list.isEmpty(cartProductDtos)}" th:each="info:${cartProductDtos}">
+        <th:block th:if="${!#lists.isEmpty(cartProductDtos)}" th:each="info:${cartProductDtos}">
             <div class="goods-list-item">
                 <span class="checkone check-all-wxz"></span>
                 <dl class="goods-list-dl">
@@ -38,19 +66,33 @@
                         <h2 class="goods-dl-name" th:text="${info.productDto.productName}">越甲科技20寸旅行箱</h2>
                         <span class="goods-dl-tips"
                               th:text="${productLogic.GetProductSpec(info.productSpecId).specName}">规格：21寸</span>
-                        <span class="goods-dl-price">&yen;<em th:text="info.productDto.salePrice">399</em></span>
+                        <span class="goods-dl-price">&yen;<em th:text="${info.productDto.salePrice}">399</em></span>
                         <div class="purchase-num">
                             <em class="purchase-num-reduce"></em>
                             <em class="purchase-num-del" style="display: none;"></em>
-                            <input type="text" value="2" disabled="disabled" class="num"/>
+                            <input type="text" th:value="${info.number}" disabled="disabled" class="num"/>
                             <em class="purchase-num-add"></em>
                         </div>
                     </dd>
                 </dl>
             </div>
+
+            <!-- delete-layer start -->
+            <div class="delete-layer" style="display: none;">
+                <div class="delete-layer-bg"></div>
+                <div class="delete-layer-con">
+                    <h2 class="delete-layer-title">确定删除该商品么？</h2>
+                    <p class="delete-layer-tips">删除的商品将不会出现在购物车中</p>
+                    <p class="delete-layer-p">
+                        <a href="javascript:void(0);" class="delete-layer-cancel">取消</a>
+                        <a th:attr="data-cart-id=${info.cartProductId}" href="javascript:void(0);"
+                           class="delete-layer-confirm">确定</a>
+                    </p>
+                </div>
+            </div>
+            <!-- delete-layer end -->
         </th:block>
     </div>
-    <!--main end-->
 
     <!--footer start-->
     <div class="footer">
@@ -62,17 +104,5 @@
     </div>
     <!--footer end-->
 
-    <!-- delete-layer start -->
-    <div class="delete-layer" style="display: none;">
-        <div class="delete-layer-bg"></div>
-        <div class="delete-layer-con">
-            <h2 class="delete-layer-title">确定删除该商品么？</h2>
-            <p class="delete-layer-tips">删除的商品将不会出现在购物车中</p>
-            <p class="delete-layer-p">
-                <a href="javascript:void(0);" class="delete-layer-cancel">取消</a>
-                <a href="javascript:void(0);" class="delete-layer-confirm">确定</a>
-            </p>
-        </div>
-    </div>
 
 </div>
