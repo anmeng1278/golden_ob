@@ -12,6 +12,9 @@ public enum DeliveryStatus {
 
     SIGNED(20, "已签收");
 
+    //活动码  未获取=0 已获取=10 已使用=20
+    //卡      未开卡 0 已开卡 10
+
     private Integer value;
     private String message;
 

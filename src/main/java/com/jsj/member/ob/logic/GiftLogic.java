@@ -339,6 +339,8 @@ public class GiftLogic extends BaseLogic {
     //endregion
 
 
+    //region (public) 取消赠送 CancelGift
+
     /**
      * 取消赠送
      * 已被领取的不退还
@@ -407,6 +409,9 @@ public class GiftLogic extends BaseLogic {
         resp.setGiftId(gift.getGiftId());
         return resp;
     }
+    //endregion
+
+    //region (public) 获取赠送库存列表 GetGiftStocks
 
     /**
      * 获取赠送库存列表
@@ -431,7 +436,9 @@ public class GiftLogic extends BaseLogic {
         return stockDtos;
 
     }
+    //endregion
 
+    //region (public) 获取赠送详情 GetGift
 
     /**
      * 获取赠送详情
@@ -441,11 +448,13 @@ public class GiftLogic extends BaseLogic {
      */
     public static GiftDto GetGift(int giftId) {
 
-        Gift gift = giftLogic.giftService.selectById(giftId);
-
-        return ToDto(gift);
+        Gift entity = giftLogic.giftService.selectById(giftId);
+        return ToDto(entity);
 
     }
+    //endregion
+
+    //region (public) 实体转换 ToDto
 
     /**
      * 实体转换
@@ -477,6 +486,9 @@ public class GiftLogic extends BaseLogic {
         return dto;
 
     }
+    //endregion
+
+    //region (public) 获取赠送详情 GetGift
 
     /**
      * 获取赠送详情
@@ -498,7 +510,9 @@ public class GiftLogic extends BaseLogic {
 
         return dto;
     }
+    //endregion
 
+    //region (public) 根据赠送编号获取领取列表
 
     /**
      * 根据赠送编号获取领取列表
@@ -537,7 +551,7 @@ public class GiftLogic extends BaseLogic {
         return giftStockDtos;
 
     }
-
+    //endregion
 
     //region (public) 获取赠送商品数量 GetGiftStockCount
 
@@ -558,6 +572,9 @@ public class GiftLogic extends BaseLogic {
     }
     //endregion
 
+
+    //region (public) 获得用户赠送列表 GetGives
+
     /**
      * 获得用户赠送列表
      *
@@ -565,10 +582,28 @@ public class GiftLogic extends BaseLogic {
      * @return
      */
     public static List<GiftDto> GetGives(String openId) {
+        return GetGives(openId, null);
+    }
+    //endregion
+
+    //region (public) 获得用户赠送列表 GetGives
+
+    /**
+     * 获得用户赠送列表
+     *
+     * @param openId
+     * @param giftStatus
+     * @return
+     */
+    public static List<GiftDto> GetGives(String openId, GiftStatus giftStatus) {
 
         EntityWrapper<Gift> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null and open_id={0}", openId);
-        wrapper.orderBy("create_time desc");
+
+        if (giftStatus != null) {
+            wrapper.where("status = {0}", giftStatus.getValue());
+        }
+
         List<Gift> gifts = giftLogic.giftService.selectList(wrapper);
 
         List<GiftDto> giftDtos = new ArrayList<>();
@@ -576,10 +611,13 @@ public class GiftLogic extends BaseLogic {
             GiftDto giftDto = GiftLogic.GetGift(gift.getGiftId());
             giftDtos.add(giftDto);
         }
-
         return giftDtos;
-    }
 
+    }
+    //endregion
+
+
+    //region (public) 获得用户领取列表 GetReceived
 
     /**
      * 获得用户领取列表
@@ -602,7 +640,6 @@ public class GiftLogic extends BaseLogic {
         EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
         wrapper.in("stock_id", parentStockIds);
-        wrapper.orderBy("create_time desc");
         List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
 
         List<GiftDto> giftDtos = new ArrayList<>();
@@ -614,18 +651,17 @@ public class GiftLogic extends BaseLogic {
             giftDtos.add(giftDto);
 
         }
-        //去重
-        ArrayList<GiftDto> dtos = giftDtos.stream().collect(
+
+        ArrayList<GiftDto> collect = giftDtos.stream().collect(
                 Collectors.collectingAndThen(
                         Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(GiftDto::getGiftId))), ArrayList::new)
         );
 
-        //排序
-        List<GiftDto> collect = dtos.stream().sorted(Comparator.comparing(GiftDto::getCreateTime).reversed())
-                .collect(Collectors.toList());
-
         return collect;
     }
+    //endregion
+
+    //region (public) 获得用户在这个礼包中的领取详情
 
     /**
      * 获得用户在这个礼包中的领取详情
@@ -646,7 +682,6 @@ public class GiftLogic extends BaseLogic {
                 wrapper.where("open_id={0}", openId);
             }
             wrapper.where("parent_stock_id={0}", giveStock.getStockId());
-            wrapper.orderBy("create_time desc");
             List<Stock> stocks = giftLogic.stockService.selectList(wrapper);
             for (Stock stock : stocks) {
                 StockDto stockDto = StockLogic.ToDto(stock);
@@ -657,7 +692,9 @@ public class GiftLogic extends BaseLogic {
         return stockDtos;
 
     }
+    //endregion
 
+    //region (public) 分享前更新分享数据 GiftReadyToShare
 
     /**
      * 分享前更新分享数据
@@ -677,6 +714,9 @@ public class GiftLogic extends BaseLogic {
             giftLogic.giftService.updateById(gift);
         }
     }
+    //endregion
+
+    //region (public) 分享成功后回调 GiftShareSuccessed
 
     /**
      * 分享成功后回调
@@ -694,6 +734,9 @@ public class GiftLogic extends BaseLogic {
         }
 
     }
+    //endregion
+
+    //region (public) 判断会员本人是否允许领取 userSelfCanDraw
 
     /**
      * 判断会员本人是否允许领取
@@ -722,6 +765,9 @@ public class GiftLogic extends BaseLogic {
 
         return true;
     }
+    //endregion
+
+    //region (public) 判断用户是否已领取 userIsDraw
 
     /**
      * 判断用户是否已领取
@@ -743,5 +789,7 @@ public class GiftLogic extends BaseLogic {
 
         return false;
     }
+    //endregion
+
 
 }

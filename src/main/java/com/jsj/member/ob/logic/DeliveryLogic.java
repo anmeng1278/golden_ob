@@ -1,9 +1,11 @@
 package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.dto.api.delivery.CreateDeliveryRequ;
 import com.jsj.member.ob.dto.api.delivery.CreateDeliveryResp;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
+import com.jsj.member.ob.dto.api.delivery.DeliveryStockDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
@@ -118,7 +120,6 @@ public class DeliveryLogic extends BaseLogic {
     public static DeliveryDto GetDelivery(int deliveryId) {
 
         Delivery delivery = deliveryLogic.deliveryService.selectById(deliveryId);
-
         DeliveryDto dto = DeliveryLogic.ToDto(delivery);
 
         return dto;
@@ -148,6 +149,10 @@ public class DeliveryLogic extends BaseLogic {
      * @return
      */
     public static DeliveryDto ToDto(Delivery delivery) {
+
+        if (delivery == null) {
+            return null;
+        }
 
         DeliveryDto dto = new DeliveryDto();
 
@@ -203,7 +208,7 @@ public class DeliveryLogic extends BaseLogic {
      * @param deliveryType
      * @return
      */
-    public static List<Delivery> GetDelivery(DeliveryStatus deliveryStatus,DeliveryType deliveryType,PropertyType propertyType){
+    public static List<Delivery> GetDelivery(DeliveryStatus deliveryStatus, DeliveryType deliveryType, PropertyType propertyType){
 
         EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
@@ -221,6 +226,95 @@ public class DeliveryLogic extends BaseLogic {
         List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
 
         return deliveries;
+
+    }
+
+    /**
+     * 获取配送库存
+     *
+     * @param openId
+     * @param deliveryId
+     * @return
+     */
+    public static List<DeliveryStockDto> GetDeliveryStocks(int deliveryId, String openId) {
+
+        Wrapper<DeliveryStock> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null");
+        wrapper.where("delivery_id = {0}", deliveryId);
+
+        List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(wrapper);
+        List<DeliveryStockDto> deliveryStockDtos = new ArrayList<>();
+
+        deliveryStocks.forEach(d -> {
+            deliveryStockDtos.add(ToDeliveryStockDto(d));
+        });
+        return deliveryStockDtos;
+    }
+
+    /**
+     * 配送库存实体转换
+     *
+     * @param entity
+     * @return
+     */
+    public static DeliveryStockDto ToDeliveryStockDto(DeliveryStock entity) {
+
+        DeliveryStockDto dto = new DeliveryStockDto();
+
+        dto.setActivityCode(entity.getActivityCode());
+        dto.setDeliveryId(entity.getDeliveryId());
+        dto.setDeliveryStockId(entity.getDeliveryStockId());
+        dto.setStockId(entity.getStockId());
+
+        return dto;
+
+    }
+
+    /**
+     * 验证次卡配送状态
+     *
+     * @param openId
+     */
+    public static List<DeliveryStockDto> getUnUsedActivityCodes(String openId) {
+
+        List<Integer> statuses = new ArrayList<>();
+        statuses.add(DeliveryStatus.UNDELIVERY.getValue());
+        statuses.add(DeliveryStatus.DELIVERED.getValue());
+
+        Wrapper<Delivery> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null");
+        wrapper.where("open_id = {0}", openId);
+        wrapper.where("property_type_id = {0}", PropertyType.ACTIVITYCODE.getValue());
+        wrapper.in("status ", statuses);
+
+        List<DeliveryStockDto> deliveryStockDtos = new ArrayList<>();
+
+        Delivery delivery = deliveryLogic.deliveryService.selectOne(wrapper);
+        if (delivery == null) {
+            return deliveryStockDtos;
+        }
+
+        deliveryStockDtos = GetDeliveryStocks(delivery.getDeliveryId(), openId);
+        return deliveryStockDtos;
+    }
+
+    /**
+     * 获取未开卡信息
+     *
+     * @param openId
+     * @return
+     */
+    public static DeliveryDto getUnCreateGoldenCard(String openId) {
+
+        Wrapper<Delivery> wrapper = new EntityWrapper<>();
+
+        wrapper.where("open_id = {0}", openId);
+        wrapper.where("delete_time is null");
+        wrapper.where("status = {0}", DeliveryStatus.UNDELIVERY.getValue());
+        wrapper.where("property_type_id = {0}", PropertyType.GOLDENCARD.getValue());
+
+        Delivery delivery = deliveryLogic.deliveryService.selectOne(wrapper);
+        return ToDto(delivery);
 
     }
 }

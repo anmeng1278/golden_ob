@@ -72,6 +72,13 @@ public class ShareController extends BaseController {
     }
 
 
+    /**
+     * 确认分享操作
+     *
+     * @param obs
+     * @param request
+     * @return
+     */
     @PostMapping(value = {"/gift/{obs}/confirm"})
     @ResponseBody
     @Transactional(Constant.DBTRANSACTIONAL)
@@ -139,7 +146,7 @@ public class ShareController extends BaseController {
 
     @PostMapping(value = {"/copywrite"})
     @ResponseBody
-    public RestResponseBo getCopywrite(HttpServletRequest request){
+    public RestResponseBo getCopywrite(HttpServletRequest request) {
 
         int typeId = Integer.parseInt(request.getParameter("typeId"));
 

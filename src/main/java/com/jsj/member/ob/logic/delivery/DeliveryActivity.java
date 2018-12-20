@@ -3,6 +3,7 @@ package com.jsj.member.ob.logic.delivery;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.delivery.CreateDeliveryRequ;
 import com.jsj.member.ob.dto.api.delivery.CreateDeliveryResp;
+import com.jsj.member.ob.dto.api.delivery.DeliveryStockDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
@@ -12,6 +13,7 @@ import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
@@ -25,10 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Component
-public class DeliveryEntity extends DeliveryBase {
+public class DeliveryActivity extends DeliveryBase {
 
-    public DeliveryEntity() {
-        super(PropertyType.ENTITY);
+    public DeliveryActivity() {
+        super(PropertyType.ACTIVITYCODE);
     }
 
     @Autowired
@@ -45,36 +47,26 @@ public class DeliveryEntity extends DeliveryBase {
         if (requ.getUseProductDtos().isEmpty()) {
             throw new TipException("使用库存不能为空");
         }
+        if (requ.getUseProductDtos().size() > 1) {
+            throw new TipException("次卡只能使用一个");
+        }
         if (StringUtils.isEmpty(requ.getContactName())) {
-            throw new TipException("联系人不能为空");
+            throw new TipException("真实姓名不能为空");
         }
         if (!com.jsj.member.ob.utils.StringUtils.isMobile(requ.getMobile())) {
-            throw new TipException("联系手机格式错误");
+            throw new TipException("手机号码格式错误");
         }
-
-        //配送
-        if (requ.getDeliveryType().equals(DeliveryType.DISTRIBUTE)) {
-            if (requ.getProvinceId() <= 0) {
-                throw new TipException("请选择省份");
-            }
-            if (requ.getCityId() <= 0) {
-                throw new TipException("请选择地区");
-            }
-            if (StringUtils.isEmpty(requ.getAddress())) {
-                throw new TipException("请输入详细地址");
-            }
-        }
-
-        if (requ.getDeliveryType().equals(DeliveryType.PICKUP)) {
-            if (!com.jsj.member.ob.utils.StringUtils.isStrDate(requ.getEffectiveDate())) {
-                throw new TipException("自提时间格式错误");
-            }
-            if (StringUtils.isEmpty(requ.getAirportCode())) {
-                throw new TipException("请选择自提网点");
-            }
+        if (StringUtils.isEmpty(requ.getAirportCode())) {
+            throw new TipException("请选择使用机场");
         }
 
         String openId = requ.getBaseRequ().getOpenId();
+
+        //判断是否存在未使用的活动码
+        List<DeliveryStockDto> deliveryStockDtos = DeliveryLogic.getUnUsedActivityCodes(openId);
+        if (!deliveryStockDtos.isEmpty()) {
+            throw new TipException("您还有未使用的次卡");
+        }
 
         //获取库存
         List<StockDto> stockDtos = StockLogic.GetStocks(openId, requ.getUseProductDtos(), false);
@@ -83,24 +75,19 @@ public class DeliveryEntity extends DeliveryBase {
 
         delivery.setStatus(DeliveryStatus.UNDELIVERY.getValue());
         delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
-        delivery.setAddress(requ.getAddress());
-        delivery.setCityId(requ.getCityId());
         delivery.setContactName(requ.getContactName());
 
-        delivery.setDistrictId(requ.getDistrictId());
         delivery.setMobile(Long.parseLong(requ.getMobile()));
-        delivery.setProvinceId(requ.getProvinceId());
         delivery.setCreateTime(DateUtils.getCurrentUnixTime());
         delivery.setOpenId(requ.getBaseRequ().getOpenId());
+        delivery.setFlightNumber(requ.getFlightNumber());
 
         delivery.setPropertyTypeId(this.getPropertyType().getValue());
         delivery.setRemarks(requ.getRemarks());
-        delivery.setTypeId(requ.getDeliveryType().getValue());
+        delivery.setTypeId(DeliveryType.PICKUP.getValue());
         delivery.setAirportCode(requ.getAirportCode());
         delivery.setAirportName(requ.getAirportName());
 
-        //自提时间、生效日期
-        delivery.setEffectiveDate(requ.getEffectiveDate());
         this.deliveryService.insert(delivery);
 
         for (StockDto stockDto : stockDtos) {
@@ -118,6 +105,9 @@ public class DeliveryEntity extends DeliveryBase {
             deliveryStock.setStockId(stock.getStockId());
             deliveryStock.setUpdateTime(DateUtils.getCurrentUnixTime());
 
+            //TODO 调用空铁接口获取活动码
+            deliveryStock.setActivityCode("需要调用空铁接口获取活动码");
+
             this.deliveryStockService.insert(deliveryStock);
 
             //修改库存状态
@@ -125,7 +115,12 @@ public class DeliveryEntity extends DeliveryBase {
             stock.setUpdateTime(DateUtils.getCurrentUnixTime());
 
             this.stockService.updateById(stock);
+
         }
+
+        //更新状态为已获取活动码
+        delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
+        this.deliveryService.updateById(delivery);
 
         CreateDeliveryResp resp = new CreateDeliveryResp();
         resp.setDeliveryId(delivery.getDeliveryId());
