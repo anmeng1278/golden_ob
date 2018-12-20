@@ -21,13 +21,13 @@
                             <label class="layui-form-label">配送状态:</label>
                             <div class="layui-input-inline layui-form-label-col"
                                  style="color: blue; font-size: large; font-weight: bold;width: 16%">
-                                <th:block th:text="${enumLogic.GetDeliveryStatus(info.status).message}"></th:block>
+                                <th:block th:text="${info.getStatusName()}"></th:block>
                             </div>
 
                             <label class="layui-form-label">配送方式:</label>
                             <div class="layui-input-inline layui-form-label-col"
                                  style="color: blue; font-size: large; font-weight: bold; width: 16 %">
-                                <th:block th:text="${enumLogic.GetDeliveryType(info.typeId).message}"></th:block>
+                                <th:block th:text="${info.deliveryType.message}"></th:block>
                             </div>
 
                             <label class="layui-form-label">联系人:</label>
@@ -43,7 +43,7 @@
                                 <th:block th:text="${info.mobile}"></th:block>
                             </div>
 
-                            <th:block th:if="${info.typeId == 2}">
+                            <th:block th:if="${info.deliveryType.value == 2}">
                             <label class="layui-form-label">详细地址:</label>
                             <div class="layui-input-inline layui-form-label-col" style="width: auto">
                                 <th:block th:text="${dictLogic.GetDict(info.provinceId).dictName}"></th:block>
@@ -53,10 +53,11 @@
                             </div>
                             </th:block>
 
-                            <th:block th:if="${info.typeId == 1}">
+                            <th:block th:if="${info.deliveryType.value == 1}">
                                 <label class="layui-form-label">自提点:</label>
                                 <div class="layui-input-inline layui-form-label-col" style="width: auto">
-                                    <th:block th:text="${info.viphallName}"></th:block>
+                                    <th:block th:text="${info.airportCode}"></th:block>
+                                    <th:block th:text="${info.airportName}"></th:block>
                                 </div>
                             </th:block>
                         </div>
@@ -92,15 +93,14 @@
 
                     <td style=" width: 95%;float: right" valign="top" th:if="${!#lists.isEmpty(data)}">
                         <table class="layui-table" lay-size="sm" lay-skin="line">
-                            <thead>
+                            <thead  th:if="${info.deliveryType.value == 2}">
                             <tr>
-                                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;width: 99%"
-                                          th:if="${info.typeId == 2}">
+                                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;width: 99%">
                                     <legend th:text="|物流信息|"></legend>
                                 </fieldset>
                             </tr>
                             <tr>
-                                <div class="layui-form-item" th:if="${info.typeId == 2}">
+                                <div class="layui-form-item">
                                     <label class="layui-form-label" style="font-size: large">快递号:</label>
                                     <div class="layui-input-inline layui-form-label-col"
                                          style="color: blue; font-size: large; font-weight: bold;">
@@ -136,7 +136,7 @@
 
             <div class="layui-form-item" style="float: bottom">
                 <div class="layui-input-block">
-                    <button type="button" class="layui-btn" id="sendProduct" th:disabled="${info.status > 0}">
+                    <button type="button" class="layui-btn" id="sendProduct" th:disabled="${info.deliveryStatus.value > 0}">
                         <i class="layui-icon">&#xe609;</i>
                         发货
                     </button>
@@ -188,8 +188,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">活动码状态:</label>
                 <div class="layui-input-inline layui-form-label-col">
-                    <th:block th:if="${info.status == 10}" th:text="已获取活动码"></th:block>
-                    <th:block th:if="${info.status == 20}" th:text="已使用活动码"></th:block>
+                    <th:block th:text="${info.getStatusName()}"></th:block>
                 </div>
             </div>
 
@@ -257,8 +256,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">开卡状态:</label>
                 <div class="layui-input-inline layui-form-label-col" style="width: auto">
-                    <th:block th:if="${info.status == 10}" th:text="已开卡"></th:block>
-                    <th:block th:if="${info.status == 0}" th:text="待开卡"></th:block>
+                    <th:block th:text="${info.getStatusName()}"></th:block>
                 </div>
             </div>
 

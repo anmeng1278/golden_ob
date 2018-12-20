@@ -3,6 +3,8 @@ package com.jsj.member.ob.dto.api.delivery;
 
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
+import com.jsj.member.ob.enums.DeliveryStatus;
+import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.PropertyType;
 
 import java.util.List;
@@ -24,11 +26,11 @@ public class DeliveryDto {
     /**
      * 状态 0未发货 10已发货 20已签收
      */
-    private Integer status;
+    private DeliveryStatus deliveryStatus;
     /**
      * 配送区分，1：自提，2：配送
      */
-    private Integer typeId;
+    private DeliveryType deliveryType;
 
     /**
      * 商品属性
@@ -64,10 +66,6 @@ public class DeliveryDto {
      */
     private String remarks;
 
-    /**
-     * 商品属性  1.实物 2.活动码 3.卡
-     */
-    private Integer propertyTypeId;
 
     /**
      * 证件号(开卡时使用)
@@ -111,17 +109,43 @@ public class DeliveryDto {
     private String statusName;
 
     public String getStatusName() {
-        if(this.typeId == 1){
-            switch (this.status){
+
+        if (this.deliveryType == DeliveryType.PICKUP && this.propertyType == PropertyType.ENTITY) {
+            switch (this.deliveryStatus.getValue()) {
                 case 0:
                     return "未提取";
                 case 10:
                 case 20:
                     return "已提取";
+                default:
+                    return "未知";
             }
         }
 
-        return "未知";
+        if (this.propertyType == PropertyType.ACTIVITYCODE) {
+            switch (this.deliveryStatus.getValue()) {
+                case 0:
+                    return "未获取活动码";
+                case 10:
+                    return "已获取活动码";
+                case 20:
+                    return "已使用活动码";
+                default:
+            }
+        }
+
+
+        if (this.propertyType == PropertyType.GOLDENCARD) {
+            switch (this.deliveryStatus.getValue()) {
+                case 0:
+                    return "未开卡";
+                case 10:
+                case 20:
+                    return "已开卡";
+                default:
+            }
+        }
+        return deliveryStatus.getMessage();
     }
 
 
@@ -149,21 +173,19 @@ public class DeliveryDto {
         this.expressNumber = expressNumber;
     }
 
-    public Integer getStatus() {
-        return status;
+
+    public DeliveryType getDeliveryType() {
+        return deliveryType;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setDeliveryType(DeliveryType deliveryType) {
+        this.deliveryType = deliveryType;
     }
 
-    public Integer getTypeId() {
-        return typeId;
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
     }
 
-    public void setTypeId(Integer typeId) {
-        this.typeId = typeId;
-    }
 
     public PropertyType getPropertyType() {
         return propertyType;
@@ -229,14 +251,6 @@ public class DeliveryDto {
         this.remarks = remarks;
     }
 
-    public Integer getPropertyTypeId() {
-        return propertyTypeId;
-    }
-
-    public void setPropertyTypeId(Integer propertyTypeId) {
-        this.propertyTypeId = propertyTypeId;
-    }
-
     public String getIdNumber() {
         return idNumber;
     }
@@ -299,5 +313,13 @@ public class DeliveryDto {
 
     public void setProductDtos(List<ProductDto> productDtos) {
         this.productDtos = productDtos;
+    }
+
+    public DeliveryStatus getDeliveryStatus() {
+        return deliveryStatus;
+    }
+
+    public void setDeliveryStatus(DeliveryStatus deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
     }
 }

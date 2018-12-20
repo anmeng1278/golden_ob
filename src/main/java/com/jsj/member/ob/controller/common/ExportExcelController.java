@@ -53,8 +53,7 @@ public class ExportExcelController {
                                HttpServletResponse response) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("配送信息表");
-        String[] headers = {"用户openId", "用户昵称", "快递号", "手机号", "联系人", "省", "市", "区", "详细地址", "创建时间", "商品属性", "配送方式", "物流状态", "商品名称", "规格", "数量"};
-
+        String[] headers = {"用户openId", "用户昵称", "快递号", "手机号", "联系人", "省", "市", "区", "详细地址","身份证号","航班号","机场编号","机场名称","卡生效/活动码使用日期", "创建时间", "商品属性", "配送方式", "物流状态", "商品名称", "规格", "数量"};
         EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
 
@@ -79,20 +78,27 @@ public class ExportExcelController {
             row.createCell(2).setCellValue(delivery.getExpressNumber());
             row.createCell(3).setCellValue(delivery.getMobile());
             row.createCell(4).setCellValue(delivery.getContactName());
-            row.createCell(5).setCellValue(GetDict(delivery.getProvinceId()).getDictName());
-            row.createCell(6).setCellValue(GetDict(delivery.getCityId()).getDictName());
-            row.createCell(7).setCellValue(GetDict(delivery.getDistrictId()).getDictName());
+            if(delivery.getProvinceId() !=null &&  delivery.getCityId() !=null && delivery.getDistrictId()!=null) {
+                row.createCell(5).setCellValue(GetDict(delivery.getProvinceId()).getDictName());
+                row.createCell(6).setCellValue(GetDict(delivery.getCityId()).getDictName());
+                row.createCell(7).setCellValue(GetDict(delivery.getDistrictId()).getDictName());
+            }
             row.createCell(8).setCellValue(delivery.getAddress());
-            row.createCell(9).setCellValue(DateUtils.formatDateByUnixTime(Long.valueOf(delivery.getCreateTime()), "yyyy-MM-dd HH:mm:ss"));
-            row.createCell(10).setCellValue(PropertyType.valueOf(delivery.getPropertyTypeId()).getMessage());
-            row.createCell(11).setCellValue(DeliveryType.valueOf(delivery.getTypeId()).getMessage());
-            row.createCell(12).setCellValue(DeliveryStatus.valueOf(delivery.getStatus()).getMessage());
+            row.createCell(9).setCellValue(delivery.getIdNumber());
+            row.createCell(10).setCellValue(delivery.getFlightNumber());
+            row.createCell(11).setCellValue(delivery.getAirportCode());
+            row.createCell(12).setCellValue(delivery.getAirportName());
+            row.createCell(13).setCellValue(delivery.getEffectiveDate());
+            row.createCell(14).setCellValue(DateUtils.formatDateByUnixTime(Long.valueOf(delivery.getCreateTime()), "yyyy-MM-dd HH:mm:ss"));
+            row.createCell(15).setCellValue(PropertyType.valueOf(delivery.getPropertyTypeId()).getMessage());
+            row.createCell(16).setCellValue(DeliveryType.valueOf(delivery.getTypeId()).getMessage());
+            row.createCell(17).setCellValue(DeliveryStatus.valueOf(delivery.getStatus()).getMessage());
 
             List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(delivery.getDeliveryId());
             for (StockDto stockDto : stockDtos) {
-                row.createCell(13).setCellValue(stockDto.getProductDto().getProductName());
-                row.createCell(14).setCellValue(ProductLogic.GetProductSpec(stockDto.getProductSpecId()).getSpecName());
-                row.createCell(15).setCellValue(stockDto.getNumber());
+                row.createCell(18).setCellValue(stockDto.getProductDto().getProductName());
+                row.createCell(19).setCellValue(ProductLogic.GetProductSpec(stockDto.getProductSpecId()).getSpecName());
+                row.createCell(20).setCellValue(stockDto.getNumber());
                 rowNum++;
                 row = sheet.createRow(rowNum);
             }
@@ -102,6 +108,7 @@ public class ExportExcelController {
 
         ExcelUtil.export(response, headers, row, workbook, sheet);
     }
+
 
 
     @RequestMapping("/exportOrder")

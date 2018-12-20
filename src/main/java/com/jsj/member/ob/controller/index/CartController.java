@@ -5,10 +5,7 @@ import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.cart.CartProductDto;
 import com.jsj.member.ob.logic.CartLogic;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +17,7 @@ import java.util.List;
 public class CartController extends BaseController {
 
     /**
-     * 配送列表
+     * 购物车列表
      *
      * @param request
      * @return
@@ -39,11 +36,14 @@ public class CartController extends BaseController {
 
     /**
      * 删除购物车中的商品
-     * @param cartProductId
+     * @param request
      * @return
      */
-    @PostMapping("/{cartProductId}")
-    public RestResponseBo deleteProduct(@PathVariable("cartProductId") int cartProductId){
+    @PostMapping("/delete")
+    @ResponseBody
+    public RestResponseBo deleteProduct(HttpServletRequest request){
+
+        int cartProductId = Integer.parseInt(request.getParameter("cartProductId"));
 
         CartLogic.DeleteCartProduct(cartProductId);
 
