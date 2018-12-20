@@ -10,22 +10,23 @@ build_ob:
     - master
   script:
     - echo "开始编译"
+    - echo $PWD
     - mvn clean package -DskipTests
-
-deploy_ob:
-  stage: deploy
-  tags:
-      - build
-  only:
-      - master
-  script:
-    - echo "开始发布"
-    - pname="memberob"
-    - if [ $(docker ps -a -q -f "name=test-$pname" | wc -l) -eq 1 ] ;
-    -     then docker stop $(docker ps -a -q -f "name=test-$pname") && docker rm $(docker ps -a -q -f "name=test-$pname") ;
-    - fi
-    - docker run -d -v "$PWD/member-ob/target/":/usr/src/myapp -p 80:80 --name "test-$pname"  -w /usr/src/myapp  docker.io/java java -jar --spring.profiles.active=pub memberob.jar
-    - echo "发布成功"
+#
+#deploy_ob:
+#  stage: deploy
+#  tags:
+#      - build
+#  only:
+#      - master
+#  script:
+#    - echo "开始发布"
+#    - pname="memberob"
+#    - if [ $(docker ps -a -q -f "name=test-$pname" | wc -l) -eq 1 ] ;
+#    -     then docker stop $(docker ps -a -q -f "name=test-$pname") && docker rm $(docker ps -a -q -f "name=test-$pname") ;
+#    - fi
+#    - docker run -d -v "$PWD/member-ob/target/":/usr/src/myapp -p 80:80 --name "test-$pname"  -w /usr/src/myapp  docker.io/java java -jar --spring.profiles.active=pub memberob.jar
+#    - echo "发布成功"
 
 
 
