@@ -130,7 +130,7 @@ public class AdminDeliveryController {
         if(deliveryDto.getPropertyType().getValue() == PropertyType.ACTIVITYCODE.getValue()){
             List<DeliveryStock> deliveryStocks = DeliveryLogic.GetDeliveryStocks(deliveryId);
             String activityCode = deliveryStocks.get(0).getActivityCode();
-            String qrcodeUrl = "http://mobile.qq.com/qrcode?url=%"+activityCode+"&width=300&height=300";
+            String qrcodeUrl = String.format(webconfig.getQrcodeUrl(), activityCode);
             model.addAttribute("qrcodeUrl", qrcodeUrl);
         }
 
