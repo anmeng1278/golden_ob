@@ -55,28 +55,25 @@
                 }
 
                 var json = encodeURI(JSON.stringify(products));
-                var url = "";
-                switch (propertyTypeIds[0]) {
-
-                    //实物商品
-                    case 1:
-                        url = [[${ob.Nav('/stock/use1')}]]
-                        break;
-
-                    //活动码
-                    case 2:
-                        break;
-
-                    //会员卡
-                    case 3:
-                        break;
-
-                }
-
-                if (url) {
-                    url += "?p=" + json;
-                    location.href = url;
-                }
+                //使用前验证
+                TX.CORE.p({
+                    url: "/stock/validateUsed",
+                    data: {
+                        p: json,
+                        propertyTypeId: propertyTypeIds[0]
+                    },
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            location.href = resp.baseResp.url;
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2}, function () {
+                                if (resp.baseResp.url) {
+                                    location.href = resp.baseResp.url;
+                                }
+                            });
+                        }
+                    }
+                })
 
             });
 
@@ -134,9 +131,9 @@
     <!--main start-->
     <div class="main clear">
         <h2 class="stock-title">库存商品</h2>
-        <div class="share-fail">
-            <p class="share-fail-tips">您有已<span>1</span>个礼包分享失败</p>
-            <a href="javascript:void(0);" class="share-fail-look">查看 ></a>
+        <div class="share-fail" th:if="${!#lists.isEmpty(giftDtos)}">
+            <p class="share-fail-tips">您有已<span th:text="${#lists.size(giftDtos)}">0</span>个礼包分享失败</p>
+            <a th:href="${ob.Nav('/share/gift/'+giftDtos[0].giftUniqueCode + '/confirm')}" class="share-fail-look">查看 ></a>
         </div>
         <div class="strok-list">
             <form id="form1" method="post">

@@ -125,7 +125,7 @@ public abstract class BaseController {
     }
 
     @Autowired
-    Webconfig webconfig;
+    protected Webconfig webconfig;
 
     /**
      * 跳转实际路径

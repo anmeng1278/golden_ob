@@ -52,6 +52,7 @@
                 getCopywriter();
 
             });
+            $("ul.head-nav li:first").click();
 
             $(document).on("click", "p.blessings-btn", function () {
                 getCopywriter();
@@ -118,7 +119,7 @@
             <div class="head-con">
                 <ul class="head-nav">
                     <th:block th:if="${!#lists.isEmpty(dicts)}" th:each="info:${dicts}">
-                        <li th:attr="data-type-id=${info.dictId}" class="head-nav-cur" th:text="${info.dictName}">
+                        <li th:attr="data-type-id=${info.dictId}" th:text="${info.dictName}">
                             寄一份想思
                         </li>
                     </th:block>

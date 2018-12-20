@@ -7,10 +7,6 @@
 
 <th:block layout:fragment="script">
 
-    <!--引入js-->
-    <script th:src="${ob.Url('/index/js/mystock.js')}" type="text/javascript"
-            charset="utf-8"></script>
-
 
     <script th:src="${ob.Url('/index/js/city/common.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/city/Popt.js')}" type="text/javascript" charset="utf-8"></script>
@@ -19,47 +15,18 @@
     <script th:src="${ob.Url('/index/js/mSelect/js/iscroll.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/mSelect/js/jquery.mobile_date_ui.js')}" type="text/javascript"
             charset="utf-8"></script>
-    <script th:src="${ob.Url('/index/js/GoodsUse.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/GoldCard.js')}" type="text/javascript" charset="utf-8"></script>
 
     <script th:src="${ob.Url('/index/js/CityList.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:inline="javascript">
 
         TX.INIT(function () {
 
-            $("a.confirm-btn").click(function () {
-                var index = $("ul.nav-list-ul li.active").index();
-                var formId = "";
-                if (index == 0) {
-                    //快递配送
-                    formId = "#form1";
-
-                    $(":hidden[name='provinceId']").val(0);
-                    $(":hidden[name='cityId']").val(0);
-                    $(":hidden[name='districtId']").val(0);
-
-                    if ($(":hidden[name='hcity']", $(formId)).length > 0) {
-                        var provinceId = $(":hidden[name='hcity']", $(formId)).attr("data-id");
-                        $(":hidden[name='provinceId']").val(provinceId);
-                    }
-
-                    if ($(":hidden[name='hproper']").length) {
-                        var cityId = $(":hidden[name='hproper']").attr("data-id");
-                        $(":hidden[name='cityId']").val(cityId);
-                    }
-
-                    if ($(":hidden[name='harea']").length) {
-                        var districtId = $(":hidden[name='harea']").attr("data-id");
-                        $(":hidden[name='districtId']").val(districtId);
-                    }
-
-                } else {
-                    //我要自提
-                    formId = "#form2";
-                }
+            $("a.sumbit-btn").click(function () {
 
                 //提交保存
                 TX.CORE.p({
-                    data: $(formId).serialize(),
+                    data: $("form").serialize(),
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
@@ -75,144 +42,74 @@
 
             });
 
-
         });
 
     </script>
 </th:block>
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/mSelect/css/mobile_date_ui.css')}"/>
-    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GoodsUse.css')}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GoldCard.css')}"/>
 
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/CityList.css')}"/>
 </th:block>
 
 <div layout:fragment="content">
-    <div class="content-form">
-        <!--head start-->
-        <div class="head">
-            <div class="head-height">
-                <ul class="head-goods-list">
-                    <th:block th:each="info :${stockDtos}">
-                        <li>
-                            <th:block th:if="${!#lists.isEmpty(info.productDto.productImgDtos)}">
-                                <img th:src="${info.productDto.productImgDtos[0].imgPath}" alt="1"
-                                     class="head-goods-img"/>
-                            </th:block>
-                            <p class="head-goods-tips">已选<span th:text="${info.number}">0</span>件</p>
-                        </li>
-                    </th:block>
-                </ul>
-            </div>
-        </div>
-        <!--head end-->
+    <div class="content-form" style="display: none;">
 
         <!--main start-->
         <div class="main">
-            <div class="nav-list">
-                <ul class="nav-list-ul">
-                    <li class="active">快递配送</li>
-                    <li th:if="${!unSupportPickup}">我要自提</li>
-                </ul>
-            </div>
+            <form name="form1" id="form1" method="post">
+                <th:block th:each="info :${stockDtos}">
+                    <th:block th:if="${!#lists.isEmpty(info.productDto.productImgDtos)}">
+                        <img th:src="${info.productDto.productImgDtos[0].imgPath}" alt="1"
+                             class="gold-card-img"/>
+                    </th:block>
+                </th:block>
 
-            <div class="nav-wrap clear">
+                <div class="gold-card">
+                    <h2 class="gold-card-title">使用次卡</h2>
 
-                <!--快递配送 start-->
-                <div class="nav-wrap-item" style="display: block;">
-                    <form name="form1" id="form1" method="post">
-                        <h2 class="address-title">新建收货地址</h2>
-                        <div class="address">
-                            <div class="address-item">
-                                <span class="address-lable">收件人：</span>
-                                <p class="address-rt">
-                                    <input type="text" placeholder="填写收件人" name="contactName" value=""
-                                           class="address-input"/>
-                                </p>
-                            </div>
-                            <div class="address-item">
-                                <span class="address-lable">联系手机：</span>
-                                <p class="address-rt">
-                                    <input type="tel" placeholder="填写联系手机" name="mobile" maxlength="11" value=""
-                                           class="address-input"/>
-                                </p>
-                            </div>
-                            <div class="address-item" id="test">
-                                <span class="address-lable">所在地区：</span>
-                                <p class="address-rt">
-                                    <span id="city" class="address-input">选择所在地区</span>
-                                </p>
-                            </div>
-                            <div class="address-item">
-                                <span class="address-lable">详细地址：</span>
-                                <p class="address-rt">
-                                    <textarea placeholder="填写详细地址" name="address" class="address-textarea"></textarea>
-                                </p>
-                            </div>
-                        </div>
+                    <div class="gold-card-item">
+                        <span class="gold-card-lable">场名称</span>
+                        <p class="gold-card-rt">
+                            <span id="SelfCity" class="address-input">使用机场</span>
+                            <input type="hidden" name="airportCode" value=""/>
+                            <input type="hidden" name="airportName" value=""/>
+                        </p>
+                    </div>
 
-                        <input type="hidden" name="deliveryType" value="2"/>
-                        <input type="hidden" name="provinceId" value="0"/>
-                        <input type="hidden" name="cityId" value="0"/>
-                        <input type="hidden" name="districtId" value="0"/>
 
-                    </form>
+                    <div class="gold-card-item">
+                        <span class="gold-card-lable">真实姓名</span>
+                        <p class="gold-card-rt">
+                            <input type="text" id="contactName" name="contactName" placeholder="填写真实姓名" value=""
+                                   class="gold-card-input"/>
+                        </p>
+                    </div>
+                    <div class="gold-card-item">
+                        <span class="gold-card-lable">手机号码</span>
+                        <p class="gold-card-rt">
+                            <input type="text" id="mobile" name="mobile" placeholder="填写手机号码" value=""
+                                   class="gold-card-input"/>
+                        </p>
+                    </div>
+                    <div class="gold-card-item">
+                        <span class="gold-card-lable">乘坐班次</span>
+                        <p class="gold-card-rt">
+                            <input type="text" id="flightNumber" name="flightNumber" placeholder="输入乘坐班次" value=""
+                                   class="gold-card-input"/>
+                        </p>
+                    </div>
                 </div>
-                <!--快递配送 end-->
-
-                <!--我要自提 start-->
-                <div class="nav-wrap-item">
-                    <form name="form2" id="form2" method="post">
-                        <h2 class="address-title">填写自提信息</h2>
-                        <div class="address">
-                            <div class="address-item">
-                                <span class="address-lable">联系人：</span>
-                                <p class="address-rt">
-                                    <input type="text" placeholder="填写联系人" name="contactName" value=""
-                                           class="address-input"/>
-                                </p>
-                            </div>
-                            <div class="address-item">
-                                <span class="address-lable">联系电话：</span>
-                                <p class="address-rt">
-                                    <input type="tel" placeholder="填写联系电话" name="mobile" maxlength="11" value=""
-                                           class="address-input"/>
-                                </p>
-                            </div>
-                            <div class="address-item">
-                                <span class="address-lable">自提时间：</span>
-                                <p class="address-rt">
-                                    <input type="text" placeholder="选择自提时间" id="birthdate" name="effectiveDate" value=""
-                                           class="address-input birthdate"/>
-                                </p>
-                            </div>
-                            <div class="address-item">
-                                <span class="address-lable">自提网点：</span>
-                                <p class="address-rt">
-                                    <span id="SelfCity" class="address-input">选择自提网点</span>
-                                    <input type="hidden" name="airportCode" value=""/>
-                                    <input type="hidden" name="airportName" value=""/>
-                                </p>
-                            </div>
-                        </div>
-
-                        <input type="hidden" name="deliveryType" value="1"/>
-                    </form>
-                </div>
-                <!--我要自提 end-->
-            </div>
+            </form>
         </div>
-        <!--main end-->
-        <!--confirm-btn start-->
-        <a href="javascript:void(0);" class="confirm-btn">确定</a>
-        <!--confirm-btn end-->
+        <!--main start-->
 
-        <!--选择日期-->
-        <div id="datePlugin"></div>
+        <a href="javascript:void(0);" class="sumbit-btn">提交</a>
+
     </div>
 
-    <div class="content-city" style="display: none;">
+    <div class="content-city">
         <!--city-list start-->
         <div class="city-list">
             <!--nav start-->

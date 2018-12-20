@@ -237,7 +237,7 @@
                 '<div id="dateshadow"></div>' +
                 '<div id="datePage" class="page">' +
                     '<section>' +
-                        '<div id="datetitle"><span id="datecancle">取消</span><h1>选择航班日期</h1><span id="dateconfirm">确定</span></div>' +
+                        '<div id="datetitle"><span id="datecancle">取消</span><h1>选择日期</h1><span id="dateconfirm">确定</span></div>' +
                         '<div id="datemark"><a id="markyear"></a><a id="markmonth"></a><a id="markday"></a></div>' +
                         '<div id="timemark"><a id="markhour"></a><a id="markminut"></a><a id="marksecond"></a></div>' +
                         '<div id="datescroll">' +

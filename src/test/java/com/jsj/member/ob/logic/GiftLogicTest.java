@@ -100,6 +100,13 @@ public class GiftLogicTest {
     }
 
 
+    @Test
+    public void getGives() {
+
+        List<GiftDto> giftDtos = GiftLogic.GetGives("oeQDZt-rcgi9QhWm6F7o2mV3dSYY");
+        System.out.println(JSON.toJSONString(giftDtos));
+
+    }
 
 
 }

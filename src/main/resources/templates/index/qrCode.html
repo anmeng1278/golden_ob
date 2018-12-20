@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<!-- 首页 \document\html\KTGJService\PaySuccess.html -->
+<head th:replace="index/common/layout :: header('金色严选-我的库存', '', '')"></head>
+
+<th:block layout:fragment="script">
+
+    <!--引入js-->
+    <script th:inline="javascript">
+
+    </script>
+
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/QRCode.css')}"/>
+</th:block>
+
+<div layout:fragment="content">
+
+    <dl class="QRCode">
+        <dt>
+            <h2 class="QRCode-title">使用时，请出示此二维码</h2>
+            <p class="QRCode-tips">点击消息通知或截图保存此页面</p>
+        </dt>
+        <dd>
+            <img th:src="${imgUrl}" alt="1" class="QRCode-img"/>
+        </dd>
+    </dl>
+
+</div>
+
+</html>
