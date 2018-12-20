@@ -19,6 +19,3 @@ build_ob:
     - fi
     - docker run -d -v "$PWD/target/":/usr/src/myapp -p 80:80 --name "test-$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --spring.profiles.active=pub
     - echo "发布成功"
-
-
-
