@@ -652,10 +652,15 @@ public class GiftLogic extends BaseLogic {
 
         }
 
-        ArrayList<GiftDto> collect = giftDtos.stream().collect(
+        //去重
+        ArrayList<GiftDto> dtos = giftDtos.stream().collect(
                 Collectors.collectingAndThen(
                         Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(GiftDto::getGiftId))), ArrayList::new)
         );
+
+        //排序
+        List<GiftDto> collect = dtos.stream().sorted(Comparator.comparing(GiftDto::getCreateTime).reversed())
+                .collect(Collectors.toList());
 
         return collect;
     }
