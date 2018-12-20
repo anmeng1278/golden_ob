@@ -441,8 +441,9 @@ public class GiftLogic extends BaseLogic {
      */
     public static GiftDto GetGift(int giftId) {
 
-        Gift entity = giftLogic.giftService.selectById(giftId);
-        return ToDto(entity);
+        Gift gift = giftLogic.giftService.selectById(giftId);
+
+        return ToDto(gift);
 
     }
 
@@ -567,6 +568,7 @@ public class GiftLogic extends BaseLogic {
 
         EntityWrapper<Gift> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null and open_id={0}", openId);
+        wrapper.orderBy("create_time desc");
         List<Gift> gifts = giftLogic.giftService.selectList(wrapper);
 
         List<GiftDto> giftDtos = new ArrayList<>();
@@ -600,6 +602,7 @@ public class GiftLogic extends BaseLogic {
         EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
         wrapper.in("stock_id", parentStockIds);
+        wrapper.orderBy("create_time desc");
         List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
 
         List<GiftDto> giftDtos = new ArrayList<>();
@@ -611,11 +614,15 @@ public class GiftLogic extends BaseLogic {
             giftDtos.add(giftDto);
 
         }
-
-        ArrayList<GiftDto> collect = giftDtos.stream().collect(
+        //去重
+        ArrayList<GiftDto> dtos = giftDtos.stream().collect(
                 Collectors.collectingAndThen(
                         Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(GiftDto::getGiftId))), ArrayList::new)
         );
+
+        //排序
+        List<GiftDto> collect = dtos.stream().sorted(Comparator.comparing(GiftDto::getCreateTime).reversed())
+                .collect(Collectors.toList());
 
         return collect;
     }
@@ -639,6 +646,7 @@ public class GiftLogic extends BaseLogic {
                 wrapper.where("open_id={0}", openId);
             }
             wrapper.where("parent_stock_id={0}", giveStock.getStockId());
+            wrapper.orderBy("create_time desc");
             List<Stock> stocks = giftLogic.stockService.selectList(wrapper);
             for (Stock stock : stocks) {
                 StockDto stockDto = StockLogic.ToDto(stock);

@@ -488,13 +488,12 @@ public class StockLogic extends BaseLogic {
 
     /**
      * 获得库存中没样商品的数量
-     *
      * @param productId
      * @param productSpecId
      * @param stockIds
      * @return
      */
-    public static Integer GetProductCount(int productId, int productSpecId, List<Integer> stockIds) {
+    public static Integer GetProductCount(int productId,int productSpecId,List<Integer> stockIds){
 
         EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
         productWrapper.where("product_id={0}", productId);
@@ -558,18 +557,18 @@ public class StockLogic extends BaseLogic {
 
     /**
      * 库存数据去重计算数量
-     *
      * @param lists
      * @return
      */
-    public static List<StockDto> FilterData(List<StockDto> lists) {
+    public static List<StockDto> FilterData(List<StockDto> lists){
 
         List<Integer> stockIds = lists.stream().map(StockDto::getStockId).collect(Collectors.toList());
 
         lists.forEach(stockDto -> {
-            Integer count = StockLogic.GetProductCount(stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
-            stockDto.setNumber(count);
-        });
+                    Integer count = StockLogic.GetProductCount(stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
+                    stockDto.setNumber(count);
+                }
+        );
 
         ArrayList<StockDto> stockDtos = lists.stream().collect(
                 Collectors.collectingAndThen(
