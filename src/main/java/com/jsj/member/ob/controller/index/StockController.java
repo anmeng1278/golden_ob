@@ -463,7 +463,7 @@ public class StockController extends BaseController {
         String imgUrl;
         try {
 
-            if (!deliveryDto.getStatus().equals(DeliveryStatus.DELIVERED.getValue())) {
+            if (!deliveryDto.getDeliveryStatus().equals(DeliveryStatus.DELIVERED.getValue())) {
                 throw new TipException("当前配送状态不允许使用");
             }
 
