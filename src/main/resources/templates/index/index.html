@@ -72,7 +72,7 @@
             <div class="section-con">
 
                 <th:block th:each="info : ${qualityTravels}">
-                    <a th:href="${ob.Url('/product?productId='+info.productId)}">
+                    <a th:href="${ob.Nav('/product?productId='+info.productId)}">
                         <dl class="section-con-dl">
                             <dt th:if="${!#lists.isEmpty(info.productImgDtos)}">
                                 <img th:src="${info.productImgDtos[0].imgPath}" alt="1" width="100%"/>
@@ -136,7 +136,7 @@
             <!--section-con start-->
             <div class="section-con">
                 <th:block th:each="info:${hotProducts}">
-                    <a th:href="${ob.Url('/product?productId='+info.productId)}">
+                    <a th:href="${ob.Nav('/product?productId='+info.productId)}">
                         <dl class="section-con-dl">
                             <dt th:if="${!#lists.isEmpty(info.productImgDtos)}">
                                 <img th:src="${info.productImgDtos[0].imgPath}" alt="1" width="100%"/>
