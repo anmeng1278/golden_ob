@@ -1,6 +1,5 @@
 package com.jsj.member.ob.config;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -21,10 +20,10 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        if (!StringUtils.isEmpty(webconfig.getVirtualPath())) {
-            registry.addResourceHandler(String.format("{0}/**", webconfig.getVirtualPath())).addResourceLocations("classpath:/static/");
-        }
+        //if (!StringUtils.isEmpty(webconfig.getVirtualPath())) {
+        //    registry.addResourceHandler(String.format("{0}/**", webconfig.getVirtualPath())).addResourceLocations("classpath:/static/");
+        //}
 
-        registry.addResourceHandler(String.format("/**", webconfig.getVirtualPath())).addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("**/static/**").addResourceLocations("classpath:/static/");
     }
 }
