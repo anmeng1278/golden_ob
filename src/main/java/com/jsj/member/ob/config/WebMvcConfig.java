@@ -22,8 +22,11 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         if (!StringUtils.isEmpty(webconfig.getVirtualPath())) {
-            registry.addResourceHandler(String.format("{0}/**", webconfig.getVirtualPath())).addResourceLocations("classpath:/static/");
+            registry.addResourceHandler(String.format("%s/static/**", webconfig.getVirtualPath())).addResourceLocations("classpath:/static/");
         }
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+
+        super.addResourceHandlers(registry);
 
         //registry.addResourceHandler("**/static/**").addResourceLocations("classpath:/static/");
     }
