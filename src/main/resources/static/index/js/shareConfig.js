@@ -15,9 +15,12 @@ wx.ready(function () {
             var url = location.protocol + "//" + location.host;
             shareConfig.link = url + shareConfig.link;
         }
+    } else {
+        shareConfig.link = location.href;
     }
 
-    shareConfig.desc = shareConfig.desc || "未设置分享描述";
+    shareConfig.desc = shareConfig.desc || "服务覆盖全国100个城市，300万商旅人士的出行首选！";
+    shareConfig.title = shareConfig.title || "空铁管家";
 
     wx.onMenuShareAppMessage({
         title: shareConfig.title, // 分享标题

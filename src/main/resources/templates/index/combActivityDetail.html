@@ -9,15 +9,13 @@
 
     <script th:inline="javascript">
 
-        var shareUrl = [[${shareUrl}]];
         var shareTitle = "我在空铁管家发现了" + [[${info.activityName}]];
-
         shareConfig = {
             title: shareTitle,
             desc: [[${info.introduce}]],
-            link: shareUrl,
             imgUrl: "[[${info.imgPath}]]"
         };
+
     </script>
 
     <script th:src="${ob.Url('/index/js/order.js')}" type="text/javascript" charset="utf-8"></script>
