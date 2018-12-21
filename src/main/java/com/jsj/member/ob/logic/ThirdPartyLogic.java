@@ -3,14 +3,15 @@ package com.jsj.member.ob.logic;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jsj.member.ob.config.Webconfig;
-import com.jsj.member.ob.dto.thirdParty.SmsDto;
-import com.jsj.member.ob.dto.thirdParty.TemplateDto;
 import com.jsj.member.ob.dto.thirdParty.*;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.HttpUtils;
 import com.jsj.member.ob.utils.Md5Utils;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,10 @@ import java.util.Map;
 
 @Component
 public class ThirdPartyLogic extends BaseLogic {
+
+
+    private final Logger logger = LoggerFactory.getLogger(ThirdPartyLogic.class);
+
 
     public static ThirdPartyLogic thirdPartyLogic;
 
@@ -53,10 +58,21 @@ public class ThirdPartyLogic extends BaseLogic {
             sign = Md5Utils.MD5(sign);
             requ.getRequestHead().setSign(sign);
 
+            String json = JSON.toJSONString(requ);
+            String url = thirdPartyLogic.webconfig.getAccessTokenUrl();
+
             //设置签名
-            String result = HttpUtils.json(thirdPartyLogic.webconfig.getWeChatAccessTokenUrl(), JSON.toJSONString(requ));
+            String result = HttpUtils.json(url, json);
             resp = JSON.parseObject(result, GetAccessTokenResp.class);
 
+            thirdPartyLogic.logger.info(String.format("%s %s %s", url, json, result));
+
+            if (!resp.getResponseHead().getCode().equals("0000")) {
+                throw new TipException(resp.getResponseHead().getMessage());
+            }
+
+        } catch (TipException ex) {
+            throw ex;
         } catch (Exception ex) {
             resp.getResponseHead().setCode("0001");
             resp.getResponseHead().setMessage(ex.getMessage());
@@ -130,10 +146,21 @@ public class ThirdPartyLogic extends BaseLogic {
             sign = Md5Utils.MD5(sign);
             requ.getRequestHead().setSign(sign);
 
+            String url = thirdPartyLogic.webconfig.getJsApiTicketUrl();
+            String json = JSON.toJSONString(requ);
+
             //设置签名
-            String result = HttpUtils.json(thirdPartyLogic.webconfig.getJsApiTicketUrl(), JSON.toJSONString(requ));
+            String result = HttpUtils.json(url, json);
             resp = JSON.parseObject(result, GetJsApiTicketResp.class);
 
+            thirdPartyLogic.logger.info(String.format("%s %s %s", url, json, result));
+
+            if (!resp.getResponseHead().getCode().equals("0000")) {
+                throw new TipException(resp.getResponseHead().getMessage());
+            }
+
+        } catch (TipException ex) {
+            throw ex;
         } catch (Exception ex) {
             resp.getResponseHead().setCode("0001");
             resp.getResponseHead().setMessage(ex.getMessage());
@@ -165,10 +192,21 @@ public class ThirdPartyLogic extends BaseLogic {
             sign = Md5Utils.MD5(sign);
             requ.getRequestHead().setSign(sign);
 
+            String url = thirdPartyLogic.webconfig.getWeChatAccessTokenUrl();
+            String json = JSON.toJSONString(requ);
+
             //设置签名
-            String result = HttpUtils.json(thirdPartyLogic.webconfig.getWeChatAccessTokenUrl(), JSON.toJSONString(requ));
+            String result = HttpUtils.json(url, json);
             resp = JSON.parseObject(result, GetWeChatAccessTokenResp.class);
 
+            thirdPartyLogic.logger.info(String.format("%s %s %s", url, json, result));
+
+            if (!resp.getResponseHead().getCode().equals("0000")) {
+                throw new TipException(resp.getResponseHead().getMessage());
+            }
+
+        } catch (TipException ex) {
+            throw ex;
         } catch (Exception ex) {
             resp.getResponseHead().setCode("0001");
             resp.getResponseHead().setMessage(ex.getMessage());
@@ -217,15 +255,21 @@ public class ThirdPartyLogic extends BaseLogic {
             sign = Md5Utils.MD5(sign);
             requ.getRequestHead().setSign(sign);
 
-            String js = JSON.toJSONString(requ);
+            String url = thirdPartyLogic.webconfig.getPayTradeUrl();
+            String json = JSON.toJSONString(requ);
 
             //设置签名
-            String result = HttpUtils.json(thirdPartyLogic.webconfig.getPayTradeUrl(), js);
+            String result = HttpUtils.json(url, json);
             resp = JSON.parseObject(result, GetPayTradeResp.class);
 
-            if (resp.getResponseHead().getCode().equals("0000")) {
-                resp.getResponseBody().Parse();
+
+            thirdPartyLogic.logger.info(String.format("%s %s %s", url, json, result));
+
+            if (!resp.getResponseHead().getCode().equals("0000")) {
+                throw new TipException(resp.getResponseHead().getMessage());
             }
+
+            resp.getResponseBody().Parse();
 
             /*
             {
@@ -239,6 +283,8 @@ public class ThirdPartyLogic extends BaseLogic {
             }
              */
 
+        } catch (TipException ex) {
+            throw ex;
         } catch (Exception ex) {
             resp.getResponseHead().setCode("0001");
             resp.getResponseHead().setMessage(ex.getMessage());
@@ -274,9 +320,12 @@ public class ThirdPartyLogic extends BaseLogic {
             Map<String, Object> map = new HashMap<>();
             map.put("SmsDto", smsDto);
 
-            String body = JSON.toJSONString(map);
+            String json = JSON.toJSONString(map);
             //System.out.println(body);
-            HttpUtils.json(url, body);
+            String result = HttpUtils.json(url, json);
+
+            thirdPartyLogic.logger.info(String.format("%s %s %s", url, json, result));
+
             //System.out.println(json);
 
         } catch (Exception e) {
@@ -304,8 +353,10 @@ public class ThirdPartyLogic extends BaseLogic {
 
             url = String.format(url, accessToken);
 
-            String body = JSON.toJSONString(templateDto);
-            HttpUtils.json(url, body);
+            String json = JSON.toJSONString(templateDto);
+            String result = HttpUtils.json(url, json);
+
+            thirdPartyLogic.logger.info(String.format("%s %s %s", url, json, result));
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -355,8 +406,11 @@ public class ThirdPartyLogic extends BaseLogic {
         requ.setPartnerLoginName(thirdPartyLogic.webconfig.getPartnerLoginName());
         requ.setPartnerLoginPassword(thirdPartyLogic.webconfig.getPartnerLoginPassword());
 
+        String url = thirdPartyLogic.webconfig.getActivityUrl();
         String json = JSON.toJSONString(requ);
-        String result = HttpUtils.json(thirdPartyLogic.webconfig.getActivityUrl(), json, "_GetActivityCode");
+        String result = HttpUtils.json(url, json, "_GetActivityCode");
+
+        thirdPartyLogic.logger.info(String.format("%s %s %s %s", url, json, result, "_GetActivityCode"));
 
         if (!StringUtils.isEmpty(result)) {
             resp = JSON.parseObject(result, GetActivityCodesResp.class);

@@ -1,11 +1,11 @@
 server:
-  port: 8000
+  port: 80
 
 
 #spring
 spring:
   profiles:
-    active: dev
+    active: pub
   http:
     multipart:
       max-file-size: 10MB

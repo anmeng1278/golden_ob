@@ -7,7 +7,7 @@ logging:
       jsj:
         member:
           ob:
-            dao: debug
+            dao: info
 #spring
 spring:
   datasource:

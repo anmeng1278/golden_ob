@@ -19,9 +19,6 @@ public class GlobalDefaultExceptionHandler {
     @ResponseBody
     public RestResponseBo defaultExceptionHander(HttpServletRequest request, Exception e) throws Exception {
 
-        e.printStackTrace();
-        logger.error("", e);
-
         return RestResponseBo.fail(e.getMessage());
 
     }
