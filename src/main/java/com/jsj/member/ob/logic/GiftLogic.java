@@ -609,6 +609,8 @@ public class GiftLogic extends BaseLogic {
         List<GiftDto> giftDtos = new ArrayList<>();
         for (Gift gift : gifts) {
             GiftDto giftDto = GiftLogic.GetGift(gift.getGiftId());
+            List<StockDto> stockDtos = GiftLogic.GetGiftStocks(gift.getGiftId());
+            giftDto.setStockDtos(stockDtos);
             giftDtos.add(giftDto);
         }
         return giftDtos;

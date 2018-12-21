@@ -11,24 +11,27 @@
     <script th:src="${ob.Url('/index/js/PaySuccess.js')}" type="text/javascript"
             charset="utf-8"></script>
 
-    <script th:inline="javascript">
-
-        var shareUrl = [[${shareUrl}]];
-        var shareTitle = "发红包啦";
-
-        shareConfig = {
-            title: shareTitle,
-            desc: "",
-            link: shareUrl,
-            imgUrl: ""
-        };
-
-    </script>
-
 </th:block>
 
 <th:block layout:fragment="css">
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/PaySuccess.css')}"/>
+</th:block>
+
+<th:block layout:fragment="share">
+
+    <script th:inline="javascript">
+        //分享到发红包页面
+        var shareUrl = [[${shareUrl}]];
+        var shareTitle = "送给您一个拼手气红包";
+
+        shareConfig = {
+            title: shareTitle,
+            desc: "拆红包，拼手气，拆多少瘦多少！",
+            link: shareUrl,
+            imgUrl: [[${ob.Img('/index/images/give_default_img.png')}]]
+        };
+    </script>
+
 </th:block>
 
 <div layout:fragment="content">

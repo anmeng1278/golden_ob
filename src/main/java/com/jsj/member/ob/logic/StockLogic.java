@@ -21,7 +21,6 @@ import com.jsj.member.ob.service.StockFlowService;
 import com.jsj.member.ob.service.StockService;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -145,7 +144,7 @@ public class StockLogic extends BaseLogic {
                     exist.getProductSpecId().equals(up.getsId())).collect(Collectors.toList());
 
             if (collect.size() < up.getNum()) {
-                throw new TipException("所有商品库存不足，请重新选择");
+                throw new TipException("所选商品库存不足，请重新选择");
             }
 
 

@@ -35,62 +35,69 @@
 
             <th:block th:each="info:${giveStocks}">
 
-                <!-- 群分享 -->
-                <th:block th:if="${info.giftShareType.value == 2}">
-                    <a th:href="${ob.Nav('/share/gift/'+info.giftUniqueCode)}">
-                        <dl class="give-item-dl clear">
-                            <dt>
-                                <img th:if="${giftLogic.GetGiftStockCount(info.giftId) le 1}"
-                                     th:src="${productLogic.GetProductImgDtos(giftLogic.GetGiftStocks(info.giftId).get(0).productId)[0].imgPath}">
-                                <img th:if="${giftLogic.GetGiftStockCount(info.giftId) gt 1}"
-                                     th:src="${ob.Img('/index/images/give_default_img.png')}" alt="1"/>
-                            </dt>
-                            <dd>
-                                <p class="give-dd-p">
-                                    <span class="give-dd-name" th:text="${info.giftShareType.message}"></span>
+                <th:block th:with="count=${giftLogic.GetGiftStockCount(info.giftId)}">
 
-                                    <span class="give-state-gray" th:text="${info.giftStatus.message}"></span>
-                                </p>
-                                <p class="give-dd-tips clear"
-                                   th:text="|共${giftLogic.GetGiftStockCount(info.giftId)}件商品|"></p>
-                                <p class="give-dd-time"
-                                   th:text="|赠送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|">
-                                </p>
-                            </dd>
-                        </dl>
-                    </a>
-                </th:block>
+                    <!-- 群分享 -->
+                    <th:block th:if="${info.giftShareType.value == 2}">
+                        <a th:href="${ob.Url('/share/gift/'+info.giftUniqueCode)}">
+                            <dl class="give-item-dl clear">
+                                <dt>
+                                    <img th:if="${count le 1}"
+                                         th:src="${productLogic.GetProductImgDtos(info.stockDtos.get(0).productId)[0].imgPath}">
+                                    <img th:if="${count gt 1}"
+                                         th:src="${ob.Img('/index/images/give_default_img.png')}" alt="1"/>
+                                </dt>
+                                <dd>
+                                    <p class="give-dd-p">
+                                        <span class="give-dd-name" th:text="${info.giftShareType.message}"></span>
 
-                <!-- 分享个人 -->
-                <th:block th:if="${info.giftShareType.value != 2}">
-                    <a th:href="${ob.Nav('/share/gift/'+info.giftUniqueCode)}">
-                        <dl class="give-item-dl clear">
-                            <dt>
-                                <img th:if="${giftLogic.GetGiftStockCount(info.giftId) le 1}"
-                                     th:src="${productLogic.GetProductImgDtos(giftLogic.GetGiftStocks(info.giftId)[0].productId)[0].imgPath}">
-                                <img th:if="${giftLogic.GetGiftStockCount(info.giftId) gt 1}"
-                                     th:src="${ob.Img('/index/images/give_default_img.png')}" alt="1"/>
-                            </dt>
-                            <dd>
-                                <p class="give-dd-p">
+                                        <span class="give-state-gray" th:text="${info.giftStatus.message}"></span>
+                                    </p>
+                                    <p class="give-dd-tips clear"
+                                       th:text="|共${count}件商品|"></p>
+                                    <p class="give-dd-time"
+                                       th:text="|赠送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|">
+                                    </p>
+                                </dd>
+                            </dl>
+                        </a>
+                    </th:block>
+
+                    <!-- 分享个人 -->
+                    <th:block th:if="${info.giftShareType.value != 2}">
+                        <a th:href="${ob.Url('/share/gift/'+info.giftUniqueCode)}">
+                            <dl class="give-item-dl clear">
+
+                                <dt>
+                                    <img th:if="${count le 1}"
+                                         th:src="${productLogic.GetProductImgDtos(info.stockDtos[0].productId)[0].imgPath}">
+                                    <img th:if="${count gt 1}"
+                                         th:src="${ob.Img('/index/images/give_default_img.png')}" alt="1"/>
+                                </dt>
+                                <dd>
+                                    <p class="give-dd-p">
                                 <span class="give-dd-name"
-                                      th:if="${!#lists.isEmpty(giftLogic.GetGiftStocks(info.giftId))}"
-                                      th:text="${giftLogic.GetGiftStocks(info.giftId)[0].wechatDto.nickname}">韩梅梅</span>
+                                      th:if="${!#lists.isEmpty(info.stockDtos)}"
+                                      th:text="${info.stockDtos[0].wechatDto.nickname}">韩梅梅</span>
 
-                                    <span class="give-dd-name"
-                                          th:if="${#lists.isEmpty(giftLogic.GetGiftStocks(info.giftId))}">待领取</span>
+                                        <span class="give-dd-name"
+                                              th:if="${#lists.isEmpty(info.stockDtos)}">待领取</span>
 
-                                    <span class="give-state-gray" th:text="${info.giftStatus.message}"></span>
+                                        <span class="give-state-gray" th:text="${info.giftStatus.message}"></span>
 
-                                </p>
-                                <p class="give-dd-tips clear"
-                                   th:text="|共${giftLogic.GetGiftStockCount(info.giftId)}件商品|"></p>
-                                <p class="give-dd-time"
-                                   th:text="|赠送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|">
-                                </p>
-                            </dd>
-                        </dl>
-                    </a>
+                                    </p>
+
+                                    <p class="give-dd-tips clear"
+                                       th:text="|共${count}件商品|"></p>
+                                    <p class="give-dd-time"
+                                       th:text="|赠送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|">
+                                    </p>
+                                </dd>
+
+                            </dl>
+                        </a>
+                    </th:block>
+
                 </th:block>
 
             </th:block>
@@ -100,7 +107,7 @@
         <!--我领取的 start-->
         <div class="give-item">
             <th:block th:each="info:${receiveStocks}">
-                <a th:href="${ob.Nav('/share/gift/'+info.giftUniqueCode)}">
+                <a th:href="${ob.Url('/share/gift/'+info.giftUniqueCode)}">
                     <dl class="give-item-dl clear">
                         <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(info.stockDtos[0].productId))}">
                             <img th:src="${productLogic.GetProductImgDtos(info.stockDtos[0].productId)[0].imgPath}"/>

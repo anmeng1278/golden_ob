@@ -14,17 +14,6 @@
 
     <script th:inline="javascript">
 
-        //分享到发礼物页面
-        var shareUrl = [[${shareUrl}]];
-        var shareTitle = "发礼物了";
-
-        shareConfig = {
-            title: shareTitle,
-            desc: "",
-            link: shareUrl,
-            imgUrl: ""
-        };
-
         TX.INIT(function () {
             $("a.share-btn").click(function () {
                 $("div.share-layer").show();
@@ -41,6 +30,23 @@
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css')}"/>
 
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/ReceiveDetail.css')}"/>
+
+</th:block>
+
+<th:block layout:fragment="share">
+
+    <script th:inline="javascript">
+        //分享到发礼物页面
+        var shareUrl = [[${shareUrl}]];
+        var shareTitle = "来自"+[[${giftDto.wechatDto.nickname}]]+"赠送出的礼物，都在一点‘小意思’";
+
+        shareConfig = {
+            title: shareTitle,
+            desc: "你来我往互道笑纳！金色严选|简单又好优质好货，生活可以过得好一些",
+            link: shareUrl,
+            imgUrl: [[${giftDto.stockDtos[0].productDto.productImgDtos[0].imgPath}]]
+        };
+    </script>
 
 </th:block>
 

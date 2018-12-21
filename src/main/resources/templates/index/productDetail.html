@@ -11,6 +11,8 @@
     <script th:src="${ob.Url('/index/js/order.js')}" type="text/javascript" charset="utf-8"></script>
 
     <script type="text/javascript" th:inline="javascript">
+
+
         TX.INIT(function () {
 
             $(".purchase-num-reduce").addClass("disabled");
@@ -212,6 +214,23 @@
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css', false)}"/>
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GoodsDetail.css')}"/>
 </th:block>
+
+<th:block layout:fragment="share">
+
+    <script th:inline="javascript">
+        var shareUrl = [[${shareUrl}]];
+        var shareTitle = "我在空铁管家发现了" + [[${info.productName}]];
+
+        shareConfig = {
+            title: shareTitle,
+            desc: [[${info.introduce}]],
+            link: shareUrl,
+            imgUrl: [[${info.productImgDtos[0].imgPath}]]
+        };
+    </script>
+
+</th:block>
+
 
 <div layout:fragment="content">
 
