@@ -79,20 +79,23 @@ public class ProductController extends BaseController {
      * @param request
      * @return
      */
-    @GetMapping("/{activityId}")
+    @GetMapping("/comb/{activityId}")
     public String groupDetail(@PathVariable("activityId") int activityId, HttpServletRequest request) {
 
         ActivityDto info = ActivityLogic.GetActivity(activityId);
 
+        if (!info.getActivityType().equals(ActivityType.COMBINATION)) {
+            return this.Redirect("/");
+        }
+
         //活动中的商品
-        List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(activityId);
+        List<ActivityProductDto> productDtos = ActivityLogic.GetActivityProductDtos(activityId);
 
         request.setAttribute("info", info);
-        request.setAttribute("activityProductDtos", activityProductDtos);
+        request.setAttribute("productDtos", productDtos);
 
-        return "index/groupDetail";
+        return "index/combActivityDetail";
     }
-
 
 
     /**
