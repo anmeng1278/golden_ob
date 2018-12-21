@@ -20,7 +20,6 @@ import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
-import com.jsj.member.ob.utils.EncryptUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -221,8 +220,7 @@ public class ProductController extends BaseController {
         }
         data.put("resp", resp);
 
-        String obs = EncryptUtils.encrypt(resp.getOrderId() + "");
-        String successUrl = String.format("/pay/success/%s", obs);
+        String successUrl = String.format("/pay/success/%s", resp.getOrderUniqueCode());
         data.put("successUrl", this.Url(successUrl));
 
         String url = this.Url("/order");

@@ -19,6 +19,7 @@ import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.service.OrderProductService;
 import com.jsj.member.ob.service.OrderService;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,6 +129,7 @@ public class OrderSeckill extends OrderBase {
         order.setCreateTime(DateUtils.getCurrentUnixTime());
         order.setUpdateTime(DateUtils.getCurrentUnixTime());
         order.setExpiredTime(DateUtils.getCurrentUnixTime() + Constant.ORDER_EXPIRED_TIME);
+        order.setOrderUniqueCode(StringUtils.UUID32());
 
         //用于创建商品订单
         List<OrderProduct> orderProducts = new ArrayList<>();
@@ -204,6 +206,7 @@ public class OrderSeckill extends OrderBase {
 
         resp.setAmount(order.getPayAmount());
         resp.setOrderId(order.getOrderId());
+        resp.setOrderUniqueCode(order.getOrderUniqueCode());
         resp.setExpiredTime(order.getExpiredTime());
         resp.setSuccess(true);
 

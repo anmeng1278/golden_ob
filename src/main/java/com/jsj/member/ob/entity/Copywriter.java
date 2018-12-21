@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Copywriter 实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-19
+ *   @since 2018-12-21
  */
 @TableName("_copywriter")
 public class Copywriter implements Serializable {

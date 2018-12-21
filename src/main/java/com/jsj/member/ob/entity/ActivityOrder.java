@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : ActivityOrder 活动订单表,暂时团单使用实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-19
+ *   @since 2018-12-21
  */
 @TableName("_activity_order")
 public class ActivityOrder implements Serializable {

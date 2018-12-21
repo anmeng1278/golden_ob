@@ -1,6 +1,7 @@
 package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderDto;
@@ -121,7 +122,7 @@ public class OrderLogic extends BaseLogic {
         list.add(OrderStatus.UNPAY.getValue());
         list.add(OrderStatus.PAYFAIL.getValue());
 
-        entityWrapper.in("status",list);
+        entityWrapper.in("status", list);
         entityWrapper.where("delete_time is null");
         entityWrapper.where("expired_time < UNIX_TIMESTAMP()");
 
@@ -261,6 +262,8 @@ public class OrderLogic extends BaseLogic {
         dto.setExpiredTime(entity.getExpiredTime());
         dto.setUpdateTime(entity.getUpdateTime());
 
+        dto.setOrderUniqueCode(entity.getOrderUniqueCode());
+
         return dto;
 
     }
@@ -268,6 +271,17 @@ public class OrderLogic extends BaseLogic {
     public static OrderDto GetOrder(int orderId) {
 
         Order entity = orderLogic.orderService.selectById(orderId);
+        OrderDto dto = OrderLogic.ToDto(entity);
+
+        return dto;
+    }
+
+    public static OrderDto GetOrder(String orderUniqueCode) {
+
+        Wrapper<Order> wrapper = new EntityWrapper<>();
+        wrapper.where("order_unique_code = {0}", orderUniqueCode);
+
+        Order entity = orderLogic.orderService.selectOne(wrapper);
         OrderDto dto = OrderLogic.ToDto(entity);
 
         return dto;

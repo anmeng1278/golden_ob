@@ -18,6 +18,7 @@ import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -122,6 +123,7 @@ public class OrderGroupon extends OrderBase {
             order.setCreateTime(DateUtils.getCurrentUnixTime());
             order.setUpdateTime(DateUtils.getCurrentUnixTime());
             order.setExpiredTime(DateUtils.getCurrentUnixTime() + Constant.ORDER_EXPIRED_TIME);
+            order.setOrderUniqueCode(StringUtils.UUID32());
 
             //用于创建商品订单
             List<OrderProduct> orderProducts = new ArrayList<>();

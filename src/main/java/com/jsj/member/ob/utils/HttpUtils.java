@@ -8,8 +8,13 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -54,6 +59,54 @@ public class HttpUtils {
             return response.body().string();
         }
         return "";
+    }
+
+    /**
+     * 发送json请求
+     * @param url
+     * @param json
+     * @param methodName
+     * @return
+     */
+    public static String json(String url, String json, String methodName) {
+        String result = null;
+        BufferedReader reader = null;
+        try {
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            connection.setUseCaches(false);
+
+            //注：这里的Content-Type必须是"application/json"
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("MethodName", methodName);
+            byte[] writeBytes = json.getBytes();
+            connection.setRequestProperty("Content-Length", String.valueOf(writeBytes.length));
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(json.getBytes());
+            outputStream.flush();
+            outputStream.close();
+
+            if (connection.getResponseCode() == 200) {
+                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                result = reader.readLine();
+            }
+        } catch (Exception ex) {
+
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return result;
+
     }
 
     /**

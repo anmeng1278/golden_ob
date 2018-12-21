@@ -54,7 +54,7 @@ public class ThirdPartyLogic extends BaseLogic {
             requ.getRequestHead().setSign(sign);
 
             //设置签名
-            String result = HttpUtils.json("http://s5.jsjinfo.cn/awkmanage/v3/ktapi/GetAccessToken", JSON.toJSONString(requ));
+            String result = HttpUtils.json(thirdPartyLogic.webconfig.getWeChatAccessTokenUrl(), JSON.toJSONString(requ));
             resp = JSON.parseObject(result, GetAccessTokenResp.class);
 
         } catch (Exception ex) {
@@ -334,4 +334,35 @@ public class ThirdPartyLogic extends BaseLogic {
         }
         return sb.toString();
     }
+
+
+    /**
+     * 获取空铁活动码
+     *
+     * @param requ
+     * @return
+     */
+    public static GetActivityCodesResp GetActivityCodes(GetActivityCodesRequ requ) {
+
+        GetActivityCodesResp resp = new GetActivityCodesResp();
+
+        if (requ == null) {
+            requ = new GetActivityCodesRequ();
+        }
+        if (requ.getCount() <= 0) {
+            requ.setCount(1);
+        }
+        requ.setPartnerLoginName(thirdPartyLogic.webconfig.getPartnerLoginName());
+        requ.setPartnerLoginPassword(thirdPartyLogic.webconfig.getPartnerLoginPassword());
+
+        String json = JSON.toJSONString(requ);
+        String result = HttpUtils.json(thirdPartyLogic.webconfig.getActivityUrl(), json, "_GetActivityCode");
+
+        if (!StringUtils.isEmpty(result)) {
+            resp = JSON.parseObject(result, GetActivityCodesResp.class);
+        }
+
+        return resp;
+    }
+
 }

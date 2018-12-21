@@ -1,5 +1,5 @@
 if (typeof shareConfig == "undefined") {
-    var url = location.protocol + "//" + location.host;
+    var url = location.protocol + "//" + location.host + virtualPath;
     shareConfig = {
         title: "空铁管家",
         desc: "服务覆盖全国100个城市，300万商旅人士的出行首选！",

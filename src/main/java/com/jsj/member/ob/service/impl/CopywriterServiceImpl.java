@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : Copywriter 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-19
+ *   @since 2018-12-21
  */
 @Service
 public class CopywriterServiceImpl extends ServiceImpl<CopywriterMapper, Copywriter> implements CopywriterService {

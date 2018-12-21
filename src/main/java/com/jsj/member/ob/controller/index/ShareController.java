@@ -7,6 +7,7 @@ import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.gift.GiftStockDto;
 import com.jsj.member.ob.dto.api.gift.ReceivedGiftRequ;
 import com.jsj.member.ob.dto.api.gift.ReceivedGiftResp;
+import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.api.redpacket.OrderRedpacketCouponDto;
 import com.jsj.member.ob.entity.Copywriter;
 import com.jsj.member.ob.entity.Dict;
@@ -14,11 +15,7 @@ import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.enums.GiftShareType;
 import com.jsj.member.ob.enums.GiftStatus;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.logic.CopywriterLogic;
-import com.jsj.member.ob.logic.DictLogic;
-import com.jsj.member.ob.logic.GiftLogic;
-import com.jsj.member.ob.logic.RedpacketLogic;
-import com.jsj.member.ob.utils.EncryptUtils;
+import com.jsj.member.ob.logic.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -50,21 +47,15 @@ public class ShareController extends BaseController {
             @PathVariable(name = "obs", required = true) String obs,
             HttpServletRequest request) {
 
-        int orderId = 0;
-        try {
-            orderId = Integer.parseInt(EncryptUtils.decrypt(obs));
-        } catch (Exception e) {
-            return this.Redirect("/");
-        }
-
+        OrderDto orderDto = OrderLogic.GetOrder(obs);
         String openId = this.OpenId();
 
         //领取
-        OrderRedpacketCouponDto couponDto = RedpacketLogic.DistributeRedpacket(openId, orderId);
+        OrderRedpacketCouponDto couponDto = RedpacketLogic.DistributeRedpacket(openId, orderDto.getOrderId());
         request.setAttribute("couponDto", couponDto);
 
         //查看领取记录
-        List<OrderRedpacketCouponDto> redpacketCoupons = RedpacketLogic.GetOrderRedpacketDtos(orderId, true);
+        List<OrderRedpacketCouponDto> redpacketCoupons = RedpacketLogic.GetOrderRedpacketDtos(orderDto.getOrderId(), true);
         request.setAttribute("redpacketCoupons", redpacketCoupons);
 
         return "index/redPacket";

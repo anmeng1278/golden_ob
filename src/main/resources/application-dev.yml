@@ -38,6 +38,11 @@ webconfig:
 
   virtualPath: ""
 
+  activityUrl: http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx
+
+  partnerLoginName: guangxiyinlian
+  partnerLoginPassword: gxylceshi
+
 redis:
   host: 172.16.5.64
   port: 6379
