@@ -24,6 +24,23 @@
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/index.css')}"/>
 </th:block>
 
+<th:block layout:fragment="share">
+    <script type="text/javascript" th:inline="javascript">
+
+        var shareUrl = [[${ob.Nav('/')}]];
+        var shareTitle = "金色严选|简单又好，优质好货，品质生活";
+
+        shareConfig = {
+            title: shareTitle,
+            desc: "随时随地，享受好的生活！",
+            link: shareUrl,
+            imgUrl: ""
+        };
+
+    </script>
+</th:block>
+
+
 <div layout:fragment="content">
 
     <!--banner start-->
@@ -160,8 +177,8 @@
             <h2 class="section-title">组合优惠</h2>
             <!--section-con start-->
             <div class="section-con">
-                <a href="javascript:void(0);">
-                    <th:block th:each="info:${setSales}">
+                <th:block th:each="info:${setSales}">
+                    <a th:href="${ob.Url('/product/groupDetail?activityId='+info.activityId)}">
                         <dl class="section-con-dl">
                             <dt>
                                 <img th:src="${info.imgPath}" alt="1" width="100%"/>
@@ -173,8 +190,8 @@
                                         th:text="${info.originalPrice}">￥</span></p>
                             </dd>
                         </dl>
-                    </th:block>
-                </a>
+                    </a>
+                </th:block>
             </div>
             <!--section-con end-->
         </div>
@@ -190,8 +207,10 @@
 
     <!--shopping-cart start-->
     <div class="shopping-cart">
-        <img th:src="${ob.Img('/index/images/shoppingCart.png')}" alt="1" class="shopping-icon"/>
-        <span class="shopping-num" th:text="${count}"></span>
+        <a th:href="${ob.Url('/cart')}">
+            <img th:src="${ob.Img('/index/images/shoppingCart.png')}" alt="1" class="shopping-icon"/>
+            <span class="shopping-num" th:text="${count}"></span>
+        </a>
     </div>
     <!--shopping-cart start-->
 

@@ -97,6 +97,7 @@ public class DeliveryLogic extends BaseLogic {
 
         EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null and open_Id={0}", openId);
+        wrapper.orderBy("create_time desc");
         List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
 
         List<DeliveryDto> deliveryDtos = new ArrayList<>();
@@ -135,7 +136,9 @@ public class DeliveryLogic extends BaseLogic {
     public static List<DeliveryStock> GetDeliveryStocks(int deliverId) {
 
         EntityWrapper<DeliveryStock> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null");
         wrapper.where("delivery_id={0}", deliverId);
+        wrapper.orderBy("create_time desc");
 
         List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(wrapper);
 
@@ -223,6 +226,8 @@ public class DeliveryLogic extends BaseLogic {
             wrapper.where("property_type_id = {0}",propertyType);
         }
 
+        wrapper.orderBy("create_time desc");
+
         List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
 
         return deliveries;
@@ -241,6 +246,7 @@ public class DeliveryLogic extends BaseLogic {
         Wrapper<DeliveryStock> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
         wrapper.where("delivery_id = {0}", deliveryId);
+        wrapper.orderBy("create_time desc");
 
         List<DeliveryStock> deliveryStocks = deliveryLogic.deliveryStockService.selectList(wrapper);
         List<DeliveryStockDto> deliveryStockDtos = new ArrayList<>();

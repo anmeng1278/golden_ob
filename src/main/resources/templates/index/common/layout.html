@@ -53,6 +53,23 @@
             })
         })
     </script>
+
+    <th:block layout:fragment="share">
+        <script type="text/javascript" th:inline="javascript">
+
+            var shareUrl = [[${ob.Nav('/')}]];
+            var shareTitle = "空铁管家";
+
+            shareConfig = {
+                title: shareTitle,
+                desc: "服务覆盖全国100个城市，300万商旅人士的出行首选",
+                link: shareUrl,
+                imgUrl: ""
+            };
+
+        </script>
+    </th:block>
+
 </head>
 <body>
 

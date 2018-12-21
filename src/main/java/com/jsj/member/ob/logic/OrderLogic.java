@@ -70,7 +70,13 @@ public class OrderLogic extends BaseLogic {
     public static List<OrderProductDto> GetOrderProducts(int orderId) {
 
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
-        List<OrderProduct> orderProducts = orderLogic.orderProductService.selectList(new EntityWrapper<OrderProduct>().where("order_id={0}", orderId));
+
+       EntityWrapper<OrderProduct> wrapper = new EntityWrapper<OrderProduct>();
+       wrapper.where("delete_time is null");
+       wrapper.where("order_id={0}", orderId);
+       wrapper.orderBy("create_time desc");
+
+        List<OrderProduct> orderProducts = orderLogic.orderProductService.selectList(wrapper);
 
         orderProducts.forEach(op -> {
 
@@ -222,7 +228,7 @@ public class OrderLogic extends BaseLogic {
             wrapper.in("status", orderStatuses);
         }
 
-        wrapper.orderBy("status asc");
+        wrapper.orderBy(" status asc ,create_time desc");
 
         List<Order> orders = orderLogic.orderService.selectList(wrapper);
         List<OrderDto> orderDtos = new ArrayList<>();

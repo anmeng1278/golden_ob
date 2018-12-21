@@ -44,7 +44,7 @@ public class ProductController extends BaseController {
      * @return
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String productDetail(HttpServletRequest request) {
+    public String productDetail(HttpServletRequest request) throws Exception {
 
         int productId = Integer.parseInt(request.getParameter("productId"));
 
@@ -70,6 +70,10 @@ public class ProductController extends BaseController {
         List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, openId);
         request.setAttribute("coupons", coupons);
 
+        String obs = EncryptUtils.encrypt(productId + "");
+        String shareUrl = this.Url(String.format("/product?productId=%s",obs), false);
+        request.setAttribute("shareUrl", shareUrl);
+
         return "index/productDetail";
     }
 
@@ -80,8 +84,10 @@ public class ProductController extends BaseController {
      * @param request
      * @return
      */
-    @GetMapping("/{activityId}")
-    public String groupDetail(@PathVariable("activityId") int activityId, HttpServletRequest request) {
+    @GetMapping("/groupDetail")
+    public String groupDetail(HttpServletRequest request) throws Exception {
+
+        int activityId = Integer.parseInt(request.getParameter("activityId"));
 
         ActivityDto info = ActivityLogic.GetActivity(activityId);
 
@@ -90,6 +96,10 @@ public class ProductController extends BaseController {
 
         request.setAttribute("info", info);
         request.setAttribute("activityProductDtos", activityProductDtos);
+
+        String obs = EncryptUtils.encrypt(activityId + "");
+        String shareUrl = this.Url(String.format("/product/groupDetail?activityId=%s",obs), false);
+        request.setAttribute("shareUrl", shareUrl);
 
         return "index/groupDetail";
     }

@@ -13,16 +13,16 @@
 
     <script type="text/javascript" th:inline="javascript">
 
-        $("div.purchase-num em.purchase-num-add").click(function(){
+
+        $("div.purchase-num em.purchase-num-add").click(function () {
 
             var stock = [[${info.stockCount}]]
             var num = parseInt($("div.purchase-layer div.purchase-num :text[name='num']").val() || 0, 10);
-            if(num>stock){
+            if (num > stock) {
                 return;
             }
 
         });
-
 
 
     </script>
@@ -32,6 +32,22 @@
 <th:block layout:fragment="css">
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css', false)}"/>
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GoodsOfJoint.css')}"/>
+</th:block>
+
+<th:block layout:fragment="share">
+
+    <script th:inline="javascript">
+        var shareUrl = [[${shareUrl}]];
+        var shareTitle = "我在空铁管家发现了" + [[${info.activityName}]];
+
+        shareConfig = {
+            title: shareTitle,
+            desc: [[${info.introduce}]],
+            link: shareUrl,
+            imgUrl: "[[${info.imgPath}]]"
+        };
+    </script>
+
 </th:block>
 
 <div layout:fragment="content">
@@ -68,7 +84,8 @@
                                     <p class="discount-dl-p">
                                         <span class="discount-dl-price"
                                               th:text="${pro.productDto.salePrice}">￥399</span>
-                                        <a href="javascript:void(0);" class="discount-dl-look">查看详情</a>
+                                        <a th:href="${ob.Url('/product?productId='+pro.productId)}"
+                                           class="discount-dl-look">查看详情</a>
                                     </p>
                                 </dd>
                             </dl>
