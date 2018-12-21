@@ -59,7 +59,7 @@ public class BaseInterceptor implements HandlerInterceptor {
      * @return
      */
     public String Url(String url, boolean enabledCache) {
-        String format = "%s/static%s";
+        String format = "%s%s";
         url = String.format(format, webconfig.getVirtualPath(), url);
         if (enabledCache) {
             int timeStamp = DateUtils.getCurrentUnixTime();
