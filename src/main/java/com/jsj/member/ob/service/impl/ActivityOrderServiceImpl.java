@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *   @description : ActivityOrder 服务实现类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-19
+ *   @since 2018-12-21
  */
 @Service
 public class ActivityOrderServiceImpl extends ServiceImpl<ActivityOrderMapper, ActivityOrder> implements ActivityOrderService {

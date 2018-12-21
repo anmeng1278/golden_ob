@@ -7,7 +7,6 @@ import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.enums.OrderFlag;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.OrderLogic;
-import com.jsj.member.ob.utils.EncryptUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,6 +64,8 @@ public class OrderController extends BaseController {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         GetPayTradeResp pay = this.createPay(orderId);
 
+        OrderDto orderDto = OrderLogic.GetOrder(orderId);
+
         HashMap<String, Object> data = new HashMap<>();
 
         if (!pay.getResponseHead().getCode().equals("0000")) {
@@ -72,8 +73,7 @@ public class OrderController extends BaseController {
         }
         data.put("pay", pay);
 
-        String obs = EncryptUtils.encrypt(orderId + "");
-        String successUrl = String.format("/pay/success/%s", obs);
+        String successUrl = String.format("/pay/success/%s", orderDto.getOrderUniqueCode());
         data.put("successUrl", this.Url(successUrl));
 
         String url = this.Url("/order");

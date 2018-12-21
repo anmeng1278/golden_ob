@@ -1,10 +1,10 @@
 if (typeof shareConfig == "undefined") {
+    var url = location.protocol + "//" + location.host + virtualPath;
     shareConfig = {
-        title: document && document.title,
-        desc: "",
-        link: location.href,
-        //TODO 上线修改
-        imgUrl: "https://hezy-static.oss-cn-shanghai.aliyuncs.com/test/product/oncecard_cover.png"
+        title: "空铁管家",
+        desc: "服务覆盖全国100个城市，300万商旅人士的出行首选！",
+        link: url,
+        imgUrl: "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68"
     };
 }
 

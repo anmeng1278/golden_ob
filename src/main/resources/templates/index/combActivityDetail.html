@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<!-- 组合商品 \document\html\KTGJService\GoodsOfJoint.html -->
+<head th:replace="index/common/layout :: header('金色严选-组合商品', '', '')"></head>
+
+<th:block layout:fragment="script">
+
+    <script type="text/javascript" th:inline="javascript">
+
+    </script>
+    <script th:src="${ob.Url('/index/js/GoodsOfJoint.js')}" type="text/javascript" charset="utf-8"></script>
+
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GoodsOfJoint.css')}"/>
+</th:block>
+
+<div layout:fragment="content">
+
+    <!--banner start-->
+    <div class="banner">
+        <img th:src="${ob.Url('/index/images/detailbanner.png')}" alt="1" width="100%"/>
+    </div>
+    <!--banner end-->
+
+    <!-- purchase-layer start -->
+    <div class="purchase-layer">
+        <div class="purchase-layer-bg"></div>
+        <div class="purchase-layer-con">
+            <!--purchase-layer-content start-->
+            <div class="purchase-layer-content">
+                <!--purchase-discount start-->
+                <div class="purchase-discount">
+                    <div class="purchase-discount-head">
+                        <p class="purchase-discount-tips"><span>优惠组合</span></p>
+                        <h2 class="purchase-discount-name">素园野生素食参谜</h2>
+                        <p class="purchase-discount-text">健康好参 立等即食</p>
+                    </div>
+                    <div class="purchase-discount-list clear">
+                        <dl class="discount-list-dl">
+                            <dt><img src="images/purchase-layer-img.png" alt="1"/></dt>
+                            <dd>
+                                <h2 class="discount-dl-name">素园野生素食参谜</h2>
+                                <p class="discount-dl-tips">规格：268g/盒</p>
+                                <p class="discount-dl-p">
+                                    <span class="discount-dl-price">￥399</span>
+                                    <a href="javascript:void(0);" class="discount-dl-look">查看详情</a>
+                                </p>
+                            </dd>
+                        </dl>
+                        <dl class="discount-list-dl">
+                            <dt><img src="images/purchase-layer-img.png" alt="1"/></dt>
+                            <dd>
+                                <h2 class="discount-dl-name">素园野生素食参谜</h2>
+                                <p class="discount-dl-tips">规格：268g/盒</p>
+                                <p class="discount-dl-p">
+                                    <span class="discount-dl-price">￥399</span>
+                                    <a href="javascript:void(0);" class="discount-dl-look">查看详情</a>
+                                </p>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <!--purchase-discount end-->
+
+                <!--purchase-layer-main start-->
+                <div class="purchase-layer-main">
+                    <div class="purchase-layer-div">
+                        <span class="purchase-layer-lable">购买数量</span>
+                        <div class="purchase-num">
+                            <em class="purchase-num-reduce"></em>
+                            <input type="text" value="1" class="num"/>
+                            <em class="purchase-num-add"></em>
+                        </div>
+                    </div>
+                </div>
+                <!--purchase-layer-main end-->
+            </div>
+            <!--purchase-layer-content end-->
+
+            <!--purchase-footer start-->
+            <div class="purchase-footer">
+                <p class="footer-lt">
+                    <span class="shopping-price">&yen;<em>1</em></span>
+                </p>
+                <a href="javascript:void(0);" class="purchase-btn">立即购买</a>
+            </div>
+            <!--purchase-footer end-->
+        </div>
+    </div>
+    <!-- purchase-layer end -->
+
+    <input type="hidden" id="totalprice" value="1"/>
+
+</div>

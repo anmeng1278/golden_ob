@@ -150,6 +150,5 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
         request.setAttribute("virtualPath", webconfig.getVirtualPath());
 
 
-
     }
 }

@@ -1,11 +1,11 @@
 server:
-  port: 8000
+  port: 80
 
 
 #spring
 spring:
   profiles:
-    active: dev
+    active: pub
   http:
     multipart:
       max-file-size: 10MB
@@ -80,6 +80,8 @@ webconfig:
   weChatAccessTokenUrl: http://s5.jsjinfo.cn/awkmanage/v3/ktapi/GetWeChatAccessToken
   #微信公众号支付
   payTradeUrl: http://zs5.jsjinfo.cn/v5/ParTrade.ashx
+  #获取活动码 "http://106.38.39.180/awk/Third/ThirdApi/API2Partner.aspx";
+  activityUrl: http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx
 
   #授权码
 #  PlatformAppId: wssccaf9-2341-1234-87c1-6ababc10aab3
@@ -101,3 +103,6 @@ webconfig:
   virtualPath: ""
 
   qrcodeUrl: http://mobile.qq.com/qrcode?url=%s&width=300&height=300
+
+  partnerLoginName: guangxiyinlian
+  partnerLoginPassword: gxylceshi

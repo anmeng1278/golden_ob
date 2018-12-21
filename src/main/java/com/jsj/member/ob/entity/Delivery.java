@@ -1,17 +1,18 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Delivery 提货表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-19
+ *   @since 2018-12-21
  */
 @TableName("_delivery")
 public class Delivery implements Serializable {
@@ -67,12 +68,12 @@ public class Delivery implements Serializable {
 	@TableField("flight_number")
 	private String flightNumber;
     /**
-     * 贵宾厅编号
+     * 机场编号
      */
 	@TableField("airport_code")
 	private String airportCode;
     /**
-     * 贵宾厅名称
+     * 机场名称
      */
 	@TableField("airport_name")
 	private String airportName;

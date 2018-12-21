@@ -79,6 +79,11 @@ public class OrderDto {
      */
     private Integer deleteTime;
 
+    /**
+     * 订单唯一标识
+     */
+    private String orderUniqueCode;
+
     private List<ProductDto> productDtos;
 
     private List<OrderProductDto> orderProductDtos;
@@ -243,4 +248,11 @@ public class OrderDto {
         this.deleteTime = deleteTime;
     }
 
+    public String getOrderUniqueCode() {
+        return orderUniqueCode;
+    }
+
+    public void setOrderUniqueCode(String orderUniqueCode) {
+        this.orderUniqueCode = orderUniqueCode;
+    }
 }

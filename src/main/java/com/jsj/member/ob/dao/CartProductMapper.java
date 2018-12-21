@@ -11,7 +11,7 @@ import java.util.List;
  *   @description : CartProduct Mapper 接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-19
+ *   @since 2018-12-21
  */
 @Repository
 public interface CartProductMapper extends BaseMapper<CartProduct> {

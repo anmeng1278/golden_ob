@@ -38,6 +38,11 @@ public class CreateOrderResp {
      */
     private double originalAmount;
 
+    /**
+     * 订单唯一标识
+     */
+    private String orderUniqueCode;
+
     public double getCouponAmount() {
         return couponAmount;
     }
@@ -93,5 +98,13 @@ public class CreateOrderResp {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getOrderUniqueCode() {
+        return orderUniqueCode;
+    }
+
+    public void setOrderUniqueCode(String orderUniqueCode) {
+        this.orderUniqueCode = orderUniqueCode;
     }
 }

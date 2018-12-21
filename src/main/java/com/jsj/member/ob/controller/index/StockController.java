@@ -56,11 +56,21 @@ public class StockController extends BaseController {
 
         String openId = this.OpenId();
 
+        //库存列表
         List<StockDto> stockDtos = StockLogic.GetStocks(openId);
         request.setAttribute("stockDtos", stockDtos);
 
+        //分享失败的礼包
         List<GiftDto> giftDtos = GiftLogic.GetGives(openId, GiftStatus.UNSHARE);
         request.setAttribute("giftDtos", giftDtos);
+
+        //存在未使用的活动码
+        List<DeliveryStockDto> unUsedActivityCodes = DeliveryLogic.getUnUsedActivityCodes(openId);
+        request.setAttribute("unUsedActivityCodes", unUsedActivityCodes);
+        //if (!unUsedActivityCodes.isEmpty()) {
+        //    url = this.Url(String.format("/stock/qrcode/%d/%d", unUsedActivityCodes.get(0).getDeliveryId(), unUsedActivityCodes.get(0).getStockId()));
+        //    return RestResponseBo.fail("您还有未使用的次卡", null, url);
+        //}
 
         return "index/stock";
     }
@@ -284,6 +294,7 @@ public class StockController extends BaseController {
         CreateDeliveryResp resp = DeliveryLogic.CreateDelivery(requ);
         return RestResponseBo.ok("操作成功", this.Url("/delivery"), resp);
 
+
     }
     //endregion
 
@@ -361,7 +372,9 @@ public class StockController extends BaseController {
         requ.setFlightNumber(flightNumber);
 
         CreateDeliveryResp resp = DeliveryLogic.CreateDelivery(requ);
-        return RestResponseBo.ok("操作成功", this.Url("/delivery"), resp);
+
+        String url = this.Url(String.format("/stock/qrcode/%d/%d", resp.getDeliveryId(), resp.getStockId()));
+        return RestResponseBo.ok("操作成功", url, resp);
 
     }
     //endregion
@@ -463,7 +476,7 @@ public class StockController extends BaseController {
         String imgUrl;
         try {
 
-            if (!deliveryDto.getDeliveryStatus().equals(DeliveryStatus.DELIVERED.getValue())) {
+            if (!deliveryDto.getDeliveryStatus().equals(DeliveryStatus.DELIVERED)) {
                 throw new TipException("当前配送状态不允许使用");
             }
 

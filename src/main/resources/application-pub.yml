@@ -7,7 +7,7 @@ logging:
       jsj:
         member:
           ob:
-            dao: debug
+            dao: info
 #spring
 spring:
   datasource:
@@ -48,6 +48,13 @@ webconfig:
   #授权码
   PlatformAppId: ws975af9-2341-1234-9751-6ababc10aab3
   PlatformToken: wsscr975ppd8v46b5678f8fxh2xdhv0975xlx08h8btn6tt9754aab3
+
+  #活动码地址
+  activityUrl: http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx
+
+  partnerLoginName: guangxiyinlian
+  partnerLoginPassword: gxylceshi
+
 
 redis:
   host: 172.16.5.64

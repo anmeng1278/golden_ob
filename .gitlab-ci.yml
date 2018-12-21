@@ -17,8 +17,5 @@ build_ob:
     - if [ $(docker ps -a -q -f "name=test-$pname" | wc -l) -eq 1 ] ;
     -   then docker stop $(docker ps -a -q -f "name=test-$pname") && docker rm $(docker ps -a -q -f "name=test-$pname") ;
     - fi
-    - docker run -d -v "$PWD/target/":/usr/src/myapp -p 80:80 --name "test-$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --spring.profiles.active=pub
+    - docker run -d -v "$PWD/target/":/usr/src/myapp -p 8090:80 --name "test-$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --spring.profiles.active=pub
     - echo "发布成功"
-
-
-

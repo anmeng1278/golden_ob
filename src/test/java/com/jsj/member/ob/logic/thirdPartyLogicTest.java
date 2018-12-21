@@ -124,5 +124,12 @@ public class thirdPartyLogicTest {
 
     }
 
+    @Test
+    public void TestGetActivityCodes() {
+        GetActivityCodesResp getActivityCodesResp = ThirdPartyLogic.GetActivityCodes(null);
+
+        System.out.println(JSON.toJSONString(getActivityCodesResp));
+    }
+
 
 }

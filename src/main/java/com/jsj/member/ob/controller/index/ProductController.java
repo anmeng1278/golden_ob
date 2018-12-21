@@ -20,7 +20,6 @@ import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
-import com.jsj.member.ob.utils.EncryptUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +43,7 @@ public class ProductController extends BaseController {
      * @return
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String productDetail(HttpServletRequest request) throws Exception {
+    public String productDetail(HttpServletRequest request) {
 
         int productId = Integer.parseInt(request.getParameter("productId"));
 
@@ -70,10 +69,6 @@ public class ProductController extends BaseController {
         List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, openId);
         request.setAttribute("coupons", coupons);
 
-        String obs = EncryptUtils.encrypt(productId + "");
-        String shareUrl = this.Url(String.format("/product?productId=%s",obs), false);
-        request.setAttribute("shareUrl", shareUrl);
-
         return "index/productDetail";
     }
 
@@ -84,26 +79,23 @@ public class ProductController extends BaseController {
      * @param request
      * @return
      */
-    @GetMapping("/groupDetail")
-    public String groupDetail(HttpServletRequest request) throws Exception {
-
-        int activityId = Integer.parseInt(request.getParameter("activityId"));
+    @GetMapping("/comb/{activityId}")
+    public String groupDetail(@PathVariable("activityId") int activityId, HttpServletRequest request) {
 
         ActivityDto info = ActivityLogic.GetActivity(activityId);
 
+        if (!info.getActivityType().equals(ActivityType.COMBINATION)) {
+            return this.Redirect("/");
+        }
+
         //活动中的商品
-        List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(activityId);
+        List<ActivityProductDto> productDtos = ActivityLogic.GetActivityProductDtos(activityId);
 
         request.setAttribute("info", info);
-        request.setAttribute("activityProductDtos", activityProductDtos);
+        request.setAttribute("productDtos", productDtos);
 
-        String obs = EncryptUtils.encrypt(activityId + "");
-        String shareUrl = this.Url(String.format("/product/groupDetail?activityId=%s",obs), false);
-        request.setAttribute("shareUrl", shareUrl);
-
-        return "index/groupDetail";
+        return "index/combActivityDetail";
     }
-
 
 
     /**
@@ -231,8 +223,7 @@ public class ProductController extends BaseController {
         }
         data.put("resp", resp);
 
-        String obs = EncryptUtils.encrypt(resp.getOrderId() + "");
-        String successUrl = String.format("/pay/success/%s", obs);
+        String successUrl = String.format("/pay/success/%s", resp.getOrderUniqueCode());
         data.put("successUrl", this.Url(successUrl));
 
         String url = this.Url("/order");

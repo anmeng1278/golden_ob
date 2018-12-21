@@ -5,6 +5,7 @@ import com.jsj.member.ob.dto.api.delivery.CreateDeliveryRequ;
 import com.jsj.member.ob.dto.api.delivery.CreateDeliveryResp;
 import com.jsj.member.ob.dto.api.delivery.DeliveryStockDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
+import com.jsj.member.ob.dto.thirdParty.GetActivityCodesResp;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.entity.Stock;
@@ -15,6 +16,7 @@ import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.StockLogic;
+import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import com.jsj.member.ob.service.StockService;
@@ -105,8 +107,12 @@ public class DeliveryActivity extends DeliveryBase {
             deliveryStock.setStockId(stock.getStockId());
             deliveryStock.setUpdateTime(DateUtils.getCurrentUnixTime());
 
-            //TODO 调用空铁接口获取活动码
-            deliveryStock.setActivityCode("需要调用空铁接口获取活动码");
+            GetActivityCodesResp resp = ThirdPartyLogic.GetActivityCodes(null);
+            if (resp.getBaseResponse().isSuccess()) {
+                deliveryStock.setActivityCode(resp.getActivityCodes().get(0));
+            } else {
+                deliveryStock.setActivityCode("KTYX");
+            }
 
             this.deliveryStockService.insert(deliveryStock);
 
@@ -124,6 +130,9 @@ public class DeliveryActivity extends DeliveryBase {
 
         CreateDeliveryResp resp = new CreateDeliveryResp();
         resp.setDeliveryId(delivery.getDeliveryId());
+        resp.setStockId(stockDtos.get(0).getStockId());
+
+        //TODO WX发送活动码使用成功模板
 
         return resp;
     }
