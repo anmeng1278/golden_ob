@@ -56,6 +56,12 @@ $(function () {
 
     });
 
+    $('.purchase-num .num').blur(function () {
+        if (typeof calculateOrder != "undefined") {
+            calculateOrder();
+        }
+    })
+
     //购买数量减的点击事件
     $(".purchase-num-reduce").click(function () {
 

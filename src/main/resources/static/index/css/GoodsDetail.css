@@ -18,9 +18,10 @@ html,body{ background: #F5F5F5;}
 /*goods-introduce end*/
 
 /*main start*/
-.main{ background: #fff; margin: 0.1rem 0 1.1rem;}
+.main{ background: #fff; margin-top: 0.1rem; padding-bottom: 1.5rem;}
 .goods-detail{ line-height: 1.2; padding: 0.5rem 0.4rem;}
-.goods-detail span{ display: block; font-size: 0.3rem; color: #666; border-left: 2px solid #C2191F; padding-left: 0.1rem;}
+.goods-detail span{ display: block; font-size: 0.3rem; color: #000; font-weight: 700; border-left: 2px solid #C2191F; padding-left: 0.1rem;}
+.main p{ line-height: 1.4; padding: 0 0.4rem; font-size: 0.28rem; color: #333;}
 /*main end*/
 
 /*footer start*/
@@ -52,10 +53,10 @@ html,body{ background: #F5F5F5;}
 .purchase-goods-tips{ font-size: 0.28rem; color: #666; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 
 .purchase-layer-div{ overflow: hidden; margin-bottom: 0.4rem;}
-.purchase-layer-lable{ display: block; font-size: 0.28rem; color: #999; padding-bottom: 0.3rem;}
+.purchase-layer-lable{ display: block; line-height: 1.2; font-size: 0.28rem; color: #999; padding-bottom: 0.3rem;}
 
 /*---------- purchase-layer-p ----------*/
-.purchase-layer-p span{ display: inline-block; width: 1.2rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.28rem; color: #333; background: #fff; border: 1px solid #DEDEDE; border-radius: 3px; margin-right: 0.1rem;}
+.purchase-layer-p span{ display: inline-block; padding: 0 0.2rem; min-width: 0.8rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.28rem; color: #333; background: #fff; border: 1px solid #DEDEDE; border-radius: 3px; margin-right: 0.1rem;}
 .purchase-layer-p .active{ color: #C2191F; border: 1px solid #C2191F;}
 .purchase-layer-p .disabled{ background: #F7F7F7;}
 

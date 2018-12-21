@@ -26,8 +26,8 @@
                 <th:block th:each="info:${giveStocks}">
                     <div class="swiper-slide">
                         <dl class="banner-dl">
-                            <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(info.productId))}">
-                                <img th:src="${productLogic.GetProductImgDtos(info.productId)[0].imgPath}"/>
+                            <dt th:if="${!#lists.isEmpty(info.productDto.productImgDtos)}">
+                                <img th:src="${info.productDto.productImgDtos[0].imgPath}"/>
                             </dt>
                             <dd>
                                 <h2 class="banner-dl-name"
