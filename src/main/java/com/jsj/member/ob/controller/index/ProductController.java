@@ -20,6 +20,7 @@ import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
+import com.jsj.member.ob.utils.EncryptUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +44,7 @@ public class ProductController extends BaseController {
      * @return
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String productDetail(HttpServletRequest request) {
+    public String productDetail(HttpServletRequest request) throws Exception {
 
         int productId = Integer.parseInt(request.getParameter("productId"));
 
@@ -69,6 +70,11 @@ public class ProductController extends BaseController {
         List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, openId);
         request.setAttribute("coupons", coupons);
 
+        String obs = EncryptUtils.encrypt(productId+"");
+        String shareUrl = this.Url(String.format("/product?productId=%s", obs), false);
+        request.setAttribute("shareUrl", shareUrl);
+
+
         return "index/productDetail";
     }
 
@@ -80,7 +86,7 @@ public class ProductController extends BaseController {
      * @return
      */
     @GetMapping("/comb/{activityId}")
-    public String groupDetail(@PathVariable("activityId") int activityId, HttpServletRequest request) {
+    public String groupDetail(@PathVariable("activityId") int activityId, HttpServletRequest request) throws Exception {
 
         ActivityDto info = ActivityLogic.GetActivity(activityId);
 
@@ -93,6 +99,10 @@ public class ProductController extends BaseController {
 
         request.setAttribute("info", info);
         request.setAttribute("productDtos", productDtos);
+
+        String obs = EncryptUtils.encrypt(activityId+"");
+        String shareUrl = this.Url(String.format("/comb/%s", obs), false);
+        request.setAttribute("shareUrl", shareUrl);
 
         return "index/combActivityDetail";
     }

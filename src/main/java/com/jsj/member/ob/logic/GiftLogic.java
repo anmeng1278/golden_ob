@@ -603,7 +603,7 @@ public class GiftLogic extends BaseLogic {
         if (giftStatus != null) {
             wrapper.where("status = {0}", giftStatus.getValue());
         }
-
+        wrapper.orderBy("create_time desc");
         List<Gift> gifts = giftLogic.giftService.selectList(wrapper);
 
         List<GiftDto> giftDtos = new ArrayList<>();

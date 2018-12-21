@@ -42,8 +42,8 @@
                         <a th:href="${ob.Url('/share/gift/'+info.giftUniqueCode)}">
                             <dl class="give-item-dl clear">
                                 <dt>
-                                    <img th:if="${count le 1}"
-                                         th:src="${productLogic.GetProductImgDtos(info.stockDtos.get(0).productId)[0].imgPath}">
+                                    <img th:if="${count le 1 && !#lists.isEmpty(info.stockDtos[0].productDto.productImgDtos)}"
+                                         th:src="${info.stockDtos[0].productDto.productImgDtos[0].imgPath}">
                                     <img th:if="${count gt 1}"
                                          th:src="${ob.Img('/index/images/give_default_img.png')}" alt="1"/>
                                 </dt>
@@ -69,8 +69,8 @@
                             <dl class="give-item-dl clear">
 
                                 <dt>
-                                    <img th:if="${count le 1}"
-                                         th:src="${productLogic.GetProductImgDtos(info.stockDtos[0].productId)[0].imgPath}">
+                                    <img th:if="${count le 1 && !#lists.isEmpty(info.stockDtos[0].productDto.productImgDtos)}"
+                                         th:src="${info.stockDtos[0].productDto.productImgDtos[0].imgPath}">
                                     <img th:if="${count gt 1}"
                                          th:src="${ob.Img('/index/images/give_default_img.png')}" alt="1"/>
                                 </dt>
@@ -109,8 +109,8 @@
             <th:block th:each="info:${receiveStocks}">
                 <a th:href="${ob.Url('/share/gift/'+info.giftUniqueCode)}">
                     <dl class="give-item-dl clear">
-                        <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(info.stockDtos[0].productId))}">
-                            <img th:src="${productLogic.GetProductImgDtos(info.stockDtos[0].productId)[0].imgPath}"/>
+                        <dt th:if="${!#lists.isEmpty(info.stockDtos[0].productDto.productImgDtos)}">
+                            <img th:src="${info.stockDtos[0].productDto.productImgDtos[0].imgPath}"/>
                         </dt>
                         <dd>
                             <p class="give-dd-p">

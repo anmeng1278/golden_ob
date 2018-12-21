@@ -20,9 +20,10 @@ html,body{ background: #f5f5f5;}
 .section-con{ padding: 0 0.2rem; overflow: hidden;}
 .section-con a:nth-child(2n) .section-con-dl{ float: right;}
 .section-con-dl{ width: 48.5%; float: left; margin-bottom: 0.6rem;}
+.section-con-dl dt img{ height: 180px;}
 .section-con-dl dd{ padding: 0.3rem 0; font-family: "microsoft yahei",arial;}
-.section-dl-title{ line-height: 1.2; font-size: 0.36rem; color: #000; font-weight: 700;}
-.section-dl-tips{ font-size: 0.28rem; color: #818181; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 0.2rem 0;}
+.section-dl-title{ line-height: 1.2; font-size: 0.36rem; color: #000; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.section-dl-tips{ line-height: 1.2; font-size: 0.28rem; color: #818181; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 0.2rem 0;}
 .section-dl-price{ font-size: 0.2rem; color: #A63838;}
 .section-dl-price em{ font-size: 0.36rem; font-weight: 700;}
 .section-dl-price span{ font-size: 0.24rem; color: #888; text-decoration: line-through; margin-left: 0.1rem;}
