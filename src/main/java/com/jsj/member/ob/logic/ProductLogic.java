@@ -269,7 +269,7 @@ public class ProductLogic extends BaseLogic {
             ProductSpec productSpec = productLogic.productSpecService.selectById(opt.getProductSpecId());
             if (productSpec.getStockCount() < opt.getNumber()) {
 
-                ProductStockException pe = new ProductStockException("库存不足");
+                ProductStockException pe = new ProductStockException("商品规格库存不足");
                 pe.setNumber(opt.getNumber());
                 pe.setStock(productSpec.getStockCount());
                 pe.setActivityType(activityType);

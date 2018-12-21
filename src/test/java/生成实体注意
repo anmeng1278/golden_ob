@@ -1,0 +1,5 @@
+
+
+Wechat 实体修改TableId
+@TableId(value="open_id", type= IdType.INPUT)
+

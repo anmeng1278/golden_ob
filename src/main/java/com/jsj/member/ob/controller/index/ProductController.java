@@ -45,6 +45,32 @@ public class ProductController extends BaseController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String productDetail(HttpServletRequest request) {
 
+        int activityTypeId = 0;
+        if (!StringUtils.isEmpty(request.getParameter("activityType"))) {
+            activityTypeId = Integer.parseInt(request.getParameter("activityType"));
+        }
+
+        ActivityType activityType = ActivityType.valueOf(activityTypeId);
+
+        switch (activityType) {
+            case NORMAL:
+                return this.normalProduct(request);
+
+            case COMBINATION:
+                return this.combProduct(request);
+        }
+
+        return this.Redirect("/");
+    }
+
+    /**
+     * 普通商品详情
+     *
+     * @param request
+     * @return
+     */
+    private String normalProduct(HttpServletRequest request) {
+
         int productId = Integer.parseInt(request.getParameter("productId"));
 
         //用户OpenId
@@ -79,11 +105,17 @@ public class ProductController extends BaseController {
      * @param request
      * @return
      */
-    @GetMapping("/comb/{activityId}")
-    public String groupDetail(@PathVariable("activityId") int activityId, HttpServletRequest request) {
+    public String combProduct(HttpServletRequest request) {
+
+        if (StringUtils.isEmpty(request.getParameter("activityId"))) {
+            return this.Redirect("/");
+        }
+
+        int activityId = Integer.parseInt(request.getParameter("activityId"));
 
         ActivityDto info = ActivityLogic.GetActivity(activityId);
 
+        //非组合商品，不允许进此链接
         if (!info.getActivityType().equals(ActivityType.COMBINATION)) {
             return this.Redirect("/");
         }
@@ -178,33 +210,27 @@ public class ProductController extends BaseController {
     @ResponseBody
     public RestResponseBo createOrder(HttpServletRequest request) throws Exception {
 
-        String openId = this.OpenId();
-
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        int num = Integer.parseInt(request.getParameter("num"));
-        int productSpecId = Integer.parseInt(request.getParameter("productSpecId"));
-        int wechatCouponId = 0;
-
-        if (!StringUtils.isEmpty(request.getParameter("wechatCouponId"))) {
-            wechatCouponId = Integer.parseInt(request.getParameter("wechatCouponId"));
+        if (StringUtils.isEmpty(request.getParameter("activityTypeId"))) {
+            return RestResponseBo.fail("请求参数错误", null, this.Url("/"));
         }
 
-        OrderBase orderBase = OrderFactory.GetInstance(ActivityType.NORMAL);
+        int activityTypeId = Integer.parseInt(request.getParameter("activityTypeId"));
+        ActivityType activityType = ActivityType.valueOf(activityTypeId);
 
-        CreateOrderRequ requ = new CreateOrderRequ();
-        requ.setActivityType(ActivityType.NORMAL);
-        requ.setWechatCouponId(wechatCouponId);
-        requ.getBaseRequ().setOpenId(openId);
+        OrderBase orderBase = OrderFactory.GetInstance(activityType);
+        CreateOrderRequ requ;
 
-        List<OrderProductDto> orderProducts = new ArrayList<>();
+        switch (activityType) {
+            case NORMAL:
+                requ = this.createNormalOrderRequest(request);
+                break;
+            case COMBINATION:
+                requ = this.createCombOrderRequest(request);
+                break;
 
-        OrderProductDto orderProduct = new OrderProductDto();
-        orderProduct.setProductId(productId);
-        orderProduct.setProductSpecId(productSpecId);
-        orderProduct.setNumber(num);
-        orderProducts.add(orderProduct);
-
-        requ.setOrderProductDtos(orderProducts);
+            default:
+                return RestResponseBo.fail("方法暂未实现", null, this.Url("/"));
+        }
 
         CreateOrderResp resp = orderBase.CreateOrder(requ);
 
@@ -229,6 +255,66 @@ public class ProductController extends BaseController {
         String url = this.Url("/order");
         return RestResponseBo.ok("创建订单成功", url, data);
 
+    }
+
+    /**
+     * 组织创建普通订单请求
+     *
+     * @param request
+     * @return
+     */
+    private CreateOrderRequ createNormalOrderRequest(HttpServletRequest request) {
+
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        int num = Integer.parseInt(request.getParameter("num"));
+        int productSpecId = Integer.parseInt(request.getParameter("productSpecId"));
+        int wechatCouponId = 0;
+
+        if (!StringUtils.isEmpty(request.getParameter("wechatCouponId"))) {
+            wechatCouponId = Integer.parseInt(request.getParameter("wechatCouponId"));
+        }
+
+        String openId = this.OpenId();
+
+        CreateOrderRequ requ = new CreateOrderRequ();
+        requ.setActivityType(ActivityType.NORMAL);
+        requ.setWechatCouponId(wechatCouponId);
+        requ.getBaseRequ().setOpenId(openId);
+
+        List<OrderProductDto> orderProducts = new ArrayList<>();
+
+        OrderProductDto orderProduct = new OrderProductDto();
+        orderProduct.setProductId(productId);
+        orderProduct.setProductSpecId(productSpecId);
+        orderProduct.setNumber(num);
+        orderProducts.add(orderProduct);
+
+        requ.setOrderProductDtos(orderProducts);
+
+        return requ;
+
+    }
+
+    /**
+     * 组织创建组合订单请求
+     *
+     * @param request
+     * @return
+     */
+    private CreateOrderRequ createCombOrderRequest(HttpServletRequest request) {
+
+        String openId = this.OpenId();
+
+        int num = Integer.parseInt(request.getParameter("num"));
+        int activityId = Integer.parseInt(request.getParameter("activityId"));
+
+        CreateOrderRequ requ = new CreateOrderRequ();
+        requ.setActivityType(ActivityType.COMBINATION);
+        requ.getBaseRequ().setOpenId(openId);
+        requ.setActivityId(activityId);
+        requ.setNumber(num);
+
+        return requ;
     }
 
 }

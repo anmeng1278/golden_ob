@@ -40,6 +40,11 @@ public class CreateOrderRequ {
      */
     private int activityId;
 
+    /**
+     * 购买份数
+     */
+    private int number;
+
 
     /**
      * 订单类型
@@ -100,5 +105,13 @@ public class CreateOrderRequ {
 
     public void setActivityType(ActivityType activityType) {
         this.activityType = activityType;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

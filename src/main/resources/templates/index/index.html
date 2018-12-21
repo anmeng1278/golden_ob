@@ -160,8 +160,8 @@
             <h2 class="section-title">组合优惠</h2>
             <!--section-con start-->
             <div class="section-con">
-                <a href="javascript:void(0);">
-                    <th:block th:each="info:${setSales}">
+                <th:block th:each="info:${setSales}">
+                    <a th:href="${ob.Nav('/product?activityId='+info.activityId+'&activityType=30')}">
                         <dl class="section-con-dl">
                             <dt>
                                 <img th:src="${info.imgPath}" alt="1" width="100%"/>
@@ -173,8 +173,8 @@
                                         th:text="${info.originalPrice}">￥</span></p>
                             </dd>
                         </dl>
-                    </th:block>
-                </a>
+                    </a>
+                </th:block>
             </div>
             <!--section-con end-->
         </div>

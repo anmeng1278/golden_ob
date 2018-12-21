@@ -7,10 +7,86 @@
 
 <th:block layout:fragment="script">
 
+    <script th:src="${ob.Url('/index/js/order.js')}" type="text/javascript" charset="utf-8"></script>
+
     <script type="text/javascript" th:inline="javascript">
 
+        function accMul(arg1, arg2) {
+            var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+            try {
+                m += s1.split(".")[1].length
+            } catch (e) {
+            }
+            try {
+                m += s2.split(".")[1].length
+            } catch (e) {
+            }
+            return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
+        }
+
+        var salePrice = [[${info.salePrice}]];
+        if (salePrice <= 0) {
+            salePrice = 0.01;
+        }
+
+        TX.INIT(function () {
+
+            //库存
+            var stockCount = parseInt($(":hidden[name='stockCount']").val(), 10);
+
+            $("em.purchase-num-reduce").click(function () {
+                var num = parseInt($(":text[name='num']").val(), 10);
+                if (num <= 1) return;
+                num--;
+                $(":text[name='num']").val(num);
+                calculateOrder();
+            });
+
+            $("em.purchase-num-add").click(function () {
+                var num = parseInt($(":text[name='num']").val(), 10);
+                if (num >= stockCount) {
+                    return;
+                }
+                num++;
+                $(":text[name='num']").val(num);
+                calculateOrder();
+            });
+
+            $("em.purchase-num-add").click();
+
+
+            //立即购买
+            $("a.purchase-btn").click(function () {
+
+                if (stockCount <= 0) {
+                    TX.MSG.msg("商品售罄啦");
+                    return;
+                }
+
+                var activityId = [[${info.activityId}]];
+                var num = parseInt($(":text[name='num']").val(), 10);
+
+                //创建活动订单
+                createOrder({
+                    num: num,
+                    activityTypeId: 30,
+                    activityId: activityId
+                });
+
+            });
+
+        });
+
+        //计算订单价格
+        function calculateOrder() {
+
+            var num = parseInt($(":text[name='num']").val(), 10);
+            var totalPrice = accMul(num, salePrice);
+            $("span.shopping-price em").html(totalPrice);
+
+        }
+
     </script>
-    <script th:src="${ob.Url('/index/js/GoodsOfJoint.js')}" type="text/javascript" charset="utf-8"></script>
 
 </th:block>
 
@@ -22,7 +98,7 @@
 
     <!--banner start-->
     <div class="banner">
-        <img th:src="${ob.Url('/index/images/detailbanner.png')}" alt="1" width="100%"/>
+        <img th:src="${info.imgPath}" alt="1" width="100%"/>
     </div>
     <!--banner end-->
 
@@ -36,32 +112,33 @@
                 <div class="purchase-discount">
                     <div class="purchase-discount-head">
                         <p class="purchase-discount-tips"><span>优惠组合</span></p>
-                        <h2 class="purchase-discount-name">素园野生素食参谜</h2>
-                        <p class="purchase-discount-text">健康好参 立等即食</p>
+                        <h2 class="purchase-discount-name" th:text="${info.activityName}">素园野生素食参谜</h2>
+                        <p class="purchase-discount-text" th:text="${info.introduce}">健康好参 立等即食</p>
                     </div>
                     <div class="purchase-discount-list clear">
-                        <dl class="discount-list-dl">
-                            <dt><img src="images/purchase-layer-img.png" alt="1"/></dt>
-                            <dd>
-                                <h2 class="discount-dl-name">素园野生素食参谜</h2>
-                                <p class="discount-dl-tips">规格：268g/盒</p>
-                                <p class="discount-dl-p">
-                                    <span class="discount-dl-price">￥399</span>
-                                    <a href="javascript:void(0);" class="discount-dl-look">查看详情</a>
-                                </p>
-                            </dd>
-                        </dl>
-                        <dl class="discount-list-dl">
-                            <dt><img src="images/purchase-layer-img.png" alt="1"/></dt>
-                            <dd>
-                                <h2 class="discount-dl-name">素园野生素食参谜</h2>
-                                <p class="discount-dl-tips">规格：268g/盒</p>
-                                <p class="discount-dl-p">
-                                    <span class="discount-dl-price">￥399</span>
-                                    <a href="javascript:void(0);" class="discount-dl-look">查看详情</a>
-                                </p>
-                            </dd>
-                        </dl>
+
+                        <div class="purchase-discount-list clear" th:if="${!#lists.isEmpty(productDtos)}">
+                            <th:block th:each="pro:${productDtos}">
+                                <dl class="discount-list-dl">
+                                    <dt th:if="${!#lists.isEmpty(pro.productDto.productImgDtos)}">
+                                        <img th:src="${pro.productDto.productImgDtos[0].imgPath}"/>
+                                    </dt>
+                                    <dd>
+                                        <h2 class="discount-dl-name" th:text="${pro.productDto.productName}">
+                                            素园野生素食参谜</h2>
+                                        <p class="discount-dl-tips"
+                                           th:text="${productLogic.GetProductSpec(pro.productSpecId).specName}">
+                                            规格：268g/盒</p>
+                                        <p class="discount-dl-p">
+                                            <span class="discount-dl-price"><s th:text="${pro.productDto.salePrice}">￥399</s></span>
+                                            <a th:href="${ob.Nav('/product?productId='+pro.productId)}"
+                                               class="discount-dl-look">查看详情</a>
+                                        </p>
+                                    </dd>
+                                </dl>
+                            </th:block>
+                        </div>
+
                     </div>
                 </div>
                 <!--purchase-discount end-->
@@ -72,7 +149,8 @@
                         <span class="purchase-layer-lable">购买数量</span>
                         <div class="purchase-num">
                             <em class="purchase-num-reduce"></em>
-                            <input type="text" value="1" class="num"/>
+                            <input type="text" value="0" name="num" class="num"/>
+                            <input type="hidden" name="stockCount" th:value="${info.stockCount}"/>
                             <em class="purchase-num-add"></em>
                         </div>
                     </div>
@@ -84,7 +162,7 @@
             <!--purchase-footer start-->
             <div class="purchase-footer">
                 <p class="footer-lt">
-                    <span class="shopping-price">&yen;<em>1</em></span>
+                    <span class="shopping-price">&yen;<em>0</em></span>
                 </p>
                 <a href="javascript:void(0);" class="purchase-btn">立即购买</a>
             </div>
@@ -92,7 +170,5 @@
         </div>
     </div>
     <!-- purchase-layer end -->
-
-    <input type="hidden" id="totalprice" value="1"/>
 
 </div>

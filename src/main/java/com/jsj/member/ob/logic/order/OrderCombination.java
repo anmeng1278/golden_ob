@@ -76,8 +76,16 @@ public class OrderCombination extends OrderBase {
             throw new TipException("活动编号不能为空");
         }
 
+        if (requ.getNumber() <= 0) {
+            requ.setNumber(1);
+        }
+
         //活动
         ActivityDto activityDto = ActivityLogic.GetActivity(requ.getActivityId());
+
+        if (requ.getNumber() > activityDto.getStockCount()) {
+            throw new TipException("商品售罄啦");
+        }
 
         //活动商品
         List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(requ.getActivityId());
@@ -120,7 +128,7 @@ public class OrderCombination extends OrderBase {
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
 
         //购买份数
-        int number = 2;
+        int number = requ.getNumber();
 
         for (ActivityProductDto apd : activityProductDtos) {
 
