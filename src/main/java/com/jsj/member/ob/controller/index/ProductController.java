@@ -95,6 +95,13 @@ public class ProductController extends BaseController {
         List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, openId);
         request.setAttribute("coupons", coupons);
 
+        if (info.getProductImgDtos() != null){
+            String imgUrl = info.getProductImgDtos().get(0).getImgPath();
+            request.setAttribute("imgUrl", imgUrl);
+        }else {
+            String imgUrl = "https://hezy-static.oss-cn-shanghai.aliyuncs.com/test/product/oncecard_cover.png";
+            request.setAttribute("imgUrl", imgUrl);
+        }
         return "index/productDetail";
     }
 

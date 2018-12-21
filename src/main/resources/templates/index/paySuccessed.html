@@ -7,18 +7,6 @@
 
 <th:block layout:fragment="script">
 
-    <!--引入js-->
-    <script th:src="${ob.Url('/index/js/PaySuccess.js')}" type="text/javascript"
-            charset="utf-8"></script>
-
-</th:block>
-
-<th:block layout:fragment="css">
-    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/PaySuccess.css')}"/>
-</th:block>
-
-<th:block layout:fragment="share">
-
     <script th:inline="javascript">
         //分享到发红包页面
         var shareUrl = [[${shareUrl}]];
@@ -32,7 +20,16 @@
         };
     </script>
 
+    <!--引入js-->
+    <script th:src="${ob.Url('/index/js/PaySuccess.js')}" type="text/javascript"
+            charset="utf-8"></script>
+
 </th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/PaySuccess.css')}"/>
+</th:block>
+
 
 <div layout:fragment="content">
 

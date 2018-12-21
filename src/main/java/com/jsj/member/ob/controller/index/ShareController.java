@@ -130,6 +130,16 @@ public class ShareController extends BaseController {
 
         String shareUrl = this.Url(String.format("/share/gift/%s/draw", obs), false);
         request.setAttribute("shareUrl", shareUrl);
+
+        //分享图片
+        if (giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos() != null) {
+            String imgUrl = giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos().get(0).getImgPath();
+            request.setAttribute("imgUrl", imgUrl);
+        } else {
+            String imgUrl = "https://hezy-static.oss-cn-shanghai.aliyuncs.com/test/product/oncecard_cover.png";
+            request.setAttribute("imgUrl", imgUrl);
+        }
+
         request.setAttribute("giftDto", giftDto);
         request.setAttribute("dicts", dicts);
         return "index/giftConfirm";
@@ -181,6 +191,15 @@ public class ShareController extends BaseController {
         //分享链接
         String shareUrl = this.Url(String.format("/share/gift/%s/draw", obs), false);
         request.setAttribute("shareUrl", shareUrl);
+
+        //分享图片
+        if (giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos() != null) {
+            String imgUrl = giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos().get(0).getImgPath();
+            request.setAttribute("imgUrl", imgUrl);
+        } else {
+            String imgUrl = "https://hezy-static.oss-cn-shanghai.aliyuncs.com/test/product/oncecard_cover.png";
+            request.setAttribute("imgUrl", imgUrl);
+        }
 
         request.setAttribute("giftDto", giftDto);
         return "index/giftDraw";
@@ -265,6 +284,15 @@ public class ShareController extends BaseController {
 
         String shareUrl = this.Url(String.format("/share/gift/%s/draw", obs), false);
         request.setAttribute("shareUrl", shareUrl);
+
+        //分享图片
+        if (giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos() != null) {
+            String imgUrl = giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos().get(0).getImgPath();
+            request.setAttribute("imgUrl", imgUrl);
+        } else {
+            String imgUrl = "https://hezy-static.oss-cn-shanghai.aliyuncs.com/test/product/oncecard_cover.png";
+            request.setAttribute("imgUrl", imgUrl);
+        }
 
         //只有一个商品、本人发放 显示"礼物等待被领取中"
         //只有一个商品、非本人 跳转到领取页面
