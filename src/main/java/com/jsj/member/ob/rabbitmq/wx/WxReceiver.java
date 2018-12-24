@@ -1,5 +1,6 @@
 package com.jsj.member.ob.rabbitmq.wx;
 
+import com.alibaba.fastjson.JSON;
 import com.jsj.member.ob.enums.TemplateType;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.rabbitmq.client.Channel;
@@ -15,10 +16,12 @@ import java.io.IOException;
 @Service
 public class WxReceiver {
 
-    private static Logger log = LoggerFactory.getLogger(WxReceiver.class);
+    private static Logger logger = LoggerFactory.getLogger(WxReceiver.class);
 
     @RabbitListener(queues = WxConfig.WX_NORMAL_QUEUE)
     public void sendMessage(TemplateDto dto, Channel channel, Message message) throws IOException {
+
+        logger.info(JSON.toJSONString(dto));
 
         try {
             if (dto.getTemplateType().equals(TemplateType.SERVICE)) {
@@ -32,6 +35,7 @@ public class WxReceiver {
                 ThirdPartyLogic.SendWxTemplate(dto);
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
         } finally {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         }
