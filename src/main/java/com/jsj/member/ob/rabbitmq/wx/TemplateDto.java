@@ -209,15 +209,20 @@ public class TemplateDto extends BaseDto {
         TemplateDto dto = new TemplateDto();
         dto.setToUser(order.getOpenId());
         dto.setTemplateType(TemplateType.PAYSUCCESSED);
-        dto.setFirst("您已支付成功");
-        dto.getData().put("keyword1", new TemplateData(order.getOrderId() + "", ""));
-        dto.getData().put("keyword2", new TemplateData(productDto.getProductName(), ""));
-        dto.getData().put("keyword3", new TemplateData(order.getPayAmount() + "", ""));
-        dto.setRemark("空铁管家祝您旅途愉快");
+        dto.setFirst("您的订单已支付成功，这里的文案需要修改。\n");
+        dto.setFirstColor(gold_color);
+        dto.getData().put("keyword1", new TemplateData(order.getOrderId() + "", color));
+        dto.getData().put("keyword2", new TemplateData(productDto.getProductName(), color));
+        dto.getData().put("keyword3", new TemplateData(order.getPayAmount() + "", color));
+        dto.setRemark("\n空铁管家祝您旅途愉快");
+        dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/order", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
 
         return dto;
     }
+
+    private static final String gold_color = "#FF9900"; // 金黄色
+    private static final String color = "#173177";
 
 
 }
