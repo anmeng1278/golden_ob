@@ -24,7 +24,7 @@
                 <div class="coupon-item">
                     <div class="coupon-item-back">
                         <div class="coupon-item-lt">
-                            <p class="coupon-item-price" th:text="|${info.amount}&yen;|">50<span>&yen;</span></p>
+                            <p class="coupon-item-price"><span th:text="|${info.amount}|">&yen;</span><span>&yen;</span></p>
                             <p class="coupon-price-tips" th:text="${info.couponDto.remarks}">满1000元可用</p>
                         </div>
                         <div class="coupon-item-rt">
@@ -44,7 +44,7 @@
                 <div class="coupon-item Invalid-item">
                     <div class="coupon-item-back">
                         <div class="coupon-item-lt">
-                            <p class="coupon-item-price" th:text="|${info.amount}&yen;|">50<span>&yen;</span></p>
+                            <p class="coupon-item-price"><span th:text="|${info.amount}|">&yen;</span><span>&yen;</span></p>
                             <p class="coupon-price-tips" th:text="${info.couponDto.remarks}">满1000元可用</p>
                         </div>
                         <div class="coupon-item-rt">

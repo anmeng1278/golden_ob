@@ -8,13 +8,14 @@ html,body{ background: #F5F5F5;}
 .coupon-item-back:after{ left: -0.15rem; background: #F5F5F5; box-shadow:-5px -5px 5px #E8E8E8 inset;}
 .coupon-item-back:before{ right: -0.15rem; background: #7665FF;}
 .coupon-item-lt{ width: 2.6rem; height: 1.6rem; text-align: center; border-right: 1px dashed #ECECEC; position: absolute; top: 50%; left: 0; margin-top: -0.8rem;}
-.coupon-item-price{ font-size: 1.12rem; color: #151515; font-weight: 700; position: relative;}
-.coupon-item-price span{ font-size: 0.36rem; color: #333; position: absolute; top: 0;}
+.coupon-item-price{ position: relative; margin-top: 0.3rem;}
+.coupon-item-price span:nth-child(1){ font-size: 0.6rem; color: #151515; font-weight: 700;}
+.coupon-item-price span:nth-child(2){ font-size: 0.30rem; color: #333; font-weight: 700; position: absolute; top: 0;}
 .coupon-price-tips{ font-size: 0.24rem; color: #999; padding-top: 0.16rem;}
 .coupon-item-rt{ margin: 0.42rem 0 0 3.2rem;}
 .coupon-item-name{ font-size: 0.38rem; color: #333; font-weight: 700;}
 .coupon-item-time{ font-size: 0.24rem; color: #666; padding: 0.18rem 0;}
-.coupon-rule-btn{ display: inline-block; font-size: 0.24rem; color: #C2191F; border: 1px solid #C2191F; border-radius: 30px; padding: 1px 5px 2px;}
+.coupon-rule-btn{ display: inline-block; font-size: 0.24rem; color: #C2191F; border: 1px solid #C2191F; border-radius: 30px; padding: 2px 5px 2px;}
 .coupon-item-tips{ display: block; width: 0.4rem; text-align: center; line-height: 1.2; font-size: 0.3rem; color: #fff; position: absolute; top: 50%; right: 0.18rem; margin-top: -0.7rem; z-index: 1;}
 
 .Invalid-item{ background: #5D5D5D;}
