@@ -186,15 +186,15 @@ public class OrderLogicTest {
 
         NotifyModelOuterClass.NotifyModel notifyModel = NotifyModelOuterClass.NotifyModel.getDefaultInstance();
 
-        int orderId = 10024;
+        int orderId = 10057;
 
-       OrderBase orderBase = OrderFactory.GetInstance(orderId);
+        OrderBase orderBase = OrderFactory.GetInstance(orderId);
         orderBase.PaySuccessed(orderId, notifyModel);
 
     }
 
     @Test
-    public void geyMyOrder(){
+    public void geyMyOrder() {
         List<OrderDto> orderDtos = OrderLogic.GetOrders("111");
     }
 

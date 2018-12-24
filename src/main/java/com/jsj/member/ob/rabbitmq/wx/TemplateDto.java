@@ -1,8 +1,10 @@
 package com.jsj.member.ob.rabbitmq.wx;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.enums.TemplateType;
+import com.jsj.member.ob.logic.ConfigLogic;
 import com.jsj.member.ob.rabbitmq.BaseDto;
 
 import java.io.Serializable;
@@ -172,7 +174,6 @@ public class TemplateDto extends BaseDto {
         this.url = url;
     }
 
-
     /**
      * 客服消息
      *
@@ -196,25 +197,32 @@ public class TemplateDto extends BaseDto {
      * @param order
      * @return
      */
-    public static TemplateDto NewOrderPaySuccessed(Order order) {
+    public static TemplateDto NewOrderPaySuccessed(Order order, ProductDto productDto) {
 
         /*
-            ## {{first.DATA}}
-            ## 付款金额：{{keyword1.DATA}}
-            ## 交易单号：{{keyword2.DATA}}
-            ## {{remark.DATA}}
+            {{first.DATA}}
+            订单号：{{keyword1.DATA}}
+            商品名称：{{keyword2.DATA}}
+            支付金额：{{keyword3.DATA}}
+            {{remark.DATA}}
         */
         TemplateDto dto = new TemplateDto();
         dto.setToUser(order.getOpenId());
         dto.setTemplateType(TemplateType.PAYSUCCESSED);
-        dto.setFirst("您已支付成功");
-        dto.getData().put("keyword1", new TemplateData(order.getOrderId() + "", ""));
-        dto.getData().put("keyword2", new TemplateData(order.getPayAmount() + "", ""));
-        dto.setRemark("空铁管家祝您旅途愉快");
-        dto.setUrl("http://h5.ktgj.com/ob/order");
+        dto.setFirst("您的订单已支付成功，这里的文案需要修改。\n");
+        dto.setFirstColor(gold_color);
+        dto.getData().put("keyword1", new TemplateData(order.getOrderId() + "", color));
+        dto.getData().put("keyword2", new TemplateData(productDto.getProductName(), color));
+        dto.getData().put("keyword3", new TemplateData(order.getPayAmount() + "", color));
+        dto.setRemark("\n空铁管家祝您旅途愉快");
+        dto.setRemarkColor(gold_color);
+        dto.setUrl(String.format("%s%s/order", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
 
         return dto;
     }
+
+    private static final String gold_color = "#FF9900"; // 金黄色
+    private static final String color = "#173177";
 
 
 }

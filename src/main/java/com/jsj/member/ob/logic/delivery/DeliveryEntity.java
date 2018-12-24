@@ -130,6 +130,8 @@ public class DeliveryEntity extends DeliveryBase {
         CreateDeliveryResp resp = new CreateDeliveryResp();
         resp.setDeliveryId(delivery.getDeliveryId());
 
+        //TODO WX发送实物使用成功模板
+
         return resp;
     }
 }

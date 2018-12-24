@@ -115,6 +115,6 @@ webconfig:
     ## 付款金额：{{keyword1.DATA}}
     ## 交易单号：{{keyword2.DATA}}
     ## {{remark.DATA}}
-    PaySuccess: DygyNvij6eJN34pQbj372iBpZTIYq6HukBcwrcmBhIo
+    PaySuccessed: DygyNvij6eJN34pQbj372iBpZTIYq6HukBcwrcmBhIo
 
 

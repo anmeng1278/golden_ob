@@ -133,6 +133,11 @@ public class DeliveryActivity extends DeliveryBase {
         resp.setStockId(stockDtos.get(0).getStockId());
 
         //TODO WX发送活动码使用成功模板
+        //url：/stock/qrcode/{deliveryId}/{stockId}
+        //感谢您在xxxx机场使用金色逸站通用券，点击模板可直接出未用券二维码
+        //空铁管家祝您旅途愉快
+        //顾客：张宁
+        //消费时间：2018.12.24
 
         return resp;
     }
