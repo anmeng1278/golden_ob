@@ -406,6 +406,7 @@ public class ActivityLogic extends BaseLogic {
         Wrapper<Activity> wrapper = new EntityWrapper<>();
         wrapper.where("ifpass = 1 and delete_time is null");
         wrapper.where("type_id = {0}", activityType.getValue());
+        wrapper.where("UNIX_TIMESTAMP() between begin_time and end_time");
         wrapper.orderBy("sort asc, update_time desc");
 
         List<Activity> activities = activityLogic.activityService.selectList(wrapper);

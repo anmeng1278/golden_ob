@@ -39,7 +39,7 @@
 
                     <!-- 群分享 -->
                     <th:block th:if="${info.giftShareType.value == 2}">
-                        <a th:href="${ob.Url('/share/gift/'+info.giftUniqueCode)}">
+                        <a th:href="${ob.Nav('/gift/give/'+info.giftId)}">
                             <dl class="give-item-dl clear">
                                 <dt>
                                     <img th:if="${count le 1 && !#lists.isEmpty(info.stockDtos[0].productDto.productImgDtos)}"
@@ -65,7 +65,7 @@
 
                     <!-- 分享个人 -->
                     <th:block th:if="${info.giftShareType.value != 2}">
-                        <a th:href="${ob.Url('/share/gift/'+info.giftUniqueCode)}">
+                        <a th:href="${ob.Nav('/gift/give/'+info.giftId)}">
                             <dl class="give-item-dl clear">
 
                                 <dt>
@@ -107,7 +107,7 @@
         <!--我领取的 start-->
         <div class="give-item">
             <th:block th:each="info:${receiveStocks}">
-                <a th:href="${ob.Url('/share/gift/'+info.giftUniqueCode)}">
+                <a th:href="${ob.Nav('/gift/received/'+info.giftId)}">
                     <dl class="give-item-dl clear">
                         <dt th:if="${!#lists.isEmpty(info.stockDtos[0].productDto.productImgDtos)}">
                             <img th:src="${info.stockDtos[0].productDto.productImgDtos[0].imgPath}"/>

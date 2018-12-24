@@ -9,6 +9,17 @@
 
     <script th:inline="javascript">
 
+        var shareUrl = [[${shareUrl}]];
+        var shareTitle = "来自"+[[${giftDto.wechatDto.nickname}]]+"赠送出的礼物，都在一点‘小意思’";
+
+        shareConfig = {
+            title: shareTitle,
+            desc: "你来我往互道笑纳！金色严选|简单又好优质好货，生活可以过得好一些",
+            link: shareUrl,
+            imgUrl: [[${imgUrl}]]
+        };
+
+
         TX.INIT(function () {
 
             $("a[data-share-type]").click(function () {
@@ -99,23 +110,6 @@
 
 <th:block layout:fragment="css">
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/share.css')}"/>
-</th:block>
-
-<th:block layout:fragment="share">
-
-    <script th:inline="javascript">
-        //分享到发礼物页面
-        var shareUrl = [[${shareUrl}]];
-        var shareTitle = "来自"+[[${giftDto.wechatDto.nickname}]]+"赠送出的礼物，都在一点‘小意思’";
-
-        shareConfig = {
-            title: shareTitle,
-            desc: "你来我往互道笑纳！金色严选|简单又好优质好货，生活可以过得好一些",
-            link: shareUrl,
-            imgUrl: [[${giftDto.stockDtos[0].productDto.productImgDtos[0].imgPath}]]
-        };
-    </script>
-
 </th:block>
 
 <div layout:fragment="content">

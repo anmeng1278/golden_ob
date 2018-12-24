@@ -67,6 +67,7 @@ public class OrderNormal extends OrderBase {
     @Transactional(Constant.DBTRANSACTIONAL)
     public CreateOrderResp CreateOrder(CreateOrderRequ requ) {
 
+
         //通用验证
         super.validateCreateRequ(requ);
 
@@ -111,8 +112,7 @@ public class OrderNormal extends OrderBase {
             orderProducts.add(orderProduct);
 
             //获取规格金额
-            orderAmount += productSpecDto.getSalePrice();
-
+            orderAmount = (orderAmount+productSpecDto.getSalePrice())*op.getNumber();
         }
         //削减规格库存
         ProductLogic.ReductionProductSpecStock(requ.getOrderProductDtos(), this.getActivityType(), null);

@@ -389,7 +389,7 @@ public class GiftLogic extends BaseLogic {
             throw new TipException("没有找到赠送信息");
         }
         if (gift.getStatus() == GiftStatus.CANCEL.getValue()) {
-            throw new TipException("用户已取消分享");
+            throw new TipException("您已经取消过啦");
         }
         if (gift.getStatus() == GiftStatus.BROUGHTOUT.getValue()) {
             throw new TipException("礼物被领完啦");
@@ -709,6 +709,7 @@ public class GiftLogic extends BaseLogic {
                 wrapper.where("open_id={0}", openId);
             }
             wrapper.where("parent_stock_id={0}", giveStock.getStockId());
+            wrapper.orderBy("create_time desc");
             List<Stock> stocks = giftLogic.stockService.selectList(wrapper);
             for (Stock stock : stocks) {
                 StockDto stockDto = StockLogic.ToDto(stock);

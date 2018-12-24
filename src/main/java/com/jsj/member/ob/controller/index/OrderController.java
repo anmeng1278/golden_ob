@@ -52,7 +52,7 @@ public class OrderController extends BaseController {
     public RestResponseBo cancel(HttpServletRequest request) {
 
         int orderId = Integer.parseInt(request.getParameter("orderId"));
-        OrderLogic.CancelOrder(orderId);
+        OrderLogic.DeleteOrder(orderId);
 
         return RestResponseBo.ok("订单取消成功");
     }

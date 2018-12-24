@@ -9,6 +9,35 @@
     <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/nav.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/GiveDetail.js')}" type="text/javascript" charset="utf-8"></script>
+
+    <script th:inline="javascript">
+
+        TX.INIT(function () {
+        
+        $(document).on("click","a.cancel-btn",function () {
+
+            var giftUniqueCode = $(this).attr("data-gift-uniqueId");
+
+            layer.confirm('确定取消赠送吗?', {icon: 3}, function (index) {
+                TX.CORE.p({
+                    url: "/gift/cancel",
+                    data: {giftUniqueCode: giftUniqueCode},
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                location.href = location.href;
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
+            })
+        })
+        })
+        
+    </script>
+    
 </th:block>
 
 <th:block layout:fragment="css">
@@ -93,8 +122,8 @@
 
     <!--footer start-->
     <div class="footer">
-        <a href="javascript:void(0);" class="cancel-btn">取消赠送</a>
-        <a href="javascript:void(0);" class="continue-btn">继续赠送</a>
+        <a href="javascript:;" th:attr="data-gift-uniqueId=${giftDto.giftUniqueCode}" class="cancel-btn">取消赠送</a>
+        <a th:href="${ob.Nav('/stock')}" class="continue-btn">继续赠送</a>
     </div>
     <!--footer end-->
 

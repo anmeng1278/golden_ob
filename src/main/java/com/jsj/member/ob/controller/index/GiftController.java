@@ -1,25 +1,24 @@
 package com.jsj.member.ob.controller.index;
 
+import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.controller.BaseController;
+import com.jsj.member.ob.dto.RestResponseBo;
+import com.jsj.member.ob.dto.api.gift.CancelGiftRequ;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.GiftLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.service.GiftStockService;
 import com.jsj.member.ob.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 @ApiIgnore
 @Controller
@@ -120,4 +119,30 @@ public class GiftController extends BaseController {
     }
 
 
+    @PostMapping(value = "/cancel")
+    @Transactional(Constant.DBTRANSACTIONAL)
+    @ResponseBody
+    public RestResponseBo cancelGift(HttpServletRequest request){
+
+        String openId = this.OpenId();
+
+        String giftUniqueCode = request.getParameter("giftUniqueCode");
+
+        try {
+
+            CancelGiftRequ requ = new CancelGiftRequ();
+            requ.getBaseRequ().setOpenId(openId);
+            requ.setGiftUniqueCode(giftUniqueCode);
+
+            GiftLogic.CancelGift(requ);
+
+            return RestResponseBo.ok("取消成功");
+
+        }catch (TipException ex) {
+
+            return RestResponseBo.fail(ex.getMessage(), null);
+
+        }
+
+    }
 }
