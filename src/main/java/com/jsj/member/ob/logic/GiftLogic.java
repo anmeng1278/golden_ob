@@ -324,7 +324,7 @@ public class GiftLogic extends BaseLogic {
         giftLogic.giftService.updateById(entity);
 
         //TODO
-        //给赠送者发送消息
+        //给赠送者发送客服消息
         WechatDto wechatDto = WechatLogic.GetWechat(openId);
         String url1 = String.format("%s%s/share/gift/%s",
                 giftLogic.webconfig.getHost(),
@@ -335,7 +335,7 @@ public class GiftLogic extends BaseLogic {
 
 
         //TODO
-        //给领取者发送消息
+        //给领取者发送客服消息
         String url2 = String.format("%s%s/stock",
                 giftLogic.webconfig.getHost(),
                 giftLogic.webconfig.getVirtualPath());
