@@ -45,7 +45,7 @@ public class WxReceiver {
             case SERVICE:
                 return "";
             case PAYSUCCESSED:
-                return PaySucccessTemplateId;
+                return this.PaySucccessedTemplateId;
 
         }
         return "";
@@ -55,8 +55,8 @@ public class WxReceiver {
     /**
      * 支付成功模板
      */
-    @Value(value = "webconfig.WxTemplate.PaySuccess")
-    private String PaySucccessTemplateId;
+    @Value(value = "${webconfig.WxTemplate.PaySuccessed}")
+    private String PaySucccessedTemplateId;
 
 
 }

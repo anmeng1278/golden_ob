@@ -58,6 +58,14 @@ webconfig:
   partnerLoginName: guangxiyinlian
   partnerLoginPassword: gxylceshi
 
+  WxTemplate:
+    ##{{first.DATA}}
+    ##订单号：{{keyword1.DATA}}
+    ##商品名称：{{keyword2.DATA}}
+    ##支付金额：{{keyword3.DATA}}
+    ##{{remark.DATA}}
+    PaySuccessed: 7_YF8mefVTVrLKEjE2fYfVvxRh-godTXzTPHxW-p8M0
+
 
 redis:
   host: 172.16.5.64

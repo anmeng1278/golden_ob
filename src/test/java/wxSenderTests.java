@@ -1,5 +1,6 @@
 import com.alibaba.fastjson.JSON;
 import com.jsj.member.ob.App;
+import com.jsj.member.ob.logic.ConfigLogic;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.jsj.member.ob.rabbitmq.wx.TemplateData;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
@@ -7,6 +8,7 @@ import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -54,6 +56,17 @@ public class wxSenderTests {
     public void SendService2(){
 
         ThirdPartyLogic.SendWxMessage("o2JcesxmAIQWeqEEqA-vM-i44Miw", "hello world");
+    }
+    /**
+     * 支付成功模板
+     */
+    @Value(value = "${webconfig.WxTemplate.PaySuccessed}")
+    private String PaySucccessedTemplateId;
+
+    @Test
+    public void ss(){
+        System.out.println(PaySucccessedTemplateId);
+        System.out.println(ConfigLogic.GetWebConfig().getHost());
     }
 
 }
