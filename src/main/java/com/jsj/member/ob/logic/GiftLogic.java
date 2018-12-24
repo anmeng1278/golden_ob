@@ -2,6 +2,7 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.gift.*;
 import com.jsj.member.ob.dto.api.stock.StockDto;
@@ -13,6 +14,7 @@ import com.jsj.member.ob.entity.StockFlow;
 import com.jsj.member.ob.enums.*;
 import com.jsj.member.ob.exception.FatalException;
 import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.service.GiftService;
 import com.jsj.member.ob.service.GiftStockService;
 import com.jsj.member.ob.service.StockService;
@@ -38,6 +40,9 @@ public class GiftLogic extends BaseLogic {
 
     @Autowired
     StockService stockService;
+
+    @Autowired
+    Webconfig webconfig;
 
     @PostConstruct
     public void init() {
@@ -313,6 +318,21 @@ public class GiftLogic extends BaseLogic {
         }
         gift.setUpdateTime(DateUtils.getCurrentUnixTime());
         giftLogic.giftService.updateById(entity);
+
+        //TODO
+        //给赠送者发送消息
+        String url1 = String.format("%s%s/share/gift/%s",
+                giftLogic.webconfig.getHost(),
+                giftLogic.webconfig.getVirtualPath(),
+                gift.getGiftUniqueCode());
+        TemplateDto.NewCustomService(gift.getOpenId(), String.format("您的礼物被%s领取了，点击<a href='%s'>查看</a>", gift.getWechatDto().getNickname(), url1));
+
+        //TODO
+        //给领取者发送消息
+        String url2 = String.format("%s%s/stock",
+                giftLogic.webconfig.getHost(),
+                giftLogic.webconfig.getVirtualPath());
+        TemplateDto.NewCustomService(openId, String.format("礼物领取成功，点击<a href='%s'>查看库存</a>", url2));
 
         return resp;
 

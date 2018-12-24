@@ -10,6 +10,7 @@ if (typeof shareConfig == "undefined") {
 
 wx.ready(function () {
 
+    console.log(shareConfig)
     if (shareConfig.link) {
         if (shareConfig.link.indexOf(location.host) == -1) {
             var url = location.protocol + "//" + location.host;

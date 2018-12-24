@@ -51,6 +51,8 @@ public class Webconfig {
 
     private String partnerLoginPassword;
 
+    private String host;
+
     public String getAppId() {
         return appId;
     }
@@ -201,5 +203,13 @@ public class Webconfig {
 
     public void setPartnerLoginPassword(String partnerLoginPassword) {
         this.partnerLoginPassword = partnerLoginPassword;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 }

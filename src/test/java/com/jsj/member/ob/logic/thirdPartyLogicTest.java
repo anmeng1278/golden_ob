@@ -2,10 +2,10 @@ package com.jsj.member.ob.logic;
 
 import com.alibaba.fastjson.JSON;
 import com.jsj.member.ob.App;
-import com.jsj.member.ob.dto.thirdParty.SmsDto;
-import com.jsj.member.ob.dto.thirdParty.TemplateDto;
 import com.jsj.member.ob.dto.thirdParty.*;
 import com.jsj.member.ob.enums.SmsLevel;
+import com.jsj.member.ob.rabbitmq.wx.TemplateData;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.utils.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,12 +114,12 @@ public class thirdPartyLogicTest {
         dto.setToUser("o2JcesxmAIQWeqEEqA-vM-i44Miw");
         dto.setTemplateId("H4LO95pkHyQFN6QEGQSZ5eFcbQ5Wgutk8wuH4Nq0j3I");
 
-        dto.setFirst("今日关注");
-        dto.setFirstColor("#173177");
+        dto.getData().put("first", new TemplateData("今日关注", "#173177"));
+
         dto.setRemark("备注信息");
         dto.setRemarkColor("#173177");
 
-        dto.getDatas().add(new TemplateDto.Data("哈哈", "#173177"));
+        dto.getData().put("keyword1", new TemplateData("哈哈", "#173177"));
         ThirdPartyLogic.SendWxTemplate(dto);
 
     }

@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.thirdParty.*;
 import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.HttpUtils;
 import com.jsj.member.ob.utils.Md5Utils;
+import com.jsj.member.ob.utils.SpringContextUtils;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -346,7 +348,13 @@ public class ThirdPartyLogic extends BaseLogic {
         try {
 
             GetAccessTokenRequ requ = new GetAccessTokenRequ();
-            GetAccessTokenResp resp = thirdPartyLogic.GetAccessToken(requ);
+            GetAccessTokenResp resp;
+
+            if (SpringContextUtils.getActiveProfile().equals("dev")) {
+                resp = ThirdPartyLogic.GetAccessTokenDev(null);
+            } else {
+                resp = ThirdPartyLogic.GetAccessToken(requ);
+            }
 
             String accessToken = resp.getResponseBody().getAccessToken();
             //accessToken = "15_4CEnte3ggbs9c7ofUjlUaBgn5dtPdRuT_nPV_ATLALAwjKWlUF9h_TXG0JJcc-n_MO_gh3NIwCd7fskxfQg5Ru5xUoMVadhBc5rfTFtOFVpWISIHgUCwzeOEFGaK1-hUy2QK44YMWBQFRBSDBLOfAEARBE";
@@ -365,6 +373,64 @@ public class ThirdPartyLogic extends BaseLogic {
 
     }
 
+
+    /**
+     * 发送客服消息
+     *
+     * @param openId
+     * @param content
+     */
+    public static void SendWxMessage(String openId, String content) {
+
+        if (StringUtils.isEmpty(openId)) {
+            return;
+        }
+        if (StringUtils.isEmpty(content)) {
+            return;
+        }
+
+        HashMap<String, Object> body = new HashMap<>();
+        body.put("touser", openId);
+        body.put("msgtype", "text");
+        HashMap<String, Object> txt = new HashMap<>();
+        txt.put("content", content);
+        body.put("text", txt);
+
+        String url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s";
+
+        try {
+
+            GetAccessTokenRequ requ = new GetAccessTokenRequ();
+            GetAccessTokenResp resp;
+
+            if (SpringContextUtils.getActiveProfile().equals("dev")) {
+                resp = ThirdPartyLogic.GetAccessTokenDev(null);
+            } else {
+                resp = ThirdPartyLogic.GetAccessToken(requ);
+            }
+
+            String accessToken = resp.getResponseBody().getAccessToken();
+            //accessToken = "15_4CEnte3ggbs9c7ofUjlUaBgn5dtPdRuT_nPV_ATLALAwjKWlUF9h_TXG0JJcc-n_MO_gh3NIwCd7fskxfQg5Ru5xUoMVadhBc5rfTFtOFVpWISIHgUCwzeOEFGaK1-hUy2QK44YMWBQFRBSDBLOfAEARBE";
+
+            url = String.format(url, accessToken);
+
+            String json = JSON.toJSONString(body);
+            String result = HttpUtils.json(url, json);
+
+            thirdPartyLogic.logger.info(String.format("%s %s %s", url, json, result));
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    //{
+    //    "touser":"OPENID",
+    //        "msgtype":"text",
+    //        "text":
+    //    {
+    //        "content":"Hello World"
+    //    }
+    //}
 
     /**
      * 签名字符串处理

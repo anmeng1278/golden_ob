@@ -5,7 +5,7 @@ server:
 #spring
 spring:
   profiles:
-    active: dev
+    active: pub
   http:
     multipart:
       max-file-size: 10MB
@@ -102,7 +102,19 @@ webconfig:
 
   virtualPath: ""
 
+  host:
+
   qrcodeUrl: http://mobile.qq.com/qrcode?url=%s&width=300&height=300
 
   partnerLoginName: guangxiyinlian
   partnerLoginPassword: gxylceshi
+
+  WxTemplate:
+
+    ## {{first.DATA}}
+    ## 付款金额：{{keyword1.DATA}}
+    ## 交易单号：{{keyword2.DATA}}
+    ## {{remark.DATA}}
+    PaySuccess: DygyNvij6eJN34pQbj372iBpZTIYq6HukBcwrcmBhIo
+
+

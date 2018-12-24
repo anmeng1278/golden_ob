@@ -16,6 +16,7 @@ import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.ProductLogic;
+import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.StringUtils;
@@ -41,12 +42,14 @@ public class OrderGroupon extends OrderBase {
     public void initService(OrderService orderService,
                             OrderProductService orderProductService,
                             ActivityService activityService,
-                            ActivityOrderService activityOrderService
+                            ActivityOrderService activityOrderService,
+                            WxSender wxSender
     ) {
         super.orderService = orderService;
         super.orderProductService = orderProductService;
         super.activityService = activityService;
         super.activityOrderService = activityOrderService;
+        super.wxSender = wxSender;
     }
 
     @Autowired

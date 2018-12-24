@@ -43,7 +43,10 @@ webconfig:
   # 公众号 appSecrect
   appSecrect: a8eb3f7e02ed7cb761220cb4363ff2b6
 
-  virtualPath: "/ob"
+  #虚拟目录
+  virtualPath: "/ot"
+  #域名
+  host: "http://h5.ktgj.com"
 
   #授权码
   PlatformAppId: ws975af9-2341-1234-9751-6ababc10aab3

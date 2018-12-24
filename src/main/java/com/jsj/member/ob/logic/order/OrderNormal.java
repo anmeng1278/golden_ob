@@ -14,6 +14,7 @@ import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.ProductLogic;
+import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.ActivityOrderService;
 import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.service.OrderProductService;
@@ -42,12 +43,14 @@ public class OrderNormal extends OrderBase {
     public void initService(OrderService orderService,
                             OrderProductService orderProductService,
                             ActivityService activityService,
-                            ActivityOrderService activityOrderService
+                            ActivityOrderService activityOrderService,
+                            WxSender wxSender
     ) {
         super.orderService = orderService;
         super.orderProductService = orderProductService;
         super.activityService = activityService;
         super.activityOrderService = activityOrderService;
+        super.wxSender = wxSender;
     }
 
     /**

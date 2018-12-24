@@ -15,6 +15,8 @@ import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.RedpacketLogic;
 import com.jsj.member.ob.logic.StockLogic;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
+import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.ActivityOrderService;
 import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.service.OrderProductService;
@@ -30,6 +32,8 @@ public abstract class OrderBase {
     OrderProductService orderProductService;
     ActivityService activityService;
     ActivityOrderService activityOrderService;
+
+    WxSender wxSender;
 
     /**
      * 是否允许使用代金券
@@ -114,6 +118,11 @@ public abstract class OrderBase {
         order.setTransactionId(notifyModel.getTradeOrderID());
 
         orderService.updateById(order);
+
+
+        //TODO 支付成功发送微信推送
+        TemplateDto temp = TemplateDto.NewOrderPaySuccessed(order);
+        wxSender.sendNormal(temp);
 
     }
 
