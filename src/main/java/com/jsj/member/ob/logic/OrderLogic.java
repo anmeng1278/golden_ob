@@ -164,7 +164,7 @@ public class OrderLogic extends BaseLogic {
         }
 
         //修改状态
-        order.setStatus(OrderStatus.CANCEL.getValue());
+        order.setStatus(OrderStatus.PAYFAIL.getValue());
 
         //恢复库存
         List<OrderProductDto> orderProductDtos = OrderLogic.GetOrderProducts(order.getOrderId());
@@ -186,7 +186,7 @@ public class OrderLogic extends BaseLogic {
         Order order = orderLogic.orderService.selectById(orderId);
         OrderStatus orderStatus = OrderStatus.valueOf(order.getStatus());
 
-        if (orderStatus == OrderStatus.UNPAY) {
+        if (orderStatus == OrderStatus.UNPAY || OrderStatus.valueOf(order.getStatus()) != OrderStatus.PAYFAIL) {
             //修改状态
             order.setStatus(OrderStatus.CANCEL.getValue());
             //恢复库存
