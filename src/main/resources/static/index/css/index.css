@@ -48,5 +48,7 @@ html,body{ background: #f5f5f5;}
 /*shopping-cart start*/
 .shopping-cart{ position: fixed; right: 0.2rem; bottom: 0.6rem; z-index: 100;}
 .shopping-icon{ width: 1.26rem;}
-.shopping-num{ display: block; width: 0.4rem; height: 0.4rem; line-height: 0.4rem; text-align: center; font-size: 0.24rem; color: #fff; background: #C2191F; border-radius: 50%; position: absolute; top: 0; right: 0; z-index: 101;}
+.shopping-num{ display: block; min-width: 0.4rem; height: 0.4rem; line-height: 0.4rem; text-align: center; font-size: 0.2rem; color: #fff; background: #C2191F; border-radius: 50%; position: absolute; top: 0; right: 0; z-index: 101;}
+.order-list{ bottom: 2rem;}
+.order-list .shopping-num{ border-radius: 30px; padding: 0 0.1rem;}
 /*shopping-cart end*/

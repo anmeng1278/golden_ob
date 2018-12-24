@@ -159,12 +159,14 @@ public class OrderLogic extends BaseLogic {
     public static void CancelOrder(int orderId) {
 
         Order order = orderLogic.orderService.selectById(orderId);
-        if (OrderStatus.valueOf(order.getStatus()) != OrderStatus.UNPAY || OrderStatus.valueOf(order.getStatus()) != OrderStatus.PAYFAIL) {
+        OrderStatus orderStatus = OrderStatus.valueOf(order.getStatus());
+
+        if (OrderStatus.valueOf(order.getStatus()) != OrderStatus.UNPAY && OrderStatus.valueOf(order.getStatus()) != OrderStatus.PAYFAIL) {
             throw new TipException("当前订单不允许取消");
         }
 
         //修改状态
-        order.setStatus(OrderStatus.PAYFAIL.getValue());
+        order.setStatus(OrderStatus.CANCEL.getValue());
 
         //恢复库存
         List<OrderProductDto> orderProductDtos = OrderLogic.GetOrderProducts(order.getOrderId());
@@ -186,7 +188,7 @@ public class OrderLogic extends BaseLogic {
         Order order = orderLogic.orderService.selectById(orderId);
         OrderStatus orderStatus = OrderStatus.valueOf(order.getStatus());
 
-        if (orderStatus == OrderStatus.UNPAY || OrderStatus.valueOf(order.getStatus()) != OrderStatus.PAYFAIL) {
+        if (orderStatus == OrderStatus.UNPAY && orderStatus != OrderStatus.PAYFAIL) {
             //修改状态
             order.setStatus(OrderStatus.CANCEL.getValue());
             //恢复库存

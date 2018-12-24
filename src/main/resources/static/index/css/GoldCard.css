@@ -1,6 +1,6 @@
 html,body{ background: #F5F5F5;}
 /*main start*/
-.main{ margin: 0 0.3rem;}
+.main{ margin: 0 0.3rem 1.3rem;}
 .gold-card-img{ display: block; width: 4rem; margin: 0.8rem auto;}
 .gold-card-title{ line-height: 1.2; font-size: 0.32rem; color: #333; border-left: 3px solid #C2191F; padding-left: 0.18rem; margin: 0.2rem 0.3rem 0.4rem;}
 .gold-card-item{ height: 1.1rem; padding: 0 0.2rem; background: #fff; border-radius: 5px; margin-bottom: 0.2rem; position: relative;}
