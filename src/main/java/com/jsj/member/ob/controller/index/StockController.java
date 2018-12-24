@@ -210,22 +210,28 @@ public class StockController extends BaseController {
             return this.Redirect("/stock");
         }
 
-        String openId = this.OpenId();
-        List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
+        try {
 
-        List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, true);
-        request.setAttribute("stockDtos", stockDtos);
+            String openId = this.OpenId();
+            List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
 
-        //不支持自提
-        boolean unSupportPickup = stockDtos.stream().filter(s -> s.getProductDto().getIfpickup().equals(false)).findFirst().isPresent();
-        request.setAttribute("unSupportPickup", unSupportPickup);
+            List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, true);
+            request.setAttribute("stockDtos", stockDtos);
 
-        //机场贵宾厅
-        List<JsAirportDto> airport = AirportLogic.GetAirportDtos(AirportType.AIRPORT);
-        List<JsAirportDto> train = AirportLogic.GetAirportDtos(AirportType.TRAIN);
+            //不支持自提
+            boolean unSupportPickup = stockDtos.stream().filter(s -> s.getProductDto().getIfpickup().equals(false)).findFirst().isPresent();
+            request.setAttribute("unSupportPickup", unSupportPickup);
 
-        request.setAttribute("airports", airport);
-        request.setAttribute("trains", train);
+            //机场贵宾厅
+            List<JsAirportDto> airport = AirportLogic.GetAirportDtos(AirportType.AIRPORT);
+            List<JsAirportDto> train = AirportLogic.GetAirportDtos(AirportType.TRAIN);
+
+            request.setAttribute("airports", airport);
+            request.setAttribute("trains", train);
+        } catch (TipException ex) {
+            logger.error(JSON.toJSONString(ex));
+            return this.Redirect("/stock");
+        }
 
         return "index/stockUse1";
     }
@@ -314,18 +320,25 @@ public class StockController extends BaseController {
             return this.Redirect("/stock");
         }
 
-        String openId = this.OpenId();
-        List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
+        try {
 
-        List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, true);
-        request.setAttribute("stockDtos", stockDtos);
+            String openId = this.OpenId();
+            List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
 
-        //机场贵宾厅
-        List<JsAirportDto> airport = AirportLogic.GetAirportDtos(AirportType.AIRPORT);
-        List<JsAirportDto> train = AirportLogic.GetAirportDtos(AirportType.TRAIN);
+            List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, true);
+            request.setAttribute("stockDtos", stockDtos);
 
-        request.setAttribute("airports", airport);
-        request.setAttribute("trains", train);
+            //机场贵宾厅
+            List<JsAirportDto> airport = AirportLogic.GetAirportDtos(AirportType.AIRPORT);
+            List<JsAirportDto> train = AirportLogic.GetAirportDtos(AirportType.TRAIN);
+
+            request.setAttribute("airports", airport);
+            request.setAttribute("trains", train);
+
+        } catch (TipException ex) {
+            logger.error(JSON.toJSONString(ex));
+            return this.Redirect("/stock");
+        }
 
         return "index/stockUse2";
     }
@@ -394,12 +407,16 @@ public class StockController extends BaseController {
         if (StringUtils.isEmpty(p)) {
             return this.Redirect("/stock");
         }
+        try {
+            String openId = this.OpenId();
+            List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
 
-        String openId = this.OpenId();
-        List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
-
-        List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, true);
-        request.setAttribute("stockDtos", stockDtos);
+            List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, true);
+            request.setAttribute("stockDtos", stockDtos);
+        } catch (TipException ex) {
+            logger.error(JSON.toJSONString(ex));
+            return this.Redirect("/stock");
+        }
 
         return "index/stockUse3";
     }

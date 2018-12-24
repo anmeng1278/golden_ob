@@ -174,6 +174,11 @@ public class TemplateDto extends BaseDto {
         this.url = url;
     }
 
+
+    private static final String gold_color = "#FF9900"; // 金黄色
+    private static final String color = "#173177";
+
+
     /**
      * 客服消息
      *
@@ -220,9 +225,5 @@ public class TemplateDto extends BaseDto {
 
         return dto;
     }
-
-    private static final String gold_color = "#FF9900"; // 金黄色
-    private static final String color = "#173177";
-
 
 }

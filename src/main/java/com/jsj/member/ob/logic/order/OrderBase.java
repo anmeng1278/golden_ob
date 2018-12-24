@@ -117,7 +117,9 @@ public abstract class OrderBase {
         //修改订单状态
         order.setStatus(OrderStatus.PAYSUCCESS.getValue());
         order.setPayTime(DateUtils.getCurrentUnixTime());
-        order.setTransactionId(notifyModel.getTradeOrderID());
+        if (notifyModel != null) {
+            order.setTransactionId(notifyModel.getTradeOrderID());
+        }
 
         orderService.updateById(order);
 

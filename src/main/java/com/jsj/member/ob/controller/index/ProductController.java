@@ -215,6 +215,7 @@ public class ProductController extends BaseController {
      */
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
     @ResponseBody
+    @Transactional(Constant.DBTRANSACTIONAL)
     public RestResponseBo createOrder(HttpServletRequest request) throws Exception {
 
         if (StringUtils.isEmpty(request.getParameter("activityTypeId"))) {

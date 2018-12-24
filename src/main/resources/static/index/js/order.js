@@ -50,7 +50,7 @@ function createOrder(data) {
                         });
                     } else {
                         //无需支付，跳转到订单列表页面
-                        location.href = url;
+                        location.href = successUrl;
                     }
                 });
             } else {
