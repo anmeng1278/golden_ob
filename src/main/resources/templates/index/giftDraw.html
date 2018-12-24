@@ -12,7 +12,7 @@
 
         //分享到发礼物页面
         var shareUrl = [[${shareUrl}]];
-        var shareTitle = "来自"+[[${giftDto.wechatDto.nickname}]]+"赠送出的礼物，都在一点‘小意思’";
+        var shareTitle = "来自" + [[${giftDto.wechatDto.nickname}]] + "赠送出的礼物，都在一点‘小意思’";
 
         shareConfig = {
             title: shareTitle,
@@ -22,8 +22,7 @@
         };
 
 
-    TX.INIT(function () {
-
+        TX.INIT(function () {
             $("a.receive-gifts-btn").click(function () {
                 TX.CORE.p({
                     success: function (resp) {
