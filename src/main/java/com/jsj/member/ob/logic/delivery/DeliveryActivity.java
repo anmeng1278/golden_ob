@@ -17,6 +17,8 @@ import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
+import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import com.jsj.member.ob.service.StockService;
@@ -34,6 +36,8 @@ public class DeliveryActivity extends DeliveryBase {
     public DeliveryActivity() {
         super(PropertyType.ACTIVITYCODE);
     }
+
+    WxSender wxSender;
 
     @Autowired
     public void initService(DeliveryService deliveryService, StockService stockService, DeliveryStockService deliveryStockService) {
@@ -138,6 +142,8 @@ public class DeliveryActivity extends DeliveryBase {
         //空铁管家祝您旅途愉快
         //顾客：张宁
         //消费时间：2018.12.24
+        TemplateDto temp = TemplateDto.QrcodeUseSuccessed(delivery,stockDtos);
+        wxSender.sendNormal(temp);
 
         return resp;
     }

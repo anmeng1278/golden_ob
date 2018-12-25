@@ -131,6 +131,8 @@ public class DeliveryEntity extends DeliveryBase {
         resp.setDeliveryId(delivery.getDeliveryId());
 
         //TODO WX发送实物使用成功模板
+       // TemplateDto temp = TemplateDto.EntityUseSuccessed()
+
 
         return resp;
     }

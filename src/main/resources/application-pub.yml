@@ -65,6 +65,9 @@ webconfig:
     ##支付金额：{{keyword3.DATA}}
     ##{{remark.DATA}}
     PaySuccessed: 3fo6b1wXLfjep8kp0CKGwN7MVEIC-qO-fDPCTsQae2g
+    OpenCardConfirm: Oz_Ldo8XAmB8mEVJsWYJrV3Hjl0p2Ezr3v0UpkvhhkQ
+    QrcodeUseSuccessed: YdD4hzFM3mOnufS2AunKUN18MQUFjEJmOQgtQsk3wt8
+    EntityUseSuccessed: 46zVrmMwlvcE0UgnSog1M43jFmEcPyzFnSm1_kb2oOg
 
 
 redis:

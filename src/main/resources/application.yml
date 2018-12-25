@@ -84,8 +84,8 @@ webconfig:
   activityUrl: http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx
 
   #授权码
-#  PlatformAppId: wssccaf9-2341-1234-87c1-6ababc10aab3
-#  PlatformToken: wsscr6zfppd8v46b5678f8fxh2xdhv0d22xlx08h8btn6ttxxx4aab3
+  #  PlatformAppId: wssccaf9-2341-1234-87c1-6ababc10aab3
+  #  PlatformToken: wsscr6zfppd8v46b5678f8fxh2xdhv0d22xlx08h8btn6ttxxx4aab3
 
   #授权码
   PlatformAppId: ws975af9-2341-1234-9751-6ababc10aab3
@@ -116,5 +116,8 @@ webconfig:
     ## 交易单号：{{keyword2.DATA}}
     ## {{remark.DATA}}
     PaySuccessed: DygyNvij6eJN34pQbj372iBpZTIYq6HukBcwrcmBhIo
+    OpenCardConfirm: Oz_Ldo8XAmB8mEVJsWYJrV3Hjl0p2Ezr3v0UpkvhhkQ
+    QrcodeUseSuccessed: YdD4hzFM3mOnufS2AunKUN18MQUFjEJmOQgtQsk3wt8
+    EntityUseSuccessed: 46zVrmMwlvcE0UgnSog1M43jFmEcPyzFnSm1_kb2oOg
 
 
