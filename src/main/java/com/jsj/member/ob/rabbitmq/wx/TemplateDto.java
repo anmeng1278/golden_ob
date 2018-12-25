@@ -5,6 +5,7 @@ import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.Order;
+import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.TemplateType;
 import com.jsj.member.ob.logic.ConfigLogic;
@@ -289,7 +290,7 @@ public class TemplateDto extends BaseDto {
         dto.getData().put("keyword1", new TemplateData(map.get("productName").toString(), color));
         dto.getData().put("keyword2", new TemplateData(map.get("productNumber").toString(), color));
         dto.getData().put("keyword3", new TemplateData(map.get("productPrice").toString(), color));
-        dto.getData().put("keyword4", new TemplateData(DeliveryType.valueOf(delivery.getStatus()).getMessage(), color));
+        dto.getData().put("keyword4", new TemplateData(DeliveryStatus.valueOf(delivery.getStatus()).getMessage(), color));
         dto.setRemark("\n金色严选祝您生活愉快！");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/delivery", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));

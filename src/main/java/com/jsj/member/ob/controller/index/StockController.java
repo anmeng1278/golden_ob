@@ -319,6 +319,7 @@ public class StockController extends BaseController {
         requ.setAirportCode(airportCode);
         requ.setAirportName(airportName);
 
+
         CreateDeliveryResp resp = DeliveryLogic.CreateDelivery(requ);
 
         //清空缓存

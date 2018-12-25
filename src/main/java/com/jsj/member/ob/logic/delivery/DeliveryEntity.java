@@ -40,6 +40,7 @@ public class DeliveryEntity extends DeliveryBase {
         super.deliveryStockService = deliveryStockService;
     }
 
+    @Autowired
     WxSender wxSender;
 
     @Override

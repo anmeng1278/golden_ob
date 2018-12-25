@@ -36,6 +36,7 @@ public class DeliveryActivity extends DeliveryBase {
         super(PropertyType.ACTIVITYCODE);
     }
 
+    @Autowired
     WxSender wxSender;
 
     @Autowired

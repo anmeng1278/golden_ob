@@ -23,6 +23,7 @@ import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.service.OrderProductService;
 import com.jsj.member.ob.service.OrderService;
 import com.jsj.member.ob.utils.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public abstract class OrderBase {
     ActivityService activityService;
     ActivityOrderService activityOrderService;
 
+    @Autowired
     WxSender wxSender;
 
     /**
