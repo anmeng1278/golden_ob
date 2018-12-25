@@ -12,9 +12,6 @@ import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.logic.StockLogic;
-import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
-import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import com.jsj.member.ob.service.StockService;
@@ -25,7 +22,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class DeliveryEntity extends DeliveryBase {
@@ -33,7 +29,6 @@ public class DeliveryEntity extends DeliveryBase {
     public DeliveryEntity() {
         super(PropertyType.ENTITY);
     }
-    WxSender wxSender;
 
     @Autowired
     public void initService(DeliveryService deliveryService, StockService stockService, DeliveryStockService deliveryStockService) {
@@ -46,7 +41,7 @@ public class DeliveryEntity extends DeliveryBase {
     @Transactional(Constant.DBTRANSACTIONAL)
     public CreateDeliveryResp CreateDelivery(CreateDeliveryRequ requ) {
 
-        if (requ.getUseProductDtos().isEmpty()) {
+        if (requ.getStockDtos().isEmpty()) {
             throw new TipException("使用库存不能为空");
         }
         if (StringUtils.isEmpty(requ.getContactName())) {
@@ -78,10 +73,8 @@ public class DeliveryEntity extends DeliveryBase {
             }
         }
 
-        String openId = requ.getBaseRequ().getOpenId();
-
         //获取库存
-        List<StockDto> stockDtos = StockLogic.GetStocks(openId, requ.getUseProductDtos(), false);
+        List<StockDto> stockDtos = requ.getStockDtos();
 
         Delivery delivery = new Delivery();
 
@@ -134,10 +127,8 @@ public class DeliveryEntity extends DeliveryBase {
         CreateDeliveryResp resp = new CreateDeliveryResp();
         resp.setDeliveryId(delivery.getDeliveryId());
 
-        //WX发送实物使用成功模板
-        Map map = TemplateDto.GetProduct(stockDtos);
-        TemplateDto temp = TemplateDto.EntityUseSuccessed(delivery,map);
-        wxSender.sendNormal(temp);
+        //TODO WX发送实物使用成功模板
+       // TemplateDto temp = TemplateDto.EntityUseSuccessed()
 
 
         return resp;

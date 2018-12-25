@@ -48,10 +48,10 @@ public class DeliveryGoldenCard extends DeliveryBase {
     @Transactional(Constant.DBTRANSACTIONAL)
     public CreateDeliveryResp CreateDelivery(CreateDeliveryRequ requ) {
 
-        if (requ.getUseProductDtos().isEmpty()) {
+        if (requ.getStockDtos().isEmpty()) {
             throw new TipException("使用库存不能为空");
         }
-        if (requ.getUseProductDtos().size() > 1) {
+        if (requ.getStockDtos().size() > 1) {
             throw new TipException("开卡只能使用一个");
         }
         if (StringUtils.isEmpty(requ.getContactName())) {
@@ -78,7 +78,7 @@ public class DeliveryGoldenCard extends DeliveryBase {
         }
 
         //获取库存
-        List<StockDto> stockDtos = StockLogic.GetStocks(openId, requ.getUseProductDtos(), false);
+        List<StockDto> stockDtos = requ.getStockDtos();
 
         Delivery delivery = new Delivery();
 

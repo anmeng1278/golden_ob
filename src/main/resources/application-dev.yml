@@ -9,14 +9,14 @@ spring:
       username: zhangning
       password: zhangning123
       driver-class-name: com.mysql.jdbc.Driver
-  redis:
-    host: 172.16.5.64
-    port: 6379
-    timeout: 10000
-    pool:
-      max-idle: 500
-      max-wait: 500
-      max-active: 1000
+#  redis:
+#    host: 172.16.5.64
+#    port: 6379
+#    timeout: 10000
+#    pool:
+#      max-idle: 500
+#      max-wait: 500
+#      max-active: 1000
   rabbitmq:
     host: 172.16.5.64
     port: 5672

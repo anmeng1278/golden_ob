@@ -15,7 +15,6 @@ import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
-import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
@@ -50,10 +49,10 @@ public class DeliveryActivity extends DeliveryBase {
     @Transactional(Constant.DBTRANSACTIONAL)
     public CreateDeliveryResp CreateDelivery(CreateDeliveryRequ requ) {
 
-        if (requ.getUseProductDtos().isEmpty()) {
+        if (requ.getStockDtos().isEmpty()) {
             throw new TipException("使用库存不能为空");
         }
-        if (requ.getUseProductDtos().size() > 1) {
+        if (requ.getStockDtos().size() > 1) {
             throw new TipException("次卡只能使用一个");
         }
         if (StringUtils.isEmpty(requ.getContactName())) {
@@ -75,7 +74,7 @@ public class DeliveryActivity extends DeliveryBase {
         }
 
         //获取库存
-        List<StockDto> stockDtos = StockLogic.GetStocks(openId, requ.getUseProductDtos(), false);
+        List<StockDto> stockDtos = requ.getStockDtos();
 
         Delivery delivery = new Delivery();
 

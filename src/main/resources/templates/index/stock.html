@@ -69,6 +69,8 @@
                             TX.MSG.msg(resp.baseResp.message, {icon: 2}, function () {
                                 if (resp.baseResp.url) {
                                     location.href = resp.baseResp.url;
+                                } else {
+                                    location.href = location.href;
                                 }
                             });
                         }

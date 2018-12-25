@@ -22,14 +22,20 @@ public class testAwk {
 
         //测试环境地址
         //String url = "http://106.38.39.180/awk/Third/ThirdApi/API2Partner.aspx";
-        String url = "http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx";
+        //String url = "http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx";
+
+        String url = "https://s5.jsjinfo.cn/third/v1/ThirdApi/API2Partner.aspx";
 
         //请求方法名
         String methodName = "_GetActivityCode";
 
         //合作商登录密码
-        String PartnerLoginName = "guangxiyinlian";
-        String PartnerLoginPassword = "gxylceshi";
+        //String PartnerLoginName = "guangxiyinlian";
+        //String PartnerLoginPassword = "gxylceshi";
+
+        String PartnerLoginName = "ylgxnx";
+        String PartnerLoginPassword = "ylgxnx_123";
+
 
         HashMap<String, Object> map = new HashMap<>();
 
