@@ -2,7 +2,6 @@ package com.jsj.member.ob.rabbitmq.wx;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
-import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.Order;
@@ -13,6 +12,7 @@ import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.rabbitmq.BaseDto;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -208,7 +208,7 @@ public class TemplateDto extends BaseDto {
      * @param order
      * @return
      */
-    public static TemplateDto NewOrderPaySuccessed(Order order, ProductDto productDto) {
+    public static TemplateDto NewOrderPaySuccessed(Order order, Map map) {
 
         /*
             {{first.DATA}}
@@ -223,7 +223,7 @@ public class TemplateDto extends BaseDto {
         dto.setFirst("您的订单已支付成功\n");
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(order.getOrderId() + "", color));
-        dto.getData().put("keyword2", new TemplateData(productDto.getProductName(), color));
+        dto.getData().put("keyword2", new TemplateData(map.get("productName").toString(), color));
         dto.getData().put("keyword3", new TemplateData(order.getPayAmount() + "", color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);
@@ -231,7 +231,6 @@ public class TemplateDto extends BaseDto {
 
         return dto;
     }
-
 
 
     /**
@@ -250,13 +249,13 @@ public class TemplateDto extends BaseDto {
         TemplateDto dto = new TemplateDto();
         dto.setToUser(delivery.getOpenId());
         dto.setTemplateType(TemplateType.QRCODEUSESUCCESSED);
-        dto.setFirst(String.format("感谢您在%s机场使用金色逸站通用券，点击模板可直接出未用券二维码\n",delivery.getAirportName()));
+        dto.setFirst(String.format("感谢您在%s机场使用金色逸站通用券，点击模板可直接出未用券二维码\n", delivery.getAirportName()));
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(WechatLogic.GetWechat(delivery.getOpenId()).getNickname() + "", color));
-        dto.getData().put("keyword2", new TemplateData( stockDtos.get(0).getCreateTime()+ "", color));
+        dto.getData().put("keyword2", new TemplateData(delivery.getCreateTime() + "", color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);
-        dto.setUrl(String.format("/stock/qrcode/%s/%s", delivery.getDeliveryId(),stockDtos.get(0).getStockId()));
+        dto.setUrl(String.format("/stock/qrcode/%s/%s", delivery.getDeliveryId(), stockDtos.get(0).getStockId()));
 
         return dto;
     }
@@ -267,34 +266,30 @@ public class TemplateDto extends BaseDto {
      * @param delivery
      * @return
      */
-    public static TemplateDto EntityUseSuccessed(Delivery delivery, List<StockDto> stockDtos) {
+    public static TemplateDto EntityUseSuccessed(Delivery delivery, Map map) {
 
-        //46zVrmMwlvcE0UgnSog1M43jFmEcPyzFnSm1_kb2oOg
-
-//        {{first.DATA}}
-//        商品名称：{{keyword1.DATA}}
-//        数量：{{keyword2.DATA}}
-//        金额：{{keyword3.DATA}}
-//        状态：{{keyword4.DATA}}
-//        {{remark.DATA}}
+        /*{{first.DATA}}
+        商品名称：{{keyword1.DATA}}
+        数量：{{keyword2.DATA}}
+        金额：{{keyword3.DATA}}
+        状态：{{keyword4.DATA}}
+        {{remark.DATA}}*/
 
 
         TemplateDto dto = new TemplateDto();
         dto.setToUser(delivery.getOpenId());
         dto.setTemplateType(TemplateType.ENTITYUSESUCCESSED);
-        if(delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()){
+        if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
             dto.setFirst("您的配送订单已创建成功，我们正在为您安排配送！");
         }
-        if(delivery.getTypeId() == DeliveryType.PICKUP.getValue()){
+        if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
             dto.setFirst("您的配送订单已创建成功，请到相应的自提点提取！");
         }
         dto.setFirstColor(gold_color);
-        TemplateData data = new TemplateData();
-
-        dto.getData().put("keyword1", new TemplateData(stockDtos.stream().map(stockDto -> stockDto.getProductDto().getProductName()) + "", color));
-        dto.getData().put("keyword2", new TemplateData(stockDtos.stream().map(StockDto::getNumber) + "", color));
-        dto.getData().put("keyword3", new TemplateData(stockDtos.stream().map(stockDto -> stockDto.getProductDto().getSalePrice()) + "", color));
-        dto.getData().put("keyword4", new TemplateData(stockDtos.stream().map(StockDto::getStockType) + "", color));
+        dto.getData().put("keyword1", new TemplateData(map.get("productName").toString(), color));
+        dto.getData().put("keyword2", new TemplateData(map.get("productNumber").toString(), color));
+        dto.getData().put("keyword3", new TemplateData(map.get("productPrice").toString(), color));
+        dto.getData().put("keyword4", new TemplateData(DeliveryType.valueOf(delivery.getStatus()).getMessage(), color));
         dto.setRemark("\n金色严选祝您生活愉快！");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/delivery", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
@@ -322,9 +317,9 @@ public class TemplateDto extends BaseDto {
         dto.setTemplateType(TemplateType.OPENCARDCONFIRM);
         dto.setFirst("正在为您开卡，请您耐心等待\n");
         dto.setFirstColor(gold_color);
-        dto.getData().put("keyword1", new TemplateData(delivery.getProductDtos().stream().map(ProductDto::getProductName) + "", color));
+        dto.getData().put("keyword1", new TemplateData(delivery.getProductDtos().get(0).getProductName() + "", color));
         dto.getData().put("keyword2", new TemplateData(delivery.getEffectiveDate(), color));
-        dto.getData().put("keyword3", new TemplateData( "依据您的卡类型", color));
+        dto.getData().put("keyword3", new TemplateData("依据卡说明", color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
@@ -333,5 +328,40 @@ public class TemplateDto extends BaseDto {
     }
 
 
+    public static Map GetProduct(List<StockDto> stockDtos) {
 
+        Map<String, Object> map = new HashMap<>();
+
+        StringBuilder name = new StringBuilder();
+        StringBuilder number = new StringBuilder();
+        StringBuilder price = new StringBuilder();
+        for (StockDto stockDto : stockDtos) {
+            name.append(stockDto.getProductDto().getProductName() + ",");
+
+            number.append(stockDto.getNumber() + ",");
+
+            price.append(stockDto.getProductDto().getSalePrice() + ",");
+        }
+
+        if (name.length() > 0) {
+
+            name.deleteCharAt(name.length() - 1);
+        }
+        if (number.length() > 0) {
+            number.deleteCharAt(number.length() - 1);
+        }
+        if (price.length() > 0) {
+            price.deleteCharAt(price.length() - 1);
+        }
+
+
+        String productName = name.toString().toLowerCase();
+        map.put("productName", productName);
+        String productNumber = number.toString().toLowerCase();
+        map.put("productNumber", productNumber);
+        String productPrice = price.toString().toLowerCase();
+        map.put("productPrice", productPrice);
+
+        return map;
+    }
 }

@@ -127,7 +127,7 @@ public class DeliveryGoldenCard extends DeliveryBase {
         CreateDeliveryResp resp = new CreateDeliveryResp();
         resp.setDeliveryId(delivery.getDeliveryId());
 
-        //TODO WX发送开卡确认中模板
+        // WX发送开卡确认中模板
         DeliveryDto deliveryDto = DeliveryLogic.GetDelivery(delivery.getDeliveryId());
         TemplateDto temp = TemplateDto.OpenCardConfirm(deliveryDto);
         wxSender.sendNormal(temp);

@@ -13,6 +13,8 @@ import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.StockLogic;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
+import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import com.jsj.member.ob.service.StockService;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class DeliveryEntity extends DeliveryBase {
@@ -30,6 +33,7 @@ public class DeliveryEntity extends DeliveryBase {
     public DeliveryEntity() {
         super(PropertyType.ENTITY);
     }
+    WxSender wxSender;
 
     @Autowired
     public void initService(DeliveryService deliveryService, StockService stockService, DeliveryStockService deliveryStockService) {
@@ -130,8 +134,10 @@ public class DeliveryEntity extends DeliveryBase {
         CreateDeliveryResp resp = new CreateDeliveryResp();
         resp.setDeliveryId(delivery.getDeliveryId());
 
-        //TODO WX发送实物使用成功模板
-       // TemplateDto temp = TemplateDto.EntityUseSuccessed()
+        //WX发送实物使用成功模板
+        Map map = TemplateDto.GetProduct(stockDtos);
+        TemplateDto temp = TemplateDto.EntityUseSuccessed(delivery,map);
+        wxSender.sendNormal(temp);
 
 
         return resp;

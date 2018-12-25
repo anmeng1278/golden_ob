@@ -323,18 +323,16 @@ public class GiftLogic extends BaseLogic {
         gift.setUpdateTime(DateUtils.getCurrentUnixTime());
         giftLogic.giftService.updateById(entity);
 
-        //TODO
         //给赠送者发送客服消息
         WechatDto wechatDto = WechatLogic.GetWechat(openId);
         String url1 = String.format("%s%s/share/gift/%s",
                 giftLogic.webconfig.getHost(),
                 giftLogic.webconfig.getVirtualPath(),
                 gift.getGiftUniqueCode());
-        TemplateDto dto1 = TemplateDto.NewCustomService(gift.getOpenId(), String.format("您的礼物被%s领取了，点击<a href='%s'>查看</a>", wechatDto.getNickname(), url1));
+        TemplateDto dto1 = TemplateDto.NewCustomService(gift.getOpenId(), String.format("您赠送的礼物被%s领取了，点击<a href='%s'>查看领取详情</a>", wechatDto.getNickname(), url1));
         giftLogic.wxSender.sendNormal(dto1);
 
 
-        //TODO
         //给领取者发送客服消息
         String url2 = String.format("%s%s/stock",
                 giftLogic.webconfig.getHost(),
