@@ -5,7 +5,7 @@ import com.jsj.member.ob.dto.api.coupon.UseCouponRequ;
 import com.jsj.member.ob.dto.api.coupon.UseCouponResp;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
-import com.jsj.member.ob.dto.api.product.ProductDto;
+import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.proto.NotifyModelOuterClass;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
@@ -14,7 +14,6 @@ import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.CouponLogic;
-import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.logic.RedpacketLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
@@ -27,6 +26,7 @@ import com.jsj.member.ob.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class OrderBase {
 
@@ -123,10 +123,14 @@ public abstract class OrderBase {
 
         orderService.updateById(order);
 
-        ProductDto productDto = ProductLogic.GetProduct(orderProducts.get(0).getProductId());
-
-        //TODO 支付成功发送微信推送
-        TemplateDto temp = TemplateDto.NewOrderPaySuccessed(order, productDto);
+        //支付成功发送微信推送
+        List<StockDto> stockDtos = new ArrayList<>();
+        for (Stock stock : stocks) {
+            StockDto stockDto = StockLogic.ToDto(stock);
+            stockDtos.add(stockDto);
+        }
+        Map map = TemplateDto.GetProduct(stockDtos);
+        TemplateDto temp = TemplateDto.NewOrderPaySuccessed(order, map);
         wxSender.sendNormal(temp);
 
     }
