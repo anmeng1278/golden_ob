@@ -16,7 +16,7 @@
 
 <div layout:fragment="content">
     <!--main start-->
-    <div class="main">
+    <div class="main" th:if="${!#lists.isEmpty(deliveryDtos)}">
 
         <th:block th:each="info:${deliveryDtos}">
 

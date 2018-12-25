@@ -146,7 +146,7 @@
 
 <div layout:fragment="content">
     <!--main start-->
-    <div class="main">
+    <div class="main" th:if="${!#lists.isEmpty(orderDtos)}">
 
         <th:block th:each="info:${orderDtos}">
 

@@ -33,7 +33,7 @@
         <!--我赠送的 start-->
         <div class="give-item" style="display: block;">
 
-            <th:block th:each="info:${giveStocks}">
+            <th:block th:if="${!#lists.isEmpty(giveStocks)}" th:each="info:${giveStocks}">
 
                 <th:block th:with="count=${giftLogic.GetGiftStockCount(info.giftId)}">
 
@@ -106,7 +106,7 @@
 
         <!--我领取的 start-->
         <div class="give-item">
-            <th:block th:each="info:${receiveStocks}">
+            <th:block th:if="${!#lists.isEmpty(receiveStocks)}" th:each="info:${receiveStocks}">
                 <a th:href="${ob.Nav('/gift/received/'+info.giftId)}">
                     <dl class="give-item-dl clear">
                         <dt th:if="${!#lists.isEmpty(info.stockDtos[0].productDto.productImgDtos)}">
