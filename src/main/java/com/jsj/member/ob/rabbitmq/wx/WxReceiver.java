@@ -50,7 +50,12 @@ public class WxReceiver {
                 return "";
             case PAYSUCCESSED:
                 return this.PaySucccessedTemplateId;
-
+            case OPENCARDCONFIRM:
+                return this.OpenCardConfirmTemplateId;
+            case QRCODEUSESUCCESSED:
+                return this.QrcodeUseSuccessedTemplateId;
+            case ENTITYUSESUCCESSED:
+                return this.EntityUseSuccessedTemplateId;
         }
         return "";
     }
@@ -61,6 +66,27 @@ public class WxReceiver {
      */
     @Value(value = "${webconfig.WxTemplate.PaySuccessed}")
     private String PaySucccessedTemplateId;
+
+    /**
+     * 开卡确认模板
+     */
+    @Value(value = "${webconfig.WxTemplate.OpenCardConfirm}")
+    private String OpenCardConfirmTemplateId;
+
+    /**
+     * 活动码使用成功模板
+     */
+    @Value(value = "${webconfig.WxTemplate.QrcodeUseSuccessed}")
+    private String QrcodeUseSuccessedTemplateId;
+
+    /**
+     * 实物商品使用成功模板
+     */
+    @Value(value = "${webconfig.WxTemplate.EntityUseSuccessed}")
+    private String EntityUseSuccessedTemplateId;
+
+
+
 
 
 }
