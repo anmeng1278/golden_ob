@@ -1,7 +1,7 @@
 package com.jsj.member.ob.dto.api.delivery;
 
 import com.jsj.member.ob.dto.BaseRequ;
-import com.jsj.member.ob.dto.api.stock.UseProductDto;
+import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.PropertyType;
 
@@ -12,7 +12,7 @@ public class CreateDeliveryRequ {
 
     public CreateDeliveryRequ() {
         this.baseRequ = new BaseRequ();
-        this.useProductDtos = new ArrayList<>();
+        this.stockDtos = new ArrayList<>();
     }
 
     private BaseRequ baseRequ;
@@ -25,7 +25,7 @@ public class CreateDeliveryRequ {
         this.baseRequ = baseRequ;
     }
 
-    private List<UseProductDto> useProductDtos;
+    private List<StockDto> stockDtos;
 
     private DeliveryType deliveryType;
 
@@ -56,12 +56,12 @@ public class CreateDeliveryRequ {
     //自提时间、生效日期
     private String effectiveDate;
 
-    public List<UseProductDto> getUseProductDtos() {
-        return useProductDtos;
+    public List<StockDto> getStockDtos() {
+        return stockDtos;
     }
 
-    public void setUseProductDtos(List<UseProductDto> useProductDtos) {
-        this.useProductDtos = useProductDtos;
+    public void setStockDtos(List<StockDto> stockDtos) {
+        this.stockDtos = stockDtos;
     }
 
     public DeliveryType getDeliveryType() {

@@ -134,7 +134,25 @@ public abstract class BaseController {
      * @return
      */
     protected String Redirect(String path) {
-        return String.format("redirect:%s%s", webconfig.getVirtualPath(), path);
+        return Redirect(path, true);
+    }
+
+
+    /**
+     * 跳转实际路径
+     *
+     * @param path
+     * @return
+     */
+    protected String Redirect(String path, boolean enabledCache) {
+        int timeStamp = DateUtils.getCurrentUnixTime();
+        if (enabledCache) {
+            return String.format("redirect:%s%s", webconfig.getVirtualPath(), path);
+        }
+        if (path.indexOf("?") > -1) {
+            return String.format("redirect:%s%s&%d", webconfig.getVirtualPath(), path, timeStamp);
+        }
+        return String.format("redirect:%s%s?%d", webconfig.getVirtualPath(), path, timeStamp);
     }
 
     /**

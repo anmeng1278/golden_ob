@@ -1,9 +1,16 @@
+import com.jsj.member.ob.App;
+import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.enums.SingletonMap;
 import com.jsj.member.ob.redis.AccessKey;
 import com.jsj.member.ob.redis.RedisService;
+import com.jsj.member.ob.redis.StockKey;
 import com.jsj.member.ob.utils.ThreadPoolUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -14,9 +21,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@SpringBootTest(classes = App.class)
-//@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = App.class)
+@WebAppConfiguration
 public class redisTests {
 
     @Autowired
@@ -199,6 +206,26 @@ public class redisTests {
 
         Long sadd = jedis.sadd(k, "123");
         System.out.println(sadd);
+    }
+
+
+    @Test
+    public void testKey() {
+
+        List<StockDto> stockDtos = new ArrayList<>();
+        StockDto st = new StockDto();
+        st.setNumber(1);
+        stockDtos.add(st);
+        redisService.set(StockKey.token, "UseStock", stockDtos);
+        //
+        //redisService.get(StockKey.token, "UseStock", List<StockDto>.getClass());
+        //redisService.delete(StockKey.token, "UseStock");
+
+        //redisService.get()
+
+
+        String useStock = redisService.get(StockKey.token, "UseStock", String.class);
+        System.out.println(useStock);
     }
 
 }

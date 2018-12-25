@@ -22,9 +22,12 @@ import com.jsj.member.ob.logic.AirportLogic;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.GiftLogic;
 import com.jsj.member.ob.logic.StockLogic;
+import com.jsj.member.ob.redis.RedisService;
+import com.jsj.member.ob.redis.StockKey;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +35,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +46,9 @@ import java.util.Optional;
 public class StockController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(StockController.class);
+
+    @Autowired
+    RedisService redisService;
 
     //region (public) 我的库存 index
 
@@ -153,8 +160,10 @@ public class StockController extends BaseController {
         String p = request.getParameter("p");
         String propertyTypeId = request.getParameter("propertyTypeId");
         if (StringUtils.isEmpty(p) || StringUtils.isEmpty(propertyTypeId)) {
-            return RestResponseBo.fail("参数错误", null, this.Url("/stock"));
+            return RestResponseBo.fail("参数错误", null, this.Url("/stock", false));
         }
+
+        p = URLDecoder.decode(p, "UTF-8");
 
         PropertyType propertyType = PropertyType.valueOf(Integer.valueOf(propertyTypeId));
         String url = "";
@@ -187,7 +196,13 @@ public class StockController extends BaseController {
                 break;
         }
 
-        url = String.format("%s?p=%s", url, p);
+        List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
+        List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, false);
+
+        //添加缓存
+        redisService.set(StockKey.token, openId, stockDtos);
+
+        //url = String.format("%s?p=%s", url, p);
         return RestResponseBo.ok("验证成功", url, null);
 
     }
@@ -205,17 +220,17 @@ public class StockController extends BaseController {
     @GetMapping(value = {"/use1"})
     public String stockUse1(HttpServletRequest request) {
 
-        String p = request.getParameter("p");
+        String openId = this.OpenId();
+
+        //获取缓存数据
+        String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
-            return this.Redirect("/stock");
+            return this.Redirect("/stock", false);
         }
 
         try {
 
-            String openId = this.OpenId();
-            List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
-
-            List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, true);
+            List<StockDto> stockDtos = JSON.parseArray(p, StockDto.class);
             request.setAttribute("stockDtos", stockDtos);
 
             //不支持自提
@@ -230,7 +245,7 @@ public class StockController extends BaseController {
             request.setAttribute("trains", train);
         } catch (TipException ex) {
             logger.error(JSON.toJSONString(ex));
-            return this.Redirect("/stock");
+            return this.Redirect("/stock", false);
         }
 
         return "index/stockUse1";
@@ -250,13 +265,20 @@ public class StockController extends BaseController {
     @Transactional(Constant.DBTRANSACTIONAL)
     public RestResponseBo saveStockUse1(HttpServletRequest request) {
 
-        String p = request.getParameter("p");
+        String openId = this.OpenId();
+        //获取缓存数据
+        String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
             return RestResponseBo.fail("参数错误");
         }
 
-        String openId = this.OpenId();
-        List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
+        List<StockDto> stockDtos = JSON.parseArray(p, StockDto.class);
+        if (stockDtos.isEmpty()) {
+            return RestResponseBo.fail("参数错误");
+        }
+        if (!stockDtos.get(0).getProductDto().getPropertyType().equals(PropertyType.ENTITY)) {
+            return RestResponseBo.fail("参数错误");
+        }
 
         String contactName = request.getParameter("contactName");
         String mobile = request.getParameter("mobile");
@@ -293,11 +315,15 @@ public class StockController extends BaseController {
         requ.setPropertyType(PropertyType.ENTITY);
         requ.setProvinceId(provinceId);
 
-        requ.setUseProductDtos(useProductDtos);
+        requ.setStockDtos(stockDtos);
         requ.setAirportCode(airportCode);
         requ.setAirportName(airportName);
 
         CreateDeliveryResp resp = DeliveryLogic.CreateDelivery(requ);
+
+        //清空缓存
+        redisService.delete(StockKey.token, openId);
+
         return RestResponseBo.ok("操作成功", this.Url("/delivery"), resp);
 
 
@@ -315,17 +341,16 @@ public class StockController extends BaseController {
     @GetMapping(value = {"/use2"})
     public String stockUse2(HttpServletRequest request) {
 
-        String p = request.getParameter("p");
+        String openId = this.OpenId();
+        //获取缓存数据
+        String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
-            return this.Redirect("/stock");
+            return this.Redirect("/stock", false);
         }
 
         try {
 
-            String openId = this.OpenId();
-            List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
-
-            List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, true);
+            List<StockDto> stockDtos = JSON.parseArray(p, StockDto.class);
             request.setAttribute("stockDtos", stockDtos);
 
             //机场贵宾厅
@@ -337,7 +362,7 @@ public class StockController extends BaseController {
 
         } catch (TipException ex) {
             logger.error(JSON.toJSONString(ex));
-            return this.Redirect("/stock");
+            return this.Redirect("/stock", false);
         }
 
         return "index/stockUse2";
@@ -357,13 +382,20 @@ public class StockController extends BaseController {
     @Transactional(Constant.DBTRANSACTIONAL)
     public RestResponseBo saveStockUse2(HttpServletRequest request) {
 
-        String p = request.getParameter("p");
+        String openId = this.OpenId();
+        //获取缓存数据
+        String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
             return RestResponseBo.fail("参数错误");
         }
 
-        String openId = this.OpenId();
-        List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
+        List<StockDto> stockDtos = JSON.parseArray(p, StockDto.class);
+        if (stockDtos.isEmpty()) {
+            return RestResponseBo.fail("参数错误");
+        }
+        if (!stockDtos.get(0).getProductDto().getPropertyType().equals(PropertyType.ACTIVITYCODE)) {
+            return RestResponseBo.fail("参数错误");
+        }
 
         String contactName = request.getParameter("contactName");
         String mobile = request.getParameter("mobile");
@@ -379,12 +411,15 @@ public class StockController extends BaseController {
         requ.setMobile(mobile);
         requ.setPropertyType(PropertyType.ACTIVITYCODE);
 
-        requ.setUseProductDtos(useProductDtos);
+        requ.setStockDtos(stockDtos);
         requ.setAirportCode(airportCode);
         requ.setAirportName(airportName);
         requ.setFlightNumber(flightNumber);
 
         CreateDeliveryResp resp = DeliveryLogic.CreateDelivery(requ);
+
+        //清空缓存
+        redisService.delete(StockKey.token, openId);
 
         String url = this.Url(String.format("/stock/qrcode/%d/%d", resp.getDeliveryId(), resp.getStockId()));
         return RestResponseBo.ok("操作成功", url, resp);
@@ -403,19 +438,18 @@ public class StockController extends BaseController {
     @GetMapping(value = {"/use3"})
     public String stockUse3(HttpServletRequest request) {
 
-        String p = request.getParameter("p");
+        String openId = this.OpenId();
+        //获取缓存数据
+        String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
-            return this.Redirect("/stock");
+            return this.Redirect("/stock", false);
         }
         try {
-            String openId = this.OpenId();
-            List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
-
-            List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, true);
+            List<StockDto> stockDtos = JSON.parseArray(p, StockDto.class);
             request.setAttribute("stockDtos", stockDtos);
         } catch (TipException ex) {
             logger.error(JSON.toJSONString(ex));
-            return this.Redirect("/stock");
+            return this.Redirect("/stock", false);
         }
 
         return "index/stockUse3";
@@ -435,13 +469,21 @@ public class StockController extends BaseController {
     @Transactional(Constant.DBTRANSACTIONAL)
     public RestResponseBo saveStockUse3(HttpServletRequest request) {
 
-        String p = request.getParameter("p");
+
+        String openId = this.OpenId();
+        //获取缓存数据
+        String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
             return RestResponseBo.fail("参数错误");
         }
 
-        String openId = this.OpenId();
-        List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
+        List<StockDto> stockDtos = JSON.parseArray(p, StockDto.class);
+        if (stockDtos.isEmpty()) {
+            return RestResponseBo.fail("参数错误");
+        }
+        if (!stockDtos.get(0).getProductDto().getPropertyType().equals(PropertyType.GOLDENCARD)) {
+            return RestResponseBo.fail("参数错误");
+        }
 
         String contactName = request.getParameter("contactName");
         String mobile = request.getParameter("mobile");
@@ -458,10 +500,14 @@ public class StockController extends BaseController {
 
         requ.setIdNumber(idNumber);
         requ.setEffectiveDate(effectiveDate);
-        requ.setUseProductDtos(useProductDtos);
+        requ.setStockDtos(stockDtos);
 
         //开卡方法
         CreateDeliveryResp resp = DeliveryLogic.CreateDelivery(requ);
+
+        //清空缓存
+        redisService.delete(StockKey.token, openId);
+
         return RestResponseBo.ok("操作成功", this.Url("/delivery"), resp);
 
     }

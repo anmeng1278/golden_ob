@@ -144,6 +144,9 @@ public class OrderLogic extends BaseLogic {
 
             //取消订单
             orderLogic.orderService.updateById(o);
+
+            //TODO 未支付订单取消客服消息
+            //o.getOpenId()
         }
 
         //返回已取消的订单列表
