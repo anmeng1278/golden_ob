@@ -143,8 +143,9 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
         request.setAttribute("appId", webconfig.getAppId());
         request.setAttribute("timestamp", timestamp);
         request.setAttribute("noncestr", noncestr);
+             */
         request.setAttribute("virtualPath", webconfig.getVirtualPath());
-        */
+
 
     }
 }
