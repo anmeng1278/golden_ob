@@ -14,7 +14,6 @@ import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
-import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
@@ -35,6 +34,7 @@ public class DeliveryGoldenCard extends DeliveryBase {
         super(PropertyType.GOLDENCARD);
     }
 
+    @Autowired
     WxSender wxSender;
 
     @Autowired
@@ -127,7 +127,7 @@ public class DeliveryGoldenCard extends DeliveryBase {
         CreateDeliveryResp resp = new CreateDeliveryResp();
         resp.setDeliveryId(delivery.getDeliveryId());
 
-        //TODO WX发送开卡确认中模板
+        // WX发送开卡确认中模板
         DeliveryDto deliveryDto = DeliveryLogic.GetDelivery(delivery.getDeliveryId());
         TemplateDto temp = TemplateDto.OpenCardConfirm(deliveryDto);
         wxSender.sendNormal(temp);
