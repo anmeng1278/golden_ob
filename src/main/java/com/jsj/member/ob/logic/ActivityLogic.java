@@ -204,10 +204,28 @@ public class ActivityLogic extends BaseLogic {
      * @return
      */
     public static List<ActivityProductDto> GetActivityProductDtos(int activityId) {
+        return GetActivityProductDtos(activityId, 0);
+    }
+    //endregion
+
+
+    //region (public) 获取活动商品列表 GetActivityProductDtos
+
+    /**
+     * 获取活动商品列表
+     *
+     * @param activityId
+     * @return
+     */
+    public static List<ActivityProductDto> GetActivityProductDtos(int activityId, int productSpecId) {
 
         EntityWrapper<ActivityProduct> entityWrapper = new EntityWrapper<>();
         entityWrapper.where("delete_time is null");
         entityWrapper.where("activity_id={0}", activityId);
+
+        if (productSpecId > 0) {
+            entityWrapper.where("product_spec_id={0}", productSpecId);
+        }
 
         List<ActivityProductDto> activityProductDtos = new ArrayList<>();
         List<ActivityProduct> activityProducts = activityLogic.activityProductService.selectList(entityWrapper);
@@ -322,17 +340,23 @@ public class ActivityLogic extends BaseLogic {
     /**
      * 同步活动到redis数据库
      */
-    public static void RedisSync() {
+    public static List<Integer> RedisSync() {
 
         Wrapper<Activity> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
         wrapper.where("ifpass = 1");
-        wrapper.where("UNIX_TIMESTAMP() between begin_time - 60 * 10 and begin_time - 60 *5");
+        //wrapper.where("UNIX_TIMESTAMP() between begin_time - 60 * 10 and begin_time - 60 *5");
+        wrapper.where("UNIX_TIMESTAMP() between begin_time - 60 * 10 and end_time");
 
         List<Activity> activities = activityLogic.activityService.selectList(wrapper);
+        List<Integer> activityIds = new ArrayList<>();
         for (Activity at : activities) {
-            ActivityLogic.RedisSync(at);
+            if (ActivityLogic.RedisSync(at)) {
+                activityIds.add(at.getActivityId());
+            }
         }
+
+        return activityIds;
     }
     //endregion
 
@@ -343,7 +367,7 @@ public class ActivityLogic extends BaseLogic {
      *
      * @param activity
      */
-    public static void RedisSync(Activity activity) {
+    public static boolean RedisSync(Activity activity) {
 
         Jedis jedis = activityLogic.jedisPool.getResource();
         int activityId = activity.getActivityId();
@@ -351,7 +375,7 @@ public class ActivityLogic extends BaseLogic {
         //活动商品
         List<ActivityProductDto> products = ActivityLogic.GetActivityProductDtos(activityId);
         if (products == null || products.isEmpty()) {
-            return;
+            return false;
         }
 
         for (ActivityProductDto dto : products) {
@@ -374,6 +398,8 @@ public class ActivityLogic extends BaseLogic {
             jedis.set(key, dto.getStockCount() + "");
             jedis.set(readyKey, activity.getBeginTime() + "");
         }
+
+        return true;
     }
     //endregion
 
@@ -398,10 +424,11 @@ public class ActivityLogic extends BaseLogic {
 
     /**
      * 根据活动类型活动活动信息
+     *
      * @param activityType
      * @return
      */
-    public static List<ActivityDto> GetActivityByType(ActivityType activityType){
+    public static List<ActivityDto> GetActivityByType(ActivityType activityType) {
 
         Wrapper<Activity> wrapper = new EntityWrapper<>();
         wrapper.where("ifpass = 1 and delete_time is null");

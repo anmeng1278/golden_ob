@@ -231,7 +231,7 @@ public class ProductLogic extends BaseLogic {
         List<ProductImgDto> productImgDtos = new ArrayList<>();
 
         //商品图片
-        Wrapper<ProductImg> productImgWrapper = new EntityWrapper<com.jsj.member.ob.entity.ProductImg>();
+        Wrapper<ProductImg> productImgWrapper = new EntityWrapper<>();
         productImgWrapper.where("product_id={0} and delete_time is null", productId);
         if (productImgType != null) {
             productImgWrapper.where("type_id = {0}", productImgType.getValue());

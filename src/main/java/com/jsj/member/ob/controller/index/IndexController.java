@@ -8,12 +8,16 @@ import com.jsj.member.ob.entity.Banner;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.BannerType;
 import com.jsj.member.ob.enums.ProductType;
-import com.jsj.member.ob.logic.*;
+import com.jsj.member.ob.logic.ActivityLogic;
+import com.jsj.member.ob.logic.BannerLogic;
+import com.jsj.member.ob.logic.CartLogic;
+import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +31,14 @@ public class IndexController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
+    //region (public) 首页 index
+
+    /**
+     * 首页
+     *
+     * @param request
+     * @return
+     */
     @GetMapping(value = {""})
     public String index(HttpServletRequest request) {
 
@@ -45,16 +57,16 @@ public class IndexController extends BaseController {
 
 
         //限时秒杀
-        List<ActivityProductDto> secKills = new ArrayList<>();
-        ActivityDto activityDto = ActivityLogic.GetActivity(ActivityType.SECKILL);
-        int secKillTime = 0;
-        if (activityDto != null) {
-            secKills = ActivityLogic.GetActivityProductDtos(activityDto.getActivityId());
-            secKillTime = activityDto.getBeginTime() - DateUtils.getCurrentUnixTime();
+        ActivityDto secKills = ActivityLogic.GetActivity(ActivityType.SECKILL);
+        List<ActivityProductDto> secKillProducts = new ArrayList<>();
+
+        String skillBegin = "";
+        if (secKills != null) {
+            secKillProducts = ActivityLogic.GetActivityProductDtos(secKills.getActivityId());
+            skillBegin = DateUtils.formatDateByUnixTime(Long.parseLong(secKills.getBeginTime() + ""), "yyyy/MM/dd HH:mm:ss");
         }
         request.setAttribute("secKills", secKills);
-        request.setAttribute("secKillTime", secKillTime);
-
+        request.setAttribute("secKillProducts", secKillProducts);
 
         //组合优惠
         List<ActivityDto> setSales = ActivityLogic.GetActivityByType(ActivityType.COMBINATION);
@@ -65,9 +77,11 @@ public class IndexController extends BaseController {
         String openId = this.OpenId();
         int count = CartLogic.GetCartProductCount(openId);
         request.setAttribute("count", count);
+        request.setAttribute("skillBegin", skillBegin);
 
         return "index/index";
     }
+    //endregion
 
 
 }

@@ -26,6 +26,30 @@
     <script th:src="${ob.Url('/index/js/nav.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/index.js')}" type="text/javascript" charset="utf-8"></script>
 
+    <script>
+        TX.INIT(function () {
+
+            $("div[data-skill-begin]").each(function () {
+
+                var skillBegin = $(this).attr("data-skill-begin");
+                if (!skillBegin) {
+                    return false;
+                }
+                var that = this;
+                //日期倒计时
+                $.leftTime(skillBegin, function (d) {
+                    var $dateShow1 = $("p.SecKill-time", $(that));
+                    $dateShow1.find(".joind").html(d.d);
+                    $dateShow1.find(".joinh").html(d.h);
+                    $dateShow1.find(".joinm").html(d.m);
+                    $dateShow1.find(".joins").html(d.s);
+                });
+
+            });
+
+        })
+    </script>
+
 </th:block>
 
 <th:block layout:fragment="css">
@@ -42,7 +66,7 @@
                 <th:block th:each="banner:${banners}">
                     <div class="swiper-slide">
                         <a th:href="@{${banner.navigateUrl}}">
-                        <img th:src="@{${banner.bannerPath}}" alt="1" width="100%"/>
+                            <img th:src="@{${banner.bannerPath}}" alt="1" width="100%"/>
                         </a>
                     </div>
                 </th:block>
@@ -103,11 +127,13 @@
         <!--品质出行 end-->
 
         <!--限时秒杀 start-->
-        <div id="section2" style="display: none;" class="section clear" th:if="${!#lists.isEmpty(secKills)}">
+        <div id="section2" class="section clear" th:if="${secKills != null}">
             <h2 class="section-title">限时秒杀</h2>
-            <div class="limited-time">
+            <div class="limited-time" th:attr="data-skill-begin=${skillBegin}">
                 <!--SecKill-time start-->
                 <p class="SecKill-time">
+                    <span class="joind">00</span>
+                    <em>:</em>
                     <span class="joinh">00</span>
                     <em>:</em>
                     <span class="joinm">00</span>
@@ -119,14 +145,13 @@
                 <!--limited-time-goods start-->
                 <div class="limited-time-goods">
                     <div class="limited-goods-con">
-                        <th:block th:each="info : ${secKills}">
-                            <a href="javascript:void(0);">
+                        <th:block th:each="info : ${secKillProducts}">
+                            <a th:href="${ob.Nav('/product?activityId='+secKills.activityId+'&productSpecId='+info.productSpecId+'&activityType=20')}">
                                 <dl class="section-con-dl">
-                                    <th:block th:with="img=${productLogic.GetProductImgDtos(info.productId,2)}">
-                                        <dt th:if="${img != null && !#lists.isEmpty(img)}">
-                                            <img th:src="${img[0].imgPath}" alt="1" width="100%"/>
-                                        </dt>
-                                    </th:block>
+                                    <dt th:if="${#lists.size(info.productDto.productImgDtos) >= 2}">
+                                        <img th:src="${info.productDto.productImgDtos[1].imgPath}" alt="1"
+                                             width="100%"/>
+                                    </dt>
                                     <dd>
                                         <h2 class="section-dl-title" th:text="${info.productDto.productName}"></h2>
                                         <p class="section-dl-price">&yen;<em th:text="${info.salePrice}"></em></p>
@@ -211,8 +236,8 @@
     <!--shopping-cart start-->
     <div class="shopping-cart order-list">
         <a th:href="${ob.Nav('/order?orderFlag=1')}">
-        <img th:src="${ob.Img('/index/images/icon_order_lits.png')}" alt="1" class="shopping-icon"/>
-        <span class="shopping-num">待支付</span>
+            <img th:src="${ob.Img('/index/images/icon_order_lits.png')}" alt="1" class="shopping-icon"/>
+            <span class="shopping-num">待支付</span>
         </a>
     </div>
     <!--shopping-cart start-->
