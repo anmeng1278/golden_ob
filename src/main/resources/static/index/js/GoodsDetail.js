@@ -32,7 +32,7 @@ $(function () {
     });
 
     //购买数量加的点击事件
-    $(".purchase-num-add").click(function () {
+    $(document).on("click", ".purchase-num-add", function () {
 
         if ($(this).hasClass("disabled")) {
             return;
@@ -63,7 +63,7 @@ $(function () {
     })
 
     //购买数量减的点击事件
-    $(".purchase-num-reduce").click(function () {
+    $(document).on("click", ".purchase-num-reduce", function () {
 
         if ($(this).hasClass("disabled")) {
             return;
@@ -84,8 +84,7 @@ $(function () {
     });
 
     //选优惠券的点击事件
-    $('.purchase-coupon li').on('click', function () {
-
+    $(document).on("click", ".purchase-coupon li", function () {
         $(this).siblings().removeClass('active');
         if ($(this).hasClass("active")) {
             $(this).removeClass("active");

@@ -1,6 +1,6 @@
 $(function(){
 	//选择城市
-	$("#city").click(function (e) {
+    $(document).on("click", "#city", function(){
 		SelCity(this,e);
 	});
 
@@ -10,7 +10,7 @@ $(function(){
    });
 	
 	//导航tab切换
-	$('.nav-list-ul li').on('click',function(){
+    $(document).on("click", ".nav-list-ul li", function(){
 		var index = $(this).index();
 		$(this).addClass('active').siblings().removeClass('active');
 		$('.nav-wrap-item').eq(index).show().siblings().hide();

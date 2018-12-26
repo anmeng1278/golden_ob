@@ -130,7 +130,7 @@
 
         TX.INIT(function () {
 
-            $("button[data-method]").click(function () {
+            $(document).on("click", "button[data-method]", function(){
 
                 var id = $(this).attr("data-id");
                 var method = $(this).attr("data-method");

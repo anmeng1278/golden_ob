@@ -29,7 +29,7 @@
             $(".purchase-num-add").addClass("disabled");
 
             //购物车规格型号点击事件
-            $("div.shopping-cart p.purchase-layer-p span").click(function () {
+            $(document).on("click", "div.shopping-cart p.purchase-layer-p span", function () {
 
                 var parent = $(this).parents("div.shopping-cart:first");
                 if ($(this).hasClass("disabled")) {
@@ -58,7 +58,7 @@
             });
 
             //购买规格型号点击事件
-            $("div.purchase-layer p.purchase-layer-p span").click(function () {
+            $(document).on("click", "div.purchase-layer p.purchase-layer-p span", function () {
 
                 var parent = $(this).parents("div.purchase-layer:first");
                 if ($(this).hasClass("disabled")) {
@@ -100,7 +100,7 @@
             });
 
             //立即购买
-            $(".purchase-btn").click(function () {
+            $(document).on("click", ".purchase-btn", function () {
 
                 if ($("div.purchase-layer p.purchase-layer-p span.active").length == 0) {
                     TX.MSG.msg("商品售罄啦");
@@ -132,7 +132,7 @@
             });
 
             //加入购物车
-            $(".shopping-cart-confirm").click(function () {
+            $(document).on("click", ".shopping-cart-confirm", function () {
 
                 var parent = $(this).parents("div.shopping-cart:first");
                 //购买数量
@@ -193,7 +193,7 @@
                 wechatCouponId = $("ul.purchase-coupon li.active").attr("data-wechatCoupon-id");
             }
 
-             var datas = [];
+            var datas = [];
             datas.push({num: num, productSpecId: productSpecId, productId: productId});
 
             //计算价格

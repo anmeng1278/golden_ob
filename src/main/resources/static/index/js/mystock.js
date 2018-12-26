@@ -1,6 +1,6 @@
 $(function () {
     //购买数量加的点击事件
-    $(".purchase-num-add").click(function () {
+    $(document).on("click", ".purchase-num-add", function () {
         var n = $(this).prev().val();
         var num = parseInt(n) + 1;
         var strok = Number($(this).parents('.strok-list-dl').find('.strok-dd-num span').text()) + 1;
@@ -13,7 +13,7 @@ $(function () {
     });
 
     //购买数量减的点击事件
-    $(".purchase-num-reduce").click(function () {
+    $(document).on("click", ".purchase-num-reduce", function () {
         var n = $(this).next().val();
         var num = parseInt(n) - 1;
         if (num <= 0) {
@@ -27,7 +27,7 @@ $(function () {
     });
 
     //点击商品显示商品详情
-    $('.strok-list-dl').on('click', function (e) {
+    $(document).on("click", ".strok-list-dl", function () {
         if ($(e.target).hasClass("purchase-num-reduce") || $(e.target).hasClass("purchase-num-add")) {
             return;
         }
