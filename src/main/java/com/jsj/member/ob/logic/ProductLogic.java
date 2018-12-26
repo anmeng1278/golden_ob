@@ -266,19 +266,23 @@ public class ProductLogic extends BaseLogic {
 
         for (OrderProductDto opt : orderProductDtos) {
 
-            ProductSpec productSpec = productLogic.productSpecService.selectById(opt.getProductSpecId());
-            if (productSpec.getStockCount() < opt.getNumber()) {
+            ProductSpecDto dto = ProductLogic.GetProductSpec(opt.getProductSpecId());
+            if (dto.getStockCount() < opt.getNumber()) {
 
-                ProductStockException pe = new ProductStockException("商品规格库存不足");
+                ProductStockException pe = new ProductStockException(String.format("\"%s\"规格库存不足<br />当前剩余：%d",
+                        dto.getProductDto().getProductName(),
+                        dto.getStockCount()));
                 pe.setNumber(opt.getNumber());
-                pe.setStock(productSpec.getStockCount());
+                pe.setStock(dto.getStockCount());
                 pe.setActivityType(activityType);
                 pe.setOrderId(orderId);
-                pe.setProductId(productSpec.getProductId());
+                pe.setProductId(dto.getProductId());
                 pe.setProductSpecId(opt.getProductSpecId());
 
                 throw pe;
             }
+
+            ProductSpec productSpec = productLogic.productSpecService.selectById(opt.getProductSpecId());
 
             productSpec.setStockCount(productSpec.getStockCount() - opt.getNumber());
             productLogic.productSpecService.updateById(productSpec);

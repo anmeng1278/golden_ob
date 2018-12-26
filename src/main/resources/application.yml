@@ -110,7 +110,7 @@ webconfig:
   partnerLoginPassword: gxylceshi
 
   WxTemplate:
-
+    ## 支付成功
     ## {{first.DATA}}
     ## 付款金额：{{keyword1.DATA}}
     ## 交易单号：{{keyword2.DATA}}

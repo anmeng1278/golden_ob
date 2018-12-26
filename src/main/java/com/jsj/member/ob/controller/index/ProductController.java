@@ -1,5 +1,7 @@
 package com.jsj.member.ob.controller.index;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.RestResponseBo;
@@ -23,11 +25,12 @@ import com.jsj.member.ob.logic.order.OrderFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,6 +38,8 @@ import java.util.List;
 @Controller
 @RequestMapping("${webconfig.virtualPath}/product")
 public class ProductController extends BaseController {
+
+    //region (public) 商品详情 productDetail
 
     /**
      * 商品详情
@@ -62,6 +67,9 @@ public class ProductController extends BaseController {
 
         return this.Redirect("/");
     }
+    //endregion
+
+    //region (private) 普通商品详情 normalProduct
 
     /**
      * 普通商品详情
@@ -95,16 +103,18 @@ public class ProductController extends BaseController {
         List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, openId);
         request.setAttribute("coupons", coupons);
 
-        if (info.getProductImgDtos() != null){
+        if (info.getProductImgDtos() != null) {
             String imgUrl = info.getProductImgDtos().get(0).getImgPath();
             request.setAttribute("imgUrl", imgUrl);
-        }else {
+        } else {
             String imgUrl = "https://hezy-static.oss-cn-shanghai.aliyuncs.com/test/product/oncecard_cover.png";
             request.setAttribute("imgUrl", imgUrl);
         }
         return "index/productDetail";
     }
+    //endregion
 
+    //region (public) 组合商品详情 combProduct
 
     /**
      * 组合商品详情
@@ -135,7 +145,9 @@ public class ProductController extends BaseController {
 
         return "index/combActivityDetail";
     }
+    //endregion
 
+    //region (public) 添加购物车 addCart
 
     /**
      * 添加购物车
@@ -163,6 +175,9 @@ public class ProductController extends BaseController {
 
         return RestResponseBo.ok("添加购物车成功");
     }
+    //endregion
+
+    //region (public) 计算订单价格 calculateOrder
 
     /**
      * 计算订单价格
@@ -174,38 +189,24 @@ public class ProductController extends BaseController {
     @ResponseBody
     public RestResponseBo calculateOrder(HttpServletRequest request) {
 
-        String openId = this.OpenId();
-
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        int num = Integer.parseInt(request.getParameter("num"));
-        int productSpecId = Integer.parseInt(request.getParameter("productSpecId"));
-        int wechatCouponId = 0;
-
-        if (!StringUtils.isEmpty(request.getParameter("wechatCouponId"))) {
-            wechatCouponId = Integer.parseInt(request.getParameter("wechatCouponId"));
+        if (StringUtils.isEmpty(request.getParameter("activityTypeId"))) {
+            return RestResponseBo.fail("请求参数错误", null, this.Url("/"));
         }
 
-        OrderBase orderBase = OrderFactory.GetInstance(ActivityType.NORMAL);
+        int activityTypeId = Integer.parseInt(request.getParameter("activityTypeId"));
+        ActivityType activityType = ActivityType.valueOf(activityTypeId);
 
-        CreateOrderRequ requ = new CreateOrderRequ();
-        requ.setActivityType(ActivityType.NORMAL);
-        requ.setWechatCouponId(wechatCouponId);
-        requ.getBaseRequ().setOpenId(openId);
+        //获取创建订单请求
+        OrderBase orderBase = OrderFactory.GetInstance(activityType);
 
-        List<OrderProductDto> orderProducts = new ArrayList<>();
-
-        OrderProductDto orderProduct = new OrderProductDto();
-        orderProduct.setProductId(productId);
-        orderProduct.setProductSpecId(productSpecId);
-        orderProduct.setNumber(num);
-        orderProducts.add(orderProduct);
-
-        requ.setOrderProductDtos(orderProducts);
-
+        CreateOrderRequ requ = this.createOrderRequ(request, activityType);
         CreateOrderResp resp = orderBase.CalculateOrder(requ);
+
         return RestResponseBo.ok(resp);
     }
+    //endregion
 
+    //region (public) 创建订单 createOrder
 
     /**
      * 创建订单
@@ -216,7 +217,7 @@ public class ProductController extends BaseController {
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
     @ResponseBody
     @Transactional(Constant.DBTRANSACTIONAL)
-    public RestResponseBo createOrder(HttpServletRequest request) throws Exception {
+    public RestResponseBo createOrder(HttpServletRequest request) {
 
         if (StringUtils.isEmpty(request.getParameter("activityTypeId"))) {
             return RestResponseBo.fail("请求参数错误", null, this.Url("/"));
@@ -224,27 +225,30 @@ public class ProductController extends BaseController {
 
         int activityTypeId = Integer.parseInt(request.getParameter("activityTypeId"));
         ActivityType activityType = ActivityType.valueOf(activityTypeId);
+        String from = request.getParameter("from");
 
         OrderBase orderBase = OrderFactory.GetInstance(activityType);
-        CreateOrderRequ requ;
 
-        switch (activityType) {
-            case NORMAL:
-                requ = this.createNormalOrderRequest(request);
-                break;
-            case COMBINATION:
-                requ = this.createCombOrderRequest(request);
-                break;
-
-            default:
-                return RestResponseBo.fail("方法暂未实现", null, this.Url("/"));
-        }
-
+        //获取创建订单请求
+        CreateOrderRequ requ = this.createOrderRequ(request, activityType);
         CreateOrderResp resp = orderBase.CreateOrder(requ);
 
         if (!resp.isSuccess()) {
             throw new TipException("创建订单失败");
         }
+
+        //来源购物车购买
+        if ("cart".equals(from)) {
+            for (OrderProductDto op : requ.getOrderProductDtos()) {
+                //删除购物车购买商品
+                CartLogic.AddUpdateCartProduct(this.OpenId(),
+                        op.getProductId(),
+                        op.getProductSpecId(),
+                        0,
+                        "update");
+            }
+        }
+
 
         HashMap<String, Object> data = new HashMap<>();
         if (resp.getAmount() > 0) {
@@ -264,6 +268,39 @@ public class ProductController extends BaseController {
         return RestResponseBo.ok("创建订单成功", url, data);
 
     }
+    //endregion
+
+
+    //region (private) 创建订单请求 createOrderRequ
+
+    /**
+     * 创建订单请求
+     *
+     * @param request
+     * @param activityType
+     * @return
+     */
+    private CreateOrderRequ createOrderRequ(HttpServletRequest request, ActivityType activityType) {
+
+        CreateOrderRequ requ;
+        switch (activityType) {
+            case NORMAL:
+                if (StringUtils.isEmpty(request.getParameter("p"))) {
+                    throw new TipException("请求参数错误");
+                }
+                requ = this.createNormalOrderRequest(request);
+                break;
+            case COMBINATION:
+                requ = this.createCombOrderRequest(request);
+                break;
+            default:
+                throw new TipException("方法暂未实现");
+        }
+        return requ;
+    }
+    //endregion
+
+    //region (private) 组织创建普通订单请求 createNormalOrderRequest
 
     /**
      * 组织创建普通订单请求
@@ -273,35 +310,40 @@ public class ProductController extends BaseController {
      */
     private CreateOrderRequ createNormalOrderRequest(HttpServletRequest request) {
 
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        int num = Integer.parseInt(request.getParameter("num"));
-        int productSpecId = Integer.parseInt(request.getParameter("productSpecId"));
-        int wechatCouponId = 0;
+        String openId = this.OpenId();
+        String p = request.getParameter("p");
+        List<JSONObject> jsonObjects = JSON.parseArray(p, JSONObject.class);
 
+        int wechatCouponId = 0;
         if (!StringUtils.isEmpty(request.getParameter("wechatCouponId"))) {
             wechatCouponId = Integer.parseInt(request.getParameter("wechatCouponId"));
         }
-
-        String openId = this.OpenId();
 
         CreateOrderRequ requ = new CreateOrderRequ();
         requ.setActivityType(ActivityType.NORMAL);
         requ.setWechatCouponId(wechatCouponId);
         requ.getBaseRequ().setOpenId(openId);
 
-        List<OrderProductDto> orderProducts = new ArrayList<>();
+        for (JSONObject jo : jsonObjects) {
 
-        OrderProductDto orderProduct = new OrderProductDto();
-        orderProduct.setProductId(productId);
-        orderProduct.setProductSpecId(productSpecId);
-        orderProduct.setNumber(num);
-        orderProducts.add(orderProduct);
+            int productId = jo.getIntValue("productId");
+            int num = jo.getIntValue("num");
+            int productSpecId = jo.getInteger("productSpecId");
 
-        requ.setOrderProductDtos(orderProducts);
+            OrderProductDto orderProduct = new OrderProductDto();
+            orderProduct.setProductId(productId);
+            orderProduct.setProductSpecId(productSpecId);
+            orderProduct.setNumber(num);
+
+            requ.getOrderProductDtos().add(orderProduct);
+        }
 
         return requ;
 
     }
+    //endregion
+
+    //region (private) 组织创建组合订单请求 createCombOrderRequest
 
     /**
      * 组织创建组合订单请求
@@ -324,5 +366,7 @@ public class ProductController extends BaseController {
 
         return requ;
     }
+    //endregion
+
 
 }

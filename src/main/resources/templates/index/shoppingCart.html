@@ -7,9 +7,11 @@
 
 <th:block layout:fragment="script">
 
+    <script th:src="${ob.Url('/index/js/order.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:inline="javascript">
 
         TX.INIT(function () {
+
             //删除购物车中的商品
             $(document).on("click", "a.delete-layer-confirm", function () {
                 var cartProductId = $(this).attr("data-cart-id");
@@ -31,12 +33,166 @@
 
             });
 
+            //减商品
+            $("em.purchase-num-reduce").click(function () {
+
+                var that = this;
+                var num = parseInt($(this).next(":text[name='num']").val(), 10);
+
+                if (num <= 1) {
+                    layer.confirm('确定删除该商品么？<br />删除的商品将不会出现在购物车中', {icon: 3}, function (index) {
+                        $(that).next(":text[name='num']").val(0);
+                        $(that).parents("div.goods-list-item:first").hide();
+                        layer.close(index);
+
+                        updateCart(function () {
+                            $(that).parents("div.goods-list-item:first").remove();
+                        });
+                    });
+                } else {
+                    num--;
+                    $(this).next(":text[name='num']").val(num);
+                    updateCart();
+                }
+
+            });
+
+            //加商品
+            $("em.purchase-num-add").click(function () {
+                var num = parseInt($(this).prev(":text[name='num']").val(), 10);
+                num++;
+                $(this).prev(":text[name='num']").val(num);
+                updateCart();
+            });
+
+            //更新购物车
+            function updateCart(callback) {
+
+                var cards = [];
+                $("dl.goods-list-dl").each(function () {
+
+                    var specId = $(this).attr("data-spec-id");
+                    var productId = $(this).attr("data-product-id");
+                    var num = parseInt($(this).find(":text[name='num']").val(), 10);
+
+                    cards.push({specId: specId, productId: productId, num: num});
+                });
+
+                TX.CORE.p({
+                    data: {
+                        p: JSON.stringify(cards)
+                    },
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            callback && callback();
+                            calculateOrder();
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
+
+            }
+
+            //全选/反选
+            $("span.checkone").click(function () {
+                if ($(this).hasClass("check-all-xz")) {
+                    $(this).removeClass("check-all-xz");
+                } else {
+                    $(this).addClass("check-all-xz");
+                }
+                calculateOrder();
+            });
+
+            $("#checkAll").click(function () {
+                if ($(this).hasClass("check-all-xz")) {
+                    $(this).removeClass("check-all-xz");
+                    $("span.checkone").removeClass("check-all-xz");
+                } else {
+                    $(this).addClass("check-all-xz");
+                    $("span.checkone").addClass("check-all-xz");
+                }
+                calculateOrder();
+            });
+
+            //计算订单价格
+            function calculateOrder() {
+
+                //重置商品价格
+                $("span.total-price em").html(0);
+
+                if ($("span.check-all-xz").length == 0) {
+                    return;
+                }
+
+                var datas = [];
+                $("span.check-all-xz").each(function () {
+
+                    var specId = $(this).next().attr("data-spec-id");
+                    var productId = $(this).next().attr("data-product-id");
+                    var num = parseInt($(this).next().find(":text[name='num']").val(), 10);
+
+                    datas.push({num: num, productSpecId: specId, productId: productId});
+                });
+
+                //计算价格
+                calculateProductOrder({
+                    activityTypeId: 0,
+                    wechatCouponId: 0,
+                    p: JSON.stringify(datas)
+                }, function (resp) {
+                    if (resp.baseResp.success) {
+                        $("span.total-price em").html(resp.datas.amount);
+                    } else {
+                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                    }
+                });
+            }
+
+
+            $("a.purchase-btn").click(function () {
+
+                if ($("span.check-all-xz").length == 0) {
+                    TX.MSG.msg("请选择购买商品", {icon: 2});
+                    return;
+                }
+
+                var datas = [];
+                $("span.check-all-xz").each(function () {
+
+                    var specId = $(this).next().attr("data-spec-id");
+                    var productId = $(this).next().attr("data-product-id");
+                    var num = parseInt($(this).next().find(":text[name='num']").val(), 10);
+
+                    datas.push({num: num, productSpecId: specId, productId: productId});
+                });
+
+                //创建普通订单
+                createOrder({
+                    activityTypeId: 0,
+                    p: JSON.stringify(datas),
+                    wechatCouponId: 0,
+                    from: "cart"
+                });
+
+            });
         });
+
+
+        // var datas = [];
+        // datas.push({num: num, productSpecId: productSpecId, productId: productId});
+        //
+        // //创建普通订单
+        // createOrder({
+        //     activityTypeId: 0,
+        //     p: JSON.stringify(datas),
+        //     wechatCouponId: wechatCouponId
+        // });
 
     </script>
     <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js', false)}" type="text/javascript"
             charset="utf-8"></script>
-    <script th:src="${ob.Url('/index/js/shoppingCart.js')}" type="text/javascript" charset="utf-8"></script>
+    <!--<script th:src="${ob.Url('/index/js/shoppingCart.js')}" type="text/javascript" charset="utf-8"></script>-->
 
 </th:block>
 
@@ -58,39 +214,28 @@
         <th:block th:if="${!#lists.isEmpty(cartProductDtos)}" th:each="info:${cartProductDtos}">
             <div class="goods-list-item">
                 <span class="checkone check-all-wxz"></span>
-                <dl class="goods-list-dl">
+                <dl class="goods-list-dl"
+                    th:attr="data-spec-id=${info.productSpecId}, data-product-id=${info.productId}">
                     <dt th:if="${!#lists.isEmpty(info.productDto.productImgDtos)}">
                         <img th:src="${info.productDto.productImgDtos[0].imgPath}" alt="1" width="100%"/>
                     </dt>
                     <dd>
                         <h2 class="goods-dl-name" th:text="${info.productDto.productName}">越甲科技20寸旅行箱</h2>
+                        <th:block th:with="specDto=${productLogic.GetProductSpec(info.productSpecId)}">
                         <span class="goods-dl-tips"
-                              th:text="${productLogic.GetProductSpec(info.productSpecId).specName}">规格：21寸</span>
-                        <span class="goods-dl-price">&yen;<em th:text="${info.productDto.salePrice}">399</em></span>
+                              th:text="${specDto.specName}">规格：21寸</span>
+                            <span class="goods-dl-price">&yen;<em th:text="${specDto.salePrice}">399</em></span>
+                        </th:block>
                         <div class="purchase-num">
                             <em class="purchase-num-reduce"></em>
-                            <em class="purchase-num-del" style="display: none;"></em>
-                            <input type="text" th:value="${info.number}" disabled="disabled" class="num"/>
+                            <input type="text" th:value="${info.number}" name="num" disabled="disabled" class="num"/>
                             <em class="purchase-num-add"></em>
                         </div>
                     </dd>
                 </dl>
             </div>
 
-            <!-- delete-layer start -->
-            <div class="delete-layer" style="display: none;">
-                <div class="delete-layer-bg"></div>
-                <div class="delete-layer-con">
-                    <h2 class="delete-layer-title">确定删除该商品么？</h2>
-                    <p class="delete-layer-tips">删除的商品将不会出现在购物车中</p>
-                    <p class="delete-layer-p">
-                        <a href="javascript:void(0);" class="delete-layer-cancel">取消</a>
-                        <a th:attr="data-cart-id=${info.cartProductId}" href="javascript:void(0);"
-                           class="delete-layer-confirm">确定</a>
-                    </p>
-                </div>
-            </div>
-            <!-- delete-layer end -->
+
         </th:block>
     </div>
 

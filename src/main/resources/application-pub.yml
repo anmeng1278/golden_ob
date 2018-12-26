@@ -59,6 +59,7 @@ webconfig:
   partnerLoginPassword: gxylceshi
 
   WxTemplate:
+    ## 支付成功
     ##{{first.DATA}}
     ##订单号：{{keyword1.DATA}}
     ##商品名称：{{keyword2.DATA}}

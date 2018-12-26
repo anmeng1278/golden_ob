@@ -53,6 +53,8 @@ public class OrderNormal extends OrderBase {
         super.wxSender = wxSender;
     }
 
+    //region (public) 创建订单 CreateOrder
+
     /**
      * 创建订单
      * 订单金额 = sum(订单规格售价) - 优惠券金额
@@ -112,7 +114,7 @@ public class OrderNormal extends OrderBase {
             orderProducts.add(orderProduct);
 
             //获取规格金额
-            orderAmount = (orderAmount+productSpecDto.getSalePrice())*op.getNumber();
+            orderAmount += productSpecDto.getSalePrice() * op.getNumber();
         }
         //削减规格库存
         ProductLogic.ReductionProductSpecStock(requ.getOrderProductDtos(), this.getActivityType(), null);
@@ -146,6 +148,9 @@ public class OrderNormal extends OrderBase {
         return resp;
 
     }
+    //endregion
+
+    //region (public) 计算商品应付金额 CalculateOrder
 
     /**
      * 计算商品应付金额
@@ -205,6 +210,7 @@ public class OrderNormal extends OrderBase {
 
         return resp;
     }
+    //endregion
 
 
 }
