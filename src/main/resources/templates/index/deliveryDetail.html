@@ -18,7 +18,7 @@
 		<div class="head-het">
 			<div class="head">
 				<span class="head-lt" th:text="|快递号：${deliveryDto.expressNumber}|"></span>
-				<span class="head-rt" th:text="${enumLogic.GetDeliveryStatus(deliveryDto.status).message}">已签收</span>
+				<span class="head-rt" th:text="${deliveryDto.deliveryStatus.message}">已签收</span>
 			</div>
 		</div>
 		<!--head end-->
