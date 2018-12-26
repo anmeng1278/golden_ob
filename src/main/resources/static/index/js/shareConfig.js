@@ -32,13 +32,18 @@ wx.ready(function () {
         type: '', // 分享类型,music、video或link，不填默认为link
         dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
         success: function (resp) {
+            alert("分享成功");
             // 用户确认分享后执行的回调函数
             if (typeof shareSuccess != "undefined") {
                 shareSuccess();
             }
         },
         cancel: function () {
+            alert("取消分享");
             // 用户取消分享后执行的回调函数
+            if (typeof shareCancel != "undefined") {
+                shareCancel();
+            }
         }
     });
 
@@ -48,13 +53,18 @@ wx.ready(function () {
         link: shareConfig.link, // 分享链接
         imgUrl: shareConfig.imgUrl, // 分享图标
         success: function (resp) {
+            alert("分享成功");
             // 用户确认分享后执行的回调函数
             if (typeof shareSuccess != "undefined") {
                 shareSuccess();
             }
         },
         cancel: function () {
+            alert("取消分享");
             // 用户取消分享后执行的回调函数
+            if (typeof shareCancel != "undefined") {
+                shareCancel();
+            }
         }
     });
 
