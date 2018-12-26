@@ -16,7 +16,7 @@
         TX.INIT(function () {
 
             //微信送好友
-            $("a.share-btn").click(function () {
+            $(document).on("click", "a.share-btn", function () {
 
                 TX.CORE.p({
                     url: "/stock/createGift",
@@ -37,7 +37,7 @@
             });
 
             //我要使用
-            $("a.use-btn").click(function () {
+            $(document).on("click", "a.use-btn", function () {
 
                 if ($(this).hasClass("disabled-use-btn")) {
                     return;

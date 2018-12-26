@@ -92,6 +92,9 @@ public class ShareController extends BaseController {
 
         String op = request.getParameter("op");
 
+        String shareUrl = this.Url(String.format("/share/gift/%s", obs), false);
+        request.setAttribute("shareUrl", shareUrl);
+
         if (op.equals("ready")) {
             int shareType = Integer.parseInt(request.getParameter("shareType"));
             String blessings = request.getParameter("blessings");
@@ -102,7 +105,7 @@ public class ShareController extends BaseController {
             GiftLogic.GiftShareSuccessed(obs);
         }
 
-        return RestResponseBo.ok("操作成功");
+        return RestResponseBo.ok("操作成功", shareUrl);
 
     }
 

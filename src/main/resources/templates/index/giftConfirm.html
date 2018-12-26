@@ -10,7 +10,7 @@
     <script th:inline="javascript">
 
         var shareUrl = [[${shareUrl}]];
-        var shareTitle = "来自"+[[${giftDto.wechatDto.nickname}]]+"赠送出的礼物，都在一点‘小意思’";
+        var shareTitle = "来自" + [[${giftDto.wechatDto.nickname}]] + "赠送出的礼物，都在一点‘小意思’";
 
         shareConfig = {
             title: shareTitle,
@@ -22,7 +22,8 @@
 
         TX.INIT(function () {
 
-            $("a[data-share-type]").click(function () {
+            //赠送好友或群
+            $(document).on("click", "a[data-share-type]", function () {
 
                 //动态获取数据
                 var blessings = $("div.head-wrap-item p.blessings").html();
@@ -81,10 +82,6 @@
 
         function shareSuccess() {
 
-            alert("页面测试成功");
-            return;
-
-            var shareUrl = [[${shareUrl}]];
             //分享成功
             TX.CORE.p({
                 data: {
@@ -93,19 +90,15 @@
                 success: function (resp) {
                     if (resp.baseResp.success) {
                         TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                            location.href = shareUrl;
+                            location.href = resp.baseResp.url;
                         });
                     } else {
                         TX.MSG.msg(resp.baseResp.message, {icon: 2}, function () {
-                            location.href = shareUrl;
+                            location.href = resp.baseResp.url;
                         });
                     }
                 }
             })
-        }
-        
-        function shareCancel() {
-            alert("页面测试取消");
         }
 
     </script>

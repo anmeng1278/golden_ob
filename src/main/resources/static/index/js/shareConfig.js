@@ -32,17 +32,9 @@ wx.ready(function () {
         type: '', // 分享类型,music、video或link，不填默认为link
         dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
         success: function (resp) {
-            alert("分享成功");
             // 用户确认分享后执行的回调函数
             if (typeof shareSuccess != "undefined") {
                 shareSuccess();
-            }
-        },
-        cancel: function () {
-            alert("取消分享");
-            // 用户取消分享后执行的回调函数
-            if (typeof shareCancel != "undefined") {
-                shareCancel();
             }
         }
     });
@@ -53,19 +45,35 @@ wx.ready(function () {
         link: shareConfig.link, // 分享链接
         imgUrl: shareConfig.imgUrl, // 分享图标
         success: function (resp) {
-            alert("分享成功");
             // 用户确认分享后执行的回调函数
             if (typeof shareSuccess != "undefined") {
                 shareSuccess();
             }
-        },
-        cancel: function () {
-            alert("取消分享");
-            // 用户取消分享后执行的回调函数
-            if (typeof shareCancel != "undefined") {
-                shareCancel();
-            }
         }
     });
+
+
+    if (typeof wx.updateAppMessageShareData != "undefined") {
+        wx.updateAppMessageShareData({
+            title: shareConfig.title, // 分享标题
+            desc: shareConfig.desc, // 分享描述
+            link: shareConfig.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: shareConfig.imgUrl, // 分享图标
+            success: function () {
+                // 设置成功
+            }
+        });
+    }
+
+    if (typeof wx.updateTimelineShareData != "undefined") {
+        wx.updateTimelineShareData({
+            title: shareConfig.title, // 分享标题
+            link: shareConfig.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: shareConfig.imgUrl, // 分享图标
+            success: function () {
+                // 设置成功
+            }
+        });
+    }
 
 });
