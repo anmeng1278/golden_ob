@@ -69,7 +69,7 @@
                         <td th:text="${wechatLogic.GetWechat(info.openId).getNickname()}"></td>
                         <td th:text="${info.expressNumber}"></td>
                         <td>
-                            <th:block th:text="${deliveryLogic.GetDeliveryStock(info.deliveryId).get(0).orderId}">
+                            <th:block th:if="${!#lists.isEmpty(deliveryLogic.GetDeliveryStock(info.deliveryId))}" th:text="${deliveryLogic.GetDeliveryStock(info.deliveryId).get(0).orderId}">
                             </th:block>
                         </td>
                         </td>

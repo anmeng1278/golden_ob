@@ -417,6 +417,7 @@ public class ProductLogic extends BaseLogic {
 
         wrapper.where("type_id = {0}", typeId);
         wrapper.where("ifpass = 1 ");
+        wrapper.where("delete_time is null");
         wrapper.orderBy("sort asc, update_time desc");
 
         Page<Product> products = productLogic.productService.selectPage(new Page<>(1, limit), wrapper);
