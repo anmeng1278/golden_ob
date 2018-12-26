@@ -40,7 +40,7 @@ public class IndexController extends BaseController {
         request.setAttribute("qualityTravels", qualityTravels);
 
         //爆款单品
-        List<ProductDto> hotProducts = ProductLogic.GetProductDtos(ProductType.HOTPRODUCT.getValue(), 4);
+        List<ProductDto> hotProducts = ProductLogic.GetProductDtos(ProductType.HOTPRODUCT.getValue(), 12);
         request.setAttribute("hotProducts", hotProducts);
 
 

@@ -65,10 +65,10 @@
                             <a href="#section2">限时秒杀</a>
                         </li>
                         <li>
-                            <a href="#section3">爆款单品</a>
+                            <a href="#section4">组合优惠</a>
                         </li>
                         <li>
-                            <a href="#section4">组合优惠</a>
+                            <a href="#section3">爆款单品</a>
                         </li>
                     </ul>
                 </div>
@@ -141,31 +141,6 @@
         </div>
         <!--限时秒杀 end-->
 
-        <!--爆款单品 start-->
-        <div id="section3" class="section clear">
-            <h2 class="section-title">爆款单品</h2>
-            <!--section-con start-->
-            <div class="section-con">
-                <th:block th:each="info:${hotProducts}">
-                    <a th:href="${ob.Nav('/product?productId='+info.productId)}">
-                        <dl class="section-con-dl">
-                            <dt th:if="${!#lists.isEmpty(info.productImgDtos)}">
-                                <img th:src="${info.productImgDtos[0].imgPath}" alt="1" width="100%"/>
-                            </dt>
-                            <dd>
-                                <h2 class="section-dl-title" th:text="${info.productName}"></h2>
-                                <p class="section-dl-tips" th:text="${info.introduce}"></p>
-                                <p class="section-dl-price" th:if="${!#lists.isEmpty(info.productSpecDtos)}">&yen;
-                                    <em th:text="${info.productSpecDtos[0].salePrice}"></em></p>
-                            </dd>
-                        </dl>
-                    </a>
-                </th:block>
-            </div>
-            <!--section-con end-->
-        </div>
-        <!--爆款单品 end-->
-
         <!--组合优惠 start-->
         <div id="section4" class="section clear" th:if="${!#lists.isEmpty(setSales)}">
             <h2 class="section-title">组合优惠</h2>
@@ -190,6 +165,31 @@
             <!--section-con end-->
         </div>
         <!--组合优惠 end-->
+
+        <!--爆款单品 start-->
+        <div id="section3" class="section clear">
+            <h2 class="section-title">爆款单品</h2>
+            <!--section-con start-->
+            <div class="section-con">
+                <th:block th:each="info:${hotProducts}">
+                    <a th:href="${ob.Nav('/product?productId='+info.productId)}">
+                        <dl class="section-con-dl">
+                            <dt th:if="${!#lists.isEmpty(info.productImgDtos)}">
+                                <img th:src="${info.productImgDtos[0].imgPath}" alt="1" width="100%"/>
+                            </dt>
+                            <dd>
+                                <h2 class="section-dl-title" th:text="${info.productName}"></h2>
+                                <p class="section-dl-tips" th:text="${info.introduce}"></p>
+                                <p class="section-dl-price" th:if="${!#lists.isEmpty(info.productSpecDtos)}">&yen;
+                                    <em th:text="${info.productSpecDtos[0].salePrice}"></em></p>
+                            </dd>
+                        </dl>
+                    </a>
+                </th:block>
+            </div>
+            <!--section-con end-->
+        </div>
+        <!--爆款单品 end-->
     </div>
     <!--main end-->
 
