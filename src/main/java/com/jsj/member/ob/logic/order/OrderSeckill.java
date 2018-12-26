@@ -1,12 +1,14 @@
 package com.jsj.member.ob.logic.order;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
+import com.jsj.member.ob.entity.ActivityProduct;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.enums.ActivityType;
@@ -15,10 +17,7 @@ import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
-import com.jsj.member.ob.service.ActivityOrderService;
-import com.jsj.member.ob.service.ActivityService;
-import com.jsj.member.ob.service.OrderProductService;
-import com.jsj.member.ob.service.OrderService;
+import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +53,9 @@ public class OrderSeckill extends OrderBase {
         super.activityOrderService = activityOrderService;
         super.wxSender = wxSender;
     }
+
+    @Autowired
+    ActivityProductService activityProductService;
 
     /**
      * 创建秒杀订单
@@ -179,6 +181,18 @@ public class OrderSeckill extends OrderBase {
             orderProductDtos.add(orderProductDto);
 
             orderAmount += apd.getSalePrice() * number;
+
+            //削减秒杀库存
+            Wrapper<ActivityProduct> activityProductWrapper = new EntityWrapper<>();
+            activityProductWrapper.where("activity_id = {0}", apd.getActivityId());
+            activityProductWrapper.where("product_id = {0}", apd.getProductId());
+            activityProductWrapper.where("product_spec_id = {0}", apd.getProductSpecId());
+
+            ActivityProduct activityProduct = activityProductService.selectOne(activityProductWrapper);
+            activityProduct.setStockCount(activityProduct.getStockCount() - number);
+
+            activityProductService.updateById(activityProduct);
+
         }
 
         //消减活动库存
