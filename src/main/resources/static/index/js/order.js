@@ -1,4 +1,4 @@
-function createOrder(data) {
+function createOrder(data, callback) {
 
     TX.CORE.p({
         url: "/product/createOrder",
@@ -10,6 +10,8 @@ function createOrder(data) {
 
                 var successUrl = resp.datas.successUrl;
                 TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+
+                    callback && callback();
 
                     if (resp.datas.resp.amount > 0) {
 
@@ -59,5 +61,14 @@ function createOrder(data) {
         }
     });
 
+}
 
+function calculateProductOrder(data, callback) {
+    TX.CORE.p({
+        url: "/product/calculateOrder",
+        data: data,
+        success: function (resp) {
+            callback && callback(resp);
+        }
+    });
 }

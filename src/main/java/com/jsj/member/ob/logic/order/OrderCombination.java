@@ -54,6 +54,8 @@ public class OrderCombination extends OrderBase {
     }
 
 
+    //region (public) 创建组合单 CreateOrder
+
     /**
      * 创建组合单
      * 订单金额 = 商品售价 - 优惠券
@@ -196,9 +198,73 @@ public class OrderCombination extends OrderBase {
         return resp;
 
     }
+    //endregion
 
+    //region (public) 计算活动订单价格 CalculateOrder
+
+    /**
+     * 计算活动订单价格
+     *
+     * @param requ
+     * @return
+     */
     @Override
     public CreateOrderResp CalculateOrder(CreateOrderRequ requ) {
-        throw new TipException("方法暂未实现");
+
+        //通用验证
+        super.validateCreateRequ(requ);
+
+        //参数校验
+        if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
+            throw new TipException("用户编号不能为空");
+        }
+        if (requ.getActivityId() == 0) {
+            throw new TipException("活动编号不能为空");
+        }
+
+        if (requ.getNumber() <= 0) {
+            requ.setNumber(1);
+        }
+
+        //活动
+        ActivityDto activityDto = ActivityLogic.GetActivity(requ.getActivityId());
+
+        if (requ.getNumber() > activityDto.getStockCount()) {
+            throw new TipException("商品售罄啦");
+        }
+
+        //活动商品
+        List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(requ.getActivityId());
+
+        if (activityDto.getDeleteTime() != null) {
+            throw new TipException("活动结束啦");
+        }
+        if (activityDto.getBeginTime() > DateUtils.getCurrentUnixTime()) {
+            throw new TipException("活动未开始");
+        }
+        if (activityDto.getEndTime() < DateUtils.getCurrentUnixTime()) {
+            throw new TipException("活动结束啦");
+        }
+        if (activityProductDtos.isEmpty()) {
+            throw new TipException(String.format("没有发现活动商品，请稍后重试。活动编号：%d", activityDto.getActivityId()));
+        }
+        if (activityDto.getActivityType() != this.getActivityType()) {
+            throw new TipException("当前活动非组合订单活动");
+        }
+
+        CreateOrderResp resp = new CreateOrderResp();
+
+        int number = requ.getNumber();
+        //订单金额
+        double orderAmount = activityDto.getSalePrice() * number;
+
+        resp.setAmount(orderAmount);
+        resp.setCouponAmount(0);
+        resp.setOriginalAmount(orderAmount);
+        resp.setSuccess(true);
+
+        return resp;
+
     }
+    //endregion
 }

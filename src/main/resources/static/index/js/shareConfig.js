@@ -10,18 +10,19 @@ if (typeof shareConfig == "undefined") {
 
 wx.ready(function () {
 
+    var url = location.protocol + "//" + location.host;
     console.log(shareConfig)
     if (shareConfig.link) {
         if (shareConfig.link.indexOf(location.host) == -1) {
-            var url = location.protocol + "//" + location.host;
             shareConfig.link = url + shareConfig.link;
         }
     } else {
-        shareConfig.link = location.href;
+        shareConfig.link = url;
     }
 
     shareConfig.desc = shareConfig.desc || "服务覆盖全国100个城市，300万商旅人士的出行首选！";
     shareConfig.title = shareConfig.title || "空铁管家";
+    shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68"
 
     wx.onMenuShareAppMessage({
         title: shareConfig.title, // 分享标题
@@ -47,9 +48,6 @@ wx.ready(function () {
         link: shareConfig.link, // 分享链接
         imgUrl: shareConfig.imgUrl, // 分享图标
         success: function (resp) {
-
-            alert(JSON.stringify(resp));
-
             // 用户确认分享后执行的回调函数
             if (typeof shareSuccess != "undefined") {
                 shareSuccess();

@@ -119,13 +119,14 @@
                     wechatCouponId = $("ul.purchase-coupon li.active").attr("data-wechatCoupon-id");
                 }
 
+                var datas = [];
+                datas.push({num: num, productSpecId: productSpecId, productId: productId});
+
                 //创建普通订单
                 createOrder({
-                    num: num,
-                    productSpecId: productSpecId,
-                    productId: productId,
-                    wechatCouponId: wechatCouponId,
-                    activityTypeId: 0
+                    activityTypeId: 0,
+                    p: JSON.stringify(datas),
+                    wechatCouponId: wechatCouponId
                 });
 
             });
@@ -192,25 +193,23 @@
                 wechatCouponId = $("ul.purchase-coupon li.active").attr("data-wechatCoupon-id");
             }
 
-            TX.CORE.p({
-                url: "/product/calculateOrder",
-                data: {
-                    num: num,
-                    productSpecId: productSpecId,
-                    productId: [[${info.productId}]],
-                    wechatCouponId: wechatCouponId
-                },
-                success: function (resp) {
-                    if (resp.baseResp.success) {
-                        $("p.purchase-footer-lt span.shopping-price em").html(resp.datas.amount);
-                        $("p.purchase-footer-lt span.shopping-price-org").html("￥" + resp.datas.originalAmount);
-                        $("p.purchase-footer-lt span.shopping-price-dis em").html(resp.datas.couponAmount);
-                    } else {
-                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
-                    }
+             var datas = [];
+            datas.push({num: num, productSpecId: productSpecId, productId: productId});
+
+            //计算价格
+            calculateProductOrder({
+                activityTypeId: 0,
+                p: JSON.stringify(datas),
+                wechatCouponId: wechatCouponId
+            }, function (resp) {
+                if (resp.baseResp.success) {
+                    $("p.purchase-footer-lt span.shopping-price em").html(resp.datas.amount);
+                    $("p.purchase-footer-lt span.shopping-price-org").html("￥" + resp.datas.originalAmount);
+                    $("p.purchase-footer-lt span.shopping-price-dis em").html(resp.datas.couponAmount);
+                } else {
+                    TX.MSG.msg(resp.baseResp.message, {icon: 2});
                 }
             });
-
 
         }
 

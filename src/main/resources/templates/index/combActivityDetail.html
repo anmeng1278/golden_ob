@@ -22,23 +22,6 @@
 
     <script type="text/javascript" th:inline="javascript">
 
-        function accMul(arg1, arg2) {
-            var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
-            try {
-                m += s1.split(".")[1].length
-            } catch (e) {
-            }
-            try {
-                m += s2.split(".")[1].length
-            } catch (e) {
-            }
-            return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
-        }
-
-        var salePrice = [[${info.salePrice}]];
-        if (salePrice <= 0) {
-            salePrice = 0.01;
-        }
 
         TX.INIT(function () {
 
@@ -91,9 +74,21 @@
         //计算订单价格
         function calculateOrder() {
 
+            var activityId = [[${info.activityId}]];
             var num = parseInt($(":text[name='num']").val(), 10);
-            var totalPrice = accMul(num, salePrice);
-            $("span.shopping-price em").html(totalPrice);
+
+            //计算价格
+            calculateProductOrder({
+                activityTypeId: 30,
+                num: num,
+                activityId:activityId
+            }, function (resp) {
+                if (resp.baseResp.success) {
+                    $("span.shopping-price em").html(resp.datas.amount);
+                } else {
+                    TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                }
+            });
 
         }
 
