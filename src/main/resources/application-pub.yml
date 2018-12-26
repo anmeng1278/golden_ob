@@ -59,14 +59,31 @@ webconfig:
   partnerLoginPassword: gxylceshi
 
   WxTemplate:
-    ##{{first.DATA}}
-    ##订单号：{{keyword1.DATA}}
-    ##商品名称：{{keyword2.DATA}}
-    ##支付金额：{{keyword3.DATA}}
-    ##{{remark.DATA}}
-    PaySuccessed: 3fo6b1wXLfjep8kp0CKGwN7MVEIC-qO-fDPCTsQae2g
+    ## {{first.DATA}}
+    ## 付款金额：{{keyword1.DATA}}
+    ## 交易单号：{{keyword2.DATA}}
+    ## {{remark.DATA}}
+    PaySuccessed: DygyNvij6eJN34pQbj372iBpZTIYq6HukBcwrcmBhIo
+
+    ## {{first.DATA}}
+    ## 产品名称：{{keyword1.DATA}}
+    ## 激活时间：{{keyword2.DATA}}
+    ## 截止时间：{{keyword3.DATA}}
+    ## {{remark.DATA}}
     OpenCardConfirm: Oz_Ldo8XAmB8mEVJsWYJrV3Hjl0p2Ezr3v0UpkvhhkQ
+
+    ## {{first.DATA}}
+    ## 顾客昵称：{{keyword1.DATA}}
+    ## 消费时间：{{keyword2.DATA}}
+    ## {{remark.DATA}}
     QrcodeUseSuccessed: YdD4hzFM3mOnufS2AunKUN18MQUFjEJmOQgtQsk3wt8
+
+    ## {{first.DATA}}
+    ## 商品名称：{{keyword1.DATA}}
+    ## 数量：{{keyword2.DATA}}
+    ## 金额：{{keyword3.DATA}}
+    ## 状态：{{keyword4.DATA}}
+    ## {{remark.DATA}}
     EntityUseSuccessed: 46zVrmMwlvcE0UgnSog1M43jFmEcPyzFnSm1_kb2oOg
 
 
