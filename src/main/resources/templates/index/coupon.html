@@ -17,14 +17,15 @@
 
 <div layout:fragment="content">
     <!-- coupon-list start-->
-    <div class="coupon-list" th:if="${!#lists.isEmpty(wechatCouponDtos)}" >
+    <div class="coupon-list" th:if="${!#lists.isEmpty(wechatCouponDtos)}">
         <th:block th:each="info:${wechatCouponDtos}">
             <!--未使用-->
             <th:block th:if="${info.couponStatus.value == 0}">
                 <div class="coupon-item">
                     <div class="coupon-item-back">
                         <div class="coupon-item-lt">
-                            <p class="coupon-item-price"><span th:text="|${info.amount}|">&yen;</span><span>&yen;</span></p>
+                            <p class="coupon-item-price"><span th:text="|${info.amount}|">&yen;</span><span>&yen;</span>
+                            </p>
                             <p class="coupon-price-tips" th:text="${info.couponDto.remarks}">满1000元可用</p>
                         </div>
                         <div class="coupon-item-rt">
@@ -35,7 +36,9 @@
                             <p class="coupon-rule-btn">使用规则</p>
                         </div>
                     </div>
-                    <span class="coupon-item-tips">立即使用</span>
+                    <a th:href="${ob.Nav('/')}">
+                        <span class="coupon-item-tips">立即使用</span>
+                    </a>
                 </div>
             </th:block>
 
@@ -44,7 +47,8 @@
                 <div class="coupon-item Invalid-item">
                     <div class="coupon-item-back">
                         <div class="coupon-item-lt">
-                            <p class="coupon-item-price"><span th:text="|${info.amount}|">&yen;</span><span>&yen;</span></p>
+                            <p class="coupon-item-price"><span th:text="|${info.amount}|">&yen;</span><span>&yen;</span>
+                            </p>
                             <p class="coupon-price-tips" th:text="${info.couponDto.remarks}">满1000元可用</p>
                         </div>
                         <div class="coupon-item-rt">
