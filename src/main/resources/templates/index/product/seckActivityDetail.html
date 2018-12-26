@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<!-- 首页 \document\html\KTGJService\index.html -->
+<head th:replace="index/common/layout :: header('金色严选-商品详情', '', '')"></head>
+
+<th:block layout:fragment="script">
+    <!--引入的js-->
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/order.js')}" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" th:inline="javascript">
+
+        var shareUrl = [[${shareUrl}]];
+        var shareTitle = "我在空铁管家发现了" + [[${info.productName}]];
+
+        shareConfig = {
+            title: shareTitle,
+            desc: [[${info.introduce}]],
+            link: shareUrl,
+            imgUrl: [[${imgUrl}]]
+        };
+
+
+        TX.INIT(function () {
+
+            $(document).on("click", "a.purchase-show-btn", function () {
+
+                var activityId = [[${activityId}]];
+                var productId = [[${productId}]];
+                var productSpecId = [[${productSpecId}]];
+
+                var datas = [];
+                datas.push({productSpecId: productSpecId, productId: productId});
+
+                //创建秒杀订单
+                createOrder({
+                    activityTypeId: 20,
+                    activityId: activityId,
+                    p: JSON.stringify(datas)
+                }, function (resp) {
+                    if (resp.baseResp.success) {
+                        var url = resp.baseResp.url;
+                        if (resp.datas == 3) {
+                            //成功
+                            TX.MSG.msg("秒杀成功，请前往订单列表页面完成支付。", {time: 1500}, function () {
+                                location.href = url;
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    } else {
+                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                    }
+                });
+
+            });
+
+        });
+
+    </script>
+
+    <script th:src="${ob.Url('/index/js/GoodsDetail.js')}" type="text/javascript" charset="utf-8"></script>
+
+</th:block>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css', false)}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GoodsDetail.css')}"/>
+</th:block>
+
+<div layout:fragment="content">
+
+    <!--banner start-->
+    <div class="banner">
+        <!-- 轮播 start -->
+        <div class="swiper-container" th:if="${!#lists.isEmpty(info.productImgDtos)}">
+            <div class="swiper-wrapper">
+                <th:block th:each="img : ${info.productImgDtos}">
+                    <div class="swiper-slide">
+                        <img th:src="${img.imgPath}" alt="1" width="100%"/>
+                    </div>
+                </th:block>
+            </div>
+            <!-- Add Pagination -->
+            <div class="swiper-pagination"></div>
+        </div>
+        <!-- 轮播 end -->
+
+        <!--只限时秒杀商品才显示-->
+        <p class="banner-SecKill"><span>限时秒杀</span></p>
+    </div>
+    <!--banner end-->
+
+    <!--goods-introduce start-->
+    <div class="goods-introduce">
+        <h2 class="goods-name" th:text="${info.productName}">素园野生素食参谜</h2>
+        <p class="goods-tips" th:text="${info.introduce}">旅行者百色行李箱，百变色彩，多色可选</p>
+        <span class="goods-num" th:text="|剩余${stockCount}${info.unit}|"></span>
+        <span class="goods-price">&yen;<em th:text="${salePrice}">898</em></span>    <!--只限时秒杀商品才显示-->
+    </div>
+    <!--goods-introduce end-->
+
+    <!--main start-->
+    <div class="main">
+        <h2 class="goods-detail"><span>商品详情</span></h2>
+        <p th:utext="${info.useIntro}"></p>
+    </div>
+    <!--main end-->
+
+    <!--footer start-->
+    <div class="footer">
+        <p class="footer-lt">
+            <span class="shopping-price">&yen;<em th:text="${salePrice}">898</em></span>
+        </p>
+        <p class="footer-rt">
+            <a th:if="${flag == 0}" href="javascript:void(0);" style="float: right;"
+               class="purchase-show-btn-no">未开始</a>
+            <a th:if="${flag == 1}" href="javascript:void(0);" style="float: right;"
+               class="purchase-show-btn-no">已售罄</a>
+            <a th:if="${flag == 2}" href="javascript:void(0);" style="float: right;" class="purchase-show-btn">立即秒杀</a>
+            <a th:if="${flag == -1}" href="javascript:void(0);" style="float: right;" class="purchase-show-btn-end"
+               style="display: none;">已结束</a>
+        </p>
+    </div>
+    <!--footer end-->
+
+</div>

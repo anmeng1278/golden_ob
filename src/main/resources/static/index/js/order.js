@@ -5,13 +5,16 @@ function createOrder(data, callback) {
         data: data,
         success: function (resp) {
 
+            if (typeof callback != "undefined") {
+                callback(resp);
+                return;
+            }
+
             var url = resp.baseResp.url;
             if (resp.baseResp.success) {
 
                 var successUrl = resp.datas.successUrl;
                 TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-
-                    callback && callback();
 
                     if (resp.datas.resp.amount > 0) {
 

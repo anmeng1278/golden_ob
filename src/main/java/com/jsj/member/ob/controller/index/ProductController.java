@@ -15,6 +15,7 @@ import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.enums.ActivityType;
+import com.jsj.member.ob.enums.SecKillStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.CartLogic;
@@ -22,6 +23,7 @@ import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
+import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +62,9 @@ public class ProductController extends BaseController {
         switch (activityType) {
             case NORMAL:
                 return this.normalProduct(request);
+
+            case SECKILL:
+                return this.secKillProduct(request);
 
             case COMBINATION:
                 return this.combProduct(request);
@@ -108,7 +113,7 @@ public class ProductController extends BaseController {
             request.setAttribute("imgUrl", imgUrl);
         }
 
-        return "index/productDetail";
+        return "index/product/productDetail";
     }
     //endregion
 
@@ -141,7 +146,78 @@ public class ProductController extends BaseController {
         request.setAttribute("info", info);
         request.setAttribute("productDtos", productDtos);
 
-        return "index/combActivityDetail";
+        return "index/product/combActivityDetail";
+    }
+    //endregion
+
+    //region (public) 秒杀商品详情 combProduct
+
+    /**
+     * 组合商品详情
+     *
+     * @param request
+     * @return
+     */
+    public String secKillProduct(HttpServletRequest request) {
+
+        if (StringUtils.isEmpty(request.getParameter("activityId"))) {
+            return this.Redirect("/");
+        }
+
+        if (StringUtils.isEmpty(request.getParameter("productSpecId"))) {
+            return this.Redirect("/");
+        }
+
+        int activityId = Integer.parseInt(request.getParameter("activityId"));
+        int productSpecId = Integer.parseInt(request.getParameter("productSpecId"));
+
+        //秒杀活动信息
+        ActivityDto info = ActivityLogic.GetActivity(activityId);
+        if (!info.getIfpass()) {
+            return this.Redirect("/");
+        }
+
+        //非组合商品，不允许进此链接
+        if (!info.getActivityType().equals(ActivityType.SECKILL)) {
+            return this.Redirect("/");
+        }
+
+        //活动中的商品
+        List<ActivityProductDto> productDtos = ActivityLogic.GetActivityProductDtos(activityId, productSpecId);
+        if (productDtos.size() == 0) {
+            return this.Redirect("/");
+        }
+        ProductDto productDto = productDtos.get(0).getProductDto();
+
+        int stockCount = productDtos.get(0).getStockCount();
+        //未开始
+        int flag = 0;
+        if (info.getBeginTime() > DateUtils.getCurrentUnixTime()) {
+            //未开始
+            flag = 0;
+        } else if (DateUtils.getCurrentUnixTime() < info.getEndTime()) {
+            //进行中
+            if (stockCount <= 0) {
+                //已售罄
+                flag = 1;
+            } else {
+                flag = 2;
+            }
+        } else {
+            flag = -1;
+        }
+
+        request.setAttribute("info", productDto);
+        request.setAttribute("salePrice", productDtos.get(0).getSalePrice());
+        request.setAttribute("stockCount", stockCount);
+        request.setAttribute("flag", flag);
+
+        request.setAttribute("activityId", activityId);
+        request.setAttribute("productId", productDto.getProductId());
+        request.setAttribute("productSpecId", productSpecId);
+
+        return "index/product/seckActivityDetail";
+
     }
     //endregion
 
@@ -188,7 +264,7 @@ public class ProductController extends BaseController {
     public RestResponseBo calculateOrder(HttpServletRequest request) {
 
         if (StringUtils.isEmpty(request.getParameter("activityTypeId"))) {
-            return RestResponseBo.fail("请求参数错误", null, this.Url("/"));
+            return RestResponseBo.fail("参数错误", null, this.Url("/"));
         }
 
         int activityTypeId = Integer.parseInt(request.getParameter("activityTypeId"));
@@ -218,12 +294,17 @@ public class ProductController extends BaseController {
     public RestResponseBo createOrder(HttpServletRequest request) {
 
         if (StringUtils.isEmpty(request.getParameter("activityTypeId"))) {
-            return RestResponseBo.fail("请求参数错误", null, this.Url("/"));
+            return RestResponseBo.fail("参数错误", null, this.Url("/"));
         }
 
         int activityTypeId = Integer.parseInt(request.getParameter("activityTypeId"));
         ActivityType activityType = ActivityType.valueOf(activityTypeId);
         String from = request.getParameter("from");
+
+        //创建秒杀订单
+        if (activityType == ActivityType.SECKILL) {
+            return this.createSecKillorder(request);
+        }
 
         OrderBase orderBase = OrderFactory.GetInstance(activityType);
 
@@ -268,6 +349,45 @@ public class ProductController extends BaseController {
     }
     //endregion
 
+    //region (public) 创建秒杀订单
+
+    /**
+     * 创建秒杀订单
+     *
+     * @param request
+     * @return
+     */
+    public RestResponseBo createSecKillorder(HttpServletRequest request) {
+
+        if (StringUtils.isEmpty(request.getParameter("activityId"))) {
+            throw new TipException("参数错误");
+        }
+
+        if (StringUtils.isEmpty(request.getParameter("p"))) {
+            throw new TipException("参数错误");
+        }
+        //活动编号
+        int activityId = Integer.parseInt(request.getParameter("activityId"));
+
+        //请求参数
+        String p = request.getParameter("p");
+        List<JSONObject> jsonObjects = JSON.parseArray(p, JSONObject.class);
+
+        if (jsonObjects.size() != 1) {
+            throw new TipException("参数错误");
+        }
+
+        int productId = jsonObjects.get(0).getInteger("productId");
+        int productSpecId = jsonObjects.get(0).getInteger("productSpecId");
+
+        SecKillStatus secKillStatus = ActivityLogic.RedisKill(activityId, productId, productSpecId, this.OpenId());
+
+        String url = this.Url("/order", false);
+        return RestResponseBo.ok(secKillStatus.getMessage(), url, secKillStatus.getValue());
+
+    }
+
+    //endregion
 
     //region (private) 创建订单请求 createOrderRequ
 
@@ -284,7 +404,7 @@ public class ProductController extends BaseController {
         switch (activityType) {
             case NORMAL:
                 if (StringUtils.isEmpty(request.getParameter("p"))) {
-                    throw new TipException("请求参数错误");
+                    throw new TipException("参数错误");
                 }
                 requ = this.createNormalOrderRequest(request);
                 break;

@@ -5,11 +5,11 @@ import com.jsj.member.ob.exception.FatalException;
 
 public enum SecKillStatus {
 
-    UNINIT(0, "未初始化"),
+    UNINIT(0, "商品信息暂未初始化"),
 
-    REPEAT(1, "重复下单"),
+    REPEAT(1, "不能重复购买"),
 
-    SOLDOUT(2, "已售罄"),
+    SOLDOUT(2, "商品已售罄"),
 
     SUCCESS(3, "下单成功"),
 
