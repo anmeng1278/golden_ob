@@ -81,6 +81,9 @@
 
         function shareSuccess() {
 
+            alert("页面测试成功");
+            return;
+
             var shareUrl = [[${shareUrl}]];
             //分享成功
             TX.CORE.p({
@@ -99,6 +102,10 @@
                     }
                 }
             })
+        }
+        
+        function shareCancel() {
+            alert("页面测试取消");
         }
 
     </script>
