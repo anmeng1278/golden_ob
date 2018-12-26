@@ -27,7 +27,7 @@ $(function () {
     });
 
     //点击商品显示商品详情
-    $(document).on("click", ".strok-list-dl", function () {
+    $(document).on("click", ".strok-list-dl", function (e) {
         if ($(e.target).hasClass("purchase-num-reduce") || $(e.target).hasClass("purchase-num-add")) {
             return;
         }
