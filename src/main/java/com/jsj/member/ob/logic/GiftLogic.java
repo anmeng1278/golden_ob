@@ -413,6 +413,7 @@ public class GiftLogic extends BaseLogic {
         }
 
         giftStocks.forEach(gf -> {
+
             Stock stock = giftLogic.stockService.selectById(gf.getStockId());
             stock.setStatus(StockStatus.UNUSE.getValue());
             stock.setUpdateTime(DateUtils.getCurrentUnixTime());
@@ -425,6 +426,7 @@ public class GiftLogic extends BaseLogic {
             stockFlow.setCreateTime(DateUtils.getCurrentUnixTime());
             stockFlow.setUpdateTime(DateUtils.getCurrentUnixTime());
             stockFlow.setStockId(stock.getStockId());
+            stockFlow.setRemark("用户取消分享");
             StockLogic.AddStockFlow(stockFlow, StockFlowType.CANCEL);
 
         });
@@ -436,6 +438,70 @@ public class GiftLogic extends BaseLogic {
 
         resp.setGiftId(gift.getGiftId());
         return resp;
+    }
+    //endregion
+
+    //region (public) 取消赠送 CancelGift
+
+    /**
+     * 取消赠送
+     *
+     * @return
+     */
+    public static List<Integer> CancelGift() {
+
+        EntityWrapper<Gift> entityWrapper = new EntityWrapper<>();
+
+        List list = new ArrayList();
+        list.add(GiftStatus.UNSHARE.getValue());
+        list.add(GiftStatus.SHARED.getValue());
+        list.add(GiftStatus.DRAWING.getValue());
+
+        entityWrapper.in("status", list);
+        entityWrapper.where("delete_time is null");
+        entityWrapper.where("expired_time < UNIX_TIMESTAMP()");
+
+        List<Gift> gifts = giftLogic.giftService.selectList(entityWrapper);
+
+        for (Gift gift : gifts) {
+
+            //修改状态
+            gift.setStatus(GiftStatus.CANCEL.getValue());
+
+            List<GiftStock> giftStocks = GiftLogic.GetUnReceivedGiftstocks(gift.getGiftId());
+
+            giftStocks.forEach(gf -> {
+
+                Stock stock = giftLogic.stockService.selectById(gf.getStockId());
+                stock.setStatus(StockStatus.UNUSE.getValue());
+                stock.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+                giftLogic.stockService.updateById(stock);
+
+                //库存日志
+                StockFlow stockFlow = new StockFlow();
+                stockFlow.setOpenId(stock.getOpenId());
+                stockFlow.setCreateTime(DateUtils.getCurrentUnixTime());
+                stockFlow.setUpdateTime(DateUtils.getCurrentUnixTime());
+                stockFlow.setStockId(stock.getStockId());
+                stockFlow.setRemark("系统自动取消分享");
+                StockLogic.AddStockFlow(stockFlow, StockFlowType.CANCEL);
+
+            });
+
+            gift.setUpdateTime(DateUtils.getCurrentUnixTime());
+            gift.setStatus(GiftStatus.CANCEL.getValue());
+
+            giftLogic.giftService.updateById(gift);
+
+            //TODO 系统自动取消分享客服消息
+            //示例：您的分享的礼物24小时未被领取，已退回账户。
+
+        }
+
+        //返回已取消的分享列表
+        return gifts.stream().map(o -> o.getGiftId()).collect(Collectors.toList());
+
     }
     //endregion
 
@@ -696,7 +762,7 @@ public class GiftLogic extends BaseLogic {
     }
     //endregion
 
-    //region (public) 获得用户在这个礼包中的领取详情
+    //region (public) 获得用户在这个礼包中的领取详情 GetGiftRecevied
 
     /**
      * 获得用户在这个礼包中的领取详情

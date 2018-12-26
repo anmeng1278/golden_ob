@@ -125,6 +125,17 @@ public class ShareController extends BaseController {
             //不是本人操作的分享，不允查看
             return this.Redirect("/");
         }
+
+        //取消分享，跳转到库存页面
+        if (giftDto.getGiftStatus().equals(GiftStatus.CANCEL)) {
+            return this.Redirect("/stock", false);
+        }
+
+        //已分享，跳转到领取页面
+        if (giftDto.getGiftStatus().equals(GiftStatus.SHARED)) {
+            return this.Redirect(String.format("/share/gift/%s/draw", obs), false);
+        }
+
         //文案类型
         List<Dict> dicts = DictLogic.GetDicts(DictType.COPYWRITER, 3);
 
@@ -134,9 +145,6 @@ public class ShareController extends BaseController {
         //分享图片
         if (giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos() != null) {
             String imgUrl = giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos().get(0).getImgPath();
-            request.setAttribute("imgUrl", imgUrl);
-        } else {
-            String imgUrl = "https://hezy-static.oss-cn-shanghai.aliyuncs.com/test/product/oncecard_cover.png";
             request.setAttribute("imgUrl", imgUrl);
         }
 
@@ -195,9 +203,6 @@ public class ShareController extends BaseController {
         //分享图片
         if (giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos() != null) {
             String imgUrl = giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos().get(0).getImgPath();
-            request.setAttribute("imgUrl", imgUrl);
-        } else {
-            String imgUrl = "https://hezy-static.oss-cn-shanghai.aliyuncs.com/test/product/oncecard_cover.png";
             request.setAttribute("imgUrl", imgUrl);
         }
 
@@ -288,9 +293,6 @@ public class ShareController extends BaseController {
         //分享图片
         if (giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos() != null) {
             String imgUrl = giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos().get(0).getImgPath();
-            request.setAttribute("imgUrl", imgUrl);
-        } else {
-            String imgUrl = "https://hezy-static.oss-cn-shanghai.aliyuncs.com/test/product/oncecard_cover.png";
             request.setAttribute("imgUrl", imgUrl);
         }
 
