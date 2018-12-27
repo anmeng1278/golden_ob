@@ -10,13 +10,13 @@ if (typeof shareConfig == "undefined") {
 
 wx.ready(function () {
 
-    var url = location.protocol + "//" + location.host + virtualPath;
+    var url = location.protocol + "//" + location.host;
     if (shareConfig.link) {
         if (shareConfig.link.indexOf(location.host) == -1) {
             shareConfig.link = url + shareConfig.link;
         }
     } else {
-        shareConfig.link = url;
+        shareConfig.link = url + virtualPath;
     }
 
     shareConfig.desc = shareConfig.desc || "服务覆盖全国100个城市，300万商旅人士的出行首选！";
