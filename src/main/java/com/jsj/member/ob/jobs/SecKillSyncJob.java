@@ -3,6 +3,7 @@ package com.jsj.member.ob.jobs;
 
 import com.alibaba.fastjson.JSON;
 import com.jsj.member.ob.logic.ActivityLogic;
+import com.jsj.member.ob.utils.SpringContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,6 +21,11 @@ public class SecKillSyncJob {
 
     @Scheduled(cron = "0 0/1 * * * ?")
     public synchronized void start() {
+
+        if (SpringContextUtils.getActiveProfile().equals("dev")) {
+            return;
+        }
+
         try {
             List<Integer> activityIds = ActivityLogic.RedisSync();
             if (!activityIds.isEmpty()) {

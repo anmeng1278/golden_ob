@@ -10,6 +10,7 @@ import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.dto.api.coupon.WechatCouponDto;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
+import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
@@ -17,10 +18,7 @@ import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.SecKillStatus;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.logic.ActivityLogic;
-import com.jsj.member.ob.logic.CartLogic;
-import com.jsj.member.ob.logic.CouponLogic;
-import com.jsj.member.ob.logic.ProductLogic;
+import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
 import com.jsj.member.ob.utils.DateUtils;
@@ -301,47 +299,57 @@ public class ProductController extends BaseController {
         ActivityType activityType = ActivityType.valueOf(activityTypeId);
         String from = request.getParameter("from");
 
-        //创建秒杀订单
-        if (activityType == ActivityType.SECKILL) {
-            return this.createSecKillorder(request);
-        }
-
-        OrderBase orderBase = OrderFactory.GetInstance(activityType);
-
-        //获取创建订单请求
-        CreateOrderRequ requ = this.createOrderRequ(request, activityType);
-        CreateOrderResp resp = orderBase.CreateOrder(requ);
-
-        if (!resp.isSuccess()) {
-            throw new TipException("创建订单失败");
-        }
-
-        //来源购物车购买
-        if ("cart".equals(from)) {
-            for (OrderProductDto op : requ.getOrderProductDtos()) {
-                //删除购物车购买商品
-                CartLogic.AddUpdateCartProduct(this.OpenId(),
-                        op.getProductId(),
-                        op.getProductSpecId(),
-                        0,
-                        "update");
-            }
-        }
-
+        //创建订单响应实体
+        CreateOrderResp resp;
 
         HashMap<String, Object> data = new HashMap<>();
-        if (resp.getAmount() > 0) {
-            //调起微信支付
-            GetPayTradeResp pay = this.createPay(resp.getOrderId());
-            if (!pay.getResponseHead().getCode().equals("0000")) {
-                throw new TipException(pay.getResponseHead().getMessage());
+        data.put("activityType", activityType.getValue());
+
+        //创建秒杀订单
+        if (activityType == ActivityType.SECKILL) {
+
+            resp = this.createSecKillorder(request);
+            if (!resp.isSuccess()) {
+                throw new TipException(resp.getMessage());
             }
-            data.put("pay", pay);
+
+        } else {
+
+            OrderBase orderBase = OrderFactory.GetInstance(activityType);
+            //获取创建订单请求
+            CreateOrderRequ requ = this.createOrderRequ(request, activityType);
+            resp = orderBase.CreateOrder(requ);
+
+            if (!resp.isSuccess()) {
+                throw new TipException(resp.getMessage());
+            }
+
+            //来源购物车购买
+            if ("cart".equals(from)) {
+                for (OrderProductDto op : requ.getOrderProductDtos()) {
+                    //删除购物车购买商品
+                    CartLogic.AddUpdateCartProduct(this.OpenId(),
+                            op.getProductId(),
+                            op.getProductSpecId(),
+                            0,
+                            "update");
+                }
+            }
+        }
+
+        if (resp.getOrderId() > 0) {
+            String successUrl = String.format("/pay/success/%s", resp.getOrderUniqueCode());
+            if (resp.getAmount() > 0) {
+                //调起微信支付
+                GetPayTradeResp pay = this.createPay(resp.getOrderId());
+                if (!pay.getResponseHead().getCode().equals("0000")) {
+                    throw new TipException(pay.getResponseHead().getMessage());
+                }
+                data.put("pay", pay);
+            }
+            data.put("successUrl", this.Url(successUrl));
         }
         data.put("resp", resp);
-
-        String successUrl = String.format("/pay/success/%s", resp.getOrderUniqueCode());
-        data.put("successUrl", this.Url(successUrl));
 
         String url = this.Url("/order");
         return RestResponseBo.ok("创建订单成功", url, data);
@@ -349,7 +357,7 @@ public class ProductController extends BaseController {
     }
     //endregion
 
-    //region (public) 创建秒杀订单
+    //region (public) 创建秒杀订单 createSecKillorder
 
     /**
      * 创建秒杀订单
@@ -357,7 +365,9 @@ public class ProductController extends BaseController {
      * @param request
      * @return
      */
-    public RestResponseBo createSecKillorder(HttpServletRequest request) {
+    public CreateOrderResp createSecKillorder(HttpServletRequest request) {
+
+        CreateOrderResp resp = new CreateOrderResp();
 
         if (StringUtils.isEmpty(request.getParameter("activityId"))) {
             throw new TipException("参数错误");
@@ -380,10 +390,42 @@ public class ProductController extends BaseController {
         int productId = jsonObjects.get(0).getInteger("productId");
         int productSpecId = jsonObjects.get(0).getInteger("productSpecId");
 
+        int createTime = DateUtils.getCurrentUnixTime();
         SecKillStatus secKillStatus = ActivityLogic.RedisKill(activityId, productId, productSpecId, this.OpenId());
 
-        String url = this.Url("/order", false);
-        return RestResponseBo.ok(secKillStatus.getMessage(), url, secKillStatus.getValue());
+        if (secKillStatus.equals(SecKillStatus.SUCCESS)) {
+            //秒杀成功
+            resp.setSuccess(true);
+
+            int times = 0;
+            while (times < 5) {
+                OrderDto orderDto = OrderLogic.GetOrder(activityId, this.OpenId(), ActivityType.SECKILL, createTime);
+                if (orderDto != null) {
+                    resp.setOrderUniqueCode(orderDto.getOrderUniqueCode());
+                    resp.setCouponAmount(0);
+                    resp.setAmount(orderDto.getPayAmount());
+                    resp.setOriginalAmount(orderDto.getPayAmount());
+                    resp.setOrderId(orderDto.getOrderId());
+                    resp.setExpiredTime(orderDto.getExpiredTime());
+                    break;
+                }
+
+                times++;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return resp;
+
+        } else {
+            resp.setSuccess(false);
+            resp.setMessage(secKillStatus.getMessage());
+        }
+
+        return resp;
 
     }
 

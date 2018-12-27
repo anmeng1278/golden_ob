@@ -39,20 +39,6 @@
                     activityTypeId: 20,
                     activityId: activityId,
                     p: JSON.stringify(datas)
-                }, function (resp) {
-                    if (resp.baseResp.success) {
-                        var url = resp.baseResp.url;
-                        if (resp.datas == 3) {
-                            //成功
-                            TX.MSG.msg("秒杀成功，请前往订单列表页面完成支付。", {time: 1500}, function () {
-                                location.href = url;
-                            });
-                        } else {
-                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
-                        }
-                    } else {
-                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
-                    }
                 });
 
             });
