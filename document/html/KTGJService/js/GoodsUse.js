@@ -1,6 +1,6 @@
 $(function(){
 	//选择城市
-    $(document).on("click", "#city", function(){
+    $(document).on("click", "#city", function(e){
 		SelCity(this,e);
 	});
 
