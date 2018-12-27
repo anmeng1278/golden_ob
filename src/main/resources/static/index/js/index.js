@@ -12,10 +12,10 @@ $(function () {
     $(window).scroll(function () {
         var top = $('.banner').outerHeight();
         if ($(window).scrollTop() > top) {
-            $(".nav-wrap").addClass('nav-wrap-fix');
+            $(".nav-wrap-div").addClass('nav-wrap-fix');
         }
         else {
-            $(".nav-wrap").removeClass('nav-wrap-fix');
+            $(".nav-wrap-div").removeClass('nav-wrap-fix');
         }
     });
 
