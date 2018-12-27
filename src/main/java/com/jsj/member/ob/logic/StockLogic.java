@@ -492,11 +492,14 @@ public class StockLogic extends BaseLogic {
      * @param stockIds
      * @return
      */
-    public static Integer GetProductCount(int productId,int productSpecId,List<Integer> stockIds){
+    public static Integer GetProductCount(String openId,int productId,int productSpecId,List<Integer> stockIds){
 
         EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
         productWrapper.where("product_id={0}", productId);
         productWrapper.where("product_spec_id={0}", productSpecId);
+        if(!StringUtils.isBlank(openId)){
+            productWrapper.where("open_id={0}", openId);
+        }
         productWrapper.in("stock_id", stockIds);
         int number = stockLogic.stockService.selectCount(productWrapper);
 
@@ -564,14 +567,14 @@ public class StockLogic extends BaseLogic {
         List<Integer> stockIds = lists.stream().map(StockDto::getStockId).collect(Collectors.toList());
 
         lists.forEach(stockDto -> {
-                    Integer count = StockLogic.GetProductCount(stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
+                    Integer count = StockLogic.GetProductCount(stockDto.getOpenId(),stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
                     stockDto.setNumber(count);
                 }
         );
 
         ArrayList<StockDto> stockDtos = lists.stream().collect(
                 Collectors.collectingAndThen(
-                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(StockDto::getProductSpecId))), ArrayList::new));
+                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(StockDto::getOpenId).thenComparing(StockDto::getProductSpecId))), ArrayList::new));
 
         return stockDtos;
     }
