@@ -18,6 +18,7 @@ import com.jsj.member.ob.logic.delivery.DeliveryBase;
 import com.jsj.member.ob.logic.delivery.DeliveryFactory;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
+import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -128,6 +129,29 @@ public class DeliveryLogic extends BaseLogic {
     }
 
     /**
+     * 修改物流状态
+     *
+     * @param deliveryId
+     * @return
+     */
+    public static void UpdateDeliveryStatus(int deliveryId, String method) {
+
+        Delivery delivery = deliveryLogic.deliveryService.selectById(deliveryId);
+
+        if (method.equals("delete")) {
+            delivery.setDeleteTime(DateUtils.getCurrentUnixTime());
+        }
+
+        if (method.equals("confirm")) {
+            delivery.setStatus(DeliveryStatus.SIGNED.getValue());
+            delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+        }
+        deliveryLogic.deliveryService.updateById(delivery);
+
+    }
+
+    /**
      * 获得DeliveryStock
      *
      * @param deliverId
@@ -181,6 +205,7 @@ public class DeliveryLogic extends BaseLogic {
         dto.setDeliveryStatus(DeliveryStatus.valueOf(delivery.getStatus()));
         dto.setDeliveryType(DeliveryType.valueOf(delivery.getTypeId()));
         dto.setRemarks(delivery.getRemarks());
+        dto.setUpdateTime(delivery.getUpdateTime());
 
         dto.setDeliveryId(delivery.getDeliveryId());
         dto.setCreateTime(delivery.getCreateTime());
@@ -207,23 +232,24 @@ public class DeliveryLogic extends BaseLogic {
 
     /**
      * 获得配送集合
+     *
      * @param deliveryStatus
      * @param deliveryType
      * @return
      */
-    public static List<Delivery> GetDelivery(DeliveryStatus deliveryStatus, DeliveryType deliveryType, PropertyType propertyType){
+    public static List<Delivery> GetDelivery(DeliveryStatus deliveryStatus, DeliveryType deliveryType, PropertyType propertyType) {
 
         EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
 
-        if(deliveryStatus != null){
-            wrapper.where("status = {0} ",deliveryStatus.getValue());
+        if (deliveryStatus != null) {
+            wrapper.where("status = {0} ", deliveryStatus.getValue());
         }
-        if(deliveryType != null){
-            wrapper.where("type_id = {0}",deliveryType);
+        if (deliveryType != null) {
+            wrapper.where("type_id = {0}", deliveryType);
         }
-        if(propertyType != null){
-            wrapper.where("property_type_id = {0}",propertyType);
+        if (propertyType != null) {
+            wrapper.where("property_type_id = {0}", propertyType);
         }
 
         wrapper.orderBy("create_time desc");

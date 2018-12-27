@@ -7,10 +7,10 @@
 
 /*main start*/
 .logistics-list{ padding: 0.5rem 0 0 0.56rem;}
-.logistics-list li{ height: auto; padding: 0 0.3rem 0 0.5rem; font-family: "microsoft yahei",arial; position: relative;}
-.logistics-list li:before{ content: ""; position: absolute; top: 0.08rem; left: -0.08rem; width: 0.16rem; height: 0.16rem; border-radius: 50%; background: #C7C7C7; z-index: 2;}
-.logistics-list li:after{ content: ""; position: absolute; top: 0.08rem; left: 0; height: 1.6rem; border-left: 1px solid #CDCDCD; z-index: 1;}
-.logistics-list li:last-child:after{ border: 0;}
+.logistics-list li{ height: auto; padding: 0.2rem 0.3rem 0 0.5rem; font-family: "microsoft yahei",arial; border-left: 1px solid #CDCDCD; position: relative;}
+.logistics-list li:before{ content: ""; position: absolute; top: 0.3rem; left: -0.08rem; width: 0.16rem; height: 0.16rem; border-radius: 50%; background: #C7C7C7; z-index: 2;}
+/*.logistics-list li:after{ content: ""; position: absolute; top: 0.08rem; left: 0; height: 1.6rem; border-left: 1px solid #CDCDCD; z-index: 1;}*/
+.logistics-list li:last-child{ border: 0;}
 .logistics-list .active:after{ border-left: 1px solid #F5B245;}
 .logistics-list .active-next:before,.logistics-list .active:before{ background: #F5B245;}
 .logistics-state{ display: block; width: 0.6rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.3rem; color: #333; background: #F5B245; border-radius: 50%; position: absolute; top: 0; left: -0.3rem; z-index: 2;}

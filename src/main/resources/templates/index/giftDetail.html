@@ -13,31 +13,31 @@
     <script th:inline="javascript">
 
         TX.INIT(function () {
-        
-        $(document).on("click","a.cancel-btn",function () {
 
-            var giftUniqueCode = $(this).attr("data-gift-uniqueId");
+            $(document).on("click", "a.cancel-btn", function () {
 
-            layer.confirm('确定取消赠送吗?', {icon: 3}, function (index) {
-                TX.CORE.p({
-                    url: "/gift/cancel",
-                    data: {giftUniqueCode: giftUniqueCode},
-                    success: function (resp) {
-                        if (resp.baseResp.success) {
-                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                location.href = location.href;
-                            });
-                        } else {
-                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                var giftUniqueCode = $(this).attr("data-gift-uniqueId");
+
+                layer.confirm('确定取消赠送吗?', {icon: 3}, function (index) {
+                    TX.CORE.p({
+                        url: "/gift/cancel",
+                        data: {giftUniqueCode: giftUniqueCode},
+                        success: function (resp) {
+                            if (resp.baseResp.success) {
+                                TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                    location.href = location.href;
+                                });
+                            } else {
+                                TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                            }
                         }
-                    }
-                });
+                    });
+                })
             })
         })
-        })
-        
+
     </script>
-    
+
 </th:block>
 
 <th:block layout:fragment="css">
@@ -122,7 +122,12 @@
 
     <!--footer start-->
     <div class="footer">
-        <a href="javascript:;" th:attr="data-gift-uniqueId=${giftDto.giftUniqueCode}" class="cancel-btn">取消赠送</a>
+        <th:block th:if="${giftDto.giftStatus.value != 60}">
+            <a href="javascript:;" th:attr="data-gift-uniqueId=${giftDto.giftUniqueCode}" class="cancel-btn">取消赠送</a>
+        </th:block>
+        <th:block th:if="${giftDto.giftStatus.value == 60}">
+            <a href="javascript:;">已取消</a>
+        </th:block>
         <a th:href="${ob.Nav('/stock')}" class="continue-btn">继续赠送</a>
     </div>
     <!--footer end-->

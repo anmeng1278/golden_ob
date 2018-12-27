@@ -58,24 +58,24 @@ public class GiftController extends BaseController {
     /**
      * 赠送详情
      *
-     * @param giftId
+     * @param giftUniqueCode
      * @param request
      * @return
      */
-    @GetMapping("/give/{giftId}")
-    public String giveInfo(@PathVariable("giftId") int giftId, HttpServletRequest request) {
+    @GetMapping("/give/{giftUniqueCode}")
+    public String giveInfo(@PathVariable("giftUniqueCode") String giftUniqueCode, HttpServletRequest request) {
 
         //礼包信息
-        GiftDto giftDto = GiftLogic.GetGift(giftId);
+        GiftDto giftDto = GiftLogic.GetGift(giftUniqueCode);
 
         //赠送的库存
-        List<StockDto> giveStock = GiftLogic.GetGiftStocks(giftId);
+        List<StockDto> giveStock = GiftLogic.GetGiftStocks(giftDto.getGiftId());
         //去重计算数量
         List<StockDto> giveStocks = StockLogic.FilterData(giveStock);
 
 
         //领取的库存
-        List<StockDto> receiveStock = GiftLogic.GetGiftRecevied(null, giftId);
+        List<StockDto> receiveStock = GiftLogic.GetGiftRecevied(null, giftDto.getGiftId());
         //去重计算数量
         List<StockDto> receiveStocks = StockLogic.FilterData(receiveStock);
 
@@ -90,24 +90,24 @@ public class GiftController extends BaseController {
     /**
      * 领取详情
      *
-     * @param giftId
+     * @param giftUniqueCode
      * @param request
      * @return
      */
-    @GetMapping("/received/{giftId}")
-    public String receivedInfo(@PathVariable("giftId") int giftId, HttpServletRequest request) {
+    @GetMapping("/received/{giftUniqueCode}")
+    public String receivedInfo(@PathVariable("giftUniqueCode") String giftUniqueCode, HttpServletRequest request) {
 
         //礼包信息
-        GiftDto giftDto = GiftLogic.GetGift(giftId);
+        GiftDto giftDto = GiftLogic.GetGift(giftUniqueCode);
 
         //赠送的库存
-        List<StockDto> giveStock = GiftLogic.GetGiftStocks(giftId);
+        List<StockDto> giveStock = GiftLogic.GetGiftStocks(giftDto.getGiftId());
         //去重计算数量
         List<StockDto> giveStocks = StockLogic.FilterData(giveStock);
 
 
         //领取的库存
-        List<StockDto> receiveStock = GiftLogic.GetGiftRecevied(null, giftId);
+        List<StockDto> receiveStock = GiftLogic.GetGiftRecevied(null, giftDto.getGiftId());
         //去重计算数量
         List<StockDto> receiveStocks = StockLogic.FilterData(receiveStock);
 
@@ -128,8 +128,13 @@ public class GiftController extends BaseController {
 
         String giftUniqueCode = request.getParameter("giftUniqueCode");
 
-        try {
+        //判断是否本人取消
+        GiftDto giftDto = GiftLogic.GetGift(giftUniqueCode);
+        if (!giftDto.getOpenId().equals(openId)) {
+           Redirect("/stock");
+        }
 
+        try {
             CancelGiftRequ requ = new CancelGiftRequ();
             requ.getBaseRequ().setOpenId(openId);
             requ.setGiftUniqueCode(giftUniqueCode);
