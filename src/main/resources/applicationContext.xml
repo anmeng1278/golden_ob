@@ -59,6 +59,7 @@
             <mvc:exclude-mapping path="/upload/**"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/ueditor/**"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/**/pay/callback"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/ActivityCode/Verify"></mvc:exclude-mapping>
             <bean class="com.jsj.member.ob.interceptor.WxInterceptor"></bean>
         </mvc:interceptor>
 

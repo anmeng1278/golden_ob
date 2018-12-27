@@ -52,11 +52,12 @@ webconfig:
   PlatformAppId: ws975af9-2341-1234-9751-6ababc10aab3
   PlatformToken: wsscr975ppd8v46b5678f8fxh2xdhv0975xlx08h8btn6tt9754aab3
 
-  #活动码地址
-  activityUrl: http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx
-
-  partnerLoginName: guangxiyinlian
-  partnerLoginPassword: gxylceshi
+  ## 严选活动码生成地址
+  activityUrl: https://s5.jsjinfo.cn/third/v1/ThirdApi/API2Partner.aspx
+  ## 严选登录名
+  partnerLoginName: jinseyanxuan
+  ## 严选登录密码
+  partnerLoginPassword: jinseyanxuan_123
 
   WxTemplate:
     ## {{first.DATA}}
