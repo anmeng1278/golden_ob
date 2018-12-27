@@ -5,6 +5,50 @@
 <head th:replace="index/common/layout :: header('配送记录', '', '')"></head>
 
 <th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+
+        TX.INIT(function () {
+
+            $("a[data-method]").click(function () {
+
+                var id = $(this).attr("data-id");
+                var method = $(this).attr("data-method");
+
+
+                if (method == "delete") {
+                    layer.confirm('确定删除该信息吗?', {icon: 3}, function (index) {
+                        layer.close(index);
+                        modifyStatus(method, id);
+                    });
+                }
+
+                if (method == "confirm") {
+                    modifyStatus(method, id);
+                }
+            });
+        });
+
+
+        function modifyStatus(method, id) {
+
+            TX.CORE.p({
+                data: {method: method, id: id},
+                url: "/delivery/update",
+                success: function (resp) {
+                    if (resp.baseResp.success) {
+                        TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                            location.href = location.href;
+                        });
+                    } else {
+                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                    }
+                }
+            });
+        }
+
+    </script>
+
     <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/DeliveryList.js')}" type="text/javascript" charset="utf-8"></script>
 </th:block>
@@ -20,7 +64,7 @@
 
         <th:block th:each="info:${deliveryDtos}">
 
-            <!-- 已发货 ,配送方式配送-->
+            <!-- start 已发货 ,配送方式配送-->
             <th:block th:if="${info.deliveryStatus.value == 10 && info.deliveryType.value == 2}">
 
                 <div class="order-item">
@@ -50,15 +94,16 @@
                     <div class="state-list clear">
                         <p class="state-list-p">
                             <a th:href="${ob.Nav('/delivery/'+info.deliveryId)}" class="look-btn">查看物流</a>
-                            <a href="javascript:void(0);" class="confirm-btn">确认收货</a>
+                            <a th:attr="data-method='confirm',data-id=${info.deliveryId}"  href="javascript:void(0);" class="confirm-btn">确认收货</a>
                         </p>
                     </div>
                 </div>
 
             </th:block>
+            <!-- end 已发货 ,配送方式配送-->
 
-            <!--未发货,已签收,配送方式自提-->
-            <th:block th:if="${info.deliveryStatus.value != 10 || info.deliveryType.value == 1}">
+            <!-- start 未发货,配送方式自提-->
+            <th:block th:if="${info.deliveryStatus.value == 0 || info.deliveryType.value == 1}">
 
                 <div class="order-item">
                     <p class="order-item-head">
@@ -87,6 +132,45 @@
                 </div>
 
             </th:block>
+            <!-- end 未发货,配送方式自提-->
+
+            <!-- start 已签收,配送方式配送-->
+            <th:block th:if="${info.deliveryStatus.value == 20 && info.deliveryType.value == 2}">
+
+                <div class="order-item">
+                    <p class="order-item-head">
+                        <span class="order-num" th:text="|收货人：${info.contactName}|"></span>
+                        <span class="order-price"
+                              th:text="${info.getStatusName()}">已发货</span>
+                        <span class="order-dd-time clear"
+                              th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></span>
+                    </p>
+                    <th:block th:if="${!#lists.isEmpty(info.stockDtos)}"
+                              th:each="pro:${info.stockDtos}">
+                        <dl class="order-item-dl">
+
+                            <dt th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(pro.productId))}">
+                                <img th:src="${productLogic.GetProductImgDtos(pro.productId)[0].imgPath}"/>
+                            </dt>
+
+                            <dd>
+                                <h2 class="order-dd-name"
+                                    th:text="${pro.productDto.productName}">越甲科技20寸旅行箱</h2>
+                                <p class="order-dd-tips"  th:text="|规格:${productLogic.GetProductSpec(pro.productSpecId).specName}|"></p>
+                                <p class="order-dd-tips" th:text="|数量:${pro.number}|"></p>
+                            </dd>
+                        </dl>
+                    </th:block>
+                    <div class="state-list clear">
+                        <p class="state-list-p">
+                            <a th:href="${ob.Nav('/delivery/'+info.deliveryId)}" class="look-btn">查看物流</a>
+                            <a th:attr="data-method='delete',data-id=${info.deliveryId}" href="javascript:void(0);" class="delete-btn">删除记录</a>
+                        </p>
+                    </div>
+                </div>
+
+            </th:block>
+            <!-- end 已签收,配送方式配送-->
 
         </th:block>
 
