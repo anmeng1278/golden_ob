@@ -6,7 +6,7 @@ build_ob:
   tags:
     - build
   only:
-    - master
+    - master.v2
   script:
     - echo "开始编译"
     - echo $PWD
