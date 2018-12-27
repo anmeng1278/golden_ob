@@ -15,6 +15,8 @@ import com.jsj.member.ob.logic.delivery.DeliveryBase;
 import com.jsj.member.ob.logic.delivery.DeliveryFactory;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
+import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.Md5Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -135,7 +137,7 @@ public class DeliveryLogic extends BaseLogic {
     }
     //endregion
 
-    //region (public) 获得DeliveryStock GetDeliveryStocks
+    //region (public) 修改物流状态 UpdateDeliveryStatus
 
     /**
      * 修改物流状态
@@ -159,6 +161,9 @@ public class DeliveryLogic extends BaseLogic {
         deliveryLogic.deliveryService.updateById(delivery);
 
     }
+    //endregion
+
+    //region (public) 获得DeliveryStock GetDeliveryStocks
 
     /**
      * 获得DeliveryStock
