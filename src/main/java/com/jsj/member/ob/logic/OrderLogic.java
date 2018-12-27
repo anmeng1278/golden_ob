@@ -14,6 +14,7 @@ import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.service.OrderProductService;
 import com.jsj.member.ob.service.OrderService;
 import com.jsj.member.ob.utils.DateUtils;
@@ -146,6 +147,7 @@ public class OrderLogic extends BaseLogic {
             orderLogic.orderService.updateById(o);
 
             //TODO 未支付订单取消客服消息
+            TemplateDto temp ;
             //o.getOpenId()
         }
 
@@ -297,4 +299,5 @@ public class OrderLogic extends BaseLogic {
 
         return dto;
     }
+
 }

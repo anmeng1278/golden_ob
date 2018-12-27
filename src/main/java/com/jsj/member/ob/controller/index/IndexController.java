@@ -7,11 +7,9 @@ import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Banner;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.BannerType;
+import com.jsj.member.ob.enums.OrderFlag;
 import com.jsj.member.ob.enums.ProductType;
-import com.jsj.member.ob.logic.ActivityLogic;
-import com.jsj.member.ob.logic.BannerLogic;
-import com.jsj.member.ob.logic.CartLogic;
-import com.jsj.member.ob.logic.ProductLogic;
+import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +76,10 @@ public class IndexController extends BaseController {
         int count = CartLogic.GetCartProductCount(openId);
         request.setAttribute("count", count);
         request.setAttribute("skillBegin", skillBegin);
+
+        //用户未支付订单数
+        int size = OrderLogic.GetOrders(openId, OrderFlag.UNPAIDORDERS).size();
+        request.setAttribute("size",size);
 
         return "index/index";
     }
