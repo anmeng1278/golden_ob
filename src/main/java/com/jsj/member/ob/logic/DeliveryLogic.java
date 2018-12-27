@@ -205,6 +205,7 @@ public class DeliveryLogic extends BaseLogic {
         dto.setDeliveryStatus(DeliveryStatus.valueOf(delivery.getStatus()));
         dto.setDeliveryType(DeliveryType.valueOf(delivery.getTypeId()));
         dto.setRemarks(delivery.getRemarks());
+        dto.setUpdateTime(delivery.getUpdateTime());
 
         dto.setDeliveryId(delivery.getDeliveryId());
         dto.setCreateTime(delivery.getCreateTime());
