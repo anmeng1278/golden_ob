@@ -1,6 +1,5 @@
 package com.jsj.member.ob.jobs;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.entity.Delivery;
@@ -11,6 +10,7 @@ import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.SpringContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,9 @@ public class DeliveryStatusJob {
     @Scheduled(cron = "0 0 0 * * ?")
     public void updateDeliveryStatus() {
 
-        System.out.println("任务执行啦");
+        if (SpringContextUtils.getActiveProfile().equals("dev")) {
+            return;
+        }
 
         List<Delivery> deliveries = DeliveryLogic.GetDelivery(DeliveryStatus.DELIVERED, DeliveryType.DISTRIBUTE, PropertyType.ENTITY);
 
