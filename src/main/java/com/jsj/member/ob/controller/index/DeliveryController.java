@@ -1,6 +1,7 @@
 package com.jsj.member.ob.controller.index;
 
 import com.jsj.member.ob.controller.BaseController;
+import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
@@ -8,10 +9,10 @@ import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
 import com.jsj.member.ob.logic.StockLogic;
+import com.jsj.member.ob.service.DeliveryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,9 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("${webconfig.virtualPath}/delivery")
 public class DeliveryController extends BaseController {
+
+    @Autowired
+    DeliveryService deliveryService;
 
 
     /**
@@ -44,8 +48,8 @@ public class DeliveryController extends BaseController {
             List<Integer> stockIds = deliveryDto.getStockDtos().stream().map(StockDto::getStockId).collect(Collectors.toList());
 
             deliveryDto.getStockDtos().forEach(stockDto -> {
-                Integer count = StockLogic.GetProductCount(stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
-                stockDto.setNumber(count);
+                        Integer count = StockLogic.GetProductCount(stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
+                        stockDto.setNumber(count);
                     }
             );
 
@@ -86,5 +90,24 @@ public class DeliveryController extends BaseController {
         return "index/deliveryDetail";
     }
 
+
+
+    /**
+     * 修改状态
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResponseBo updateStatus(HttpServletRequest request) {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        String method = request.getParameter("method");
+
+        DeliveryLogic.UpdateDeliveryStatus(id, method);
+
+        return RestResponseBo.ok("操作成功");
+    }
 
 }

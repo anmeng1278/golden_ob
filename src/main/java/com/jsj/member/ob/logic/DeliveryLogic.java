@@ -15,8 +15,6 @@ import com.jsj.member.ob.logic.delivery.DeliveryBase;
 import com.jsj.member.ob.logic.delivery.DeliveryFactory;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
-import com.jsj.member.ob.utils.DateUtils;
-import com.jsj.member.ob.utils.Md5Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -140,6 +138,29 @@ public class DeliveryLogic extends BaseLogic {
     //region (public) 获得DeliveryStock GetDeliveryStocks
 
     /**
+     * 修改物流状态
+     *
+     * @param deliveryId
+     * @return
+     */
+    public static void UpdateDeliveryStatus(int deliveryId, String method) {
+
+        Delivery delivery = deliveryLogic.deliveryService.selectById(deliveryId);
+
+        if (method.equals("delete")) {
+            delivery.setDeleteTime(DateUtils.getCurrentUnixTime());
+        }
+
+        if (method.equals("confirm")) {
+            delivery.setStatus(DeliveryStatus.SIGNED.getValue());
+            delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+        }
+        deliveryLogic.deliveryService.updateById(delivery);
+
+    }
+
+    /**
      * 获得DeliveryStock
      *
      * @param deliverId
@@ -196,6 +217,7 @@ public class DeliveryLogic extends BaseLogic {
         dto.setDeliveryStatus(DeliveryStatus.valueOf(delivery.getStatus()));
         dto.setDeliveryType(DeliveryType.valueOf(delivery.getTypeId()));
         dto.setRemarks(delivery.getRemarks());
+        dto.setUpdateTime(delivery.getUpdateTime());
 
         dto.setDeliveryId(delivery.getDeliveryId());
         dto.setCreateTime(delivery.getCreateTime());

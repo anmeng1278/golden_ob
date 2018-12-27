@@ -22,6 +22,7 @@ html,body{ background: #F5F5F5;}
 .goods-detail{ line-height: 1.2; padding: 0.5rem 0.4rem;}
 .goods-detail span{ display: block; font-size: 0.3rem; color: #000; font-weight: 700; border-left: 2px solid #C2191F; padding-left: 0.1rem;}
 .main p{ line-height: 1.4; padding: 0 0.4rem; font-size: 0.28rem; color: #333;}
+.main p img{width: 100%;}
 /*main end*/
 
 /*footer start*/
@@ -47,9 +48,9 @@ html,body{ background: #F5F5F5;}
 /*---------- purchase-layer-dl ----------*/
 .purchase-layer-dl{ margin: 0.4rem 0; height: 2.16rem; position: relative;}
 .purchase-layer-dl dt{ width: 2.16rem; height: 2.16; position: absolute; top: 0; left: 0;}
-.purchase-layer-dl dt img{ width: 2.16rem; height: 2.16;}
+.purchase-layer-dl dt img{ width: 2.16rem; height: 2.16rem;}
 .purchase-layer-dl dd{ margin-left: 2.46rem; padding-top: 0.6rem; font-family: "microsoft yahei",arial;}
-.purchase-goods-name{ line-height: 1.2; font-size: 0.36rem; color: #333; font-weight: 700; margin-bottom: 0.2rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.purchase-goods-name{ line-h热卖eight: 1.2; font-size: 0.36rem; color: #333; font-weight: 700; margin-bottom: 0.2rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .purchase-goods-tips{ line-height: 1.2;font-size: 0.28rem; color: #666; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 
 .purchase-layer-div{ overflow: hidden; margin-bottom: 0.4rem;}
