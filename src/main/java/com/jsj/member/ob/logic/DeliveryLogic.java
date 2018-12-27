@@ -2,10 +2,7 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.jsj.member.ob.dto.api.delivery.CreateDeliveryRequ;
-import com.jsj.member.ob.dto.api.delivery.CreateDeliveryResp;
-import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
-import com.jsj.member.ob.dto.api.delivery.DeliveryStockDto;
+import com.jsj.member.ob.dto.api.delivery.*;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
@@ -18,6 +15,8 @@ import com.jsj.member.ob.logic.delivery.DeliveryBase;
 import com.jsj.member.ob.logic.delivery.DeliveryFactory;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
+import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.Md5Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,6 +42,8 @@ public class DeliveryLogic extends BaseLogic {
     @Autowired
     DeliveryStockService deliveryStockService;
 
+    //region (public) 获取未发货数 GetUnDeliveryCount
+
     /**
      * 获取未发货数
      *
@@ -58,6 +59,9 @@ public class DeliveryLogic extends BaseLogic {
         return deliveryLogic.deliveryService.selectCount(wrapper);
 
     }
+    //endregion
+
+    //region (public) 获得配送的库存详情 GetDeliveryStock
 
     /**
      * 获得配送的库存详情
@@ -81,7 +85,9 @@ public class DeliveryLogic extends BaseLogic {
 
         return stockDtos;
     }
+    //endregion
 
+    //region (public) 获取我的配送记录 GetDelivery
 
     /**
      * 获取我的配送记录
@@ -111,6 +117,9 @@ public class DeliveryLogic extends BaseLogic {
         return deliveryDtos;
 
     }
+    //endregion
+
+    //region (public) 获取配送信息 GetDelivery
 
     /**
      * 获取配送信息
@@ -126,6 +135,9 @@ public class DeliveryLogic extends BaseLogic {
         return dto;
 
     }
+    //endregion
+
+    //region (public) 获得DeliveryStock GetDeliveryStocks
 
     /**
      * 获得DeliveryStock
@@ -144,6 +156,9 @@ public class DeliveryLogic extends BaseLogic {
 
         return deliveryStocks;
     }
+    //endregion
+
+    //region (public) 实体转换 ToDto
 
     /**
      * 实体转换
@@ -192,7 +207,9 @@ public class DeliveryLogic extends BaseLogic {
 
         return dto;
     }
+    //endregion
 
+    //region (public) 创建配送 CreateDelivery
 
     /**
      * 创建配送
@@ -204,26 +221,30 @@ public class DeliveryLogic extends BaseLogic {
         DeliveryBase deliveryBase = DeliveryFactory.GetInstance(requ.getPropertyType());
         return deliveryBase.CreateDelivery(requ);
     }
+    //endregion
+
+    //region (public) 获得配送集合 CreateDelivery
 
     /**
      * 获得配送集合
+     *
      * @param deliveryStatus
      * @param deliveryType
      * @return
      */
-    public static List<Delivery> GetDelivery(DeliveryStatus deliveryStatus, DeliveryType deliveryType, PropertyType propertyType){
+    public static List<Delivery> GetDelivery(DeliveryStatus deliveryStatus, DeliveryType deliveryType, PropertyType propertyType) {
 
         EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
 
-        if(deliveryStatus != null){
-            wrapper.where("status = {0} ",deliveryStatus.getValue());
+        if (deliveryStatus != null) {
+            wrapper.where("status = {0} ", deliveryStatus.getValue());
         }
-        if(deliveryType != null){
-            wrapper.where("type_id = {0}",deliveryType);
+        if (deliveryType != null) {
+            wrapper.where("type_id = {0}", deliveryType);
         }
-        if(propertyType != null){
-            wrapper.where("property_type_id = {0}",propertyType);
+        if (propertyType != null) {
+            wrapper.where("property_type_id = {0}", propertyType);
         }
 
         wrapper.orderBy("create_time desc");
@@ -233,6 +254,9 @@ public class DeliveryLogic extends BaseLogic {
         return deliveries;
 
     }
+    //endregion
+
+    //region (public) 获取配送库存 GetDeliveryStocks
 
     /**
      * 获取配送库存
@@ -256,6 +280,9 @@ public class DeliveryLogic extends BaseLogic {
         });
         return deliveryStockDtos;
     }
+    //endregion
+
+    //region (public) 配送库存实体转换 ToDeliveryStockDto
 
     /**
      * 配送库存实体转换
@@ -275,6 +302,9 @@ public class DeliveryLogic extends BaseLogic {
         return dto;
 
     }
+    //endregion
+
+    //region (public) 验证次卡配送状态 getUnUsedActivityCodes
 
     /**
      * 验证次卡配送状态
@@ -303,6 +333,9 @@ public class DeliveryLogic extends BaseLogic {
         deliveryStockDtos = GetDeliveryStocks(delivery.getDeliveryId(), openId);
         return deliveryStockDtos;
     }
+    //endregion
+
+    //region (public) 获取未开卡信息 getUnCreateGoldenCard
 
     /**
      * 获取未开卡信息
@@ -323,4 +356,73 @@ public class DeliveryLogic extends BaseLogic {
         return ToDto(delivery);
 
     }
+    //endregion
+
+
+    //region (public) 使用活动码 ActivityCodeVerify
+
+    /**
+     * 使用活动码
+     *
+     * @param requ
+     * @return
+     */
+    public static VerifyActivityCodeResp VerifyActivityCode(VerifyActivityCodeRequ requ) {
+
+        VerifyActivityCodeResp resp = new VerifyActivityCodeResp();
+        if (StringUtils.isEmpty(requ.getActivityCode())) {
+            resp.setRespCd("9999");
+            resp.setRespMsg("活动码不能为空");
+            return resp;
+        }
+
+        int timeStamp = requ.getTimeStamp();
+        String activityCode = requ.getActivityCode();
+
+        if (Math.abs(DateUtils.getCurrentUnixTime() - timeStamp) >= 60 * 10) {
+            resp.setRespCd("9999");
+            resp.setRespMsg("请求已过期");
+            return resp;
+        }
+
+        String sign = String.format("%s%dJSYX", activityCode, timeStamp);
+        sign = Md5Utils.MD5(sign).toLowerCase();
+
+        if (!requ.getSign().equals(sign)) {
+            resp.setRespCd("9999");
+            resp.setRespMsg("非法请求");
+            return resp;
+        }
+
+        Wrapper<DeliveryStock> wrapper = new EntityWrapper<>();
+        wrapper.where("activity_code = {0}", activityCode);
+
+        DeliveryStock deliveryStock = deliveryLogic.deliveryStockService.selectOne(wrapper);
+        if (deliveryStock == null) {
+            resp.setRespCd("9999");
+            resp.setRespMsg(String.format("没有找到活动码：%s", activityCode));
+            return resp;
+        }
+
+        Delivery delivery = deliveryLogic.deliveryService.selectById(deliveryStock.getDeliveryId());
+        if (!delivery.getStatus().equals(DeliveryStatus.SIGNED.getValue())) {
+
+            delivery.setStatus(DeliveryStatus.SIGNED.getValue());
+            String remark = delivery.getRemarks();
+            if(remark != null){
+                remark += String.format("使用活动码：%s %s %s", activityCode, requ.getAirportName(), requ.getVipHallName());
+            } else {
+                remark = String.format("使用活动码：%s %s %s", activityCode, requ.getAirportName(), requ.getVipHallName());
+            }
+            delivery.setRemarks(remark);
+
+            deliveryLogic.deliveryService.updateById(delivery);
+        }
+
+        resp.setRespCd("0000");
+        resp.setRespMsg("核销成功");
+        return resp;
+
+    }
+    //endregion
 }
