@@ -36,12 +36,15 @@ webconfig:
   # 公众号 appSecrect
   appSecrect: 455c2d8d53c8cd37cca073e579fac95f
 
+  ## 虚拟目录
   virtualPath: ""
 
+  ## 严选活动码生成地址
   activityUrl: http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx
-
-  partnerLoginName: guangxiyinlian
-  partnerLoginPassword: gxylceshi
+  ## 严选登录名
+  partnerLoginName: jinseyanxuan
+  ## 严选登录密码
+  partnerLoginPassword: jinseyanxuan_123
 
 redis:
   host: 172.16.5.64

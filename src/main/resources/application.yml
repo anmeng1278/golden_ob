@@ -102,12 +102,16 @@ webconfig:
 
   virtualPath: ""
 
+  ## 当前站点域名
   host:
 
+  ##二维码查看网址
   qrcodeUrl: http://mobile.qq.com/qrcode?url=%s&width=300&height=300
 
-  partnerLoginName: guangxiyinlian
-  partnerLoginPassword: gxylceshi
+  ## 严选登录名
+  partnerLoginName: jinseyanxuan
+  ## 严选登录密码
+  partnerLoginPassword: jinseyanxuan_123
 
   WxTemplate:
     ## 支付成功
