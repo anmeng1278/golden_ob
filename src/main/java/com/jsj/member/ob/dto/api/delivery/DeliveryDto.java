@@ -94,6 +94,11 @@ public class DeliveryDto {
     private Integer createTime;
 
     /**
+     * 修改时间
+     */
+    private Integer updateTime;
+
+    /**
      * 配送的库存信息
      */
     private List<StockDto> stockDtos;
@@ -321,5 +326,13 @@ public class DeliveryDto {
 
     public void setDeliveryStatus(DeliveryStatus deliveryStatus) {
         this.deliveryStatus = deliveryStatus;
+    }
+
+    public Integer getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Integer updateTime) {
+        this.updateTime = updateTime;
     }
 }

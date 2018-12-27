@@ -58,3 +58,8 @@ input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none;  margi
 .share-layer-sanjiao{width:0; height:0; border-width:10px 0 10px 10px; border-style:solid; border-color:transparent transparent transparent #C2191F; -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); -webkit-transform: rotate(45deg); transform: rotate(45deg); position: absolute; top: -0.22rem; right: -0.04rem;z-index: 1;}
 .share-layer-p{ line-height: 1.4; font-size: 0.36rem; color: #fff; padding: 0.3rem 0.5rem;}
 /*share-layer end*/
+
+/*coupon-no-list start*/
+.coupon-no-list{ margin-top: 2.4rem; text-align: center;}
+.coupon-no-list dd{ font-size: 0.32rem; color: #000; padding-top: 0.6rem;}
+/*coupon-no-list end*/
