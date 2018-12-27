@@ -9,6 +9,7 @@ import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
+import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.OrderFlag;
 import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
@@ -43,6 +44,8 @@ public class OrderLogic extends BaseLogic {
     @Autowired
     OrderProductService orderProductService;
 
+    //region (public) 创建订单，普通订单、团单、秒杀单、 CreateOrder
+
     /**
      * 创建订单，普通订单、团单、秒杀单、
      *
@@ -60,7 +63,9 @@ public class OrderLogic extends BaseLogic {
         return orderBase.CreateOrder(requ);
 
     }
+    //endregion
 
+    //region (public) 获取订单商品列表 GetOrderProducts
 
     /**
      * 获取订单商品列表
@@ -95,6 +100,9 @@ public class OrderLogic extends BaseLogic {
 
         return orderProductDtos;
     }
+    //endregion
+
+    //region (public) 获取订单数 GetOrderCount
 
     /**
      * 获取订单数
@@ -114,6 +122,9 @@ public class OrderLogic extends BaseLogic {
         return orderLogic.orderService.selectCount(wrapper);
 
     }
+    //endregion
+
+    //region (public) 取消订单 CancelOrder
 
     /**
      * 取消订单
@@ -153,6 +164,9 @@ public class OrderLogic extends BaseLogic {
         return orders.stream().map(o -> o.getOrderId()).collect(Collectors.toList());
 
     }
+    //endregion
+
+    //region (public) 取消订单 CancelOrder
 
     /**
      * 取消订单
@@ -179,6 +193,9 @@ public class OrderLogic extends BaseLogic {
         orderLogic.orderService.updateById(order);
 
     }
+    //endregion
+
+    //region (public) 删除订单 DeleteOrder
 
     /**
      * 删除订单
@@ -203,6 +220,9 @@ public class OrderLogic extends BaseLogic {
         orderLogic.orderService.updateById(order);
 
     }
+    //endregion
+
+    //region (public) 获得用户的所有订单 GetOrders
 
     /**
      * 获得用户的所有订单
@@ -213,6 +233,9 @@ public class OrderLogic extends BaseLogic {
     public static List<OrderDto> GetOrders(String openId) {
         return OrderLogic.GetOrders(openId, OrderFlag.ALLORDERS);
     }
+    //endregion
+
+    //region (public) 获得用户所有订单或所有待支付订单 GetOrders
 
     /**
      * 获得用户所有订单或所有待支付订单
@@ -250,7 +273,15 @@ public class OrderLogic extends BaseLogic {
         }
         return orderDtos;
     }
+    //endregion
 
+    //region (public) 实体转换 ToDto
+
+    /**
+     * 实体转换
+     * @param entity
+     * @return
+     */
     public static OrderDto ToDto(Order entity) {
 
         OrderDto dto = new OrderDto();
@@ -278,7 +309,15 @@ public class OrderLogic extends BaseLogic {
         return dto;
 
     }
+    //endregion
 
+    //region (public) 获取订单 GetOrder
+
+    /**
+     * 获取订单
+     * @param orderId
+     * @return
+     */
     public static OrderDto GetOrder(int orderId) {
 
         Order entity = orderLogic.orderService.selectById(orderId);
@@ -286,7 +325,15 @@ public class OrderLogic extends BaseLogic {
 
         return dto;
     }
+    //endregion
 
+    //region (public) 获取订单 GetOrder
+
+    /**
+     * 获取订单
+     * @param orderUniqueCode
+     * @return
+     */
     public static OrderDto GetOrder(String orderUniqueCode) {
 
         Wrapper<Order> wrapper = new EntityWrapper<>();
@@ -297,4 +344,37 @@ public class OrderLogic extends BaseLogic {
 
         return dto;
     }
+    //endregion
+
+    //region (public) 获取秒杀活动成功后的秒杀订单 GetOrder
+
+    /**
+     * 获取秒杀活动成功后的秒杀订单
+     *
+     * @param activityId
+     * @param openId
+     * @param activityType
+     * @param createTime
+     * @return
+     */
+    public static OrderDto GetOrder(int activityId, String openId, ActivityType activityType, int createTime) {
+
+        Wrapper<Order> wrapper = new EntityWrapper<>();
+
+        wrapper.where("activity_id = {0}", activityId);
+        wrapper.where("type_id = {0}", activityType.getValue());
+        wrapper.where("create_time >= {0}", createTime);
+        wrapper.where("open_id = {0}", openId);
+
+        wrapper.orderBy("create_time desc");
+
+        Order order = orderLogic.orderService.selectOne(wrapper);
+        if (order != null) {
+            return ToDto(order);
+        }
+
+        return null;
+
+    }
+    //endregion
 }

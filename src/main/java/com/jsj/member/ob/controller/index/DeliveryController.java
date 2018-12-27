@@ -48,7 +48,7 @@ public class DeliveryController extends BaseController {
             List<Integer> stockIds = deliveryDto.getStockDtos().stream().map(StockDto::getStockId).collect(Collectors.toList());
 
             deliveryDto.getStockDtos().forEach(stockDto -> {
-                        Integer count = StockLogic.GetProductCount(stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
+                        Integer count = StockLogic.GetProductCount(openId,stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
                         stockDto.setNumber(count);
                     }
             );
