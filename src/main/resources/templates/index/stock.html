@@ -161,7 +161,7 @@
                                 <p class="strok-dd-num">库存：<span th:text="${info.number}">0</span></p>
                                 <div class="purchase-num" style="display: none;">
                                     <em class="purchase-num-reduce"></em>
-                                    <input type="text" value="0" class="num" name="num"/>
+                                    <input type="text" value="0" readonly="readonly" unselectable="on" class="num" name="num"/>
                                     <em class="purchase-num-add"></em>
 
                                     <input type="hidden" name="productId" th:value="${info.productId}"/>
