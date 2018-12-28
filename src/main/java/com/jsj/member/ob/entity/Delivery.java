@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Delivery 提货表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2018-12-28
  */
 @TableName("_delivery")
 public class Delivery implements Serializable {
@@ -62,6 +61,8 @@ public class Delivery implements Serializable {
      */
 	@TableField("id_number")
 	private String idNumber;
+	@TableField("id_type_id")
+	private Integer idTypeId;
     /**
      * 航班号
      */
@@ -85,7 +86,7 @@ public class Delivery implements Serializable {
      * 卡生效日期、活动码使用日期
      */
 	@TableField("effective_date")
-	private String effectiveDate;
+	private Integer effectiveDate;
     /**
      * 备注
      */
@@ -194,6 +195,14 @@ public class Delivery implements Serializable {
 		this.idNumber = idNumber;
 	}
 
+	public Integer getIdTypeId() {
+		return idTypeId;
+	}
+
+	public void setIdTypeId(Integer idTypeId) {
+		this.idTypeId = idTypeId;
+	}
+
 	public String getFlightNumber() {
 		return flightNumber;
 	}
@@ -226,11 +235,11 @@ public class Delivery implements Serializable {
 		this.address = address;
 	}
 
-	public String getEffectiveDate() {
+	public Integer getEffectiveDate() {
 		return effectiveDate;
 	}
 
-	public void setEffectiveDate(String effectiveDate) {
+	public void setEffectiveDate(Integer effectiveDate) {
 		this.effectiveDate = effectiveDate;
 	}
 
@@ -303,6 +312,7 @@ public class Delivery implements Serializable {
 			", contactName=" + contactName +
 			", mobile=" + mobile +
 			", idNumber=" + idNumber +
+			", idTypeId=" + idTypeId +
 			", flightNumber=" + flightNumber +
 			", airportCode=" + airportCode +
 			", airportName=" + airportName +

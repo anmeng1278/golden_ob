@@ -183,7 +183,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">使用日期:</label>
                 <div class="layui-input-inline layui-form-label-col">
-                    <th:block th:text="${info.effectiveDate}"></th:block>
+                    <th:block th:text="${dateUtils.formatDateByUnixTime(info.effectiveDate, 'yyyy-MM-dd HH:mm:ss')}" ></th:block>
                 </div>
             </div>
 
@@ -245,7 +245,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">生效日期:</label>
                 <div class="layui-input-inline layui-form-label-col" style="width: auto">
-                    <th:block th:text="${info.effectiveDate}"></th:block>
+                    <th:block th:text="${dateUtils.formatDateByUnixTime(info.effectiveDate, 'yyyy-MM-dd HH:mm:ss')}" ></th:block>
                 </div>
             </div>
         </th:block>

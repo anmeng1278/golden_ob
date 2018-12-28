@@ -37,6 +37,8 @@ public class CreateDeliveryRequ {
 
     private String idNumber;
 
+    private int idTypeId;
+
     private String flightNumber;
 
     private String airportCode;
@@ -54,7 +56,7 @@ public class CreateDeliveryRequ {
     private int districtId;
 
     //自提时间、生效日期
-    private String effectiveDate;
+    private int effectiveDate;
 
     public List<StockDto> getStockDtos() {
         return stockDtos;
@@ -168,11 +170,19 @@ public class CreateDeliveryRequ {
         this.districtId = districtId;
     }
 
-    public String getEffectiveDate() {
+    public int getEffectiveDate() {
         return effectiveDate;
     }
 
-    public void setEffectiveDate(String effectiveDate) {
+    public void setEffectiveDate(int effectiveDate) {
         this.effectiveDate = effectiveDate;
+    }
+
+    public int getIdTypeId() {
+        return idTypeId;
+    }
+
+    public void setIdTypeId(int idTypeId) {
+        this.idTypeId = idTypeId;
     }
 }

@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Product 商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2018-12-28
  */
 @TableName("_product")
 public class Product implements Serializable {
@@ -39,6 +38,8 @@ public class Product implements Serializable {
      */
 	@TableField("property_type_id")
 	private Integer propertyTypeId;
+	@TableField("card_type_id")
+	private Integer cardTypeId;
     /**
      * 简介
      */
@@ -126,6 +127,14 @@ public class Product implements Serializable {
 
 	public void setPropertyTypeId(Integer propertyTypeId) {
 		this.propertyTypeId = propertyTypeId;
+	}
+
+	public Integer getCardTypeId() {
+		return cardTypeId;
+	}
+
+	public void setCardTypeId(Integer cardTypeId) {
+		this.cardTypeId = cardTypeId;
 	}
 
 	public String getIntroduce() {
@@ -240,6 +249,7 @@ public class Product implements Serializable {
 			", productName=" + productName +
 			", typeId=" + typeId +
 			", propertyTypeId=" + propertyTypeId +
+			", cardTypeId=" + cardTypeId +
 			", introduce=" + introduce +
 			", useIntro=" + useIntro +
 			", unit=" + unit +

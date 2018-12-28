@@ -11,6 +11,7 @@ import com.jsj.member.ob.enums.TemplateType;
 import com.jsj.member.ob.logic.ConfigLogic;
 import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.rabbitmq.BaseDto;
+import com.jsj.member.ob.utils.DateUtils;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -266,7 +267,6 @@ public class TemplateDto extends BaseDto {
     }
 
 
-
     /**
      * 活动码使用成功模板消息
      *
@@ -346,13 +346,17 @@ public class TemplateDto extends BaseDto {
             截止时间：{{keyword3.DATA}}
             {{remark.DATA}}
         */
+
+        //生效时间
+        String effectiveDate = DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getEffectiveDate() + ""), "yyyy-MM-dd");
+
         TemplateDto dto = new TemplateDto();
         dto.setToUser(delivery.getOpenId());
         dto.setTemplateType(TemplateType.OPENCARDCONFIRM);
         dto.setFirst("正在为您开卡，请您耐心等待\n");
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(delivery.getProductDtos().get(0).getProductName() + "", color));
-        dto.getData().put("keyword2", new TemplateData(delivery.getEffectiveDate(), color));
+        dto.getData().put("keyword2", new TemplateData(effectiveDate, color));
         dto.getData().put("keyword3", new TemplateData("依据卡说明", color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);

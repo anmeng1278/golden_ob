@@ -11,6 +11,27 @@
     <script th:src="${ob.Url('/index/js/GiftsDetail.js')}" type="text/javascript"
             charset="utf-8"></script>
 
+    <script th:inline="javascript">
+        $(function () {
+
+            var subscribe = [[${wx.subscribe}]];
+            $('.coupon-tips').on('click', function () {
+                if (!subscribe || subscribe == 0) {
+                    //点击立即使用关注二维码弹层显示
+                    $('.QR-code-layer').show();
+                } else {
+                    //已关注，转到严选首页
+                    location.href = [[${ob.Nav('/')}]];
+                }
+            });
+            //关注二维码弹层隐藏
+            $('.QR-code-layer-bg').on('click', function () {
+                $('.QR-code-layer').hide();
+            });
+
+        });
+    </script>
+
 </th:block>
 
 <th:block layout:fragment="css">
