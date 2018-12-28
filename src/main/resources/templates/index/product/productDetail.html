@@ -158,7 +158,7 @@
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                location.href = location.href;
+                                // location.href = location.href;
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});

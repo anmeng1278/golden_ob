@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -257,6 +258,7 @@ public class OrderCombination extends OrderBase {
         int number = requ.getNumber();
         //订单金额
         double orderAmount = activityDto.getSalePrice() * number;
+        orderAmount = new BigDecimal(orderAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
         resp.setAmount(orderAmount);
         resp.setCouponAmount(0);

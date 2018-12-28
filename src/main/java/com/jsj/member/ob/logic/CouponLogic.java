@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,6 +114,10 @@ public class CouponLogic extends BaseLogic {
             wechatCoupon.setStatus(CouponStatus.USED.getValue());
             couponLogic.wechatCouponService.updateById(wechatCoupon);
         }
+
+        payAmount = new BigDecimal(payAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        discountAmount = new BigDecimal(discountAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+
         resp.setWechatCouponId(requ.getWechatCouponId());
         resp.setPayAmount(payAmount);
         resp.setDiscountAmount(discountAmount);

@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -200,6 +201,11 @@ public class OrderNormal extends OrderBase {
             orderAmount = useCouponResp.getPayAmount();
             couponAmount = useCouponResp.getDiscountAmount();
         }
+
+        orderAmount = new BigDecimal(orderAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        couponAmount = new BigDecimal(couponAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        originalAmount = new BigDecimal(originalAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+
 
         CreateOrderResp resp = new CreateOrderResp();
 
