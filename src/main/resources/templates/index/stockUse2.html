@@ -143,7 +143,7 @@
                                    th:text="${vip.initials}"></a>
                                 <div class="city-list-div">
                                     <th:block th:each="vvip :${vip.airportDtos}">
-                                        <span th:attr="data-ifhot=${vvip.ifhot},data-airport-id=${vvip.airportId},data-airport-code=${vvip.airportCode}"
+                                        <span onclick="javascript:chooseNet(this);" th:attr="data-ifhot=${vvip.ifhot},data-airport-id=${vvip.airportId},data-airport-code=${vvip.airportCode}"
                                               th:text="${vvip.airportName}"></span>
                                     </th:block>
                                 </div>
@@ -178,7 +178,7 @@
                                    th:text="${vip.initials}"></a>
                                 <div class="city-list-div">
                                     <th:block th:each="vvip :${vip.airportDtos}">
-                                        <span th:attr="data-ifhot=${vvip.ifhot},data-airport-id=${vvip.airportId},data-airport-code=${vvip.airportCode}"
+                                        <span onclick="javascript:chooseNet(this);" th:attr="data-ifhot=${vvip.ifhot},data-airport-id=${vvip.airportId},data-airport-code=${vvip.airportCode}"
                                               th:text="${vvip.airportName}"></span>
                                     </th:block>
                                 </div>
@@ -221,7 +221,7 @@
                         <ul>
                             <th:block th:each="vip :${airports}">
                                 <th:block th:each="vvip :${vip.airportDtos}">
-                                    <li th:if="${vvip.ifhot}"
+                                    <li onclick="javascript:chooseNet(this);" th:if="${vvip.ifhot}"
                                         th:attr="data-ifhot=${vvip.ifhot},data-airport-id=${vvip.airportId},data-airport-code=${vvip.airportCode}"
                                         th:text="${vvip.airportName}"></li>
                                 </th:block>

@@ -1,5 +1,5 @@
-$(function(){
-	//选项卡
+$(function () {
+    //选项卡
     $('.city-list-ul li').click(function () {
         var index = $(this).index();
         $(this).addClass('city-cur').siblings().removeClass('city-cur');
@@ -8,19 +8,19 @@ $(function(){
             scrollTop: "0px"
         }, 300);
     });
-    
+
     //点击搜索显示
     $('.search-btn').click(function () {
         $('.search-layer').show()
     });
-    
+
     //点击取消搜索隐藏
     $('#cancelBtn').click(function () {
         $('.search-layer').hide()
     });
-    
-	
-	//右侧点击 定位滑动
+
+
+    //右侧点击 定位滑动
     $(".slider-nav a,.slider-nav2 a").click(function () {
         $("html,body").animate({
             scrollTop: $($(this).attr("href")).offset().top - 60 + "px"
@@ -69,7 +69,7 @@ $(function(){
         }
         var html = [];
         $.each(items, function (i, item) {
-            html.push("<li data-airport-id='" + item.id + "' data-airport-code='" + item.code + "'>" + item.name + "</li>")
+            html.push("<li onclick=\"javascript:chooseNet(this);\" data-airport-id='" + item.id + "' data-airport-code='" + item.code + "'>" + item.name + "</li>")
         });
         $("div.search_list ul").append(html.join(""));
     }
@@ -80,20 +80,11 @@ $(function(){
         createHtml(items);
     });
 
-    //点击服务网点
-    $(document).on("click", "*[data-airport-id]", function(){
-
-        var airportName = $(this).html();
-        var airportCode = $(this).attr("data-airport-code");
-
-        $("div.content-city").hide();
-        $("div.content-form").show();
-
-        $("#SelfCity").html(airportName);
-        $(":hidden[name='airportName']").val(airportName);
-        $(":hidden[name='airportCode']").val(airportCode);
-
-    });
+    // //点击服务网点
+    // $(document).on("click", "*[data-airport-id]", function () {
+    //
+    //
+    // });
 
     //网点关闭
     $("div.content-city img.close-btn").click(function () {
@@ -102,3 +93,16 @@ $(function(){
     });
 
 });
+
+function chooseNet(obj) {
+
+    var airportName = $(obj).html();
+    var airportCode = $(obj).attr("data-airport-code");
+
+    $("div.content-city").hide();
+    $("div.content-form").show();
+
+    $("#SelfCity").html(airportName);
+    $(":hidden[name='airportName']").val(airportName);
+    $(":hidden[name='airportCode']").val(airportCode);
+}
