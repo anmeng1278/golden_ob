@@ -8,6 +8,7 @@ import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.enums.PropertyType;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
@@ -40,7 +41,6 @@ public class AdminActivityController {
 
     @Autowired
     private DictService dictService;
-
 
 
     /**
@@ -167,6 +167,13 @@ public class AdminActivityController {
         boolean ifpass = !StringUtils.isBlank(request.getParameter("ifpass"));
 
         if (activityId > 0) {
+
+            //校验活动是否允许修改
+            boolean allowModify = ActivityLogic.checkActivity(activityId);
+            if (!allowModify) {
+                throw new TipException("秒杀活动已开始，并且已有用户抢购成功！<br />不允许修改。");
+            }
+
             //修改
             activity = activityService.selectById(activityId);
 
@@ -189,6 +196,7 @@ public class AdminActivityController {
             activityService.updateById(activity);
 
         } else {
+
             //添加
             activity.setActivityName(activityName);
             activity.setStockCount(stockCount);

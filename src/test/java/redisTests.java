@@ -2,6 +2,7 @@ import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.enums.SingletonMap;
 import com.jsj.member.ob.redis.AccessKey;
+import com.jsj.member.ob.redis.ProductKey;
 import com.jsj.member.ob.redis.RedisService;
 import com.jsj.member.ob.redis.StockKey;
 import com.jsj.member.ob.utils.ThreadPoolUtils;
@@ -226,6 +227,19 @@ public class redisTests {
 
         String useStock = redisService.get(StockKey.token, "UseStock", String.class);
         System.out.println(useStock);
+    }
+
+    @Test
+    public void tt() {
+        Jedis resource = jedisPool.getResource();
+        ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", 4, 7, 9));
+
+        String key = String.format("%s:%s", productKey.getPrefix(), "INIT");
+        String readyKey = String.format("%s:%s", productKey.getPrefix(), "READYTIME");
+        String resultKey = String.format("%s:%s", productKey.getPrefix(), "RESULT");
+
+        resource.del(key, readyKey, resultKey);
+
     }
 
 }
