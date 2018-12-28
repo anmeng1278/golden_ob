@@ -13,6 +13,7 @@
         <result column="contact_name" property="contactName" />
         <result column="mobile" property="mobile" />
         <result column="id_number" property="idNumber" />
+        <result column="id_type_id" property="idTypeId" />
         <result column="flight_number" property="flightNumber" />
         <result column="airport_code" property="airportCode" />
         <result column="airport_name" property="airportName" />
@@ -29,7 +30,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        delivery_id AS deliveryId, open_id AS openId, express_number AS expressNumber, status, type_id AS typeId, property_type_id AS propertyTypeId, contact_name AS contactName, mobile, id_number AS idNumber, flight_number AS flightNumber, airport_code AS airportCode, airport_name AS airportName, address, effective_date AS effectiveDate, remarks, province_id AS provinceId, city_id AS cityId, district_id AS districtId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        delivery_id AS deliveryId, open_id AS openId, express_number AS expressNumber, status, type_id AS typeId, property_type_id AS propertyTypeId, contact_name AS contactName, mobile, id_number AS idNumber, id_type_id AS idTypeId, flight_number AS flightNumber, airport_code AS airportCode, airport_name AS airportName, address, effective_date AS effectiveDate, remarks, province_id AS provinceId, city_id AS cityId, district_id AS districtId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

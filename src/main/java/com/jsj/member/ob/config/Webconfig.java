@@ -23,7 +23,7 @@ public class Webconfig {
     //微信公众号支付
     private String payTradeUrl;
 
-     //授权码
+    //授权码
     private String PlatformAppId;
 
     private String PlatformToken;
@@ -37,7 +37,7 @@ public class Webconfig {
 
     private String ReqURL;
 
-    private  String   appId;
+    private String appId;
 
     private String appSecrect;
 
@@ -52,6 +52,11 @@ public class Webconfig {
     private String partnerLoginPassword;
 
     private String host;
+
+    /**
+     * 开卡地址
+     */
+    private String openCardUrl;
 
     public String getAppId() {
         return appId;
@@ -211,5 +216,13 @@ public class Webconfig {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public String getOpenCardUrl() {
+        return openCardUrl;
+    }
+
+    public void setOpenCardUrl(String openCardUrl) {
+        this.openCardUrl = openCardUrl;
     }
 }

@@ -58,6 +58,7 @@ public class ShareController extends BaseController {
         List<OrderRedpacketCouponDto> redpacketCoupons = RedpacketLogic.GetOrderRedpacketDtos(orderDto.getOrderId(), true);
         request.setAttribute("redpacketCoupons", redpacketCoupons);
 
+
         return "index/redPacket";
 
     }

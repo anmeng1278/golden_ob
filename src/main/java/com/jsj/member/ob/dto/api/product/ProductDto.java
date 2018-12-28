@@ -63,6 +63,11 @@ public class ProductDto {
     private int parentProductId;
 
     /**
+     * 卡类型
+     */
+    private int cardTypeId;
+
+    /**
      * 使用说明
      */
     private String useIntro;
@@ -257,5 +262,13 @@ public class ProductDto {
 
     public void setProductSpecDtos(List<ProductSpecDto> productSpecDtos) {
         this.productSpecDtos = productSpecDtos;
+    }
+
+    public int getCardTypeId() {
+        return cardTypeId;
+    }
+
+    public void setCardTypeId(int cardTypeId) {
+        this.cardTypeId = cardTypeId;
     }
 }

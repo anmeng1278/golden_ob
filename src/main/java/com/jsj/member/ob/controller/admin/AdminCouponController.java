@@ -10,6 +10,7 @@ import com.jsj.member.ob.entity.CouponProduct;
 import com.jsj.member.ob.entity.Product;
 import com.jsj.member.ob.enums.CouponType;
 import com.jsj.member.ob.enums.CouponUseRange;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.CouponProductService;
 import com.jsj.member.ob.service.CouponService;
@@ -139,9 +140,35 @@ public class AdminCouponController {
         Coupon coupon = new Coupon();
 
         String couponName = request.getParameter("couponName");
+        if (StringUtils.isEmpty(couponName)) {
+            throw new TipException("优惠券名称不能为空");
+        }
+        if (StringUtils.isEmpty(request.getParameter("amount"))) {
+            throw new TipException("优惠券金额不能为空");
+        }
         Double amount = Double.valueOf(request.getParameter("amount"));
-        int typeId = Integer.parseInt(request.getParameter("typeId"));
+        if (amount <= 0) {
+            throw new TipException("金额输入错误");
+        }
+        if (StringUtils.isEmpty(request.getParameter("typeId"))) {
+            throw new TipException("优惠券类型不能为空");
+        }
         String instruction = request.getParameter("instruction");
+        if (StringUtils.isEmpty(instruction)) {
+            throw new TipException("使用说明不能为空");
+        }
+
+        int typeId = Integer.parseInt(request.getParameter("typeId"));
+
+        CouponType couponType = CouponType.valueOf(typeId);
+        switch (couponType) {
+            case DISCOUNT:
+                if (amount >= 1) {
+                    throw new TipException("折扣金额输入错误，只能输入0-1间小数。<br />示例：8折输入0.8；");
+                }
+                break;
+        }
+
         String remarks = request.getParameter("remarks");
         int userRange = Integer.parseInt(request.getParameter("userRange"));
         int validDays = Integer.parseInt(request.getParameter("validDays"));
@@ -183,10 +210,10 @@ public class AdminCouponController {
         //添加or更新商品
         couponId = coupon.getCouponId();
         String[] productIds = request.getParameterValues("productId");
-        if(productIds != null){
-            for (int i=0;i<productIds.length;i++){
+        if (productIds != null) {
+            for (int i = 0; i < productIds.length; i++) {
                 int productId = Integer.parseInt(productIds[i]);
-                CouponProduct couponProduct = couponProductService.selectOne(new EntityWrapper<CouponProduct>().where("coupon_id={0} and product_id={1} ", couponId,productId));
+                CouponProduct couponProduct = couponProductService.selectOne(new EntityWrapper<CouponProduct>().where("coupon_id={0} and product_id={1} ", couponId, productId));
 
                 //添加优惠券商品
                 if (couponProduct == null) {
@@ -207,7 +234,6 @@ public class AdminCouponController {
         }
         return RestResponseBo.ok("保存成功");
     }
-
 
 
     /**
@@ -240,6 +266,7 @@ public class AdminCouponController {
 
     /**
      * 优惠券产品信息
+     *
      * @param request
      * @return
      */

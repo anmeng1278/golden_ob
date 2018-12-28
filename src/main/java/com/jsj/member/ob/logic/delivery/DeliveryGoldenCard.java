@@ -64,9 +64,6 @@ public class DeliveryGoldenCard extends DeliveryBase {
         if (!com.jsj.member.ob.utils.StringUtils.isIdNumber(requ.getIdNumber())) {
             throw new TipException("证件号格式错误");
         }
-        if (!com.jsj.member.ob.utils.StringUtils.isStrDate(requ.getEffectiveDate())) {
-            throw new TipException("生效日期格式错误");
-        }
 
 
         String openId = requ.getBaseRequ().getOpenId();
@@ -86,6 +83,7 @@ public class DeliveryGoldenCard extends DeliveryBase {
         delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
         delivery.setContactName(requ.getContactName());
         delivery.setIdNumber(requ.getIdNumber());
+        delivery.setIdTypeId(requ.getIdTypeId());
         delivery.setEffectiveDate(requ.getEffectiveDate());
 
         delivery.setMobile(Long.parseLong(requ.getMobile()));

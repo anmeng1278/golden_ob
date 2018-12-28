@@ -45,7 +45,14 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         if (SpringContextUtils.getActiveProfile().equals("dev")) {
-            return true;
+
+            User wxUser = new User();
+            wxUser.setOpenid("oeQDZt_pkkN1odTzWQrIr_5mhvcA");
+            wxUser.setNickname("测试账户");
+            wxUser.setSubscribe(1);
+
+            request.getSession().setAttribute("wx", wxUser);
+
         }
 
         //当前用户是否登录
@@ -107,10 +114,12 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                 WechatLogic.Init(wxUser);
                 request.getSession().setAttribute("wx", wxUser);
 
-                return true;
             }
 
         }
+
+        User wx = (User) request.getSession().getAttribute("wx");
+        request.setAttribute("wx", wx);
 
         return true;
     }

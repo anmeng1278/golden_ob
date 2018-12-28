@@ -27,10 +27,7 @@ spring:
     publisher-returns: true
 
 webconfig:
-  # 图片服务器
-  imgServerURL: http://img.jsjinfo.cn/upload
-  # 是否上传到图片服务器 (true为上传到图片服务器 false为上传到本地服务器)
-  imgServerSwitch: false
+
   # 公众号appid
   appId: wxe0942a1e2a5f53e3
   # 公众号 appSecrect
@@ -41,10 +38,15 @@ webconfig:
 
   ## 严选活动码生成地址
   activityUrl: http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx
+
+  ## 开卡地址
+  openCardUrl: http://172.16.6.134/awk/v3/ktapi/OpenVPCardFromWx
+
   ## 严选登录名
   partnerLoginName: jinseyanxuan
   ## 严选登录密码
   partnerLoginPassword: jinseyanxuan_123
+
 
 redis:
   host: 172.16.5.64

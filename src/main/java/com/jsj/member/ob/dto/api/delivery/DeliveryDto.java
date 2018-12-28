@@ -72,6 +72,11 @@ public class DeliveryDto {
      */
     private String idNumber;
 
+    /**
+     * 证件类型
+     */
+    private Integer idTypeId;
+
 
     /**
      * 航班号
@@ -104,7 +109,7 @@ public class DeliveryDto {
     private List<StockDto> stockDtos;
 
     //生效日期
-    private String effectiveDate;
+    private int effectiveDate;
 
     /**
      * 配送的商品信息
@@ -304,11 +309,11 @@ public class DeliveryDto {
         this.stockDtos = stockDtos;
     }
 
-    public String getEffectiveDate() {
+    public int getEffectiveDate() {
         return effectiveDate;
     }
 
-    public void setEffectiveDate(String effectiveDate) {
+    public void setEffectiveDate(int effectiveDate) {
         this.effectiveDate = effectiveDate;
     }
 
@@ -334,5 +339,13 @@ public class DeliveryDto {
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getIdTypeId() {
+        return idTypeId;
+    }
+
+    public void setIdTypeId(Integer idTypeId) {
+        this.idTypeId = idTypeId;
     }
 }

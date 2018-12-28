@@ -26,7 +26,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">类型</label>
             <div class="layui-input-inline">
-                <select name="typeId" lay-verify="req" title="类型" th:disabled="${info.couponId>0}">
+                <select name="typeId" lay-verify="req" lay-filter="typeId" title="类型" th:disabled="${info.couponId>0}">
                     <option value="">请选择</option>
                     <th:block th:each="pps : ${couponTypes}">
                         <option th:value="${pps.value}" th:selected="${info.typeId==pps.value}"
@@ -35,7 +35,7 @@
                 </select>
             </div>
 
-            <label class="layui-form-label">金额</label>
+            <label class="layui-form-label" id="couponAmountText">金额</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" name="amount"
                        lay-verify="float4"
@@ -169,6 +169,24 @@
                 $(":checkbox[name='userRange'][value='" + userRange + "']").next("div.layui-form-checkbox").trigger("click");
             }
 
+            function setCouponType(value) {
+                if (value == 1) {
+                    //直减券
+                    $("#couponAmountText").html("金额");
+                    return;
+                }
+                if (value == 2) {
+                    $("#couponAmountText").html("折扣");
+                    return;
+                }
+                alert("未处理的优惠券类型");
+            }
+
+            form.on("select(typeId)", function (data) {
+                setCouponType(data.value);
+            })
+            var typeId = [[${info.typeId}]];
+            setCouponType(typeId);
 
             //选择商品
             $("#btnChooseProducts").click(function () {
