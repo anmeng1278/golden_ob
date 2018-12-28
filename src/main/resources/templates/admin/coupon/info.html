@@ -98,9 +98,18 @@
         <div class="layui-form-item">
             <label class="layui-form-label">使用说明</label>
             <div class="layui-input-inline" style="width:85%;">
-                <textarea class="layui-textarea" name="instruction" id="instruction" style="width:100%;height:30px;"
+                <textarea class="layui-textarea" name="instruction" id="instruction"
                           placeholder="请输入使用说明" title="使用说明" th:text="${info.instruction}"
                           autocomplete="off"></textarea>
+
+                <script type="text/javascript">
+                    UE.getEditor('instruction', {
+                        initialFrameWidth: "100%",//设置编辑器宽度
+                        initialFrameHeight: 300,
+                        scaleEnabled: true
+                    });
+                </script>
+
             </div>
         </div>
 

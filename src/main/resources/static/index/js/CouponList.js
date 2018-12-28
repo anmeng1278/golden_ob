@@ -1,7 +1,7 @@
 $(function(){
 	//活动规则弹层显示
 	$('.coupon-rule-btn').on('click',function(){
-		$('.IllustrateLayer').show();
+		$(this).parents("div.coupon-item").next().show();
 	});
 	//活动规则弹层隐藏
 	$('.four_close').on('click',function(){
