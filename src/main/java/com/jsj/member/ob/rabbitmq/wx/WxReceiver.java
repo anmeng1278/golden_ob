@@ -56,6 +56,8 @@ public class WxReceiver {
                 return this.QrcodeUseSuccessedTemplateId;
             case ENTITYUSESUCCESSED:
                 return this.EntityUseSuccessedTemplateId;
+            case CANCELUNPAYORDER:
+                return this.CancelUnPayOrderTemplateId;
         }
         return "";
     }
@@ -85,6 +87,11 @@ public class WxReceiver {
     @Value(value = "${webconfig.WxTemplate.EntityUseSuccessed}")
     private String EntityUseSuccessedTemplateId;
 
+    /**
+     * 取消待支付订单模板
+     */
+    @Value(value = "${webconfig.WxTemplate.CancelUnPayOrder}")
+    private String CancelUnPayOrderTemplateId;
 
 
 

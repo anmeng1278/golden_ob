@@ -6,6 +6,7 @@ import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.gift.CancelGiftRequ;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
+import com.jsj.member.ob.enums.GiftStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.GiftLogic;
 import com.jsj.member.ob.logic.StockLogic;
@@ -78,6 +79,20 @@ public class GiftController extends BaseController {
         List<StockDto> receiveStock = GiftLogic.GetGiftRecevied(null, giftDto.getGiftId());
         //去重计算数量
         List<StockDto> receiveStocks = StockLogic.FilterData(receiveStock);
+
+        //未分享
+        if(giftDto.getGiftStatus() == GiftStatus.UNSHARE){
+
+            String shareUrl = this.Url(String.format("/share/gift/%s/draw", giftDto.getGiftUniqueCode()), false);
+            request.setAttribute("shareUrl", shareUrl);
+
+            //分享图片
+            if (giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos() != null) {
+                String imgUrl = giftDto.getStockDtos().get(0).getProductDto().getProductImgDtos().get(0).getImgPath();
+                request.setAttribute("imgUrl", imgUrl);
+            }
+
+        }
 
         request.setAttribute("receiveStocks", receiveStocks);
         request.setAttribute("giveStocks", giveStocks);

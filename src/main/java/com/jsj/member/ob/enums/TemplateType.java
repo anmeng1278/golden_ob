@@ -12,7 +12,9 @@ public enum TemplateType {
 
     OPENCARDCONFIRM(3, "开卡确认中"),
 
-    QRCODEUSESUCCESSED(4,"活动码使用成功");
+    QRCODEUSESUCCESSED(4,"活动码使用成功"),
+
+    CANCELUNPAYORDER(5,"取消待支付订单");
 
     private Integer value;
 
@@ -43,6 +45,8 @@ public enum TemplateType {
                 return OPENCARDCONFIRM;
             case 4:
                 return QRCODEUSESUCCESSED;
+            case 5:
+                return CANCELUNPAYORDER;
             default:
                 throw new FatalException("未知的枚举值");
         }
