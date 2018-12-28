@@ -15,6 +15,8 @@ import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
+import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.OrderProductService;
 import com.jsj.member.ob.service.OrderService;
 import com.jsj.member.ob.utils.DateUtils;
@@ -24,7 +26,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -37,6 +41,9 @@ public class OrderLogic extends BaseLogic {
     public void init() {
         orderLogic = this;
     }
+
+    @Autowired
+    WxSender wxSender;
 
     @Autowired
     OrderService orderService;
@@ -77,7 +84,7 @@ public class OrderLogic extends BaseLogic {
 
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
 
-        EntityWrapper<OrderProduct> wrapper = new EntityWrapper<OrderProduct>();
+        EntityWrapper<OrderProduct> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
         wrapper.where("order_id={0}", orderId);
         wrapper.orderBy("create_time desc");
@@ -156,8 +163,19 @@ public class OrderLogic extends BaseLogic {
             //取消订单
             orderLogic.orderService.updateById(o);
 
-            //TODO 未支付订单取消客服消息
-            //o.getOpenId()
+            //未支付订单取消客服消息
+            Map<String,Object> map = new HashMap<>();
+            StringBuilder sb = new StringBuilder();
+            for (OrderProductDto orderProductDto : orderProductDtos) {
+                sb.append(orderProductDto.getProductDto().getProductName() +"*"+ orderProductDto.getNumber()).append(",");
+
+            }
+            if(sb.length()>0){
+                sb.deleteCharAt(sb.length()-1);
+            }
+            map.put("productName",sb);
+            TemplateDto temp = TemplateDto.CancelUnPayOrder(o,map);
+            orderLogic.wxSender.sendNormal(temp);
         }
 
         //返回已取消的订单列表

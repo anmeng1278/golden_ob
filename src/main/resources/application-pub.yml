@@ -87,6 +87,14 @@ webconfig:
     ## {{remark.DATA}}
     EntityUseSuccessed: 46zVrmMwlvcE0UgnSog1M43jFmEcPyzFnSm1_kb2oOg
 
+    ## {{first.DATA}}
+    ## 订单号：{{keyword1.DATA}}
+    ## 产品名称：{{keyword2.DATA}}
+    ## 订单金额：{{keyword3.DATA}}
+    ## 订单取消原因：{{keyword4.DATA}}
+    ## {{remark.DATA}}
+    CancelUnPayOrder: pRqThOciBj7f9ZnOFYa6CsVrsjo8tvk9icCGcHlKXOs
+
 
 redis:
   host: 172.16.5.64

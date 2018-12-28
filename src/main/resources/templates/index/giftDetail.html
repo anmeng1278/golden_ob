@@ -12,8 +12,55 @@
 
     <script th:inline="javascript">
 
+
+        var shareUrl = [[${shareUrl}]];
+        var shareTitle = "来自" + [[${giftDto.wechatDto.nickname}]] + "赠送出的礼物，都在一点‘小意思’";
+
+        shareConfig = {
+            title: shareTitle,
+            desc: "你来我往互道笑纳！金色严选|简单又好优质好货，生活可以过得好一些",
+            link: shareUrl,
+            imgUrl: [[${imgUrl}]]
+        };
+
+
         TX.INIT(function () {
 
+            //继续赠送
+            $(document).on("click", "a.continue-btn", function () {
+
+                var giftStatus = [[${giftDto.giftStatus.value}]];
+
+                //未分享状态，继续分享
+                if (giftStatus == 0) {
+
+                    $("div.share-layer").show();
+
+                    TX.CORE.p({
+                        url: '/share/gift/'+[[${giftDto.giftUniqueCode}]]+'/confirm',
+                        data: {
+                            op: "success"
+                        },
+                        success: function (resp) {
+                            if (resp.baseResp.success) {
+                                TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                    location.href = resp.baseResp.url;
+                                });
+                            } else {
+                                TX.MSG.msg(resp.baseResp.message, {icon: 2}, function () {
+                                    location.href = resp.baseResp.url;
+                                });
+                            }
+                        }
+                    });
+                }
+
+                if (giftStatus != 0) {
+                    $(this).attr("href", [[${ob.Nav('/stock')}]]);
+                }
+            });
+
+            //取消赠送
             $(document).on("click", "a.cancel-btn", function () {
 
                 var giftUniqueCode = $(this).attr("data-gift-uniqueId");
@@ -33,8 +80,8 @@
                         }
                     });
                 })
-            })
-        })
+            });
+        });
 
     </script>
 
@@ -122,14 +169,25 @@
 
     <!--footer start-->
     <div class="footer">
+
         <th:block th:if="${giftDto.giftStatus.value != 60}">
             <a href="javascript:;" th:attr="data-gift-uniqueId=${giftDto.giftUniqueCode}" class="cancel-btn">取消赠送</a>
         </th:block>
         <th:block th:if="${giftDto.giftStatus.value == 60}">
             <a href="javascript:;">已取消</a>
         </th:block>
-        <a th:href="${ob.Nav('/stock')}" class="continue-btn">继续赠送</a>
+
+        <a href="javascript:void(0);" class="continue-btn">继续赠送</a>
     </div>
     <!--footer end-->
+
+    <div class="share-layer" style="display: none;">
+        <div class="share-layer-bg"></div>
+        <div class="share-layer-con">
+            <span class="share-layer-sanjiao"></span>
+            <p class="share-layer-p">点击右上角【•••】<br/>分享到朋友，朋友圈。<br/>让大家一起来试试手气吧</p>
+        </div>
+    </div>
+
 
 </div>

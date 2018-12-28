@@ -37,6 +37,7 @@
             TX.INIT(function () {
                 TX.CORE.p({
                     url: "/config/wechat",
+                    disabledLoading: true,
                     success: function (resp) {
                         if (!resp.baseResp.success) {
                             return;
@@ -52,7 +53,7 @@
                                 'updateTimelineShareData',
                                 'onMenuShareAppMessage',
                                 'onMenuShareTimeline'
-                                ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                            ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
                         });
                     }
                 })
@@ -65,10 +66,29 @@
     <script type="text/javascript" th:src="${ob.Url('/index/js/shareConfig.js')}"></script>
     <script>
         $(function () {
+
+            window.onpageshow = function (event) {
+
+                var needRefresh = sessionStorage.getItem("need-refresh");
+                var lo = location.href;
+
+                if (needRefresh && needRefresh != lo && needRefresh != document.referrer) {
+                    sessionStorage.removeItem("need-refresh");
+                    history.go(0);
+                }
+                sessionStorage.setItem("need-refresh", lo);
+            }
+
+
             $(document).on("click", "div.share-layer", function () {
                 $(this).hide();
-            })
+            });
+            $("div.share-layer").click(function () {
+                $(this).hide();
+            });
         })
+
+
     </script>
 
 
