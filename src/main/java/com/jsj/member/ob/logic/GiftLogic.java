@@ -492,8 +492,12 @@ public class GiftLogic extends BaseLogic {
 
             giftLogic.giftService.updateById(gift);
 
-            //TODO 系统自动取消分享客服消息
-            //示例：您的分享的礼物24小时未被领取，已退回账户。
+            // 系统自动取消分享客服消息
+            String url = String.format("%s%s/stock",
+                    giftLogic.webconfig.getHost(),
+                    giftLogic.webconfig.getVirtualPath());
+            TemplateDto dto = TemplateDto.NewCustomService(gift.getOpenId(), String.format("24h前赠送的商品未被领取，已退回您的账户，请到公众号我的库存<a href='%s'>我的库存</a>点击查看", url));
+            giftLogic.wxSender.sendNormal(dto);
 
         }
 

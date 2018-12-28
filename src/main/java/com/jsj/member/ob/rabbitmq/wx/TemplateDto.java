@@ -226,12 +226,45 @@ public class TemplateDto extends BaseDto {
         dto.getData().put("keyword1", new TemplateData(order.getOrderId() + "", color));
         dto.getData().put("keyword2", new TemplateData(map.get("productName").toString(), color));
         dto.getData().put("keyword3", new TemplateData(order.getPayAmount() + "", color));
-        dto.setRemark("\n空铁管家祝您旅途愉快");
+        dto.setRemark("\n金色严选祝您生活愉快");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/order", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
 
         return dto;
     }
+
+
+    /**
+     * 发送取消支付订单模板消息
+     *
+     * @param order
+     * @return
+     */
+    public static TemplateDto CancelUnPayOrder(Order order, Map map) {
+
+        /*
+            {{first.DATA}}
+            订单号：{{keyword1.DATA}}
+            产品名称：{{keyword2.DATA}}
+            订单金额：{{keyword3.DATA}}
+            订单取消原因：{{keyword4.DATA}}
+            {{remark.DATA}}
+        */
+        TemplateDto dto = new TemplateDto();
+        dto.setToUser(order.getOpenId());
+        dto.setTemplateType(TemplateType.PAYSUCCESSED);
+        dto.setFirst("您取消了该订单\n");
+        dto.setFirstColor(gold_color);
+        dto.getData().put("keyword1", new TemplateData(order.getOrderId() + "", color));
+        dto.getData().put("keyword2", new TemplateData(map.get("productName").toString(), color));
+        dto.getData().put("keyword3", new TemplateData(order.getPayAmount() + "", color));
+        dto.setRemark("\n金色严选祝您生活愉快");
+        dto.setRemarkColor(gold_color);
+        dto.setUrl(String.format("%s%s/order", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
+
+        return dto;
+    }
+
 
 
     /**

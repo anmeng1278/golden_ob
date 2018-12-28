@@ -269,7 +269,6 @@ public class ShareController extends BaseController {
 
         //赠送的库存
 
-
         List<GiftStockDto> giftStockDtos = GiftLogic.GetGiftStockDtos(giftDto.getGiftId());
 
         //是否本人领取数
