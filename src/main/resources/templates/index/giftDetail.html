@@ -26,39 +26,6 @@
 
         TX.INIT(function () {
 
-            //继续赠送
-            $(document).on("click", "a.continue-btn", function () {
-
-                var giftStatus = [[${giftDto.giftStatus.value}]];
-
-                //未分享状态，继续分享
-                if (giftStatus == 0) {
-
-                    $("div.share-layer").show();
-
-                    TX.CORE.p({
-                        url: '/share/gift/'+[[${giftDto.giftUniqueCode}]]+'/confirm',
-                        data: {
-                            op: "success"
-                        },
-                        success: function (resp) {
-                            if (resp.baseResp.success) {
-                                TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                    location.href = resp.baseResp.url;
-                                });
-                            } else {
-                                TX.MSG.msg(resp.baseResp.message, {icon: 2}, function () {
-                                    location.href = resp.baseResp.url;
-                                });
-                            }
-                        }
-                    });
-                }
-
-                if (giftStatus != 0) {
-                    $(this).attr("href", [[${ob.Nav('/stock')}]]);
-                }
-            });
 
             //取消赠送
             $(document).on("click", "a.cancel-btn", function () {
@@ -177,7 +144,9 @@
             <a href="javascript:;">已取消</a>
         </th:block>
 
-        <a href="javascript:void(0);" class="continue-btn">继续赠送</a>
+        <a th:href="${ob.Nav('/share/gift/'+giftDto.giftUniqueCode+'/confirm')}" th:if="${giftDto.giftStatus.value==0}" class="continue-btn">继续赠送</a>
+        <a th:href="${ob.Nav('/stock')}" class="continue-btn" th:unless="${giftDto.giftStatus.value==0}">继续赠送</a>
+
     </div>
     <!--footer end-->
 
