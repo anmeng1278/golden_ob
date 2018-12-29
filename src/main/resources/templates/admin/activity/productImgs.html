@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="admin/layout">
+
+<div layout:fragment="content" class="admin-main layui-anim" style="margin: 15px;">
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend th:text="|${info.productName} 图片管理|"></legend>
+    </fieldset>
+
+    <form class="layui-form" method="post" action="">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-4">
+                <input type="hidden" name="image_url" id="image_url"></input>
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-primary" id="thumbBtn">
+                        <i class="icon icon-upload3"></i>点击上传
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block" id="divImages">
+
+                <th:block th:each="info : ${productImgDtos}">
+                    <label style="position: relative; float: left;margin-right: 10px;">
+                        <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>
+                        <img class="layui-upload-img" style="width:115px;height:115px;" th:src="${info.imgPath}"/>
+                        <input type="hidden" name="imgpath" th:value="${info.imgPath}"/>
+                    </label>
+                </th:block>
+
+                <th:block th:if="${#lists.isEmpty(productImgs)}">
+                    <label style="position: relative; float: left;margin-right: 10px;">
+                        <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>
+                        <img class="layui-upload-img" style="width:115px;height:115px;"/>
+                        <input type="hidden" name="imgpath"/>
+                    </label>
+                </th:block>
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-form-mid layui-word-aux">首张图片为封面，双击图片调整顺序，上传完成请点击保存操作。</div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit="">
+                    <i class="layui-icon">&#xe621;</i>
+                    保存
+                </button>
+                <button type="button" class="layui-btn" id="btnClose">
+                    <i class="layui-icon">&#x1006;</i>
+                    关闭
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        TX.INIT(function (layui) {
+
+            var form = layui.form;
+            var upload = layui.upload;
+
+            //缩略图上传
+            upload.render({
+                elem: '#thumbBtn'
+                , url: '/ueditor/uploadimage'
+                , accept: 'images' //普通文件
+                , field: "upfile"
+                , multiple: true
+                , exts: 'jpg|png|gif|jpeg' //只允许上传压缩文件
+                , done: function (resp) {
+
+                    if (resp.state == "SUCCESS") {
+                        var html = [];
+
+                        html.push('<label style="position: relative; float: left;margin-right: 10px;">');
+                        html.push('    <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>');
+                        html.push('    <img class="layui-upload-img" src="' + resp.url + '" style="width:115px;height:115px;"/>');
+                        html.push('    <input type="hidden" name="imgpath"  value="' + resp.fkey + '" />');
+                        html.push('</label>');
+
+                        $(html.join('')).appendTo($("#divImages"));
+                    }
+                    resetImage();
+                }
+            });
+
+            //调整排序
+            $(document).on("dblclick", "#divImages label", function () {
+                if ($(this).index() == 0) {
+                    return;
+                }
+                var firstLabel = $("label:first", $("#divImages"));
+                $(this).insertBefore(firstLabel);
+                resetImage();
+            });
+
+            //删除图片
+            $(document).on("click", "#divImages label a", function () {
+                var self = this;
+                layer.confirm('确定删除该图片吗?', {icon: 3}, function (index) {
+                    layer.close(index);
+                    $(self).parent("label").remove();
+                    resetImage();
+                });
+            });
+
+            //重置图片
+            function resetImage() {
+
+                $("label", $("#divImages")).each(function () {
+                    if ($(":hidden", $(this)).val().length == 0) {
+                        $(this).remove();
+                    }
+                });
+
+                if ($("label", $("#divImages")).length == 0) {
+                    var html = [];
+                    html.push('<label style="position: relative; float: left;margin-right: 10px;">');
+                    html.push('    <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>');
+                    html.push('    <img class="layui-upload-img"  style="width:115px;height:115px;"/>');
+                    html.push('    <input type="hidden" name="imgpath"  />');
+                    html.push('</label>');
+                    $(html.join('')).appendTo($("#divImages"));
+                }
+            }
+
+            //提交保存
+            form.on("submit", function (data) {
+
+                TX.CORE.p({
+                    data: $("form.layui-form").serialize(),
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                parent.tab.openTab("/admin/activity"+[[${activityId}]], {refershType: "reload"});
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                });
+            });
+
+
+            $("#btnClose").click(function () {
+                if (parent.window.TX.TEMP.LAYERINDEX) {
+                    parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
+                } else {
+                    var currentTabId = parent.tab.getCurrentTabId();
+                    parent.tab.deleteTab(currentTabId);
+                }
+            });
+
+        });
+    </script>
+</th:block>
+</html>
