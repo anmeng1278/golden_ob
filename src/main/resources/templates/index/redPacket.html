@@ -63,7 +63,7 @@
                         <p class="coupon-time"
                            th:text="|至${dateUtils.formatDateByUnixTime(couponDto.wechatCouponDto.expiredTime, 'yyyy-MM-dd')}过期|">
                             至2018-11-11过期</p>
-                        <p class="coupon-rule-btn" th:utext="${couponDto.couponDto.couponUseRange.message}">使用规则</p>
+                        <p class="coupon-rule-btn">使用规则</p>
                     </div>
                 </div>
                 <span class="coupon-tips">立即使用</span>
@@ -105,6 +105,21 @@
         <!--main end-->
     </div>
     <!--content end-->
+
+    <!--活动说明 start-->
+    <div class="IllustrateLayer" style="display: none;">
+        <div class="IllustrateLayerCon">
+            <h2 class="IllustrateTitle">使用说明</h2>
+            <ul class="IllustrateList">
+                <p th:utext="${couponDto.couponDto.instruction}"></p>
+            </ul>
+        </div>
+        <p class="closeBtn_p">
+            <img th:src="${ob.Img('/index/images/rule_close.png')}" alt="1" class="four_close"/>
+        </p>
+    </div>
+    <!--活动说明 end-->
+
 
     <!--footer-tips start-->
     <fieldset class="footer-tips">
