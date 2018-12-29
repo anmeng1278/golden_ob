@@ -24,10 +24,17 @@
                 <div class="coupon-item">
                     <div class="coupon-item-back">
                         <div class="coupon-item-lt">
-                            <p class="coupon-item-price"><span th:text="|${info.amount}|"></span>
-                                <span th:if="${info.couponType.value == 1}" th:text="|&yen;|"></span>
-                                <span th:if="${info.couponType.value == 2}" th:text="|折|"></span>
+
+
+                            <p th:if="${info.couponType.value == 1}" class="coupon-item-price"><span
+                                    th:text="| ${#numbers.formatInteger(info.amount,0,'POINT')}|"></span>
+                                <span th:text="|&yen;|"></span>
                             </p>
+                            <p th:if="${info.couponType.value == 2}" class="coupon-item-price"><span
+                                    th:text="|${info.amount}|"></span>
+                                <span th:text="|折|"></span>
+                            </p>
+
                             <p class="coupon-price-tips" th:text="${info.couponDto.remarks}">满1000元可用</p>
                         </div>
                         <div class="coupon-item-rt">

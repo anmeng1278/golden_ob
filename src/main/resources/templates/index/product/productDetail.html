@@ -317,10 +317,13 @@
                         <th:block th:each="coupon :${coupons}">
                             <!--class="active"-->
                             <li th:attr="data-wechatCoupon-id=${coupon.wechatCouponId}">
-                                <span class="coupon-price">
+                                <span th:if="${coupon.couponType.value == 1}" class="coupon-price">
+                                    <th:block th:text="${#numbers.formatInteger(coupon.amount,0,'POINT')}"></th:block>
+                                    <em>&yen;</em>
+                                </span>
+                                <span th:if="${coupon.couponType.value ==  2}" class="coupon-price">
                                     <th:block th:text="${coupon.amount}"></th:block>
-                                    <em th:if="${coupon.couponType.value == 1}">&yen;</em>
-                                    <em th:if="${coupon.couponType.value == 2}">折</em>
+                                    <em>折</em>
                                 </span>
                                 <p class="coupon-tips" th:text="${coupon.couponType.message}"></p>
                             </li>

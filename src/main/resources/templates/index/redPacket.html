@@ -52,9 +52,13 @@
             <div class="coupon">
                 <div class="coupon-back">
                     <div class="coupon-lt">
-                        <p class="coupon-price" th:text="${couponDto.amount}">50
-                            <span th:if="${couponDto.couponType.value == 1}" th:text="|&yen;|"></span>
-                            <span th:if="${couponDto.couponType.value == 2}" th:text="|折|"></span>
+                        <p th:if="${couponDto.couponType.value == 1}" class="coupon-price"
+                           th:text="${#numbers.formatInteger(couponDto.amount,0,'POINT')}">
+                            <span th:text="|&yen;|"></span>
+                        </p>
+                        <p th:if="${couponDto.couponType.value == 2}" class="coupon-price"
+                           th:text="${couponDto.amount}">50
+                            <span th:text="|折|"></span>
                         </p>
                         <p class="coupon-price-tips" th:text="${couponDto.couponType.message}"></p>
                     </div>
@@ -92,7 +96,7 @@
                         <dt><img th:src="${cc.wechatDto.headimgurl}" alt=""/></dt>
                         <dd>
                             <span class="gifts-dl-name" th:text="${cc.wechatDto.nickname}">张鑫</span>
-                            <span class="gifts-dl-price" th:text="|抢到${cc.amount}元券|"
+                            <span class="gifts-dl-price" th:text="|抢到${#numbers.formatInteger(cc.amount,0,'POINT')}元券|"
                                   th:if="${cc.couponType.value==1}"></span>
                             <span class="gifts-dl-price" th:text="|抢到${cc.amount}折券|"
                                   th:if="${cc.couponType.value==2}"></span>
