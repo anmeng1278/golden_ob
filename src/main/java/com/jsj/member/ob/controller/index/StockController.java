@@ -182,7 +182,7 @@ public class StockController extends BaseController {
         TwoTuple<String, String> usedNavigate = deliveryBase.GetUsedNavigate(openId);
 
         if (!StringUtils.isEmpty(usedNavigate.first)) {
-            return RestResponseBo.fail(usedNavigate.first, null, usedNavigate.second);
+            return RestResponseBo.fail(usedNavigate.first, null, this.Url(usedNavigate.second));
         }
 
         List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
@@ -192,7 +192,7 @@ public class StockController extends BaseController {
         redisService.set(StockKey.token, openId, stockDtos);
 
         //url = String.format("%s?p=%s", url, p);
-        return RestResponseBo.ok("验证成功", usedNavigate.second, null);
+        return RestResponseBo.ok("验证成功", this.Url(usedNavigate.second), null);
 
     }
     //endregion
