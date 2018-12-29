@@ -6,12 +6,10 @@ import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.enums.DeliveryType;
-import com.jsj.member.ob.enums.GoldenCardType;
 import com.jsj.member.ob.enums.TemplateType;
 import com.jsj.member.ob.logic.ConfigLogic;
 import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.rabbitmq.BaseDto;
-import com.jsj.member.ob.rabbitmq.card.CreateGoldenDto;
 import com.jsj.member.ob.utils.DateUtils;
 
 import java.io.Serializable;
@@ -377,7 +375,7 @@ public class TemplateDto extends BaseDto {
      * @param goldenDto
      * @return
      */
-    public static TemplateDto OpenCardSuccess(CreateGoldenDto goldenDto,Delivery delivery) {
+    public static TemplateDto OpenCardSuccess(DeliveryDto goldenDto,Delivery delivery) {
 
         /*
             {{first.DATA}}
@@ -392,7 +390,7 @@ public class TemplateDto extends BaseDto {
         TemplateDto dto = new TemplateDto();
         dto.setToUser(delivery.getOpenId());
         dto.setTemplateType(TemplateType.OPENCARDCONFIRM);
-        dto.setFirst(String.format("您的%s已成功开通\n", GoldenCardType.valueOf(goldenDto.getCardType()).getMessage()));
+        dto.setFirst(String.format("您的%s已成功开通\n", goldenDto.getPropertyType().getMessage()));
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1",new TemplateData("北京金色世纪商旅网络有限公司", color));
         dto.getData().put("keyword2", new TemplateData(openCardDate, color));

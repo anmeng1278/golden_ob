@@ -14,6 +14,7 @@ import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
@@ -124,8 +125,10 @@ public class DeliveryMonth extends DeliveryBase {
             }
             delivery.setStatus(DeliveryStatus.SIGNED.getValue());
 
-            //TODO 开卡成功发送模板消息
-            //示例：您的GoldenCardType.valueOf(dto.getCardType()).getMessage()卡已开通成功
+
+            // 开卡成功发送模板消息
+            TemplateDto temp = TemplateDto.OpenCardSuccess(dto,delivery);
+            wxSender.sendNormal(temp);
 
             //更新发货状态
             deliveryStocks.forEach(ds -> {
