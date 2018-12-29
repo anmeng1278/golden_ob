@@ -87,6 +87,7 @@ public class ProductLogic extends BaseLogic {
         productDto.setTypeId(entity.getTypeId());
         productDto.setUnit(entity.getUnit());
         productDto.setUseIntro(entity.getUseIntro());
+        productDto.setCardTypeId(entity.getCardTypeId());
 
         //商品图片
         List<ProductImgDto> productImgDtos = ProductLogic.GetProductImgDtos(entity.getProductId());

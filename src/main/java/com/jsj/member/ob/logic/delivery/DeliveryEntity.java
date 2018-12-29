@@ -71,9 +71,6 @@ public class DeliveryEntity extends DeliveryBase {
         }
 
         if (requ.getDeliveryType().equals(DeliveryType.PICKUP)) {
-            if (!com.jsj.member.ob.utils.StringUtils.isStrDate(requ.getEffectiveDate())) {
-                throw new TipException("自提时间格式错误");
-            }
             if (StringUtils.isEmpty(requ.getAirportCode())) {
                 throw new TipException("请选择自提网点");
             }

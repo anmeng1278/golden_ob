@@ -40,6 +40,8 @@ public class ThirdPartyLogic extends BaseLogic {
         thirdPartyLogic = this;
     }
 
+    //region (public) 获取AccessToken GetAccessToken
+
     /**
      * 获取AccessToken
      *
@@ -83,6 +85,9 @@ public class ThirdPartyLogic extends BaseLogic {
         return resp;
 
     }
+    //endregion
+
+    //region (public) 获取开发环境token GetAccessTokenDev
 
     /**
      * 获取开发环境token
@@ -126,6 +131,9 @@ public class ThirdPartyLogic extends BaseLogic {
 
         return resp;
     }
+    //endregion
+
+    //region (public) 获取公众号的 GetJsApiTicket
 
     /**
      * 获取公众号的 jsapi_ticket
@@ -171,7 +179,9 @@ public class ThirdPartyLogic extends BaseLogic {
         return resp;
 
     }
+    //endregion
 
+    //region (public) 通过 code 换取网页授权 GetWeChatAccessToken
 
     /**
      * 通过 code 换取网页授权 access_token
@@ -217,7 +227,65 @@ public class ThirdPartyLogic extends BaseLogic {
         return resp;
 
     }
+    //endregion
 
+    //region (public) 开卡 CreateGoldenCard
+
+    /**
+     * 开卡
+     *
+     * @param requ
+     * @return
+     */
+    public static CreateGoldenCardResp CreateGoldenCard(CreateGoldenCardRequ requ) {
+
+        CreateGoldenCardResp resp = new CreateGoldenCardResp();
+
+        try {
+
+            LinkedMap<String, String> map = new LinkedMap<>();
+            map.put("TimeStamp", requ.getRequestHead().getTimeStamp());
+            map.put("SourceFrom", requ.getRequestHead().getSourceFrom());
+            map.put("CardType", requ.getRequestBody().getCardType() + "");
+            map.put("MemberMobile", requ.getRequestBody().getMemberMobile());
+            map.put("MemberName", requ.getRequestBody().getMemberName());
+            map.put("MemberIdNumber", requ.getRequestBody().getMemberIdNumber());
+            map.put("MemberIDType", requ.getRequestBody().getMemberIDType());
+            map.put("SalePrice", requ.getRequestBody().getSalePrice());
+
+            String sign = thirdPartyLogic.GetMd5str(map, "#wugf543sxcv5*$#");
+            System.out.println("签名前：" + sign);
+            sign = Md5Utils.MD5(sign);
+            System.out.println("签名后：" + sign);
+            requ.getRequestHead().setSign(sign);
+
+            String url = thirdPartyLogic.webconfig.getOpenCardUrl();
+            String json = JSON.toJSONString(requ);
+
+            //设置签名
+            String result = HttpUtils.json(url, json);
+            resp = JSON.parseObject(result, CreateGoldenCardResp.class);
+
+            thirdPartyLogic.logger.info(String.format("%s %s %s", url, json, result));
+
+            if (!resp.getResponseHead().getCode().equals("0000")) {
+                throw new TipException(resp.getResponseHead().getMessage());
+            }
+
+        } catch (TipException ex) {
+            resp.getResponseHead().setCode("0001");
+            resp.getResponseHead().setMessage(ex.getMessage());
+        } catch (Exception ex) {
+            resp.getResponseHead().setCode("0001");
+            resp.getResponseHead().setMessage(ex.getMessage());
+        }
+
+        return resp;
+
+    }
+    //endregion
+
+    //region (public) 微信公众号下单接口，使用返回参数调起微信客户端支付 GetPayTrade
 
     /**
      * 微信公众号下单接口，使用返回参数调起微信客户端支付
@@ -295,7 +363,9 @@ public class ThirdPartyLogic extends BaseLogic {
         return resp;
 
     }
+    //endregion
 
+    //region (public) 发送短信 SendSms
 
     /**
      * 发送短信
@@ -335,7 +405,9 @@ public class ThirdPartyLogic extends BaseLogic {
         }
 
     }
+    //endregion
 
+    //region (public) 发送微信模板消息 SendWxTemplate
 
     /**
      * 发送微信模板消息
@@ -372,7 +444,18 @@ public class ThirdPartyLogic extends BaseLogic {
 
 
     }
+    //endregion
 
+    //region (public) 发送客服消息 SendWxMessage
+
+    //{
+    //    "touser":"OPENID",
+    //        "msgtype":"text",
+    //        "text":
+    //    {
+    //        "content":"Hello World"
+    //    }
+    //}
 
     /**
      * 发送客服消息
@@ -423,14 +506,9 @@ public class ThirdPartyLogic extends BaseLogic {
             ex.printStackTrace();
         }
     }
-    //{
-    //    "touser":"OPENID",
-    //        "msgtype":"text",
-    //        "text":
-    //    {
-    //        "content":"Hello World"
-    //    }
-    //}
+    //endregion
+
+    //region (private) 签名字符串处理 GetMd5str
 
     /**
      * 签名字符串处理
@@ -451,7 +529,9 @@ public class ThirdPartyLogic extends BaseLogic {
         }
         return sb.toString();
     }
+    //endregion
 
+    //region (public) 获取空铁活动码 GetActivityCodes
 
     /**
      * 获取空铁活动码
@@ -484,5 +564,6 @@ public class ThirdPartyLogic extends BaseLogic {
 
         return resp;
     }
+    //endregion
 
 }

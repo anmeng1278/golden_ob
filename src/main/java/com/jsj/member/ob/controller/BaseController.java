@@ -12,8 +12,6 @@ import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.jsj.member.ob.redis.AccessKey;
 import com.jsj.member.ob.redis.RedisService;
 import com.jsj.member.ob.utils.DateUtils;
-import com.jsj.member.ob.utils.SpringContextUtils;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -110,18 +108,8 @@ public abstract class BaseController {
         HttpServletRequest request = attr.getRequest();
 
         Object wx = request.getSession().getAttribute("wx");
-        if (wx != null) {
-            return (User) wx;
-        } else {
-            if (SpringContextUtils.getActiveProfile().equals("dev")) {
-                User u = new User();
-                u.setOpenid("oeQDZt_pkkN1odTzWQrIr_5mhvcA");
-                u.setNickname("测试账户");
-                return u;
-            } else {
-                throw new NotImplementedException("未获取到登录用户信息");
-            }
-        }
+        return (User) wx;
+
     }
 
     @Autowired

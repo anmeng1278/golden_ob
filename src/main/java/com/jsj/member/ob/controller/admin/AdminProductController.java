@@ -10,6 +10,7 @@ import com.jsj.member.ob.entity.Product;
 import com.jsj.member.ob.entity.ProductImg;
 import com.jsj.member.ob.entity.ProductSpec;
 import com.jsj.member.ob.enums.DictType;
+import com.jsj.member.ob.enums.GoldenCardType;
 import com.jsj.member.ob.enums.ProductImgType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.logic.DictLogic;
@@ -90,7 +91,6 @@ public class AdminProductController {
         //商品分类
         List<Dict> productTypes = DictLogic.GetDicts(DictType.PRODUCTTYPE);
 
-
         request.setAttribute("infos", new CCPage<Product>(pp, limit));
         request.setAttribute("keys", keys);
         request.setAttribute("isSellout", isSellout);
@@ -99,7 +99,6 @@ public class AdminProductController {
         request.setAttribute("productPerproties", productPerproties);
         request.setAttribute("typeId", typeId);
         request.setAttribute("propertyTypeId", propertyTypeId);
-
 
         return "admin/product/index";
     }
@@ -139,6 +138,11 @@ public class AdminProductController {
         request.setAttribute("productPerproties", productPerproties);
         request.setAttribute("productTypes", productTypes);
 
+        //卡类型
+        GoldenCardType[] goldenCardTypes = GoldenCardType.values();
+        request.setAttribute("goldenCardTypes", goldenCardTypes);
+
+
         return "admin/product/info";
     }
 
@@ -163,6 +167,13 @@ public class AdminProductController {
         int typeId = Integer.valueOf(request.getParameter("typeId"));
         //商品属性
         int propertyTypeId = Integer.valueOf(request.getParameter("propertyTypeId"));
+
+        PropertyType propertyType = PropertyType.valueOf(propertyTypeId);
+        int cardTypeId = 0;
+        if (propertyType.equals(PropertyType.GOLDENCARD)) {
+            cardTypeId = Integer.valueOf(request.getParameter("cardTypeId"));
+        }
+
         //简介
         String introduce = request.getParameter("introduce");
         //使用说明
@@ -187,6 +198,7 @@ public class AdminProductController {
             product.setTypeId(typeId);
             product.setPropertyTypeId(propertyTypeId);
             product.setIntroduce(introduce);
+            product.setCardTypeId(cardTypeId);
 
             product.setUseIntro(useIntro);
             product.setUnit(unit);
@@ -207,6 +219,7 @@ public class AdminProductController {
             product.setTypeId(typeId);
             product.setPropertyTypeId(propertyTypeId);
             product.setIntroduce(introduce);
+            product.setCardTypeId(cardTypeId);
 
             product.setUseIntro(useIntro);
             product.setUnit(unit);

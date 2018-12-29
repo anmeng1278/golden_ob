@@ -403,6 +403,45 @@ public class ActivityLogic extends BaseLogic {
     }
     //endregion
 
+    //region (public) 校验活动是否允许修改 checkActivity
+
+    /**
+     * 校验活动是否允许修改
+     *
+     * @param activityId
+     */
+    public static boolean checkActivity(int activityId) {
+
+        //活动商品
+        List<ActivityProductDto> products = ActivityLogic.GetActivityProductDtos(activityId);
+        if (products == null || products.isEmpty()) {
+            return true;
+        }
+        Jedis jedis = activityLogic.jedisPool.getResource();
+
+        for (ActivityProductDto dto : products) {
+
+            ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, dto.getProductId(), dto.getProductSpecId()));
+
+            //已初始化
+            if (jedis.exists(productKey.RESULT())) {
+                return false;
+            }
+
+        }
+        for (ActivityProductDto dto : products) {
+            ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, dto.getProductId(), dto.getProductSpecId()));
+            for (String k : productKey.TOTALS()) {
+                jedis.del(k);
+            }
+        }
+
+        return true;
+    }
+    //endregion
+
+    //region (public) 根据活动类型获取首个活动 GetActivity
+
     /**
      * 根据活动类型获取首个活动
      *
@@ -421,6 +460,9 @@ public class ActivityLogic extends BaseLogic {
 
         return dto;
     }
+    //endregion
+
+    //region (public) 根据活动类型活动活动信息 GetActivityByType
 
     /**
      * 根据活动类型活动活动信息
@@ -463,15 +505,16 @@ public class ActivityLogic extends BaseLogic {
 
         return dtos;
     }
+    //endregion
+
+    //region (public) 秒杀 RedisKill
+
 
     @Autowired
     JedisPool jedisPool;
 
 
     public static HashMap<String, Boolean> soldOutMap = new HashMap<String, Boolean>();
-
-
-    //region (public) 秒杀 RedisKill
 
     /**
      * 秒杀
@@ -487,10 +530,10 @@ public class ActivityLogic extends BaseLogic {
         ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, productId, productSpecId));
         Jedis jedis = null;
 
-        String key = String.format("%s:%s", productKey.getPrefix(), "INIT");
+        String key = productKey.INIT();
         String userKey = String.format("%s:%s", productKey.getPrefix(), openId);
-        String resultKey = String.format("%s:%s", productKey.getPrefix(), "RESULT");
-        String readyKey = String.format("%s:%s", productKey.getPrefix(), "READYTIME");
+        String resultKey = productKey.RESULT();
+        String readyKey = productKey.READYTIME();
 
         SingletonMap singletonMap = SingletonMap.INSTANCE;
 
@@ -562,7 +605,7 @@ public class ActivityLogic extends BaseLogic {
         }
     }
 
+//endregion
 
 }
-//endregion
 

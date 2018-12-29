@@ -3,6 +3,7 @@ package com.jsj.member.ob.logic;
 import com.alibaba.fastjson.JSON;
 import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.thirdParty.*;
+import com.jsj.member.ob.enums.GoldenCardType;
 import com.jsj.member.ob.enums.SmsLevel;
 import com.jsj.member.ob.rabbitmq.wx.TemplateData;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
@@ -129,6 +130,23 @@ public class thirdPartyLogicTest {
         GetActivityCodesResp getActivityCodesResp = ThirdPartyLogic.GetActivityCodes(null);
 
         System.out.println(JSON.toJSONString(getActivityCodesResp));
+    }
+
+    @Test
+    public void testOpenCard() {
+
+        CreateGoldenCardRequ requ = new CreateGoldenCardRequ();
+
+        requ.getRequestBody().setCardType(GoldenCardType.getApiCode(GoldenCardType.MONTH));
+        requ.getRequestBody().setMemberIdNumber("210781198610161816");
+        requ.getRequestBody().setMemberIDType("1");
+        requ.getRequestBody().setMemberMobile("15210860133");
+        requ.getRequestBody().setMemberName("张宁");
+        requ.getRequestBody().setSalePrice("20");
+
+        CreateGoldenCardResp resp = ThirdPartyLogic.CreateGoldenCard(requ);
+        System.out.println(JSON.toJSONString(resp));
+
     }
 
 

@@ -24,6 +24,7 @@ import com.jsj.member.ob.logic.GiftLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.redis.RedisService;
 import com.jsj.member.ob.redis.StockKey;
+import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -296,6 +298,14 @@ public class StockController extends BaseController {
         String address = request.getParameter("address");
         String effectiveDate = request.getParameter("effectiveDate");
 
+        int effEctDateTimeStamp = 0;
+        if (!StringUtils.isEmpty(effectiveDate)) {
+            if (!com.jsj.member.ob.utils.StringUtils.isStrDate(effectiveDate)) {
+                throw new TipException("生效时间格式错误");
+            }
+            effEctDateTimeStamp = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(effectiveDate, "yyyy-MM-dd"));
+        }
+
         String airportCode = request.getParameter("airportCode");
         String airportName = request.getParameter("airportName");
 
@@ -310,7 +320,7 @@ public class StockController extends BaseController {
         requ.setDeliveryType(deliveryType);
 
         requ.setDistrictId(districtId);
-        requ.setEffectiveDate(effectiveDate);
+        requ.setEffectiveDate(effEctDateTimeStamp);
         requ.setMobile(mobile);
         requ.setPropertyType(PropertyType.ENTITY);
         requ.setProvinceId(provinceId);
@@ -491,6 +501,11 @@ public class StockController extends BaseController {
         String idNumber = request.getParameter("idNumber");
         String effectiveDate = request.getParameter("effectiveDate");
 
+        if (!com.jsj.member.ob.utils.StringUtils.isStrDate(effectiveDate)) {
+            throw new TipException("生效时间格式错误");
+        }
+        Date effectDate = DateUtils.dateFormat(effectiveDate, "yyyy-MM-dd");
+        int effEctDateTimeStamp = DateUtils.getUnixTimeByDate(effectDate);
 
         CreateDeliveryRequ requ = new CreateDeliveryRequ();
 
@@ -500,7 +515,8 @@ public class StockController extends BaseController {
         requ.setPropertyType(PropertyType.GOLDENCARD);
 
         requ.setIdNumber(idNumber);
-        requ.setEffectiveDate(effectiveDate);
+        requ.setIdTypeId(1);
+        requ.setEffectiveDate(effEctDateTimeStamp);
         requ.setStockDtos(stockDtos);
 
         //开卡方法

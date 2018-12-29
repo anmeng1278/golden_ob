@@ -9,6 +9,7 @@ import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
+import com.jsj.member.ob.enums.GoldenCardType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.delivery.DeliveryBase;
@@ -232,6 +233,8 @@ public class DeliveryLogic extends BaseLogic {
         dto.setIdNumber(delivery.getIdNumber());
         dto.setAirportName(delivery.getAirportName());
 
+        dto.setIdTypeId(delivery.getIdTypeId());
+
         return dto;
     }
     //endregion
@@ -366,6 +369,7 @@ public class DeliveryLogic extends BaseLogic {
 
     /**
      * 获取未开卡信息
+     * 目前只支付月体验卡
      *
      * @param openId
      * @return
@@ -378,6 +382,7 @@ public class DeliveryLogic extends BaseLogic {
         wrapper.where("delete_time is null");
         wrapper.where("status = {0}", DeliveryStatus.UNDELIVERY.getValue());
         wrapper.where("property_type_id = {0}", PropertyType.GOLDENCARD.getValue());
+
 
         Delivery delivery = deliveryLogic.deliveryService.selectOne(wrapper);
         return ToDto(delivery);
@@ -436,7 +441,7 @@ public class DeliveryLogic extends BaseLogic {
 
             delivery.setStatus(DeliveryStatus.SIGNED.getValue());
             String remark = delivery.getRemarks();
-            if(remark != null){
+            if (remark != null) {
                 remark += String.format("使用活动码：%s %s %s", activityCode, requ.getAirportName(), requ.getVipHallName());
             } else {
                 remark = String.format("使用活动码：%s %s %s", activityCode, requ.getAirportName(), requ.getVipHallName());
@@ -450,6 +455,41 @@ public class DeliveryLogic extends BaseLogic {
         resp.setRespMsg("核销成功");
         return resp;
 
+    }
+    //endregion
+
+    //region (public) 获取待开卡记录 GetUnOpenGoldenCard
+
+    /**
+     * 获取待开卡记录
+     *
+     * @return
+     */
+    public static List<DeliveryDto> GetUnCreateGoldenCard() {
+
+        Wrapper<Delivery> wrapper = new EntityWrapper<>();
+
+        wrapper.where("delete_time is null");
+        wrapper.where("property_type_id = {0}", PropertyType.GOLDENCARD.getValue());
+        wrapper.where("status = {0}", DeliveryStatus.UNDELIVERY.getValue());
+        wrapper.where("( effective_date > 0 and effective_date <= UNIX_TIMESTAMP())");
+        wrapper.where("exists(   select * " +
+                        "                           from _delivery_stock as a " +
+                        "                               inner join _stock as b " +
+                        "                                   on a.stock_id = b.stock_id" +
+                        "                               inner join _product as c" +
+                        "                                   on b.product_id = c.product_id" +
+                        "                           where a.delivery_id =  _delivery.delivery_id and c.card_type_id = {0}  )",
+                GoldenCardType.MONTH.getValue());
+
+        List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
+        List<DeliveryDto> deliveryDtos = new ArrayList<>();
+
+        deliveries.forEach(entity -> {
+            deliveryDtos.add(ToDto(entity));
+        });
+
+        return deliveryDtos;
     }
     //endregion
 }

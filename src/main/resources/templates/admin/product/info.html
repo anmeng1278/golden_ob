@@ -39,7 +39,7 @@
 
             <label class="layui-form-label">商品属性</label>
             <div class="layui-input-inline">
-                <select name="propertyTypeId" lay-verify="req" title="商品属性">
+                <select name="propertyTypeId" lay-verify="req" lay-filter="propertyTypeId" title="商品属性">
                     <option value="">商品属性</option>
                     <th:block th:each="pps : ${productPerproties}">
                         <option th:value="${pps.value}" th:selected="${info.propertyTypeId==pps.value}"
@@ -54,6 +54,20 @@
                 <input type="text" class="layui-input" name="unit" th:value="${info.unit}" placeholder="请输入单位"
                        lay-verify="chn" title="商品单位"/>
 
+            </div>
+            <div class="layui-form-mid layui-word-aux-red">*</div>
+        </div>
+
+        <div class="layui-form-item" style="display: none;" id="divCardType">
+            <label class="layui-form-label">卡类型</label>
+            <div class="layui-input-inline">
+                <select name="cardTypeId" title="卡类型">
+                    <option value="">卡类型</option>
+                    <th:block th:each="pts : ${goldenCardTypes}">
+                        <option th:value="${pts.value}"
+                                th:text="${pts.message}" th:selected="${pts.value==info.cardTypeId}"></option>
+                    </th:block>
+                </select>
             </div>
             <div class="layui-form-mid layui-word-aux-red">*</div>
         </div>
@@ -278,6 +292,26 @@
                 });
 
             });
+
+            form.on("select(propertyTypeId)", function (data) {
+                //会员卡，显示会员卡类型
+                setcardTypeStatus(data.value);
+            });
+
+            //设置会员卡选项状态
+            var propertyTypeId = [[${info.propertyTypeId}]];
+            setcardTypeStatus(propertyTypeId);
+
+            //设置会员卡选项状态
+            function setcardTypeStatus(value) {
+                if (value == 3) {
+                    $("select[name='cardTypeId']").attr("lay-verify", "req");
+                    $("#divCardType").slideDown();
+                } else {
+                    $("select[name='cardTypeId']").removeAttr("lay-verify");
+                    $("#divCardType").slideUp();
+                }
+            }
 
             /**
              * 删除所选规格

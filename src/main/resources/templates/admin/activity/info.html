@@ -10,6 +10,10 @@
         <legend th:if="${info.activityId > 0}" th:text="|${info.activityName} 信息编辑|"></legend>
     </fieldset>
 
+    <blockquote class="layui-elem-quote" th:if="${!allowModify}" style="color: red; font-weight: bold;">
+        当前秒杀活动，已有用户抢购成功，不允许修改。
+    </blockquote>
+
     <form class="layui-form" method="post" action="">
 
 
@@ -231,9 +235,13 @@
             </div>
         </div>
 
+        <blockquote class="layui-elem-quote" th:if="${!allowModify}" style="color: red; font-weight: bold;">
+            当前秒杀活动，已有用户抢购成功，不允许修改。
+        </blockquote>
+
         <div class="layui-form-item">
             <div class="layui-input-block" style="float: left;margin-left: 15px;">
-                <button type="button" class="layui-btn" lay-submit="">
+                <button type="button" class="layui-btn" lay-submit="" th:if="${allowModify}">
                     <i class="layui-icon">&#xe621;</i>
                     保存
                 </button>
@@ -566,41 +574,6 @@
                 }
             });
         }
-
-        layui.use(['form', 'layedit', 'laydate', "jquery"], function () {
-            var form = layui.form
-                , layer = layui.layer
-                , $ = layui.jquery
-                , laydate = layui.laydate;
-            var nowTime = new Date().valueOf();
-
-            //日期
-            var start = laydate.render({
-                elem: '#start',
-                min: nowTime,
-                done: function (value, date) {
-                    endMax = end.config.max;
-                    end.config.min = date;
-                    end.config.min.month = date.month - 1;
-                }
-            });
-            var end = laydate.render({
-                elem: '#end',
-                min: nowTime,
-                done: function (value, date) {
-                    if ($.trim(value) == '') {
-                        var curDate = new Date();
-                        date = {
-                            'date': curDate.getDate(),
-                            'month': curDate.getMonth() + 1,
-                            'year': curDate.getFullYear()
-                        };
-                    }
-                    start.config.max = date;
-                    start.config.max.month = date.month - 1;
-                }
-            });
-        });
 
     </script>
 </th:block>

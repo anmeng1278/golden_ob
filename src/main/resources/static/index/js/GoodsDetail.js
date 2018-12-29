@@ -83,8 +83,9 @@ $(function () {
 
     });
 
+
     //选优惠券的点击事件
-    $(document).on("click", ".purchase-coupon li", function () {
+    $(".purchase-coupon li").click(function () {
         $(this).siblings().removeClass('active');
         if ($(this).hasClass("active")) {
             $(this).removeClass("active");

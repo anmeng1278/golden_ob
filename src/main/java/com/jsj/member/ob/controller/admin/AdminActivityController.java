@@ -42,7 +42,6 @@ public class AdminActivityController {
     private DictService dictService;
 
 
-
     /**
      * 查询所有活动活动列表
      *
@@ -117,6 +116,9 @@ public class AdminActivityController {
         model.addAttribute("activityId", activityId);
         model.addAttribute("activityProducts", activityProducts);
 
+        boolean allowModify = ActivityLogic.checkActivity(activityId);
+        model.addAttribute("allowModify", allowModify);
+
         return "admin/activity/info";
     }
 
@@ -167,6 +169,10 @@ public class AdminActivityController {
         boolean ifpass = !StringUtils.isBlank(request.getParameter("ifpass"));
 
         if (activityId > 0) {
+
+            //校验活动是否允许修改
+            boolean allowModify = ActivityLogic.checkActivity(activityId);
+
             //修改
             activity = activityService.selectById(activityId);
 
@@ -189,6 +195,7 @@ public class AdminActivityController {
             activityService.updateById(activity);
 
         } else {
+
             //添加
             activity.setActivityName(activityName);
             activity.setStockCount(stockCount);
