@@ -7,17 +7,17 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class GoldenSender {
+public class CardSender {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
     public void sendNormal(BaseDto mm) {
-        this.rabbitTemplate.convertAndSend(GoldenConfig.GOLDEN_NORMAL_QUEUE, mm);
+        this.rabbitTemplate.convertAndSend(CardConfig.GOLDEN_NORMAL_QUEUE, mm);
     }
 
     public void sendError(BaseDto mm) {
-        this.rabbitTemplate.convertAndSend(GoldenConfig.GOLDEN_ERROR_QUEUE, mm);
+        this.rabbitTemplate.convertAndSend(CardConfig.GOLDEN_ERROR_QUEUE, mm);
     }
 
 }

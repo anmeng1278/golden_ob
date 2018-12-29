@@ -12,8 +12,8 @@ public enum DeliveryStatus {
 
     SIGNED(20, "已签收");
 
-    //活动码  未获取=0 已获取=10 已使用=20
-    //卡      未开卡 0 已开卡 10
+    //活动码  未使用=0 已获取=10 已核销=20
+    //卡      未开卡 0 未开卡 10 已开卡 20
 
     private Integer value;
     private String message;
@@ -31,6 +31,42 @@ public enum DeliveryStatus {
         return message;
     }
 
+    public String getMessage(PropertyType propertyType) {
+
+        switch (propertyType) {
+            case ENTITY:
+                return this.getMessage();
+            case ACTIVITYCODE: {
+                switch (this) {
+                    case UNDELIVERY:
+                        return "未使用";
+                    case DELIVERED:
+                        return "已获取";
+                    case SIGNED:
+                        return "已核销";
+                    default:
+                        throw new FatalException("未知的枚举值");
+                }
+            }
+            case MONTH:
+            case GOLDEN:
+            case NATION: {
+                switch (this) {
+                    case UNDELIVERY:
+                        return "未开卡";
+                    case DELIVERED:
+                        return "未开卡";
+                    case SIGNED:
+                        return "已开卡";
+                    default:
+                        throw new FatalException("未知的枚举值");
+                }
+            }
+            default:
+                throw new FatalException("未知的枚举值");
+        }
+    }
+
     public static DeliveryStatus valueOf(int value) {
         switch (value) {
             case 0:
@@ -43,4 +79,5 @@ public enum DeliveryStatus {
                 throw new FatalException("未知的枚举值");
         }
     }
+
 }

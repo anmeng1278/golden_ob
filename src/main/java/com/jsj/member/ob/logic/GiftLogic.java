@@ -496,7 +496,7 @@ public class GiftLogic extends BaseLogic {
             String url = String.format("%s%s/stock",
                     giftLogic.webconfig.getHost(),
                     giftLogic.webconfig.getVirtualPath());
-            TemplateDto dto = TemplateDto.NewCustomService(gift.getOpenId(), String.format("24h前赠送的商品未被领取，已退回您的账户，请到公众号我的库存<a href='%s'>我的库存</a>点击查看", url));
+            TemplateDto dto = TemplateDto.NewCustomService(gift.getOpenId(), String.format("24h前赠送的商品未被领取，已退回您的账户，请到公众号<a href='%s'>我的库存</a>点击查看", url));
             giftLogic.wxSender.sendNormal(dto);
 
         }
@@ -699,7 +699,7 @@ public class GiftLogic extends BaseLogic {
         if (giftStatus != null) {
             wrapper.where("status = {0}", giftStatus.getValue());
         }
-        wrapper.orderBy("create_time desc");
+        wrapper.orderBy("status asc,create_time desc");
         List<Gift> gifts = giftLogic.giftService.selectList(wrapper);
 
         List<GiftDto> giftDtos = new ArrayList<>();
@@ -738,6 +738,7 @@ public class GiftLogic extends BaseLogic {
         EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
         wrapper.in("stock_id", parentStockIds);
+        wrapper.orderBy("create_time desc");
         List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
 
         List<GiftDto> giftDtos = new ArrayList<>();

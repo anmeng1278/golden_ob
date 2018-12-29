@@ -52,7 +52,10 @@
             <div class="coupon">
                 <div class="coupon-back">
                     <div class="coupon-lt">
-                        <p class="coupon-price" th:text="${couponDto.amount}">50<span>&yen;</span></p>
+                        <p class="coupon-price" th:text="${couponDto.amount}">50
+                            <span th:if="${couponDto.couponType.value == 1}" th:text="|&yen;|"></span>
+                            <span th:if="${couponDto.couponType.value == 2}" th:text="|折|"></span>
+                        </p>
                         <p class="coupon-price-tips" th:text="${couponDto.couponType.message}"></p>
                     </div>
                     <div class="coupon-rt">

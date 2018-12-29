@@ -96,10 +96,26 @@
 
             //全选/反选
             $("span.checkone").click(function () {
+
+                var len = $('div.goods-list-item').length;
+
                 if ($(this).hasClass("check-all-xz")) {
                     $(this).removeClass("check-all-xz");
+
+                    var xzlen = $('div.goods-list-item .check-all-xz').length;
+                    //判断是否所有商品全是选中状态
+                    if (len != xzlen) {
+                        $('#checkAll').removeClass('check-all-xz');
+                    }
+
                 } else {
                     $(this).addClass("check-all-xz");
+
+                    var xzlen = $('div.goods-list-item .check-all-xz').length;
+                    //判断是否所有商品全是选中状态
+                    if (len == xzlen) {
+                        $('#checkAll').addClass('check-all-xz');
+                    }
                 }
                 calculateOrder();
             });

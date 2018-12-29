@@ -58,6 +58,8 @@ public class WxReceiver {
                 return this.EntityUseSuccessedTemplateId;
             case CANCELUNPAYORDER:
                 return this.CancelUnPayOrderTemplateId;
+            case OPENCARDSUCCESS:
+                return  this.OpenCardSuccessTemplateId;
         }
         return "";
     }
@@ -92,6 +94,12 @@ public class WxReceiver {
      */
     @Value(value = "${webconfig.WxTemplate.CancelUnPayOrder}")
     private String CancelUnPayOrderTemplateId;
+
+    /**
+     * 取消待支付订单模板
+     */
+    @Value(value = "${webconfig.WxTemplate.OpenCardSuccess}")
+    private String OpenCardSuccessTemplateId;
 
 
 

@@ -86,7 +86,7 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                 }
                 //{"openid":"o2JcesxmAIQWeqEEqA-vM-i44Miw","nickname":"张宁","sex":1,"language":"zh_CN","city":"Chaoyang","province":"Beijing","country":"China","headimgurl":"http:\/\/thirdwx.qlogo.cn\/mmopen\/vi_32\/DYAIOgq83erTkr9EdnUkzMDx5XM2slCL16ibrG6T1aibGlKZjicZFt16oVibkHxoA4Fft6akHQ10X62dzfBF3ojctw\/132","privilege":[]}
 
-                GetAccessTokenResp getAccessTokenResp = null;
+                GetAccessTokenResp getAccessTokenResp;
                 if (SpringContextUtils.getActiveProfile().equals("dev")) {
                     getAccessTokenResp = ThirdPartyLogic.GetAccessTokenDev(null);
                 } else {

@@ -5,17 +5,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class GoldenConfig {
+public class CardConfig {
 
     /**
      * 正常队列
      */
-    public static final String GOLDEN_NORMAL_QUEUE = "ob.gl.normal.queue";
+    public static final String GOLDEN_NORMAL_QUEUE = "ob.gl2.normal.queue";
 
     /**
      * 错误队列
      */
-    public static final String GOLDEN_ERROR_QUEUE = "ob.gl.error.queue";
+    public static final String GOLDEN_ERROR_QUEUE = "ob.gl2.error.queue";
 
     @Bean
     public Queue GlNormalQueue() {

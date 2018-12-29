@@ -69,37 +69,24 @@
                         <td th:text="${wechatLogic.GetWechat(info.openId).getNickname()}"></td>
                         <td th:text="${info.expressNumber}"></td>
                         <td>
-                            <th:block th:if="${!#lists.isEmpty(deliveryLogic.GetDeliveryStock(info.deliveryId))}" th:text="${deliveryLogic.GetDeliveryStock(info.deliveryId).get(0).orderId}">
+                            <th:block th:if="${!#lists.isEmpty(deliveryLogic.GetDeliveryStock(info.deliveryId))}"
+                                      th:text="${deliveryLogic.GetDeliveryStock(info.deliveryId).get(0).orderId}">
                             </th:block>
                         </td>
                         </td>
                         <td>
-                            <th:block  th:text="${info.mobile}"></th:block><br />
-                            <th:block  th:text="${info.contactName}"></th:block><br />
-                            <th:block  th:text="${info.address}"></th:block>
+                            <th:block th:text="${info.mobile}"></th:block>
+                            <br/>
+                            <th:block th:text="${info.contactName}"></th:block>
+                            <br/>
+                            <th:block th:text="${info.address}"></th:block>
                         </td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${enumLogic.GetPropertyType(info.propertyTypeId).message}"></td>
                         <td th:text="${enumLogic.GetDeliveryType(info.typeId).message}"></td>
 
-                        <td>
-                            <th:block th:if="${info.typeId == 1 && info.propertyTypeId == 1}">
-                                <th:block th:if="${info.status == 0}" th:text="未提取"></th:block>
-                                <th:block th:if="${info.status == 10 || info.status == 20}" th:text="已提取"></th:block>
-                            </th:block>
-
-                            <th:block th:if="${info.typeId == 2 && info.propertyTypeId == 1}" th:text="${enumLogic.GetDeliveryStatus(info.status).message}"> </th:block>
-
-                            <th:block th:if="${info.propertyTypeId == 2}">
-                                <th:block th:if="${info.status == 0}" th:text="未获取活动码"></th:block>
-                                <th:block th:if="${info.status == 10}" th:text="已获取活动码"></th:block>
-                                <th:block th:if="${info.status == 20}" th:text="已使用活动码"></th:block>
-                            </th:block>
-
-                            <th:block th:if="${info.propertyTypeId == 3}">
-                                <th:block th:if="${info.status == 0}" th:text="未开卡"></th:block>
-                                <th:block th:if="${info.status == 10 || info.status == 20}" th:text="已开卡"></th:block>
-                            </th:block>
+                        <td th:with="status=${enumLogic.GetDeliveryStatus(info.status)},propertyType=${enumLogic.GetPropertyType(info.propertyTypeId )} ">
+                            <th:block th:text="${status.getMessage(propertyType)}"></th:block>
                         <td>
                             <button th:title="|配送详情|"
                                     th:attr="data-tab-href=@{'/admin/delivery/sendInfo/'+${info.deliveryId}}"
@@ -139,7 +126,7 @@
                 var status = $("select[name='status']").val();
                 var keys = $("input[name='keys']").val();
 
-                window.location.href="/excel/exportDelivery?typeId="+typeId+"&keys="+keys+"&status="+status;
+                window.location.href = "/excel/exportDelivery?typeId=" + typeId + "&keys=" + keys + "&status=" + status;
             });
 
         });

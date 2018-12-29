@@ -4,13 +4,13 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
+import com.jsj.member.ob.dto.api.product.ProductImgDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.entity.Product;
 import com.jsj.member.ob.entity.ProductImg;
 import com.jsj.member.ob.entity.ProductSpec;
 import com.jsj.member.ob.enums.DictType;
-import com.jsj.member.ob.enums.GoldenCardType;
 import com.jsj.member.ob.enums.ProductImgType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.logic.DictLogic;
@@ -138,11 +138,6 @@ public class AdminProductController {
         request.setAttribute("productPerproties", productPerproties);
         request.setAttribute("productTypes", productTypes);
 
-        //卡类型
-        GoldenCardType[] goldenCardTypes = GoldenCardType.values();
-        request.setAttribute("goldenCardTypes", goldenCardTypes);
-
-
         return "admin/product/info";
     }
 
@@ -169,10 +164,6 @@ public class AdminProductController {
         int propertyTypeId = Integer.valueOf(request.getParameter("propertyTypeId"));
 
         PropertyType propertyType = PropertyType.valueOf(propertyTypeId);
-        int cardTypeId = 0;
-        if (propertyType.equals(PropertyType.GOLDENCARD)) {
-            cardTypeId = Integer.valueOf(request.getParameter("cardTypeId"));
-        }
 
         //简介
         String introduce = request.getParameter("introduce");
@@ -198,7 +189,6 @@ public class AdminProductController {
             product.setTypeId(typeId);
             product.setPropertyTypeId(propertyTypeId);
             product.setIntroduce(introduce);
-            product.setCardTypeId(cardTypeId);
 
             product.setUseIntro(useIntro);
             product.setUnit(unit);
@@ -219,7 +209,6 @@ public class AdminProductController {
             product.setTypeId(typeId);
             product.setPropertyTypeId(propertyTypeId);
             product.setIntroduce(introduce);
-            product.setCardTypeId(cardTypeId);
 
             product.setUseIntro(useIntro);
             product.setUnit(unit);
@@ -317,10 +306,7 @@ public class AdminProductController {
         //商品信息
         Product entity = productService.selectById(productId);
 
-        EntityWrapper<ProductImg> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where("product_id = {0}", productId);
-        entityWrapper.orderBy("type_id asc, product_img_id asc");
-        List<ProductImg> productImgs = productImgService.selectList(entityWrapper);
+        List<ProductImgDto> productImgs = ProductLogic.GetProductImgDtos(productId);
 
         request.setAttribute("info", entity);
         request.setAttribute("productImgs", productImgs);
@@ -341,8 +327,17 @@ public class AdminProductController {
     @Transactional(Constant.DBTRANSACTIONAL)
     public RestResponseBo saveProductImgs(@PathVariable("productId") Integer productId, HttpServletRequest request) {
 
+
+        EntityWrapper<ProductImg> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where("product_id = {0}", productId);
+
+        List list = new ArrayList();
+        list.add(ProductImgType.COVER.getValue());
+        list.add(ProductImgType.PRODUCT.getValue());
+        entityWrapper.in("type_id",list);
+
         //删除所有图片
-        productImgService.delete(new EntityWrapper<ProductImg>().where("product_id={0}", productId));
+        productImgService.delete(entityWrapper);
 
         //添加图片
         String[] imgPaths = request.getParameterValues("imgpath");

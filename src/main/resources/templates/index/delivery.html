@@ -71,7 +71,7 @@
                     <p class="order-item-head">
                         <span class="order-num" th:text="|收货人：${info.contactName}|"></span>
                         <span class="order-price"
-                              th:text="${info.getStatusName()}">已发货</span>
+                              th:text="${info.deliveryStatus.getMessage(info.propertyType)}">已发货</span>
                         <span class="order-dd-time clear"
                               th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></span>
                     </p>
@@ -109,7 +109,7 @@
                     <p class="order-item-head">
                         <span class="order-num" th:text="|收货人：${info.contactName}|"></span>
                         <span class="order-price"
-                              th:text="${info.getStatusName()}">已发货</span>
+                              th:text="${info.deliveryStatus.getMessage(info.propertyType)}">已发货</span>
                         <span class="order-dd-time clear"
                               th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></span>
                     </p>
@@ -141,7 +141,7 @@
                     <p class="order-item-head">
                         <span class="order-num" th:text="|收货人：${info.contactName}|"></span>
                         <span class="order-price"
-                              th:text="${info.getStatusName()}">已发货</span>
+                              th:text="${info.deliveryStatus.getMessage(info.propertyType)}">已发货</span>
                         <span class="order-dd-time clear"
                               th:text="|申请配送时间:${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}|"></span>
                     </p>

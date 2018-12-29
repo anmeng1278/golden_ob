@@ -116,49 +116,6 @@ public class DeliveryDto {
      */
     private List<ProductDto> productDtos;
 
-    private String statusName;
-
-    public String getStatusName() {
-
-        if (this.deliveryType == DeliveryType.PICKUP && this.propertyType == PropertyType.ENTITY) {
-            switch (this.deliveryStatus.getValue()) {
-                case 0:
-                    return "未提取";
-                case 10:
-                case 20:
-                    return "已提取";
-                default:
-                    return "未知";
-            }
-        }
-
-        if (this.propertyType == PropertyType.ACTIVITYCODE) {
-            switch (this.deliveryStatus.getValue()) {
-                case 0:
-                    return "未获取活动码";
-                case 10:
-                    return "已获取活动码";
-                case 20:
-                    return "已使用活动码";
-                default:
-            }
-        }
-
-
-        if (this.propertyType == PropertyType.GOLDENCARD) {
-            switch (this.deliveryStatus.getValue()) {
-                case 0:
-                    return "未开卡";
-                case 10:
-                case 20:
-                    return "已开卡";
-                default:
-            }
-        }
-        return deliveryStatus.getMessage();
-    }
-
-
     public Integer getDeliveryId() {
         return deliveryId;
     }
@@ -191,11 +148,6 @@ public class DeliveryDto {
     public void setDeliveryType(DeliveryType deliveryType) {
         this.deliveryType = deliveryType;
     }
-
-    public void setStatusName(String statusName) {
-        this.statusName = statusName;
-    }
-
 
     public PropertyType getPropertyType() {
         return propertyType;

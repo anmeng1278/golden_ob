@@ -10,6 +10,10 @@
     <!--引入js-->
     <script th:src="${ob.Url('/index/js/mystock.js')}" type="text/javascript"
             charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js', false)}" type="text/javascript"
+            charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/nav.js')}" type="text/javascript" charset="utf-8"></script>
+
 
     <script th:inline="javascript">
 
@@ -85,6 +89,7 @@
 </th:block>
 
 <th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css', false)}"/>
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/mystock.css')}"/>
 </th:block>
 
@@ -125,8 +130,18 @@
     <!--head end-->
 
     <!--banner start-->
-    <div class="banner clear" style="display: none;">
-        <img th:src="${ob.Img('/index/images/banner.png')}" alt="1"/>
+    <div class="banner" th:if="${!#lists.isEmpty(banners)}">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <th:block th:each="banner:${banners}">
+                    <div class="swiper-slide">
+                        <a th:href="@{${banner.navigateUrl}}">
+                            <img th:src="@{${banner.bannerPath}}" alt="1" width="100%"/>
+                        </a>
+                    </div>
+                </th:block>
+            </div>
+        </div>
     </div>
     <!--banner end-->
 
@@ -134,9 +149,8 @@
     <div class="main clear">
         <h2 class="stock-title">库存商品</h2>
         <div class="share-fail" th:if="${!#lists.isEmpty(giftDtos)}">
-            <p class="share-fail-tips">您有<span th:text="${#lists.size(giftDtos)}">0</span>个礼包分享失败</p>
-            <a th:href="${ob.Nav('/share/gift/'+giftDtos[0].giftUniqueCode + '/confirm')}" class="share-fail-look">查看
-                ></a>
+            <p class="share-fail-tips">您有<span th:text="${#lists.size(giftDtos)}">0</span>个礼包未分享</p>
+            <a th:href="${ob.Nav('/gift')}" class="share-fail-look">查看></a>
         </div>
         <div class="share-fail" th:if="${!#lists.isEmpty(unUsedActivityCodes)}">
             <p class="share-fail-tips">您有<span th:text="${#lists.size(unUsedActivityCodes)}">0</span>个未使用的次卡</p>
