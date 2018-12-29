@@ -1,8 +1,8 @@
 package com.jsj.member.ob.logic.delivery;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.constant.Constant;
-import com.jsj.member.ob.dto.api.delivery.CreateDeliveryRequ;
-import com.jsj.member.ob.dto.api.delivery.CreateDeliveryResp;
+import com.jsj.member.ob.dto.api.delivery.*;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
@@ -12,12 +12,15 @@ import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import com.jsj.member.ob.service.StockService;
+import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.TupleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,15 +37,25 @@ public class DeliveryEntity extends DeliveryBase {
     }
 
     @Autowired
-    public void initService(DeliveryService deliveryService, StockService stockService, DeliveryStockService deliveryStockService) {
+    public void initService(DeliveryService deliveryService,
+                            StockService stockService,
+                            DeliveryStockService deliveryStockService,
+                            WxSender wxSender) {
         super.deliveryService = deliveryService;
         super.stockService = stockService;
         super.deliveryStockService = deliveryStockService;
+        super.wxSender = wxSender;
     }
 
-    @Autowired
-    WxSender wxSender;
 
+    //region (public) 使用库存 CreateDelivery
+
+    /**
+     * 使用库存
+     *
+     * @param requ
+     * @return
+     */
     @Override
     @Transactional(Constant.DBTRANSACTIONAL)
     public CreateDeliveryResp CreateDelivery(CreateDeliveryRequ requ) {
@@ -103,29 +116,8 @@ public class DeliveryEntity extends DeliveryBase {
         delivery.setEffectiveDate(requ.getEffectiveDate());
         this.deliveryService.insert(delivery);
 
-        for (StockDto stockDto : stockDtos) {
-
-            Stock stock = this.stockService.selectById(stockDto.getStockId());
-            if (stock.getStatus() != StockStatus.UNUSE.getValue()) {
-                throw new TipException("当前库存状态不允许使用");
-            }
-
-            //添加提供库存
-            DeliveryStock deliveryStock = new DeliveryStock();
-
-            deliveryStock.setCreateTime(DateUtils.getCurrentUnixTime());
-            deliveryStock.setDeliveryId(delivery.getDeliveryId());
-            deliveryStock.setStockId(stock.getStockId());
-            deliveryStock.setUpdateTime(DateUtils.getCurrentUnixTime());
-
-            this.deliveryStockService.insert(deliveryStock);
-
-            //修改库存状态
-            stock.setStatus(StockStatus.USED.getValue());
-            stock.setUpdateTime(DateUtils.getCurrentUnixTime());
-
-            this.stockService.updateById(stock);
-        }
+        //使用库存
+        this.UseStocks(stockDtos, delivery);
 
         CreateDeliveryResp resp = new CreateDeliveryResp();
         resp.setDeliveryId(delivery.getDeliveryId());
@@ -135,7 +127,68 @@ public class DeliveryEntity extends DeliveryBase {
         TemplateDto temp = TemplateDto.EntityUseSuccessed(delivery, map);
         wxSender.sendNormal(temp);
 
-
         return resp;
     }
+    //endregion
+
+    //region (public) 获取使用链接 GetUsedNavigate
+
+    /**
+     * 获取使用链接
+     *
+     * @param openId
+     * @return
+     */
+    @Override
+    public TwoTuple<String, String> GetUsedNavigate(String openId) {
+        return TupleUtils.tuple("", "/stock/use1");
+    }
+
+    //endregion
+
+    //region (public) 实物发货 OpreationDelivery
+
+    /**
+     * 实物发货
+     *
+     * @param requ
+     * @return
+     */
+    @Override
+    public OpreationDeliveryResp OpreationDelivery(OpreationDeliveryRequ requ) {
+
+        DeliveryDto dto = DeliveryLogic.GetDelivery(requ.getDeliveryId());
+        if (!dto.getDeliveryStatus().equals(DeliveryStatus.UNDELIVERY)) {
+            throw new TipException(String.format("配送状态为：%s，不允许操作", dto.getDeliveryStatus().getMessage()));
+        }
+
+        if (dto.getDeliveryType().equals(DeliveryType.DISTRIBUTE)) {
+            if (StringUtils.isEmpty(requ.getExpressNumber())) {
+                throw new TipException("快递号不能为空");
+            }
+        }
+
+        Delivery delivery = deliveryService.selectById(dto.getDeliveryId());
+        List<DeliveryStock> deliveryStocks = deliveryStockService.selectList(new EntityWrapper<DeliveryStock>()
+                .where("delivery_id = {0}", delivery.getDeliveryId()));
+
+        delivery.setExpressNumber(requ.getExpressNumber());
+        delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
+        deliveryService.updateById(delivery);
+
+        //更新发货状态
+        deliveryStocks.forEach(ds -> {
+            Stock stock = stockService.selectById(ds.getStockId());
+            stock.setStatus(StockStatus.SENT.getValue());
+            stockService.updateById(stock);
+        });
+
+        OpreationDeliveryResp resp = new OpreationDeliveryResp();
+        resp.setSuccess(true);
+
+        return resp;
+
+    }
+    //endregion
+
 }

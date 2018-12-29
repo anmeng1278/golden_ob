@@ -8,7 +8,6 @@ import com.jsj.member.ob.dto.api.airport.JsAirportDto;
 import com.jsj.member.ob.dto.api.delivery.CreateDeliveryRequ;
 import com.jsj.member.ob.dto.api.delivery.CreateDeliveryResp;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
-import com.jsj.member.ob.dto.api.delivery.DeliveryStockDto;
 import com.jsj.member.ob.dto.api.gift.CreateGiftRequ;
 import com.jsj.member.ob.dto.api.gift.CreateGiftResp;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
@@ -22,8 +21,11 @@ import com.jsj.member.ob.logic.AirportLogic;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.GiftLogic;
 import com.jsj.member.ob.logic.StockLogic;
+import com.jsj.member.ob.logic.delivery.DeliveryBase;
+import com.jsj.member.ob.logic.delivery.DeliveryFactory;
 import com.jsj.member.ob.redis.RedisService;
 import com.jsj.member.ob.redis.StockKey;
+import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -74,7 +76,12 @@ public class StockController extends BaseController {
         request.setAttribute("giftDtos", giftDtos);
 
         //存在未使用的活动码
-        List<DeliveryStockDto> unUsedActivityCodes = DeliveryLogic.getUnUsedActivityCodes(openId);
+        DeliveryDto unDeliveryDto = DeliveryFactory.GetInstance(PropertyType.ACTIVITYCODE).GetUnDeliveryDto(openId);
+        List<DeliveryStock> unUsedActivityCodes = new ArrayList<>();
+
+        if (unDeliveryDto != null) {
+            unUsedActivityCodes = DeliveryLogic.GetDeliveryStocks(unDeliveryDto.getDeliveryId());
+        }
         request.setAttribute("unUsedActivityCodes", unUsedActivityCodes);
         //if (!unUsedActivityCodes.isEmpty()) {
         //    url = this.Url(String.format("/stock/qrcode/%d/%d", unUsedActivityCodes.get(0).getDeliveryId(), unUsedActivityCodes.get(0).getStockId()));
@@ -168,34 +175,16 @@ public class StockController extends BaseController {
         p = URLDecoder.decode(p, "UTF-8");
 
         PropertyType propertyType = PropertyType.valueOf(Integer.valueOf(propertyTypeId));
-        String url = "";
         String openId = this.OpenId();
 
-        switch (propertyType) {
+        //根据商品属性创建实例
+        DeliveryBase deliveryBase = DeliveryFactory.GetInstance(propertyType);
 
-            case ENTITY:
-                url = this.Url("/stock/use1", false);
-                break;
-            case ACTIVITYCODE:
+        //验证并获取下一步链接
+        TwoTuple<String, String> usedNavigate = deliveryBase.GetUsedNavigate(openId);
 
-                //判断是否存在未使用的活动码
-                List<DeliveryStockDto> unUsedActivityCodes = DeliveryLogic.getUnUsedActivityCodes(openId);
-                if (!unUsedActivityCodes.isEmpty()) {
-                    url = this.Url(String.format("/stock/qrcode/%d/%d", unUsedActivityCodes.get(0).getDeliveryId(), unUsedActivityCodes.get(0).getStockId()));
-                    return RestResponseBo.fail("您还有未使用的次卡", null, url);
-                }
-
-                url = this.Url("/stock/use2", false);
-                break;
-            case GOLDENCARD:
-
-                DeliveryDto unCreateGoldenCard = DeliveryLogic.getUnCreateGoldenCard(openId);
-                if (unCreateGoldenCard != null) {
-                    return RestResponseBo.fail("您的开卡正在确认中，不能重复开卡……");
-                }
-
-                url = this.Url("/stock/use3", false);
-                break;
+        if (!StringUtils.isEmpty(usedNavigate.first)) {
+            return RestResponseBo.fail(usedNavigate.first, null, usedNavigate.second);
         }
 
         List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
@@ -205,7 +194,7 @@ public class StockController extends BaseController {
         redisService.set(StockKey.token, openId, stockDtos);
 
         //url = String.format("%s?p=%s", url, p);
-        return RestResponseBo.ok("验证成功", url, null);
+        return RestResponseBo.ok("验证成功", usedNavigate.second, null);
 
     }
     //endregion
@@ -492,7 +481,7 @@ public class StockController extends BaseController {
         if (stockDtos.isEmpty()) {
             return RestResponseBo.fail("参数错误");
         }
-        if (!stockDtos.get(0).getProductDto().getPropertyType().equals(PropertyType.GOLDENCARD)) {
+        if (!stockDtos.get(0).getProductDto().getPropertyType().isMmeberCard()) {
             return RestResponseBo.fail("参数错误");
         }
 
@@ -502,7 +491,7 @@ public class StockController extends BaseController {
         String effectiveDate = request.getParameter("effectiveDate");
 
         if (!com.jsj.member.ob.utils.StringUtils.isStrDate(effectiveDate)) {
-            throw new TipException("生效时间格式错误");
+            throw new TipException("生效时间格式错误，示例：2019-01-01");
         }
         Date effectDate = DateUtils.dateFormat(effectiveDate, "yyyy-MM-dd");
         int effEctDateTimeStamp = DateUtils.getUnixTimeByDate(effectDate);
@@ -512,7 +501,7 @@ public class StockController extends BaseController {
         requ.getBaseRequ().setOpenId(openId);
         requ.setContactName(contactName);
         requ.setMobile(mobile);
-        requ.setPropertyType(PropertyType.GOLDENCARD);
+        requ.setPropertyType(stockDtos.get(0).getProductDto().getPropertyType());
 
         requ.setIdNumber(idNumber);
         requ.setIdTypeId(1);

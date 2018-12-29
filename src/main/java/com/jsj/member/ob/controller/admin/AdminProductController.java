@@ -10,7 +10,6 @@ import com.jsj.member.ob.entity.Product;
 import com.jsj.member.ob.entity.ProductImg;
 import com.jsj.member.ob.entity.ProductSpec;
 import com.jsj.member.ob.enums.DictType;
-import com.jsj.member.ob.enums.GoldenCardType;
 import com.jsj.member.ob.enums.ProductImgType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.logic.DictLogic;
@@ -138,11 +137,6 @@ public class AdminProductController {
         request.setAttribute("productPerproties", productPerproties);
         request.setAttribute("productTypes", productTypes);
 
-        //卡类型
-        GoldenCardType[] goldenCardTypes = GoldenCardType.values();
-        request.setAttribute("goldenCardTypes", goldenCardTypes);
-
-
         return "admin/product/info";
     }
 
@@ -169,10 +163,6 @@ public class AdminProductController {
         int propertyTypeId = Integer.valueOf(request.getParameter("propertyTypeId"));
 
         PropertyType propertyType = PropertyType.valueOf(propertyTypeId);
-        int cardTypeId = 0;
-        if (propertyType.equals(PropertyType.GOLDENCARD)) {
-            cardTypeId = Integer.valueOf(request.getParameter("cardTypeId"));
-        }
 
         //简介
         String introduce = request.getParameter("introduce");
@@ -198,7 +188,6 @@ public class AdminProductController {
             product.setTypeId(typeId);
             product.setPropertyTypeId(propertyTypeId);
             product.setIntroduce(introduce);
-            product.setCardTypeId(cardTypeId);
 
             product.setUseIntro(useIntro);
             product.setUnit(unit);
@@ -219,7 +208,6 @@ public class AdminProductController {
             product.setTypeId(typeId);
             product.setPropertyTypeId(propertyTypeId);
             product.setIntroduce(introduce);
-            product.setCardTypeId(cardTypeId);
 
             product.setUseIntro(useIntro);
             product.setUnit(unit);

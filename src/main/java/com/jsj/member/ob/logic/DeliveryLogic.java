@@ -9,7 +9,6 @@ import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
-import com.jsj.member.ob.enums.GoldenCardType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.delivery.DeliveryBase;
@@ -334,62 +333,53 @@ public class DeliveryLogic extends BaseLogic {
     }
     //endregion
 
-    //region (public) 验证次卡配送状态 getUnUsedActivityCodes
+
+    //region (public) 获取未开卡信息 GetUnDeliveryDto
 
     /**
-     * 验证次卡配送状态
-     *
-     * @param openId
-     */
-    public static List<DeliveryStockDto> getUnUsedActivityCodes(String openId) {
-
-        List<Integer> statuses = new ArrayList<>();
-        statuses.add(DeliveryStatus.UNDELIVERY.getValue());
-        statuses.add(DeliveryStatus.DELIVERED.getValue());
-
-        Wrapper<Delivery> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null");
-        wrapper.where("open_id = {0}", openId);
-        wrapper.where("property_type_id = {0}", PropertyType.ACTIVITYCODE.getValue());
-        wrapper.in("status ", statuses);
-
-        List<DeliveryStockDto> deliveryStockDtos = new ArrayList<>();
-
-        Delivery delivery = deliveryLogic.deliveryService.selectOne(wrapper);
-        if (delivery == null) {
-            return deliveryStockDtos;
-        }
-
-        deliveryStockDtos = GetDeliveryStocks(delivery.getDeliveryId(), openId);
-        return deliveryStockDtos;
-    }
-    //endregion
-
-    //region (public) 获取未开卡信息 getUnCreateGoldenCard
-
-    /**
-     * 获取未开卡信息
-     * 目前只支付月体验卡
+     * 获取未发货信息
      *
      * @param openId
      * @return
      */
-    public static DeliveryDto getUnCreateGoldenCard(String openId) {
+    public static DeliveryDto GetUnDeliveryDto(String openId, PropertyType propertyType) {
 
         Wrapper<Delivery> wrapper = new EntityWrapper<>();
 
         wrapper.where("open_id = {0}", openId);
         wrapper.where("delete_time is null");
-        wrapper.where("status = {0}", DeliveryStatus.UNDELIVERY.getValue());
-        wrapper.where("property_type_id = {0}", PropertyType.GOLDENCARD.getValue());
 
+        //活动码 0/10 不允许
+        switch (propertyType) {
+            case ACTIVITYCODE: {
+                List<Integer> status = new ArrayList<>();
+                status.add(DeliveryStatus.UNDELIVERY.getValue());
+                status.add(DeliveryStatus.DELIVERED.getValue());
+                wrapper.in("status", status);
+            }
+            break;
+            case ENTITY:
+                wrapper.where("status = {0}", DeliveryStatus.UNDELIVERY.getValue());
+                break;
+            case GOLDEN:
+            case MONTH:
+            case CARD:
+            case NATION: {
+                List<Integer> status = new ArrayList<>();
+                status.add(DeliveryStatus.UNDELIVERY.getValue());
+                status.add(DeliveryStatus.DELIVERED.getValue());
+                wrapper.in("status", status);
+            }
+            break;
+        }
+        wrapper.where("property_type_id = {0}", propertyType.getValue());
 
         Delivery delivery = deliveryLogic.deliveryService.selectOne(wrapper);
         return ToDto(delivery);
 
     }
-    //endregion
 
+    //endregion
 
     //region (public) 使用活动码 ActivityCodeVerify
 
@@ -470,17 +460,11 @@ public class DeliveryLogic extends BaseLogic {
         Wrapper<Delivery> wrapper = new EntityWrapper<>();
 
         wrapper.where("delete_time is null");
-        wrapper.where("property_type_id = {0}", PropertyType.GOLDENCARD.getValue());
+        //扫描任务
+        wrapper.where("property_type_id = {0}", PropertyType.MONTH.getValue());
         wrapper.where("status = {0}", DeliveryStatus.UNDELIVERY.getValue());
         wrapper.where("( effective_date > 0 and effective_date <= UNIX_TIMESTAMP())");
-        wrapper.where("exists(   select * " +
-                        "                           from _delivery_stock as a " +
-                        "                               inner join _stock as b " +
-                        "                                   on a.stock_id = b.stock_id" +
-                        "                               inner join _product as c" +
-                        "                                   on b.product_id = c.product_id" +
-                        "                           where a.delivery_id =  _delivery.delivery_id and c.card_type_id = {0}  )",
-                GoldenCardType.MONTH.getValue());
+
 
         List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
         List<DeliveryDto> deliveryDtos = new ArrayList<>();

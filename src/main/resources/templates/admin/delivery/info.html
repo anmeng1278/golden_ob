@@ -21,7 +21,7 @@
                             <label class="layui-form-label">配送状态:</label>
                             <div class="layui-input-inline layui-form-label-col"
                                  style="color: blue; font-size: large; font-weight: bold;width: 16%">
-                                <th:block th:text="${info.getStatusName()}"></th:block>
+                                <th:block th:text="${info.deliveryStatus.getMessage(info.propertyType)}"></th:block>
                             </div>
 
                             <label class="layui-form-label">配送方式:</label>
@@ -176,7 +176,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">活动码状态:</label>
                 <div class="layui-input-inline layui-form-label-col">
-                    <th:block th:text="${info.getStatusName()}"></th:block>
+                    <th:block th:text="${info.deliveryStatus.getMessage(info.propertyType)}"></th:block>
                 </div>
             </div>
 
@@ -198,7 +198,7 @@
         </th:block>
 
         <!-- 卡类 -->
-        <th:block th:if="${info.propertyType.value == 3}">
+        <th:block th:if="${info.propertyType.isMmeberCard()}">
 
             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;width: 99%">
                 <legend th:text="|卡信息|"></legend>
@@ -238,7 +238,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">开卡状态:</label>
                 <div class="layui-input-inline layui-form-label-col" style="width: auto">
-                    <th:block th:text="${info.getStatusName()}"></th:block>
+                    <th:block th:text="${info.deliveryStatus.getMessage(info.propertyType)}"></th:block>
                 </div>
             </div>
 

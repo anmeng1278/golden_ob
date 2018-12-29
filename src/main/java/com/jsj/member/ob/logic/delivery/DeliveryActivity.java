@@ -1,9 +1,8 @@
 package com.jsj.member.ob.logic.delivery;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.constant.Constant;
-import com.jsj.member.ob.dto.api.delivery.CreateDeliveryRequ;
-import com.jsj.member.ob.dto.api.delivery.CreateDeliveryResp;
-import com.jsj.member.ob.dto.api.delivery.DeliveryStockDto;
+import com.jsj.member.ob.dto.api.delivery.*;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.thirdParty.GetActivityCodesResp;
 import com.jsj.member.ob.entity.Delivery;
@@ -21,7 +20,9 @@ import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import com.jsj.member.ob.service.StockService;
+import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.TupleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,15 +38,24 @@ public class DeliveryActivity extends DeliveryBase {
     }
 
     @Autowired
-    WxSender wxSender;
-
-    @Autowired
-    public void initService(DeliveryService deliveryService, StockService stockService, DeliveryStockService deliveryStockService) {
+    public void initService(DeliveryService deliveryService,
+                            StockService stockService,
+                            DeliveryStockService deliveryStockService,
+                            WxSender wxSender) {
         super.deliveryService = deliveryService;
         super.stockService = stockService;
         super.deliveryStockService = deliveryStockService;
+        super.wxSender = wxSender;
     }
 
+    //region (public) 使用库存 CreateDelivery
+
+    /**
+     * 使用库存
+     *
+     * @param requ
+     * @return
+     */
     @Override
     @Transactional(Constant.DBTRANSACTIONAL)
     public CreateDeliveryResp CreateDelivery(CreateDeliveryRequ requ) {
@@ -69,8 +79,8 @@ public class DeliveryActivity extends DeliveryBase {
         String openId = requ.getBaseRequ().getOpenId();
 
         //判断是否存在未使用的活动码
-        List<DeliveryStockDto> deliveryStockDtos = DeliveryLogic.getUnUsedActivityCodes(openId);
-        if (!deliveryStockDtos.isEmpty()) {
+        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(openId);
+        if (unDeliveryDto != null) {
             throw new TipException("您还有未使用的次卡");
         }
 
@@ -96,50 +106,119 @@ public class DeliveryActivity extends DeliveryBase {
 
         this.deliveryService.insert(delivery);
 
-        for (StockDto stockDto : stockDtos) {
+        //使用库存
+        this.UseStocks(stockDtos, delivery);
 
-            Stock stock = this.stockService.selectById(stockDto.getStockId());
-            if (stock.getStatus() != StockStatus.UNUSE.getValue()) {
-                throw new TipException("当前库存状态不允许使用");
-            }
+        //生成活动码
+        OpreationDeliveryRequ opreationDeliveryRequ = new OpreationDeliveryRequ();
+        opreationDeliveryRequ.setDeliveryId(delivery.getDeliveryId());
 
-            //添加提供库存
-            DeliveryStock deliveryStock = new DeliveryStock();
-
-            deliveryStock.setCreateTime(DateUtils.getCurrentUnixTime());
-            deliveryStock.setDeliveryId(delivery.getDeliveryId());
-            deliveryStock.setStockId(stock.getStockId());
-            deliveryStock.setUpdateTime(DateUtils.getCurrentUnixTime());
-
-            GetActivityCodesResp resp = ThirdPartyLogic.GetActivityCodes(null);
-            if (resp.getBaseResponse().isSuccess()) {
-                deliveryStock.setActivityCode(resp.getActivityCodes().get(0));
-            } else {
-                deliveryStock.setActivityCode("KTYX");
-            }
-
-            this.deliveryStockService.insert(deliveryStock);
-
-            //修改库存状态
-            stock.setStatus(StockStatus.USED.getValue());
-            stock.setUpdateTime(DateUtils.getCurrentUnixTime());
-
-            this.stockService.updateById(stock);
-
-        }
-
-        //更新状态为已获取活动码
-        delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
-        this.deliveryService.updateById(delivery);
+        this.OpreationDelivery(opreationDeliveryRequ);
 
         CreateDeliveryResp resp = new CreateDeliveryResp();
         resp.setDeliveryId(delivery.getDeliveryId());
         resp.setStockId(stockDtos.get(0).getStockId());
 
         // WX发送活动码使用成功模板
-        TemplateDto temp = TemplateDto.QrcodeUseSuccessed(delivery,stockDtos);
+        TemplateDto temp = TemplateDto.QrcodeUseSuccessed(delivery, stockDtos);
         wxSender.sendNormal(temp);
 
         return resp;
     }
+    //endregion
+
+    //region (public) 获取使用链接 GetUsedNavigate
+
+    /**
+     * 获取使用链接
+     *
+     * @param openId
+     * @return
+     */
+    @Override
+    public TwoTuple<String, String> GetUsedNavigate(String openId) {
+
+        //判断是否存在未使用的活动码
+        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(openId);
+        if (unDeliveryDto != null) {
+            List<DeliveryStock> deliveryStocks = DeliveryLogic.GetDeliveryStocks(unDeliveryDto.getDeliveryId());
+            if (!deliveryStocks.isEmpty()) {
+                String url = String.format("/stock/qrcode/%d/%d", deliveryStocks.get(0).getDeliveryId(), deliveryStocks.get(0).getStockId());
+                return TupleUtils.tuple("您还有未使用的次卡", url);
+            }
+        }
+
+        return TupleUtils.tuple("", "/stock/use2");
+    }
+
+    //endregion
+
+    //region (public) 发货、开卡、创建活动码 OpreationDelivery
+
+    /**
+     * 发货、开卡、创建活动码
+     *
+     * @param requ
+     * @return
+     */
+    @Override
+    public OpreationDeliveryResp OpreationDelivery(OpreationDeliveryRequ requ) {
+
+        DeliveryDto dto = DeliveryLogic.GetDelivery(requ.getDeliveryId());
+
+        if (!dto.getDeliveryStatus().equals(DeliveryStatus.UNDELIVERY)) {
+            throw new TipException(String.format("活动码状态为：%s，不允许操作",
+                    dto.getDeliveryStatus().getMessage(this.getPropertyType())));
+        }
+
+        Delivery delivery = deliveryService.selectById(dto.getDeliveryId());
+        List<DeliveryStock> deliveryStocks = deliveryStockService.selectList(new EntityWrapper<DeliveryStock>()
+                .where("delivery_id = {0}", delivery.getDeliveryId()));
+
+        String remark = delivery.getRemarks();
+
+
+        //更新发货状态
+        for (DeliveryStock ds : deliveryStocks) {
+
+            //获取验证码
+            GetActivityCodesResp resp = ThirdPartyLogic.GetActivityCodes(null);
+            if (resp.getBaseResponse().isSuccess()) {
+                ds.setActivityCode(resp.getActivityCodes().get(0));
+                //获取成功
+                if (remark != null) {
+                    remark += String.format("获取成功：%s", this.getPropertyType().getMessage());
+                } else {
+                    remark = String.format("获取成功：%s", this.getPropertyType().getMessage());
+                }
+            } else {
+                ds.setActivityCode("JSYX");
+                //获取失败
+                if (remark != null) {
+                    remark += String.format("获取失败：%s", resp.getBaseResponse().getErrorMessage());
+                } else {
+                    remark = String.format("获取失败：%s", resp.getBaseResponse().getErrorMessage());
+                }
+            }
+            this.deliveryStockService.updateById(ds);
+
+            Stock stock = stockService.selectById(ds.getStockId());
+            stock.setStatus(StockStatus.SENT.getValue());
+            stockService.updateById(stock);
+        }
+
+        //更新状态为已获取
+        delivery.setRemarks(remark);
+        delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
+        this.deliveryService.updateById(delivery);
+
+        OpreationDeliveryResp resp = new OpreationDeliveryResp();
+        resp.setSuccess(true);
+
+        return resp;
+
+    }
+
+    //endregion
+
 }

@@ -3,9 +3,10 @@ package com.jsj.member.ob.jobs;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.logic.DeliveryLogic;
-import com.jsj.member.ob.rabbitmq.card.CreateGoldenDto;
-import com.jsj.member.ob.rabbitmq.card.GoldenSender;
+import com.jsj.member.ob.rabbitmq.card.CardSender;
+import com.jsj.member.ob.rabbitmq.card.CreateCardDto;
 import com.jsj.member.ob.service.DeliveryService;
+import com.jsj.member.ob.utils.SpringContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -22,15 +23,15 @@ public class CreateGoldenCardJob {
     DeliveryService deliveryService;
 
     @Autowired
-    GoldenSender goldenSender;
+    CardSender goldenSender;
 
 
     @Scheduled(cron = "0 0/1 * * * ?")
     public void updateDeliveryStatus() {
 
-        //if (SpringContextUtils.getActiveProfile().equals("dev")) {
-        //    return;
-        //}
+        if (SpringContextUtils.getActiveProfile().equals("dev")) {
+            return;
+        }
 
         try {
             List<DeliveryDto> deliveryDtos = DeliveryLogic.GetUnCreateGoldenCard();
@@ -42,20 +43,9 @@ public class CreateGoldenCardJob {
                     continue;
                 }
 
-                StockDto dt = stockDtos.get(0);
-                int cardTypeId = dt.getProductDto().getCardTypeId();
-                if (cardTypeId == 0) {
-                    continue;
-                }
-
-                CreateGoldenDto dto = new CreateGoldenDto();
-                dto.setCardType(cardTypeId);
+                CreateCardDto dto = new CreateCardDto();
                 dto.setDeliveryId(dl.getDeliveryId());
-                dto.setMemberIdNumber(dl.getIdNumber());
-                dto.setMemberIDType(dl.getIdTypeId() + "");
-                dto.setMemberMobile(dl.getMobile() + "");
-                dto.setMemberName(dl.getContactName());
-                dto.setSalePrice(dt.getProductDto().getProductSpecDtos().get(0).getSalePrice() + "");
+                dto.setPropertyType(dl.getPropertyType());
 
                 goldenSender.sendNormal(dto);
             }

@@ -3,7 +3,6 @@ package com.jsj.member.ob.logic;
 import com.alibaba.fastjson.JSON;
 import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.thirdParty.*;
-import com.jsj.member.ob.enums.GoldenCardType;
 import com.jsj.member.ob.enums.SmsLevel;
 import com.jsj.member.ob.rabbitmq.wx.TemplateData;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
@@ -137,7 +136,6 @@ public class thirdPartyLogicTest {
 
         CreateGoldenCardRequ requ = new CreateGoldenCardRequ();
 
-        requ.getRequestBody().setCardType(GoldenCardType.getApiCode(GoldenCardType.MONTH));
         requ.getRequestBody().setMemberIdNumber("210781198610161816");
         requ.getRequestBody().setMemberIDType("1");
         requ.getRequestBody().setMemberMobile("15210860133");
