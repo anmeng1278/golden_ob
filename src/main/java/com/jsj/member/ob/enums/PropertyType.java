@@ -9,8 +9,6 @@ public enum PropertyType {
 
     ACTIVITYCODE(2, "活动码"),
 
-    CARD(3, "超级空客月体验卡"),
-
     MONTH(34, "超级空客月体验卡"),
 
     GOLDEN(46, "商旅管家逸站通卡"),
@@ -40,7 +38,6 @@ public enum PropertyType {
                 return ENTITY;
             case 2:
                 return ACTIVITYCODE;
-            case 3:
             case 34:
                 return MONTH;
             case 46:

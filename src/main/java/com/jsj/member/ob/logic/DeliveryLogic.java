@@ -363,7 +363,6 @@ public class DeliveryLogic extends BaseLogic {
                 break;
             case GOLDEN:
             case MONTH:
-            case CARD:
             case NATION: {
                 List<Integer> status = new ArrayList<>();
                 status.add(DeliveryStatus.UNDELIVERY.getValue());

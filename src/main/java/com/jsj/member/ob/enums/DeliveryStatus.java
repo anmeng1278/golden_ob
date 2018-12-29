@@ -48,7 +48,6 @@ public enum DeliveryStatus {
                         throw new FatalException("未知的枚举值");
                 }
             }
-            case CARD:
             case MONTH:
             case GOLDEN:
             case NATION: {
