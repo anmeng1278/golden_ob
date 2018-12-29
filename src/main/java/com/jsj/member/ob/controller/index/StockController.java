@@ -15,13 +15,11 @@ import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.gift.GiftProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.stock.UseProductDto;
+import com.jsj.member.ob.entity.Banner;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.enums.*;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.logic.AirportLogic;
-import com.jsj.member.ob.logic.DeliveryLogic;
-import com.jsj.member.ob.logic.GiftLogic;
-import com.jsj.member.ob.logic.StockLogic;
+import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.redis.RedisService;
 import com.jsj.member.ob.redis.StockKey;
 import com.jsj.member.ob.utils.DateUtils;
@@ -76,10 +74,10 @@ public class StockController extends BaseController {
         //存在未使用的活动码
         List<DeliveryStockDto> unUsedActivityCodes = DeliveryLogic.getUnUsedActivityCodes(openId);
         request.setAttribute("unUsedActivityCodes", unUsedActivityCodes);
-        //if (!unUsedActivityCodes.isEmpty()) {
-        //    url = this.Url(String.format("/stock/qrcode/%d/%d", unUsedActivityCodes.get(0).getDeliveryId(), unUsedActivityCodes.get(0).getStockId()));
-        //    return RestResponseBo.fail("您还有未使用的次卡", null, url);
-        //}
+
+        //库存轮播图
+        List<Banner> banners = BannerLogic.GetBanner(BannerType.STOCK.getValue());
+        request.setAttribute("banners", banners);
 
         return "index/stock";
     }
