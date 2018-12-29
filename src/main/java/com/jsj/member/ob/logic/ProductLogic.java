@@ -217,9 +217,47 @@ public class ProductLogic extends BaseLogic {
      * @param productId
      * @return
      */
-    public static List<ProductImgDto> GetProductImgDtos(int productId) {
+   /* public static List<ProductImgDto> GetProductImgDtos(int productId) {
         return productLogic.GetProductImgDtos(productId, null);
+    }*/
+
+    /**
+     * 获取商品首图和详情图
+     *
+     * @param productId
+     * @return
+     */
+    public static List<ProductImgDto> GetProductImgDtos(int productId) {
+
+        List<ProductImgDto> productImgDtos = new ArrayList<>();
+
+        //商品图片
+        Wrapper<ProductImg> productImgWrapper = new EntityWrapper<>();
+        productImgWrapper.where("product_id={0} and delete_time is null", productId);
+
+        List list = new ArrayList();
+        list.add(ProductImgType.COVER.getValue());
+        list.add(ProductImgType.PRODUCT.getValue());
+        productImgWrapper.in("type_id",list);
+
+        productImgWrapper.orderBy("type_id asc, product_img_id asc");
+
+        List<ProductImg> productImgs = productLogic.productImgService.selectList(productImgWrapper);
+        for (ProductImg pi : productImgs) {
+
+            ProductImgDto productImgDto = new ProductImgDto();
+
+            productImgDto.setImgPath(pi.getImgPath());
+            productImgDto.setProductId(pi.getProductId());
+            productImgDto.setProductImgId(pi.getProductImgId());
+            productImgDto.setProductImgType(ProductImgType.valueOf(pi.getTypeId()));
+
+            productImgDtos.add(productImgDto);
+        }
+
+        return productImgDtos;
     }
+
 
     /**
      * 获取商品图片
@@ -237,7 +275,7 @@ public class ProductLogic extends BaseLogic {
         if (productImgType != null) {
             productImgWrapper.where("type_id = {0}", productImgType.getValue());
         }
-        productImgWrapper.orderBy("update_time desc");
+        productImgWrapper.orderBy("type_id asc, product_img_id asc");
 
         List<ProductImg> productImgs = productLogic.productImgService.selectList(productImgWrapper);
         for (ProductImg pi : productImgs) {
