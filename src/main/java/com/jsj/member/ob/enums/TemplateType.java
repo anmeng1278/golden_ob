@@ -14,7 +14,9 @@ public enum TemplateType {
 
     QRCODEUSESUCCESSED(4,"活动码使用成功"),
 
-    CANCELUNPAYORDER(5,"取消待支付订单");
+    CANCELUNPAYORDER(5,"取消待支付订单"),
+
+    OPENCARDSUCCESS(6,"开卡成功");
 
     private Integer value;
 
@@ -47,6 +49,8 @@ public enum TemplateType {
                 return QRCODEUSESUCCESSED;
             case 5:
                 return CANCELUNPAYORDER;
+            case 6:
+                return OPENCARDSUCCESS;
             default:
                 throw new FatalException("未知的枚举值");
         }

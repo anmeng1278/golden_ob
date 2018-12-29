@@ -10,6 +10,10 @@
     <!--引入js-->
     <script th:src="${ob.Url('/index/js/mystock.js')}" type="text/javascript"
             charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js', false)}" type="text/javascript"
+            charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/nav.js')}" type="text/javascript" charset="utf-8"></script>
+
 
     <script th:inline="javascript">
 
@@ -85,6 +89,7 @@
 </th:block>
 
 <th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css', false)}"/>
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/mystock.css')}"/>
 </th:block>
 
@@ -125,8 +130,18 @@
     <!--head end-->
 
     <!--banner start-->
-    <div class="banner clear" style="display: none;">
-        <img th:src="${ob.Img('/index/images/banner.png')}" alt="1"/>
+    <div class="banner" th:if="${!#lists.isEmpty(banners)}">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <th:block th:each="banner:${banners}">
+                    <div class="swiper-slide">
+                        <a th:href="@{${banner.navigateUrl}}">
+                            <img th:src="@{${banner.bannerPath}}" alt="1" width="100%"/>
+                        </a>
+                    </div>
+                </th:block>
+            </div>
+        </div>
     </div>
     <!--banner end-->
 

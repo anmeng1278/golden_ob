@@ -129,7 +129,7 @@ webconfig:
     ## 金额：{{keyword3.DATA}}
     ## 状态：{{keyword4.DATA}}
     ## {{remark.DATA}}
-    EntityUseSuccessed: 46zVrmMwlvcE0UgnSog1M43jFmEcPyzFnSm1_kb2oOg
+    EntityUseSuccessed: -f5vgpqxIPIKnA0cem4DewNe-2IJHN14DR0rZcUv6aI
 
     ## {{first.DATA}}
     ## 订单号：{{keyword1.DATA}}
@@ -138,5 +138,11 @@ webconfig:
     ## 订单取消原因：{{keyword4.DATA}}
     ## {{remark.DATA}}
     CancelUnPayOrder: pRqThOciBj7f9ZnOFYa6CsVrsjo8tvk9icCGcHlKXOs
+
+    ## {{first.DATA}}
+    ## 公司名称：{{keyword1.DATA}}
+    ## 出卡时间：{{keyword2.DATA}}
+    ## {{remark.DATA}}
+    OpenCardSuccess: A7p3NcrvEGlbqS56PRbHTE9qGRz25lGrb1Fpo4bTHDU
 
 
