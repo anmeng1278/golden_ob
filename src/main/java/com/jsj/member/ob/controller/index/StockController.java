@@ -83,10 +83,10 @@ public class StockController extends BaseController {
             unUsedActivityCodes = DeliveryLogic.GetDeliveryStocks(unDeliveryDto.getDeliveryId());
         }
         request.setAttribute("unUsedActivityCodes", unUsedActivityCodes);
-        //if (!unUsedActivityCodes.isEmpty()) {
-        //    url = this.Url(String.format("/stock/qrcode/%d/%d", unUsedActivityCodes.get(0).getDeliveryId(), unUsedActivityCodes.get(0).getStockId()));
-        //    return RestResponseBo.fail("您还有未使用的次卡", null, url);
-        //}
+
+        //库存轮播图
+        List<Banner> banners = BannerLogic.GetBanner(BannerType.STOCK.getValue());
+        request.setAttribute("banners", banners);
 
         return "index/stock";
     }

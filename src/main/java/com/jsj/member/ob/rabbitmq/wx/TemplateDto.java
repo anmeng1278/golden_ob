@@ -5,12 +5,13 @@ import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.Order;
-import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
+import com.jsj.member.ob.enums.GoldenCardType;
 import com.jsj.member.ob.enums.TemplateType;
 import com.jsj.member.ob.logic.ConfigLogic;
 import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.rabbitmq.BaseDto;
+import com.jsj.member.ob.rabbitmq.card.CreateGoldenDto;
 import com.jsj.member.ob.utils.DateUtils;
 
 import java.io.Serializable;
@@ -280,13 +281,16 @@ public class TemplateDto extends BaseDto {
         消费时间：{{keyword2.DATA}}
         {{remark.DATA}}*/
 
+        //消费时间
+        String consumeDate = DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getCreateTime() + ""), "yyyy-MM-dd");
+
         TemplateDto dto = new TemplateDto();
         dto.setToUser(delivery.getOpenId());
         dto.setTemplateType(TemplateType.QRCODEUSESUCCESSED);
         dto.setFirst(String.format("感谢您在%s机场使用金色逸站通用券，点击模板可直接出未用券二维码\n", delivery.getAirportName()));
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(WechatLogic.GetWechat(delivery.getOpenId()).getNickname() + "", color));
-        dto.getData().put("keyword2", new TemplateData(delivery.getCreateTime() + "", color));
+        dto.getData().put("keyword2", new TemplateData(consumeDate + "", color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("/stock/qrcode/%s/%s", delivery.getDeliveryId(), stockDtos.get(0).getStockId()));
@@ -300,30 +304,31 @@ public class TemplateDto extends BaseDto {
      * @param delivery
      * @return
      */
-    public static TemplateDto EntityUseSuccessed(Delivery delivery, Map map) {
+    public static TemplateDto EntityUseSuccessed(Delivery delivery, Map map,List<StockDto> stockDtos) {
+
 
         /*{{first.DATA}}
-        商品名称：{{keyword1.DATA}}
-        数量：{{keyword2.DATA}}
-        金额：{{keyword3.DATA}}
-        状态：{{keyword4.DATA}}
+        订单时间：{{keyword1.DATA}}
+        订单编号：{{keyword2.DATA}}
+        订单物品：{{keyword3.DATA}}
         {{remark.DATA}}*/
 
+        //订单时间
+        String orderDate = DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getCreateTime() + ""), "yyyy-MM-dd");
 
         TemplateDto dto = new TemplateDto();
         dto.setToUser(delivery.getOpenId());
         dto.setTemplateType(TemplateType.ENTITYUSESUCCESSED);
         if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
-            dto.setFirst("您的配送订单已创建成功，我们正在为您安排配送！");
+            dto.setFirst("您的配送订单已创建成功，我们正在为您安排配送！\n");
         }
         if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
-            dto.setFirst("您的配送订单已创建成功，请到相应的自提点提取！");
+            dto.setFirst("您的配送订单已创建成功，请到相应的自提点提取！\n");
         }
         dto.setFirstColor(gold_color);
-        dto.getData().put("keyword1", new TemplateData(map.get("productName").toString(), color));
-        dto.getData().put("keyword2", new TemplateData(map.get("productNumber").toString(), color));
-        dto.getData().put("keyword3", new TemplateData(map.get("productPrice").toString(), color));
-        dto.getData().put("keyword4", new TemplateData(DeliveryStatus.valueOf(delivery.getStatus()).getMessage(), color));
+        dto.getData().put("keyword1", new TemplateData(orderDate, color));
+        dto.getData().put("keyword2", new TemplateData(stockDtos.get(0).getOrderId().toString(), color));
+        dto.getData().put("keyword3", new TemplateData(map.get("productName").toString(), color));
         dto.setRemark("\n金色严选祝您生活愉快！");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/delivery", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
@@ -366,39 +371,55 @@ public class TemplateDto extends BaseDto {
     }
 
 
+    /**
+     * 开卡成功中模板消息
+     *
+     * @param goldenDto
+     * @return
+     */
+    public static TemplateDto OpenCardSuccess(CreateGoldenDto goldenDto,Delivery delivery) {
+
+        /*
+            {{first.DATA}}
+            公司名称：{{keyword1.DATA}}
+            出卡时间：{{keyword2.DATA}}
+            {{remark.DATA}}
+        */
+
+        //开卡时间
+        String openCardDate = DateUtils.formatDateByUnixTime(Long.parseLong(DateUtils.getCurrentUnixTime() + ""), "yyyy-MM-dd");
+
+        TemplateDto dto = new TemplateDto();
+        dto.setToUser(delivery.getOpenId());
+        dto.setTemplateType(TemplateType.OPENCARDCONFIRM);
+        dto.setFirst(String.format("您的%s已成功开通\n", GoldenCardType.valueOf(goldenDto.getCardType()).getMessage()));
+        dto.setFirstColor(gold_color);
+        dto.getData().put("keyword1",new TemplateData("北京金色世纪商旅网络有限公司", color));
+        dto.getData().put("keyword2", new TemplateData(openCardDate, color));
+        dto.setRemark("\n空铁管家祝您旅途愉快");
+        dto.setRemarkColor(gold_color);
+        dto.setUrl(String.format("%s%s/", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
+
+        return dto;
+    }
+
     public static Map GetProduct(List<StockDto> stockDtos) {
 
         Map<String, Object> map = new HashMap<>();
 
         StringBuilder name = new StringBuilder();
-        StringBuilder number = new StringBuilder();
-        StringBuilder price = new StringBuilder();
+
         for (StockDto stockDto : stockDtos) {
-            name.append(stockDto.getProductDto().getProductName() + ",");
-
-            number.append(stockDto.getNumber() + ",");
-
-            price.append(stockDto.getProductDto().getSalePrice() + ",");
+            name.append(stockDto.getProductDto().getProductName()+"*"+stockDto.getNumber() + ",");
         }
 
         if (name.length() > 0) {
-
             name.deleteCharAt(name.length() - 1);
         }
-        if (number.length() > 0) {
-            number.deleteCharAt(number.length() - 1);
-        }
-        if (price.length() > 0) {
-            price.deleteCharAt(price.length() - 1);
-        }
-
 
         String productName = name.toString().toLowerCase();
         map.put("productName", productName);
-        String productNumber = number.toString().toLowerCase();
-        map.put("productNumber", productNumber);
-        String productPrice = price.toString().toLowerCase();
-        map.put("productPrice", productPrice);
+
 
         return map;
     }

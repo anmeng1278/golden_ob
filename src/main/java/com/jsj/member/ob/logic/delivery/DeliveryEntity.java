@@ -124,7 +124,7 @@ public class DeliveryEntity extends DeliveryBase {
 
         // WX发送实物使用成功模板
         Map map = TemplateDto.GetProduct(stockDtos);
-        TemplateDto temp = TemplateDto.EntityUseSuccessed(delivery, map);
+        TemplateDto temp = TemplateDto.EntityUseSuccessed(delivery, map,stockDtos);
         wxSender.sendNormal(temp);
 
         return resp;
@@ -187,8 +187,5 @@ public class DeliveryEntity extends DeliveryBase {
         resp.setSuccess(true);
 
         return resp;
-
     }
-    //endregion
-
 }

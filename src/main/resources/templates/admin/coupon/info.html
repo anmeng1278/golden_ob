@@ -277,19 +277,6 @@
 
             var choosedProducts = getChoosedProduct();
 
-            //判断是否存在
-            // $("input[type='hidden'][name='productId']").each(function (j) {
-            //     var value = this.value;
-            //     var self = this;
-            //     for (var i = 0; i < productIds.length; i++) {
-            //         if (value == productIds[i]) {
-            //             layer.msg("优惠券已存在,请重新选择!", {icon: 2});
-            //             type = 2;
-            //             return false;
-            //         }
-            //     }
-            // });
-
             if (type == 1) {
                 TX.CORE.p({
                     data: {productIds: productIds.join(',')},
