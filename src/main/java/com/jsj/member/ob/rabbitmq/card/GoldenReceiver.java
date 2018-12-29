@@ -12,6 +12,8 @@ import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.GoldenCardType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
+import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import com.jsj.member.ob.service.StockService;
@@ -40,6 +42,9 @@ public class GoldenReceiver {
 
     @Autowired
     StockService stockService;
+
+    @Autowired
+    WxSender wxSender;
 
     @RabbitListener(queues = GoldenConfig.GOLDEN_NORMAL_QUEUE)
     @Transactional(Constant.DBTRANSACTIONAL)
@@ -72,8 +77,9 @@ public class GoldenReceiver {
                     remark = String.format("开卡成功：%s", GoldenCardType.valueOf(dto.getCardType()).getMessage());
                 }
 
-                //TODO 开卡成功发送模板消息
-                //示例：您的GoldenCardType.valueOf(dto.getCardType()).getMessage()卡已开通成功
+                // 开卡成功发送模板消息
+                TemplateDto temp = TemplateDto.OpenCardSuccess(dto,delivery);
+                wxSender.sendNormal(temp);
 
             } else {
                 //开卡失败
