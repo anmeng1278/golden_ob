@@ -28,4 +28,10 @@ html,body{ background: #F5F5F5;}
 .order-bot-p .cancel-btn{ background: #fff; border: 1px solid #eee; color: #333;}
 .order-bot-p .pay-btn{ background: #C2191F; border: 1px solid #C2191F; color: #fff;}
 
+
+/*order-no-list start*/
+.coupon-no-list{ margin-top: 2.4rem; text-align: center;}
+.coupon-no-list dd{ font-size: 0.32rem; color: #000; padding-top: 0.6rem;}
+/*order-no-list end*/
+
 /*main end*/

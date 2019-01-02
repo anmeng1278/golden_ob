@@ -360,7 +360,7 @@ public class TemplateDto extends BaseDto {
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(delivery.getProductDtos().get(0).getProductName() + "", color));
         dto.getData().put("keyword2", new TemplateData(effectiveDate, color));
-        dto.getData().put("keyword3", new TemplateData("依据卡说明", color));
+        dto.getData().put("keyword3", new TemplateData("点击详情查看使用说明", color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/stock", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
@@ -396,7 +396,7 @@ public class TemplateDto extends BaseDto {
         dto.getData().put("keyword2", new TemplateData(openCardDate, color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);
-        dto.setUrl(String.format("%s%s/stock", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
+        dto.setUrl(String.format("%s%s/delivery", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
 
         return dto;
     }

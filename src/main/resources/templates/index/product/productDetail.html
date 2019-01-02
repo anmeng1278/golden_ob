@@ -340,7 +340,7 @@
                 <p class="purchase-footer-lt">
                     <span class="shopping-price">&yen;<em>0</em></span>
                     <span class="shopping-price-org">￥0</span>
-                    <span class="shopping-price-dis">已优惠￥<em>0</em></span>    <!--购买时使用优惠券才显示-->
+                    <span class="shopping-price-dis" th:if="${!#lists.isEmpty(coupons)}">已优惠￥<em>0</em></span>    <!--购买时使用优惠券才显示-->
                 </p>
                 <a href="javascript:void(0);" class="purchase-btn">立即购买</a>
             </div>

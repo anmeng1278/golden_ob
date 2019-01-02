@@ -227,6 +227,7 @@
     <!--main start-->
 
     <div class="main">
+
         <th:block th:if="${!#lists.isEmpty(cartProductDtos)}" th:each="info:${cartProductDtos}">
             <div class="goods-list-item">
                 <span class="checkone check-all-wxz"></span>
@@ -253,6 +254,14 @@
 
 
         </th:block>
+
+        <!--coupon-no-list start-->
+        <dl class="coupon-no-list" th:if="${#lists.isEmpty(cartProductDtos)}">
+            <dt><img th:src="${ob.Img('/index/images/no_goods.png')}" alt="1" width="62px"/></dt>
+            <dd>您的购物车中空空如也~</dd>
+        </dl>
+        <!--coupon-no-list end-->
+
     </div>
 
     <!--footer start-->

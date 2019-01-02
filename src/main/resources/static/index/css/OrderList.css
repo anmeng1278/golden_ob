@@ -4,7 +4,7 @@ html,body{ background: #F5F5F5;}
 /*---------- order-item ----------*/
 .order-item{ background: #fff; margin-bottom: 0.2rem;}
 .order-item-head{ padding: 0 0.3rem; height: 1.1rem; font-family: "microsoft yahei",arial;}
-.order-num{ line-height: 1.1rem; font-size: 0.3rem; color: #666; float: left;}
+.order-num{ line-height: 1.1rem; font-size: 0.35rem; color: #666; float: left;}
 .order-price{ line-height: 1.1rem; font-size: 0.3rem; color: #C2191F; float: right;}
 
 /*---------- order-item-dl ----------*/
@@ -12,7 +12,7 @@ html,body{ background: #F5F5F5;}
 .order-item-dl dt{ width: 1.8rem; height: 1.8rem; position: absolute; top: 0.2rem; left: 0.3rem;}
 .order-item-dl dt img{ width: 1.8rem; height: 1.8rem;}
 .order-item-dl dd{ min-height: 1.6rem; margin: 0.2rem 0 0 2.1rem; font-family: "microsoft yahei",arial; position: relative;}
-.order-dd-name{ font-size: 0.32rem; color: #333; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;} 
+.order-dd-name{ font-size: 0.32rem; color: #333; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: "microsoft yahei",arial;}
 .order-dd-tips{ line-height: 1.2; font-size: 0.28rem; color: #888;}
 .order-dd-time{ height: 0.6rem; line-height: 0.6rem; font-size: 0.28rem;}
 .order-dd-time span:nth-child(1){ color: #888; float: left;}
