@@ -52,15 +52,13 @@
             <div class="coupon">
                 <div class="coupon-back">
                     <div class="coupon-lt">
-                        <p th:if="${couponDto.couponType.value == 1}" class="coupon-price"
-                           th:text="${#numbers.formatInteger(couponDto.amount,0,'POINT')}">
-                            <span th:text="|&yen;|"></span>
-                        </p>
-                        <p th:if="${couponDto.couponType.value == 2}" class="coupon-price"
-                           th:text="${couponDto.amount}">50
-                            <span th:text="|折|"></span>
-                        </p>
-                        <p class="coupon-price-tips" th:text="${couponDto.couponType.message}"></p>
+                        <p th:if="${couponDto.couponType.value == 1}" class="coupon-price">
+                            <th:block th:text="${#numbers.formatInteger(couponDto.amount,0,'POINT')}"></th:block>
+                            <span>&yen;</span></p>
+                        <p th:if="${couponDto.couponType.value == 2}" class="coupon-price">
+                            <th:block th:text="${couponDto.amount}"></th:block>
+                            <span>折</span></p>
+                        <p class="coupon-price-tips" th:text="${couponDto.couponType.message}">满1000元可用</p>
                     </div>
                     <div class="coupon-rt">
                         <p class="coupon-name" th:text="${couponDto.couponType.message}">满减券</p>
@@ -72,6 +70,7 @@
                 </div>
                 <span class="coupon-tips">立即使用</span>
             </div>
+
             <!--coupon end-->
             <a href="javascript:void(0);" class="activity-rule-btn">活动规则</a>
         </div>
