@@ -25,6 +25,10 @@ spring:
     virtual-host: /
     publisher-confirms: true
     publisher-returns: true
+  redis:
+    host: 172.16.5.64
+    timeout: 10000
+    port: 6379
 
 webconfig:
 
@@ -55,3 +59,4 @@ redis:
   pool-max-total: 1000
   pool-max-idle: 500
   pool-max-wait: 500
+
