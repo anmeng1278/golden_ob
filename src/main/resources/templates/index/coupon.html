@@ -80,7 +80,7 @@
             <!--活动说明 start-->
             <div class="IllustrateLayer" style="display: none;">
                 <div class="IllustrateLayerCon">
-                    <h2 class="IllustrateTitle">使用说明</h2>
+                    <h2 class="IllustrateTitle">使用规则</h2>
                     <ul class="IllustrateList">
                         <p th:utext="${info.couponDto.instruction}"></p>
                     </ul>
@@ -99,7 +99,7 @@
     <!--coupon-no-list start-->
     <dl class="coupon-no-list" th:if="${#lists.isEmpty(wechatCouponDtos)}">
         <dt><img th:src="${ob.Img('/index/images/coupon_icon.png')}" alt="1" width="62px"/></dt>
-        <dd>您暂时还没有优惠券</dd>
+        <dd>没有可使用的优惠</dd>
     </dl>
     <!--coupon-no-list end-->
 </div>

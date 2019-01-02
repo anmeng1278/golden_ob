@@ -45,7 +45,7 @@
                                     <img th:if="${count le 1 && !#lists.isEmpty(info.stockDtos[0].productDto.productImgDtos)}"
                                          th:src="${info.stockDtos[0].productDto.productImgDtos[0].imgPath}">
                                     <img th:if="${count gt 1}"
-                                         th:src="${ob.Img('/index/images/give_default_img.png')}" alt="1"/>
+                                         th:src="${ob.Img('/index/images/gift_default.png')}" alt="1"/>
                                 </dt>
                                 <dd>
                                     <p class="give-dd-p">
@@ -72,7 +72,7 @@
                                     <img th:if="${count le 1 && !#lists.isEmpty(info.stockDtos[0].productDto.productImgDtos)}"
                                          th:src="${info.stockDtos[0].productDto.productImgDtos[0].imgPath}">
                                     <img th:if="${count gt 1}"
-                                         th:src="${ob.Img('/index/images/give_default_img.png')}" alt="1"/>
+                                         th:src="${ob.Img('/index/images/gift_default.png')}" alt="1"/>
                                 </dt>
                                 <dd>
                                     <p class="give-dd-p">
@@ -105,7 +105,7 @@
             <!--coupon-no-list start-->
             <dl class="coupon-no-list" th:if="${#lists.isEmpty(giveStocks)}">
                 <dt><img th:src="${ob.Img('/index/images/no_gift.png')}" alt="1" width="62px"/></dt>
-                <dd>您暂时还没有赠送记录</dd>
+                <dd>暂无赠送记录</dd>
             </dl>
             <!--coupon-no-list end-->
 
@@ -140,7 +140,7 @@
             <!--coupon-no-list start-->
             <dl class="coupon-no-list" th:if="${#lists.isEmpty(receiveStocks)}">
                 <dt><img th:src="${ob.Img('/index/images/no_gift.png')}" alt="1" width="62px"/></dt>
-                <dd>您暂时还没有领取记录</dd>
+                <dd>暂无领取记录</dd>
             </dl>
             <!--coupon-no-list end-->
         </div>
