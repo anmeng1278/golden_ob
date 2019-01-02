@@ -87,6 +87,7 @@
 
                         <td th:with="status=${enumLogic.GetDeliveryStatus(info.status)},propertyType=${enumLogic.GetPropertyType(info.propertyTypeId )} ">
                             <th:block th:text="${status.getMessage(propertyType)}"></th:block>
+                        </td>
                         <td>
                             <button th:title="|配送详情|"
                                     th:attr="data-tab-href=@{'/admin/delivery/sendInfo/'+${info.deliveryId}}"
