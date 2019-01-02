@@ -291,7 +291,7 @@ public class TemplateDto extends BaseDto {
         dto.getData().put("keyword2", new TemplateData(consumeDate + "", color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);
-        dto.setUrl(String.format("/stock/qrcode/%s/%s", delivery.getDeliveryId(), stockDtos.get(0).getStockId()));
+        dto.setUrl(String.format("%s%s/stock/qrcode/%s/%s", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath(),delivery.getDeliveryId(), stockDtos.get(0).getStockId()));
 
         return dto;
     }
@@ -363,14 +363,14 @@ public class TemplateDto extends BaseDto {
         dto.getData().put("keyword3", new TemplateData("依据卡说明", color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);
-        dto.setUrl(String.format("%s%s/", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
+        dto.setUrl(String.format("%s%s/stock", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
 
         return dto;
     }
 
 
     /**
-     * 开卡成功中模板消息
+     * 开卡成功模板消息
      *
      * @param goldenDto
      * @return
@@ -396,7 +396,7 @@ public class TemplateDto extends BaseDto {
         dto.getData().put("keyword2", new TemplateData(openCardDate, color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);
-        dto.setUrl(String.format("%s%s/", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
+        dto.setUrl(String.format("%s%s/stock", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
 
         return dto;
     }
