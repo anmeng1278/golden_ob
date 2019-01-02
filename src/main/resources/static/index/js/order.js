@@ -68,6 +68,7 @@ function createOrder(data, callback) {
                         location.href = successUrl;
                     },
                     fail: function (resp) {
+                        alert(JSON.stringify(resp));
                         TX.MSG.msg("对不起，支付失败了！", {time: 1500}, function () {
                             location.href = url;
                         });
