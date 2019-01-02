@@ -234,7 +234,7 @@
     <!--shopping-cart start-->
 
     <!--shopping-cart start-->
-    <div class="shopping-cart order-list">
+    <div class="shopping-cart order-list" th:if="${size gt 0}">
         <a th:href="${ob.Nav('/order?orderFlag=1')}">
             <img th:src="${ob.Img('/index/images/icon_order_lits.png')}" alt="1" class="shopping-icon"/>
             <span class="shopping-num" th:text="|待支付${size}|"></span>

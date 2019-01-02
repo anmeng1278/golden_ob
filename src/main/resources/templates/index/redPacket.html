@@ -70,9 +70,23 @@
                 </div>
                 <span class="coupon-tips">立即使用</span>
             </div>
-
             <!--coupon end-->
-            <a href="javascript:void(0);" class="activity-rule-btn">活动规则</a>
+
+
+            <!--活动说明 start-->
+            <div class="IllustrateLayer" style="display: none;">
+                <div class="IllustrateLayerCon">
+                    <h2 class="IllustrateTitle">使用规则</h2>
+                    <ul class="IllustrateList">
+                        <p th:utext="${couponDto.couponDto.instruction}"></p>
+                    </ul>
+                </div>
+                <p class="closeBtn_p">
+                    <img th:src="${ob.Img('/index/images/rule_close.png')}" alt="1" class="four_close"/>
+                </p>
+            </div>
+            <!--活动说明 end-->
+
         </div>
         <!--head end-->
 
@@ -106,22 +120,10 @@
             </div>
         </div>
         <!--main end-->
+
+
     </div>
     <!--content end-->
-
-    <!--活动说明 start-->
-    <div class="IllustrateLayer" th:if="${couponDto != null}" style="display: none;">
-        <div class="IllustrateLayerCon">
-            <h2 class="IllustrateTitle">使用说明</h2>
-            <ul class="IllustrateList">
-                <p th:utext="${couponDto.couponDto.instruction}"></p>
-            </ul>
-        </div>
-        <p class="closeBtn_p">
-            <img th:src="${ob.Img('/index/images/rule_close.png')}" alt="1" class="four_close"/>
-        </p>
-    </div>
-    <!--活动说明 end-->
 
 
     <!--footer-tips start-->
