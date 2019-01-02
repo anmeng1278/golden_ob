@@ -218,7 +218,7 @@ public class AdminDeliveryController {
                 }
 
                 String address = request.getParameter("address");
-                //修改状态已发货
+
                 delivery.setMobile(mobile);
                 delivery.setProvinceId(provinceId);
                 delivery.setCityId(cityId);
