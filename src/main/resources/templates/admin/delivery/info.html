@@ -21,9 +21,7 @@
                             <label class="layui-form-label">配送状态:</label>
                             <div class="layui-input-inline layui-form-label-col"
                                  style="color: blue; font-size: large; font-weight: bold;width: 16%">
-                                <th:block th:if="${info.deliveryType.value == 1}" th:text="${info.deliveryStatus.getMessage(info.propertyType)}"></th:block>
-                                <th:block th:if="${info.deliveryType.value == 2 && info.deliveryStatus == 0}" th:text="|未提取|"></th:block>
-                                <th:block th:if="${info.deliveryType.value == 2 && info.deliveryStatus == 10 || info.deliveryStatus == 20}" th:text="|已自提|"></th:block>
+                                <th:block th:text="${info.deliveryStatus.getMessage(info.propertyType)}"></th:block>
                             </div>
 
                             <label class="layui-form-label">配送方式:</label>
