@@ -2,6 +2,7 @@ package com.jsj.member.ob.controller;
 
 import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.api.order.OrderDto;
+import com.jsj.member.ob.dto.http.UserSession;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeRequ;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.enums.OrderStatus;
@@ -22,7 +23,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.thymeleaf.spring4.context.SpringWebContext;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import springfox.documentation.annotations.ApiIgnore;
-import weixin.popular.bean.user.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -102,13 +102,13 @@ public abstract class BaseController {
      *
      * @return
      */
-    public User User() {
+    public UserSession User() {
 
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = attr.getRequest();
 
         Object wx = request.getSession().getAttribute("wx");
-        return (User) wx;
+        return (UserSession) wx;
 
     }
 
