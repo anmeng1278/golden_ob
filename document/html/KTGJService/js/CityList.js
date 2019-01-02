@@ -1,4 +1,11 @@
 $(function(){
+	pushHistory();
+ 
+    window.addEventListener("popstate", function(e) {
+        window.location = '../CouponList.html';
+    }, false);
+ 
+	
 	//选项卡
     $('.city-list-ul li').click(function () {
         var index = $(this).index();
@@ -28,3 +35,11 @@ $(function(){
         return false;
     });
 });
+
+function pushHistory() {
+    var state = {
+        title: "title",
+        url: "#"
+    };
+    window.history.pushState(state, state.title, state.url);
+}
