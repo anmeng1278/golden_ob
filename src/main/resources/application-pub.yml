@@ -32,6 +32,10 @@ spring:
     virtual-host: /
     publisher-confirms: true
     publisher-returns: true
+  redis:
+    host: 172.16.5.64
+    timeout: 10000
+    port: 6379
 
 webconfig:
   # 图片服务器

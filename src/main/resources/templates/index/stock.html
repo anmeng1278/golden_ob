@@ -8,9 +8,9 @@
 <th:block layout:fragment="script">
 
     <!--引入js-->
-    <script th:src="${ob.Url('/index/js/mystock.js')}" type="text/javascript"
-            charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js', false)}" type="text/javascript"
+            charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/mystock.js')}" type="text/javascript"
             charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/nav.js')}" type="text/javascript" charset="utf-8"></script>
 
@@ -175,7 +175,8 @@
                                 <p class="strok-dd-num">库存：<span th:text="${info.number}">0</span></p>
                                 <div class="purchase-num" style="display: none;">
                                     <em class="purchase-num-reduce"></em>
-                                    <input type="text" value="0" readonly="readonly" unselectable="on" class="num" name="num"/>
+                                    <input type="text" value="0" readonly="readonly" unselectable="on" class="num"
+                                           name="num"/>
                                     <em class="purchase-num-add"></em>
 
                                     <input type="hidden" name="productId" th:value="${info.productId}"/>

@@ -1,6 +1,7 @@
 package com.jsj.member.ob.interceptor;
 
 import com.jsj.member.ob.config.Webconfig;
+import com.jsj.member.ob.dto.http.UserSession;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenRequ;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenResp;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
@@ -46,8 +47,9 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
         if (SpringContextUtils.getActiveProfile().equals("dev")) {
 
-            User wxUser = new User();
-            wxUser.setOpenid("oeQDZt_pkkN1odTzWQrIr_5mhvcA");
+            UserSession wxUser = new UserSession();
+
+            wxUser.setOpenid("oeQDZt-rcgi9QhWm6F7o2mV3dSYY");
             wxUser.setNickname("测试账户");
             wxUser.setSubscribe(1);
 
@@ -112,14 +114,13 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
                 //{"subscribe":1,"openid":"o2JcesxmAIQWeqEEqA-vM-i44Miw","nickname":"张宁","sex":1,"language":"zh_CN","city":"朝阳","province":"北京","country":"中国","headimgurl":"http:\/\/thirdwx.qlogo.cn\/mmopen\/PiajxSqBRaEKFLsWN4XS5v1yCavjGU69d4MhTotaNU1oe0C5w9cdHTt2J1x3VTeEnDcfT4B3b5ml3ekmlcJHrNA\/132","subscribe_time":1538198776,"remark":"","groupid":0,"tagid_list":[],"subscribe_scene":"ADD_SCENE_SEARCH","qr_scene":0,"qr_scene_str":""}
                 WechatLogic.Init(wxUser);
-                request.getSession().setAttribute("wx", wxUser);
+
+                UserSession wx = UserSession.Init(wxUser);
+                request.getSession().setAttribute("wx", wx);
 
             }
 
         }
-
-        User wx = (User) request.getSession().getAttribute("wx");
-        request.setAttribute("wx", wx);
 
         return true;
     }

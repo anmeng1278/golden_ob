@@ -5,9 +5,9 @@
     });
 
     //选择日期
-    $('#birthdate').date( function () {
-        $("#birthdate").text(arguments[0]);
-    });
+    // $('#birthdate').date( function () {
+    //     $("#birthdate").text(arguments[0]);
+    // });
 
     //导航tab切换
     $('.nav-list-ul li').on('click',function(){

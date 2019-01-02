@@ -7,10 +7,10 @@
 
 <th:block layout:fragment="script">
 
-    <script th:src="${ob.Url('/index/js/mSelect/js/iscroll.js')}" type="text/javascript" charset="utf-8"></script>
-    <script th:src="${ob.Url('/index/js/mSelect/js/jquery.mobile_date_ui.js')}" type="text/javascript"
-            charset="utf-8"></script>
-    <script th:src="${ob.Url('/index/js/GoldCard.js')}" type="text/javascript" charset="utf-8"></script>
+    <!--<script th:src="${ob.Url('/index/js/mSelect/js/iscroll.js')}" type="text/javascript" charset="utf-8"></script>-->
+    <!--<script th:src="${ob.Url('/index/js/mSelect/js/jquery.mobile_date_ui.js')}" type="text/javascript"-->
+            <!--charset="utf-8"></script>-->
+    <!--<script th:src="${ob.Url('/index/js/GoldCard.js')}" type="text/javascript" charset="utf-8"></script>-->
 
     <script th:src="${ob.Url('/index/js/CityList.js')}" type="text/javascript" charset="utf-8"></script>
 
@@ -89,6 +89,7 @@
                     <span class="gold-card-lable">生效日期</span>
                     <p class="gold-card-rt">
                         <input type="text" id="birthdate" name="effectiveDate" placeholder="选择生效日期" value=""
+                               data-options="{'type':'YYYY-MM-DD','beginYear':2019,'endYear':2024}"
                                class="gold-card-input"/>
                     </p>
                 </div>
@@ -99,8 +100,12 @@
 
     <a href="javascript:void(0);" class="sumbit-btn">提交</a>
 
-    <!--选择日期-->
-    <div id="datePlugin"></div>
+    <script th:src="${ob.Url('/index/js/jquery.date.js')}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(function () {
+            $.date('#birthdate');
+        });
+    </script>
 
 </div>
 
