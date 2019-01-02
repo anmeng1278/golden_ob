@@ -122,6 +122,9 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
         }
 
+        UserSession wx = (UserSession) request.getSession().getAttribute("wx");
+        request.setAttribute("wx", wx);
+
         return true;
     }
 
