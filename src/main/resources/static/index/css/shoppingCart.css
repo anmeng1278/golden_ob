@@ -53,3 +53,8 @@ html,body{ background: #F5F5F5;}
 .delete-layer-p a{ display: block; width: 50%; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #333; float: left; position: relative;}
 .delete-layer-cancel:before{ content: ""; position: absolute; top: 0; right: 0; height: 1.1rem; border-left: 1px solid #eee;}
 /*delete-layer end*/
+
+/*order-no-list start*/
+.coupon-no-list{ margin-top: 2.4rem; text-align: center;}
+.coupon-no-list dd{ font-size: 0.32rem; color: #000; padding-top: 0.6rem;}
+/*order-no-list end*/

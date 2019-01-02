@@ -19,5 +19,11 @@ html,body{ background: #F5F5F5;}
 .state-list{ height: 0.6rem; padding: 0.3rem 0;}
 .state-list-p{ float: right;}
 .state-list-p a{ display: block; width: 1.7rem; height: 0.6rem; line-height: 0.6rem; text-align: center; font-size: 0.28rem; color: #333; border: 1px solid #DEDEDE; border-radius: 30px; float: left; margin-left: 0.2rem;}
+
+/*delivery-no-list start*/
+.coupon-no-list{ margin-top: 2.4rem; text-align: center;}
+.coupon-no-list dd{ font-size: 0.32rem; color: #000; padding-top: 0.6rem;}
+/*delivery-no-list end*/
+
 /*main end*/
 
