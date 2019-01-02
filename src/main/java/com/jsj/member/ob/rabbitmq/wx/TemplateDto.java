@@ -389,7 +389,7 @@ public class TemplateDto extends BaseDto {
 
         TemplateDto dto = new TemplateDto();
         dto.setToUser(delivery.getOpenId());
-        dto.setTemplateType(TemplateType.OPENCARDCONFIRM);
+        dto.setTemplateType(TemplateType.OPENCARDSUCCESS);
         dto.setFirst(String.format("您的%s已成功开通\n", goldenDto.getPropertyType().getMessage()));
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1",new TemplateData("北京金色世纪商旅网络有限公司", color));
