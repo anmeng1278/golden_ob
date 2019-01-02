@@ -55,7 +55,7 @@ public enum DeliveryStatus {
                     case UNDELIVERY:
                         return "未开卡";
                     case DELIVERED:
-                        return "未开卡";
+                        return "已开卡";
                     case SIGNED:
                         return "已开卡";
                     default:

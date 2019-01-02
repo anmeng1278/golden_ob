@@ -6,6 +6,7 @@ import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
+import com.jsj.member.ob.dto.api.delivery.OpreationDeliveryRequ;
 import com.jsj.member.ob.dto.api.dict.DictDto;
 import com.jsj.member.ob.dto.api.dict.GetAreasResp;
 import com.jsj.member.ob.dto.api.express.ExpressRequ;
@@ -18,6 +19,8 @@ import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
+import com.jsj.member.ob.logic.delivery.DeliveryBase;
+import com.jsj.member.ob.logic.delivery.DeliveryFactory;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import com.jsj.member.ob.service.OrderProductService;
@@ -181,6 +184,7 @@ public class AdminDeliveryController {
 
         Delivery delivery = deliveryService.selectById(deliveryId);
 
+
         switch (id){
             //去发货
             case 0:{
@@ -188,9 +192,13 @@ public class AdminDeliveryController {
                 if (StringUtils.isBlank(expressNumber)) {
                     expressNumber = "";
                 }
-                delivery.setExpressNumber(expressNumber);
-                delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
-                delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+                DeliveryBase deliveryBase = DeliveryFactory.GetInstance(PropertyType.valueOf(delivery.getPropertyTypeId()));
+                OpreationDeliveryRequ requ = new OpreationDeliveryRequ();
+                requ.setDeliveryId(deliveryId);
+                requ.setExpressNumber(expressNumber);
+                deliveryBase.OpreationDelivery(requ);
+
             }
             break;
             //修改地址
@@ -218,10 +226,12 @@ public class AdminDeliveryController {
                 delivery.setContactName(contactName);
                 delivery.setAddress(address);
                 delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+                deliveryService.updateAllColumnById(delivery);
             }
             break;
         }
-        deliveryService.updateAllColumnById(delivery);
+
         return RestResponseBo.ok("操作成功");
 
     }
