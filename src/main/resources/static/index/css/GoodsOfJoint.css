@@ -4,7 +4,7 @@
 .purchase-layer-main{ padding: 0 0.6rem;}
 
 .purchase-layer-div{ overflow: hidden; margin-bottom: 0.4rem;}
-.purchase-layer-lable{ display: block; font-size: 0.28rem; color: #999; padding-bottom: 0.3rem;}
+.purchase-layer-lable{ display: block; font-size: 0.28rem; color: #999; padding-bottom: 0.35rem;}
 
 .purchase-layer-content{ max-height: 9rem; overflow: scroll; -webkit-overflow-scrolling: touch;}
 .purchase-layer-content::-webkit-scrollbar{ display: none;}

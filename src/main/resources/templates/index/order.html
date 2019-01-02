@@ -181,7 +181,7 @@
                         </th:block>
                     </div>
                     <div class="order-item-bot">
-                        <p class="order-bot-price">待支付&yen;<span th:text="|${info.payAmount}|">650</span></p>
+                        <p class="order-bot-price">待支付&yen; <span th:text="|${info.payAmount}|">650</span></p>
                         <p class="order-bot-p">
                             <a href="javascript:;" class="cancel-btn" th:attr="data-order-id=${info.orderId}">取消订单</a>
                             <a href="javascript:;" class="pay-btn" th:attr="data-order-id=${info.orderId}">去支付</a>
@@ -215,7 +215,7 @@
                         </dl>
                     </th:block>
                     <div class="order-item-bot">
-                        <p class="order-bot-price">实付款&yen;<span th:text="${info.payAmount}">650</span></p>
+                        <p class="order-bot-price">实付款&yen; <span th:text="${info.payAmount}">650</span></p>
                     </div>
                 </div>
             </th:block>
@@ -249,9 +249,16 @@
 
         </th:block>
 
-
     </div>
 
     <!--main end-->
+
+    <!--order-no-list start-->
+    <dl class="coupon-no-list" th:if="${#lists.isEmpty(orderDtos)}">
+        <dt><img th:src="${ob.Img('/index/images/no_order.png')}" alt="1" width="62px"/></dt>
+        <dd>您暂时还没有订单记录</dd>
+    </dl>
+    <!--order-no-list end-->
+
 </div>
 </html>

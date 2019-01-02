@@ -176,4 +176,11 @@
 
     </div>
     <!--main end-->
+
+    <!--delivery-no-list start-->
+    <dl class="coupon-no-list" th:if="${#lists.isEmpty(deliveryDtos)}">
+        <dt><img th:src="${ob.Img('/index/images/no_delivery.png')}" alt="1" width="62px"/></dt>
+        <dd>您暂时还没有配送记录</dd>
+    </dl>
+    <!--delivery-no-list end-->
 </div>

@@ -101,11 +101,20 @@
                 </th:block>
 
             </th:block>
+
+            <!--coupon-no-list start-->
+            <dl class="coupon-no-list" th:if="${#lists.isEmpty(giveStocks)}">
+                <dt><img th:src="${ob.Img('/index/images/no_gift.png')}" alt="1" width="62px"/></dt>
+                <dd>您暂时还没有赠送记录</dd>
+            </dl>
+            <!--coupon-no-list end-->
+
         </div>
         <!--我赠送的 end-->
 
         <!--我领取的 start-->
         <div class="give-item">
+
             <th:block th:if="${!#lists.isEmpty(receiveStocks)}" th:each="info:${receiveStocks}">
                 <a th:href="${ob.Nav('/gift/received/'+info.giftUniqueCode)}">
                     <dl class="give-item-dl clear">
@@ -127,6 +136,13 @@
                     </dl>
                 </a>
             </th:block>
+
+            <!--coupon-no-list start-->
+            <dl class="coupon-no-list" th:if="${#lists.isEmpty(receiveStocks)}">
+                <dt><img th:src="${ob.Img('/index/images/no_gift.png')}" alt="1" width="62px"/></dt>
+                <dd>您暂时还没有领取记录</dd>
+            </dl>
+            <!--coupon-no-list end-->
         </div>
         <!--我领取的 end-->
     </div>

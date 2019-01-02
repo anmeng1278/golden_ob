@@ -20,4 +20,10 @@ html,body{ background: #F5F5F5;}
 .give-state-red{ font-size: 0.3rem; color: #C2191F; float: right;}
 .give-dd-tips{ line-height: 1.2; font-size: 0.3rem; color: #999;}
 .give-dd-time{ height: 0.6rem; line-height: 0.6rem; font-size: 0.28rem; color: #666; position: absolute; left: 0; bottom: 0; right: 0;}
+
+/*order-no-list start*/
+.coupon-no-list{ margin-top: 2.4rem; text-align: center;}
+.coupon-no-list dd{ font-size: 0.32rem; color: #000; padding-top: 0.6rem;}
+/*order-no-list end*/
+
 /*main end*/
