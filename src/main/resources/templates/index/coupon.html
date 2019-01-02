@@ -27,7 +27,7 @@
 
 
                             <p th:if="${info.couponType.value == 1}" class="coupon-item-price"><span
-                                    th:text="| ${#numbers.formatInteger(info.amount,0,'POINT')}|"></span>
+                                    th:text="| ${#numbers.formatInteger(info.amount,0,'NONE')}|"></span>
                                 <span>&yen;</span>
                             </p>
                             <p th:if="${info.couponType.value == 2}" class="coupon-item-price"><span
@@ -57,7 +57,7 @@
                     <div class="coupon-item-back">
                         <div class="coupon-item-lt">
                             <p class="coupon-item-price" th:if="${info.couponType.value == 1}">
-                                <span th:text="|${#numbers.formatInteger(info.amount,0,'POINT')}|"></span><span>&yen;</span>
+                                <span th:text="|${#numbers.formatInteger(info.amount,0,'NONE')}|"></span><span>&yen;</span>
                             </p>
                             <p class="coupon-item-price" th:if="${info.couponType.value == 2}">
                                 <span th:text="|${info.amount}|"></span><span>折</span>
