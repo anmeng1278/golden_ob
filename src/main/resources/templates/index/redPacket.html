@@ -45,7 +45,7 @@
         <!--head start-->
         <div class="head" th:if="${couponDto != null}">
             <p class="head-p">
-                <span class="head-p-span">抢到啦！手气不错！</span>
+                <span class="head-p-span" th:text="${couponDto.openId == wx.openid}? '别太贪心，您已领取过了!' : '抢到啦！手气不错！'"></span>
                 <a th:href="${ob.Nav('/coupon')}" class="head-p-look">去查看 ></a>
             </p>
             <!--coupon start-->
