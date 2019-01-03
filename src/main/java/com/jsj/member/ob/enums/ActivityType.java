@@ -12,7 +12,7 @@ public enum ActivityType {
 
     COMBINATION(30, "组合"),
 
-    RIGHTSEXCHANGE(40,"权益兑换");
+    EXCHANGE(40,"权益兑换");
 
 
     private Integer value;
@@ -43,7 +43,7 @@ public enum ActivityType {
             case 30:
                 return COMBINATION;
             case 40:
-                return RIGHTSEXCHANGE;
+                return EXCHANGE;
             default:
                 throw new FatalException("未知的枚举值");
         }
