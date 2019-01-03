@@ -352,7 +352,6 @@
                 $(":text[name='originalPrice']").attr("lay-verify", "float4");
                 $(":text[name='salePrice']").attr("lay-verify", "float4");
                 $(":text[name='productSpecSalePrice']").attr("lay-verify", "float4");
-                $(":text[name='stockCount']").attr("lay-verify", "num2");
 
 
                 //所选类型
@@ -394,10 +393,10 @@
                     case "40":
                         //权益兑换
                         $(":text[name='number']").removeAttr("lay-verify");
-                        $(":text[name='originalPrice']").removeAttr("lay-verify", "float4");
-                        $(":text[name='salePrice']").removeAttr("lay-verify", "float4");
-                        $(":text[name='productSpecSalePrice']").removeAttr("lay-verify", "float4");
-                        $(":text[name='stockCount']").removeAttr("lay-verify", "num2")
+                        $(":text[name='originalPrice']").removeAttr("lay-verify");
+                        $(":text[name='salePrice']").removeAttr("lay-verify");
+                        $(":text[name='productSpecSalePrice']").removeAttr("lay-verify");
+                        $(":text[name='stockCount']").removeAttr("lay-verify");
                         break;
 
                 }
