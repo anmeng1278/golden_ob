@@ -145,13 +145,30 @@ public class AdminActivityController {
         String activityName = request.getParameter("activityName");
         int typeId = Integer.parseInt(request.getParameter("typeId"));
         String beginTime = request.getParameter("beginTime");
+        if (StringUtils.isBlank(beginTime)) {
+            beginTime = String.valueOf(DateUtils.getCurrentUnixTime());
+        }
         String endTime = request.getParameter("endTime");
+        if (StringUtils.isBlank(beginTime)) {
+            beginTime = "4070880000";
+        }
         String showTime = request.getParameter("showTime");
+        if (StringUtils.isBlank(showTime)) {
+            showTime = String.valueOf(DateUtils.getCurrentUnixTime());
+        }
         String salePrice = request.getParameter("salePrice");
-        String introduce = request.getParameter("introduce");
-        String imgPath = request.getParameter("imgPath");
         if (StringUtils.isBlank(salePrice)) {
             salePrice = "0";
+        }
+
+        String introduce = request.getParameter("introduce");
+        if (StringUtils.isBlank(introduce)) {
+            introduce = " ";
+        }
+
+        String imgPath = request.getParameter("imgPath");
+        if (StringUtils.isBlank(imgPath)) {
+            imgPath = null;
         }
 
         String originalPrice = request.getParameter("originalPrice");
