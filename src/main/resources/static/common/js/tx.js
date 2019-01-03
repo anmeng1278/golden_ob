@@ -53,8 +53,8 @@ Namespace.register("TX.TEMP");
             }
 
             if (options.url && options.url.length > 0 && options.url.substring(0, 1) == "/") {
-                if (typeof virtualPath != "undefined") {
-                    options.url = virtualPath + options.url;
+                if (ob && typeof ob.virtualPath != "undefined") {
+                    options.url = ob.virtualPath + options.url;
                 }
             }
 
