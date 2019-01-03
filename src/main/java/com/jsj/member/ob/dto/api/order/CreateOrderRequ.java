@@ -46,6 +46,7 @@ public class CreateOrderRequ {
     private int number;
 
 
+
     /**
      * 订单类型
      */
@@ -114,4 +115,5 @@ public class CreateOrderRequ {
     public void setNumber(int number) {
         this.number = number;
     }
+
 }

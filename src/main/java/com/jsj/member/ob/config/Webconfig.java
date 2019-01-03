@@ -58,6 +58,11 @@ public class Webconfig {
      */
     private String openCardUrl;
 
+    /**
+     * 会员组接口地址
+     */
+    private String memberApiUrl;
+
     public String getAppId() {
         return appId;
     }
@@ -224,5 +229,13 @@ public class Webconfig {
 
     public void setOpenCardUrl(String openCardUrl) {
         this.openCardUrl = openCardUrl;
+    }
+
+    public String getMemberApiUrl() {
+        return memberApiUrl;
+    }
+
+    public void setMemberApiUrl(String memberApiUrl) {
+        this.memberApiUrl = memberApiUrl;
     }
 }

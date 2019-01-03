@@ -1,0 +1,8 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseRequest.proto";
+
+message GetCustomerIdByPhoneRequ {
+   optional BaseRequest BaseRequest = 1;
+   optional string Phone = 2;
+}
