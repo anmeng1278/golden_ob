@@ -35,6 +35,7 @@
                     <input type="checkbox" name="typeId"
                            style="width:20px;height:20px;"
                            lay-filter="typeId"
+                           th:disabled="${info.activityId > 0 && info.typeId != type.value}"
                            th:title="${type.message}" th:value="${type.value}"
                            th:checked="${info.typeId == type.value}">
                 </th:block>
