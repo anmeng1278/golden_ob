@@ -1,18 +1,17 @@
 package com.jsj.member.ob.logic.order;
 
 import com.jsj.member.ob.constant.Constant;
-import com.jsj.member.ob.dto.api.coupon.UseCouponRequ;
-import com.jsj.member.ob.dto.api.coupon.UseCouponResp;
+import com.jsj.member.ob.dto.api.activity.ActivityDto;
+import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
-import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.logic.CouponLogic;
+import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.*;
@@ -22,15 +21,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 兑换权益单
+ * 秒杀单
  */
 @Component
 public class OrderExchange extends OrderBase {
+
     public OrderExchange() {
         super(ActivityType.EXCHANGE);
         super.setCanUseCoupon(false);
@@ -54,13 +53,13 @@ public class OrderExchange extends OrderBase {
     @Autowired
     ActivityProductService activityProductService;
 
-
-    //region (public) 创建订单 CreateOrder
-
     /**
-     * 创建兑换权益订单
+     * 创建秒杀订单
+     * 订单金额 = 秒杀金额
+     * 不允许使用优惠券
+     * 削减秒杀库存
      * 削减规格库存
-     * 允许购买多种商品
+     * 只允许购买一种商品并且只能购买一个,并且只能购买一次
      *
      * @param requ
      * @return
@@ -69,15 +68,57 @@ public class OrderExchange extends OrderBase {
     @Transactional(Constant.DBTRANSACTIONAL)
     public CreateOrderResp CreateOrder(CreateOrderRequ requ) {
 
+        //通用验证
+        super.validateCreateRequ(requ);
+
         //参数校验
         if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
             throw new TipException("用户编号不能为空");
         }
-        if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().size() == 0) {
-            throw new TipException("购买商品不能为空");
+
+        if (requ.getBaseRequ().getJsjId() <= 0) {
+            throw new TipException("会员编号不能为空");
         }
+
         if (requ.getActivityId() == 0) {
             throw new TipException("活动编号不能为空");
+        }
+
+        if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().isEmpty()) {
+            throw new TipException("兑换商品不能为空");
+        }
+        if (requ.getOrderProductDtos().size() != 1) {
+            throw new TipException("只能兑换一个商品");
+        }
+        if (requ.getNumber() <= 0) {
+            requ.setNumber(1);
+        }
+
+        //所选商品
+        OrderProductDto chooseOrderProduct = requ.getOrderProductDtos().get(0);
+
+        //活动
+        ActivityDto activityDto = ActivityLogic.GetActivity(requ.getActivityId());
+
+        //活动商品
+        List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(requ.getActivityId(), chooseOrderProduct.getProductSpecId());
+
+        if (activityProductDtos.isEmpty()) {
+            throw new TipException(String.format("没有发现活动商品，请稍后重试。活动编号：%d", activityDto.getActivityId()));
+        }
+
+        if (activityDto.getDeleteTime() != null) {
+            throw new TipException("活动结束啦");
+        }
+        if (activityDto.getBeginTime() > DateUtils.getCurrentUnixTime()) {
+            throw new TipException("活动未开始");
+        }
+        if (activityDto.getEndTime() < DateUtils.getCurrentUnixTime()) {
+            throw new TipException("活动结束啦");
+        }
+
+        if (activityDto.getActivityType() != this.getActivityType()) {
+            throw new TipException("当前活动非兑换活动");
         }
 
 
@@ -87,7 +128,7 @@ public class OrderExchange extends OrderBase {
         order.setOpenId(requ.getBaseRequ().getOpenId());
         order.setTypeId(this.getActivityType().getValue());
         order.setRemarks(requ.getRemarks());
-        order.setActivityId(requ.getActivityId());
+        order.setActivityId(activityDto.getActivityId());
 
         order.setStatus(OrderStatus.UNPAY.getValue());
         order.setCreateTime(DateUtils.getCurrentUnixTime());
@@ -95,33 +136,55 @@ public class OrderExchange extends OrderBase {
         order.setExpiredTime(DateUtils.getCurrentUnixTime() + Constant.ORDER_EXPIRED_TIME);
         order.setOrderUniqueCode(StringUtils.UUID32());
 
-        List<com.jsj.member.ob.entity.OrderProduct> orderProducts = new ArrayList<>();
+        //用于创建商品订单
+        List<OrderProduct> orderProducts = new ArrayList<>();
 
-        //订单应支付金额
+        //用于削减库存
+        List<OrderProductDto> orderProductDtos = new ArrayList<>();
+
+        //购买份数
+        int number = requ.getNumber();
+
+        //订单金额
         double orderAmount = 0d;
 
-        for (OrderProductDto op : requ.getOrderProductDtos()) {
+        for (ActivityProductDto apd : activityProductDtos) {
 
-            ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(op.getProductSpecId());
+            if (apd.getStockCount() < number) {
+                throw new TipException("商品售罄啦");
+            }
+
+            //用于创建商品订单
             OrderProduct orderProduct = new OrderProduct();
 
-            orderProduct.setNumber(op.getNumber());
-            orderProduct.setOrderProductId(op.getProductId());
-            orderProduct.setProductSpecId(op.getProductSpecId());
+            orderProduct.setNumber(number);
+            orderProduct.setProductSpecId(apd.getProductSpecId());
             orderProduct.setCreateTime(DateUtils.getCurrentUnixTime());
             orderProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
 
-            orderProduct.setProductId(op.getProductId());
+            orderProduct.setProductId(apd.getProductId());
             orderProducts.add(orderProduct);
 
-            //获取规格金额
-            orderAmount += productSpecDto.getSalePrice() * op.getNumber();
-        }
-        //削减规格库存
-        ProductLogic.ReductionProductSpecStock(requ.getOrderProductDtos(), this.getActivityType(), null);
+            //用于削减库存
+            OrderProductDto orderProductDto = new OrderProductDto();
+            orderProductDto.setProductId(apd.getProductId());
+            orderProductDto.setProductSpecId(apd.getProductSpecId());
+            orderProductDto.setNumber(number);
 
-        //使用优惠券后的支付金额
-        double payAmount = super.UseCoupon(requ.getWechatCouponId(), orderAmount, order);
+            orderProductDtos.add(orderProductDto);
+
+            orderAmount += apd.getSalePrice() * number;
+
+            //削减活动商品库存
+            ActivityLogic.ReductionActivityProductStock(apd.getActivityId(), apd.getProductId(), apd.getProductSpecId(), number);
+        }
+
+        //削减规格库存
+        ProductLogic.ReductionProductSpecStock(orderProductDtos, this.getActivityType(), null);
+
+        //TODO 商品兑换
+        double payAmount = super.Exchange(requ.getBaseRequ().getJsjId(), orderAmount, order);
+
         //支付金额
         order.setPayAmount(payAmount);
         //订单金额
@@ -147,72 +210,11 @@ public class OrderExchange extends OrderBase {
         resp.setSuccess(true);
 
         return resp;
+
     }
-    //endregion
 
-    //region (public) 计算商品应付金额 CalculateOrder
-
-    /**
-     * 计算商品应付金额
-     *
-     * @param requ
-     * @return
-     */
     @Override
     public CreateOrderResp CalculateOrder(CreateOrderRequ requ) {
-
-        //通用验证
-        super.validateCreateRequ(requ);
-
-        //参数校验
-        if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
-            throw new TipException("用户编号不能为空");
-        }
-        if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().size() == 0) {
-            throw new TipException("购买商品不能为空");
-        }
-
-        //订单应支付金额
-        double orderAmount = 0d;
-
-        for (OrderProductDto op : requ.getOrderProductDtos()) {
-            //获取商品规格
-            ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(op.getProductSpecId());
-            //获取规格金额
-            orderAmount += productSpecDto.getSalePrice() * op.getNumber();
-        }
-
-        //原价
-        double originalAmount = orderAmount;
-
-        //优惠金额
-        double couponAmount = 0d;
-
-        if (requ.getWechatCouponId() > 0) {
-            //使用优惠券
-            UseCouponRequ useCouponRequ = new UseCouponRequ();
-            useCouponRequ.setUseAmount(orderAmount);
-            useCouponRequ.setUse(false);
-            useCouponRequ.setWechatCouponId(requ.getWechatCouponId());
-
-            UseCouponResp useCouponResp = CouponLogic.UseCoupon(useCouponRequ);
-
-            orderAmount = useCouponResp.getPayAmount();
-            couponAmount = useCouponResp.getDiscountAmount();
-        }
-
-        orderAmount = new BigDecimal(orderAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        couponAmount = new BigDecimal(couponAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        originalAmount = new BigDecimal(originalAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-
-
-        CreateOrderResp resp = new CreateOrderResp();
-
-        resp.setAmount(orderAmount);
-        resp.setCouponAmount(couponAmount);
-        resp.setOriginalAmount(originalAmount);
-        resp.setSuccess(true);
-
-        return resp;
+        throw new TipException("方法暂未实现");
     }
 }

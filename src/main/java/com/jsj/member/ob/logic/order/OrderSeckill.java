@@ -1,14 +1,12 @@
 package com.jsj.member.ob.logic.order;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
-import com.jsj.member.ob.entity.ActivityProduct;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.enums.ActivityType;
@@ -182,21 +180,10 @@ public class OrderSeckill extends OrderBase {
 
             orderAmount += apd.getSalePrice() * number;
 
-            //削减秒杀库存
-            Wrapper<ActivityProduct> activityProductWrapper = new EntityWrapper<>();
-            activityProductWrapper.where("activity_id = {0}", apd.getActivityId());
-            activityProductWrapper.where("product_id = {0}", apd.getProductId());
-            activityProductWrapper.where("product_spec_id = {0}", apd.getProductSpecId());
-
-            ActivityProduct activityProduct = activityProductService.selectOne(activityProductWrapper);
-            activityProduct.setStockCount(activityProduct.getStockCount() - number);
-
-            activityProductService.updateById(activityProduct);
+            //削减活动商品库存
+            ActivityLogic.ReductionActivityProductStock(apd.getActivityId(), apd.getProductId(), apd.getProductSpecId(), number);
 
         }
-
-        //消减活动库存
-        ActivityLogic.ReductionActivityStock(activityDto.getActivityId(), number, requ.getActivityOrderId());
 
         //削减规格库存
         ProductLogic.ReductionProductSpecStock(orderProductDtos, this.getActivityType(), null);

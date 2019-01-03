@@ -44,6 +44,12 @@ public class ActivityLogicTest {
         ActivityLogic.RedisSync(activity);
     }
 
+    @Test
+    public void sync2Redis2() {
+
+        ActivityLogic.RedisSync();
+    }
+
     /**
      * 同步数据
      */

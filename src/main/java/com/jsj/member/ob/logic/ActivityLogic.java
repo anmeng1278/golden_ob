@@ -103,6 +103,8 @@ public class ActivityLogic extends BaseLogic {
     }
     //endregion
 
+    //region (public) 实体转换 ToDto
+
     /**
      * 实体转换
      *
@@ -139,6 +141,7 @@ public class ActivityLogic extends BaseLogic {
 
         return dto;
     }
+    //endregion
 
     //region (public) 削减活动库存 ReductionActivityStock
 
@@ -171,6 +174,36 @@ public class ActivityLogic extends BaseLogic {
         activityLogic.activityService.updateById(activity);
     }
     //endregion
+
+    //region (public) 消减活动商品库存 ReductionActivityProductStock
+
+    /**
+     * 消减活动商品库存
+     *
+     * @param activityId
+     * @param productId
+     * @param productSepcId
+     * @param number
+     */
+    public static void ReductionActivityProductStock(int activityId, int productId, int productSepcId, int number) {
+
+        //削减活动商品库存
+        Wrapper<ActivityProduct> activityProductWrapper = new EntityWrapper<>();
+        activityProductWrapper.where("activity_id = {0}", activityId);
+        activityProductWrapper.where("product_id = {0}", productId);
+        activityProductWrapper.where("product_spec_id = {0}", productSepcId);
+
+        ActivityProduct activityProduct = activityLogic.activityProductService.selectOne(activityProductWrapper);
+        if (activityProduct.getStockCount() < number) {
+            throw new TipException(String.format("活动商品库存不足，暂不允许下单<br />活动编号：%d 商品编号：%d", activityId, productId));
+        }
+        activityProduct.setStockCount(activityProduct.getStockCount() - number);
+
+        activityLogic.activityProductService.updateById(activityProduct);
+
+    }
+    //endregion
+
 
     //region (public) 获得当前预热展示的活动 GetShowActivity
 
@@ -345,6 +378,7 @@ public class ActivityLogic extends BaseLogic {
         Wrapper<Activity> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
         wrapper.where("ifpass = 1");
+        wrapper.where("type_id = {0}", ActivityType.SECKILL.getValue());
         //wrapper.where("UNIX_TIMESTAMP() between begin_time - 60 * 10 and begin_time - 60 *5");
         wrapper.where("UNIX_TIMESTAMP() between begin_time - 60 * 10 and end_time");
 
@@ -383,8 +417,8 @@ public class ActivityLogic extends BaseLogic {
             for (ActivityProductDto dto : products) {
 
                 ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, dto.getProductId(), dto.getProductSpecId()));
-                String key = String.format("%s:%s", productKey.getPrefix(), "INIT");
-                String readyKey = String.format("%s:%s", productKey.getPrefix(), "READYTIME");
+                String key = productKey.INIT();
+                String readyKey = productKey.READYTIME();
 
                 //没有库存
                 if (dto.getStockCount() == 0) {
