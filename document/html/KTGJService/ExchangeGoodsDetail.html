@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <meta name="apple-mobile-web-app-capable" content="yes" />
+	    <meta name="format-detection" content="telephone=no" />
+	    <meta name="format-detection" content="email=no" />
+	    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+	    <title>空铁服务</title>
+	    <link rel="stylesheet" type="text/css" href="css/public.css"/>
+	    <link rel="stylesheet" type="text/css" href="js/swiper/css/swiper.min.css"/>
+	    <link rel="stylesheet" type="text/css" href="css/GoodsDetail.css"/>
+	    <style type="text/css">
+	    	.footer-lt{ width: 50%;}
+	    	.footer-rt{ width: 50%;}
+	    	.footer-rt a{ width: 100%;}
+	    	.shopping-cart-btn{ background: #D7686B;}
+	    </style>
+	</head>
+	<body>
+		<!--banner start-->
+		<div class="banner">
+			<!-- 轮播 start -->
+			<div class="swiper-container">
+			    <div class="swiper-wrapper">
+			    	<div class="swiper-slide">
+			    		<img src="images/detailbanner.png" alt="1" width="100%"/>
+			    	</div>
+			    	<div class="swiper-slide">
+			    		<img src="images/detailbanner.png" alt="1" width="100%"/>
+			    	</div>
+			    	<div class="swiper-slide">
+			    		<img src="images/detailbanner.png" alt="1" width="100%"/>
+			    	</div>
+			    	<div class="swiper-slide">
+			    		<img src="images/detailbanner.png" alt="1" width="100%"/>
+			    	</div>
+			    	<div class="swiper-slide">
+			    		<img src="images/detailbanner.png" alt="1" width="100%"/>
+			    	</div>
+				</div>
+			    <!-- Add Pagination -->
+			    <div class="swiper-pagination"></div>
+			</div>
+			<!-- 轮播 end -->
+		</div>
+		<!--banner end-->
+		
+		<!--goods-introduce start-->
+		<div class="goods-introduce">
+			<h2 class="goods-name">素园野生素食参谜</h2>
+			<p class="goods-tips">旅行者百色行李箱，百变色彩，多色可选</p>
+			<span class="goods-num">剩余45盒</span>
+		</div>
+		<!--goods-introduce end-->
+		
+		<!--main start-->
+		<div class="main">
+			<h2 class="goods-detail"><span>商品详情</span></h2>
+			<p>
+				<img src="images/goodsdetail.png" alt="1" width="100%"/>
+			</p>
+		</div>
+		<!--main end-->
+		
+		<!--footer start-->
+		<div class="footer">
+			<p class="footer-lt">
+				<span class="shopping-price">&yen;<em>898</em></span>
+			</p>
+			<p class="footer-rt">
+				<a href="javascript:void(0);" class="shopping-cart-btn" style="display: none;">余额不足</a>
+				<a href="javascript:void(0);" class="purchase-show-btn">立即兑换</a>
+			</p>
+			
+		</div>
+		<!--footer end-->
+		
+		<!-- purchase-layer start -->
+		<div class="purchase-layer" style="display: none;">
+			<div class="purchase-layer-bg"></div>
+			<div class="purchase-layer-con">
+				<!--purchase-layer-main start-->
+				<div class="purchase-layer-main">
+					<dl class="purchase-layer-dl">
+						<dt><img src="images/purchase-layer-img.png"/></dt>
+						<dd>
+							<h2 class="purchase-goods-name">素园野生素食参谜</h2>
+							<p class="purchase-goods-tips">健康好参 立等即食</p>
+						</dd>
+					</dl>
+					<div class="purchase-layer-div">
+						<span class="purchase-layer-lable">规格</span>
+						<p class="purchase-layer-p">
+							<span class="active">红色</span>
+							<span>蓝色</span>
+							<span class="disabled">蓝色</span>
+						</p>
+					</div>
+					<div class="purchase-layer-div">
+						<span class="purchase-layer-lable">购买数量</span>
+						<div class="purchase-num">
+							<em class="purchase-num-reduce"></em>
+							<input type="text" value="1" class="num"/>
+							<em class="purchase-num-add"></em>
+						</div>
+					</div>
+				</div>
+				<!--purchase-layer-main end-->
+				
+				<!--purchase-footer start-->
+				<div class="purchase-footer">
+					<p class="purchase-footer-lt">
+						<span class="shopping-price">&yen;<em>898</em></span>
+					</p>
+					<a href="javascript:void(0);" class="purchase-btn">立即购买</a>
+				</div>
+				<!--purchase-footer end-->
+			</div>
+		</div>
+		<!-- purchase-layer end -->
+		
+		<!--引入的js-->
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/size.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/swiper/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/GoodsDetail.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

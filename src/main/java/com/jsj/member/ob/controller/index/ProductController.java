@@ -66,6 +66,9 @@ public class ProductController extends BaseController {
 
             case COMBINATION:
                 return this.combProduct(request);
+
+            case EXCHANGE:
+                return this.exchangeProduct(request);
         }
 
         return this.Redirect("/");
@@ -145,6 +148,28 @@ public class ProductController extends BaseController {
         request.setAttribute("productDtos", productDtos);
 
         return "index/product/combActivityDetail";
+    }
+    //endregion
+
+    //region (public) 兑换商品详情 exchangeProduct
+
+    /**
+     * 组合商品详情
+     *
+     * @param request
+     * @return
+     */
+    public String exchangeProduct(HttpServletRequest request) {
+
+        if (StringUtils.isEmpty(request.getParameter("activityId"))) {
+            return this.Redirect("/");
+        }
+
+        if (StringUtils.isEmpty(request.getParameter("productId"))) {
+            return this.Redirect("/");
+        }
+
+        return "index/product/exchangeActivityDetail";
     }
     //endregion
 
@@ -453,6 +478,9 @@ public class ProductController extends BaseController {
             case COMBINATION:
                 requ = this.createCombOrderRequest(request);
                 break;
+            case EXCHANGE:
+                requ = this.createExchangeOrderRequest(request);
+                break;
             default:
                 throw new TipException("方法暂未实现");
         }
@@ -528,5 +556,41 @@ public class ProductController extends BaseController {
     }
     //endregion
 
+    //region (private) 组织创建兑换订单请求 createNormalOrderRequest
+
+    /**
+     * 组织创建兑换订单请求
+     *
+     * @param request
+     * @return
+     */
+    private CreateOrderRequ createExchangeOrderRequest(HttpServletRequest request) {
+
+        String openId = this.OpenId();
+        String p = request.getParameter("p");
+        List<JSONObject> jsonObjects = JSON.parseArray(p, JSONObject.class);
+
+        CreateOrderRequ requ = new CreateOrderRequ();
+        requ.setActivityType(ActivityType.EXCHANGE);
+        requ.getBaseRequ().setOpenId(openId);
+
+        for (JSONObject jo : jsonObjects) {
+
+            int productId = jo.getIntValue("productId");
+            int num = jo.getIntValue("num");
+            int productSpecId = jo.getInteger("productSpecId");
+
+            OrderProductDto orderProduct = new OrderProductDto();
+            orderProduct.setProductId(productId);
+            orderProduct.setProductSpecId(productSpecId);
+            orderProduct.setNumber(num);
+
+            requ.getOrderProductDtos().add(orderProduct);
+        }
+
+        return requ;
+
+    }
+    //endregion
 
 }

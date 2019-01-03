@@ -38,7 +38,7 @@ webconfig:
   appSecrect: 455c2d8d53c8cd37cca073e579fac95f
 
   ## 虚拟目录
-  virtualPath: ""
+  virtualPath: "/ot"
 
   ## 严选活动码生成地址
   activityUrl: http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx
@@ -51,6 +51,8 @@ webconfig:
   ## 严选登录密码
   partnerLoginPassword: jinseyanxuan_123
 
+  ## 会员组接口
+  memberApiUrl: http://memberapi.jsjit.cn/hosts/Jmember.aspx
 
 redis:
   host: 172.16.5.64

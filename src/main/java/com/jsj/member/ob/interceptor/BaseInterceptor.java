@@ -4,8 +4,6 @@ import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.logic.BaseLogic;
 import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,8 +19,6 @@ import java.util.List;
 @Component
 public class BaseInterceptor implements HandlerInterceptor {
 
-    private static final Logger LOGGE = LoggerFactory.getLogger(BaseInterceptor.class);
-    private static final String USER_AGENT = "user-agent";
 
     @Autowired
     List<BaseLogic> baseLogics;

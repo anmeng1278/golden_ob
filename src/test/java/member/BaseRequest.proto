@@ -1,0 +1,18 @@
+package com.jsj.member.ob.dto.proto;
+
+import "SourceWay.proto";
+import "LanguageVersion.proto";
+import "DataCommission.proto";
+
+message BaseRequest {
+   optional string AppVersion = 1;
+   optional SourceWay SourceWay = 2 [default = SourceWayNoSetting];
+   optional LanguageVersion LanguageVersion = 3 [default = CN];
+   optional string TerminalExt = 4;
+   optional string RegistrationId = 5;
+   optional string IMEI = 6;
+   optional int32 OpEmployeeID = 7 [default = 0];
+   optional string Token = 8;
+   optional DataCommission DataCommission = 9 [default = DataCommissionNoSetting];
+   optional int32 DeptID = 10 [default = 0];
+}

@@ -1,0 +1,7 @@
+package com.jsj.member.ob.dto.proto;
+
+message BaseResponse {
+   optional bool IsSuccess = 1 [default = false];
+   optional string ErrorMessage = 2;
+   optional string ErrorCode = 3;
+}

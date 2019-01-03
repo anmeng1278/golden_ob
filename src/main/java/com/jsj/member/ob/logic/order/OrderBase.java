@@ -29,6 +29,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ * 削减库存规则
+ * 1.普通商品 削减商品规格库存
+ * 2.组合商品 削减活动库存+削减活动商品库存+商品规格库存
+ * 3.团购     削减活动库存+削减活动商品库存+商品规格库存
+ * 4.秒杀     削减活动商品库存+商品规格库存
+ * 5.兑换     削减活动商品库存+商品规格库存
+ */
+
 public abstract class OrderBase {
 
     OrderService orderService;
@@ -191,4 +201,22 @@ public abstract class OrderBase {
 
     }
 
+    /**
+     * 商品兑换
+     *
+     * @param jsjId
+     * @param orderAmount
+     * @param order
+     * @return
+     */
+    public double Exchange(int jsjId, double orderAmount, Order order) {
+
+        if (jsjId <= 0) {
+            throw new TipException("没有绑定会员，不允许兑换商品。");
+        }
+
+        //TODO 扣减金额
+        return 0;
+
+    }
 }
