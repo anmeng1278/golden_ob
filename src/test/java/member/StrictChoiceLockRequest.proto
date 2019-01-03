@@ -1,0 +1,15 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseRequest.proto";
+import "StrictChoiceOrderType.proto";
+
+message StrictChoiceLockRequest {
+   optional BaseRequest BaseRequest = 1;
+   optional int32 JSJID = 2 [default = 0];
+   optional string OrderID = 3;
+   optional double Money = 4 [default = 0];
+   optional StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeUnSet];
+   optional int32 ProjectID = 6 [default = 0];
+   optional int32 DepositDeptID = 7 [default = 0];
+   optional string Remark = 8;
+}

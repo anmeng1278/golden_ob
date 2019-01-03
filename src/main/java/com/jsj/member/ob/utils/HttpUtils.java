@@ -1,6 +1,8 @@
 package com.jsj.member.ob.utils;
 
 import com.jsj.member.ob.config.Webconfig;
+import com.jsj.member.ob.dto.proto.ZRequestOuterClass;
+import com.jsj.member.ob.dto.proto.ZResponseOuterClass;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -241,6 +244,45 @@ public class HttpUtils {
         }
 
         return map;
+
+    }
+
+    /**
+     * 发送protobuf请求
+     *
+     * @param zRequest
+     * @param url
+     * @return
+     */
+    public static ZResponseOuterClass.ZResponse.Builder protobuf(ZRequestOuterClass.ZRequest.Builder zRequest, String url) {
+
+        ZResponseOuterClass.ZResponse.Builder zResponse = ZResponseOuterClass.ZResponse.newBuilder();
+        try {
+            OkHttpClient client = new OkHttpClient();
+
+            //请求超时设置
+            client.newBuilder()
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS).build();
+
+            final RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-protobuf"), zRequest.build().toByteArray());
+
+            Request request = new Request.Builder()
+                    .post(requestBody)
+                    .url(url)//请求接口。如果需要传参拼接到接口后面。
+                    .build();//创建Request 对象
+            Response response = client.newCall(request).execute();//得到Response 对象
+
+            if (response.isSuccessful()) {
+                zResponse = ZResponseOuterClass.ZResponse.parseFrom(response.body().bytes()).toBuilder();
+                return zResponse;
+            }
+        } catch (Exception ex) {
+            zResponse.setIsSuccess(false);
+            zResponse.setExceptionMessage(ex.getMessage());
+        }
+
+        return zResponse;
 
     }
 }

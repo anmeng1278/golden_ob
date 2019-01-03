@@ -79,11 +79,23 @@ public class IndexController extends BaseController {
 
         //用户未支付订单数
         int size = OrderLogic.GetOrders(openId, OrderFlag.UNPAIDORDERS).size();
-        request.setAttribute("size",size);
+        request.setAttribute("size", size);
 
         return "index/index";
     }
     //endregion
 
+    /**
+     * 兑换专区
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping(value = {"/exchange"})
+    public String exchange(HttpServletRequest request) {
+
+        return "index/exchange";
+    }
+    //endregion
 
 }

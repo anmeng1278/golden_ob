@@ -158,6 +158,8 @@ public class OrderGroupon extends OrderBase {
 
                 orderProductDtos.add(orderProductDto);
 
+                //削减活动商品库存
+                ActivityLogic.ReductionActivityProductStock(apd.getActivityId(), apd.getProductId(), apd.getProductSpecId(), number);
             }
 
             //消减活动库存

@@ -1,6 +1,5 @@
 package com.jsj.member.ob.logic.order;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
@@ -24,16 +23,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 秒杀单
  */
 @Component
-public class OrderSeckill extends OrderBase {
+public class OrderExchange extends OrderBase {
 
-    public OrderSeckill() {
-        super(ActivityType.SECKILL);
+    public OrderExchange() {
+        super(ActivityType.EXCHANGE);
         super.setCanUseCoupon(false);
     }
 
@@ -77,15 +75,23 @@ public class OrderSeckill extends OrderBase {
         if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
             throw new TipException("用户编号不能为空");
         }
+
+        if (requ.getBaseRequ().getJsjId() <= 0) {
+            throw new TipException("会员编号不能为空");
+        }
+
         if (requ.getActivityId() == 0) {
             throw new TipException("活动编号不能为空");
         }
 
         if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().isEmpty()) {
-            throw new TipException("秒杀商品不能为空");
+            throw new TipException("兑换商品不能为空");
         }
         if (requ.getOrderProductDtos().size() != 1) {
-            throw new TipException("只能秒杀一个商品");
+            throw new TipException("只能兑换一个商品");
+        }
+        if (requ.getNumber() <= 0) {
+            requ.setNumber(1);
         }
 
         //所选商品
@@ -95,11 +101,7 @@ public class OrderSeckill extends OrderBase {
         ActivityDto activityDto = ActivityLogic.GetActivity(requ.getActivityId());
 
         //活动商品
-        List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(requ.getActivityId());
-
-        activityProductDtos = activityProductDtos.stream().filter(apd -> apd.getProductId().equals(chooseOrderProduct.getProductId()) &&
-                apd.getProductSpecId().equals(chooseOrderProduct.getProductSpecId())
-        ).collect(Collectors.toList());
+        List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(requ.getActivityId(), chooseOrderProduct.getProductSpecId());
 
         if (activityProductDtos.isEmpty()) {
             throw new TipException(String.format("没有发现活动商品，请稍后重试。活动编号：%d", activityDto.getActivityId()));
@@ -116,7 +118,7 @@ public class OrderSeckill extends OrderBase {
         }
 
         if (activityDto.getActivityType() != this.getActivityType()) {
-            throw new TipException("当前活动非秒杀活动");
+            throw new TipException("当前活动非兑换活动");
         }
 
 
@@ -141,22 +143,15 @@ public class OrderSeckill extends OrderBase {
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
 
         //购买份数
-        int number = 1;
+        int number = requ.getNumber();
 
         //订单金额
         double orderAmount = 0d;
 
         for (ActivityProductDto apd : activityProductDtos) {
 
-            //重复购买判断
-            EntityWrapper<Order> orderWrapper = new EntityWrapper<>();
-            orderWrapper.where("open_id = {0}", requ.getBaseRequ().getOpenId());
-            orderWrapper.where("type_id = {0}", ActivityType.SECKILL.getValue());
-            orderWrapper.where("activity_id = {0}", activityDto.getActivityId());
-            orderWrapper.where("exists( select * from _order_product where order_id = _order.order_id and product_id = {0} )", apd.getProductId());
-
-            if (orderService.selectCount(orderWrapper) > 0) {
-                throw new TipException("秒杀商品只能购买一次");
+            if (apd.getStockCount() < number) {
+                throw new TipException("商品售罄啦");
             }
 
             //用于创建商品订单
@@ -182,14 +177,14 @@ public class OrderSeckill extends OrderBase {
 
             //削减活动商品库存
             ActivityLogic.ReductionActivityProductStock(apd.getActivityId(), apd.getProductId(), apd.getProductSpecId(), number);
-
         }
 
         //削减规格库存
         ProductLogic.ReductionProductSpecStock(orderProductDtos, this.getActivityType(), null);
 
-        //使用优惠券后的支付金额
-        double payAmount = super.UseCoupon(requ.getWechatCouponId(), orderAmount, order);
+        //TODO 商品兑换
+        double payAmount = super.Exchange(requ.getBaseRequ().getJsjId(), orderAmount, order);
+
         //支付金额
         order.setPayAmount(payAmount);
         //订单金额
