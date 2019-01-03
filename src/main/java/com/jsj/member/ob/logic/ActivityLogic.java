@@ -368,35 +368,43 @@ public class ActivityLogic extends BaseLogic {
      * @param activity
      */
     public static boolean RedisSync(Activity activity) {
+        Jedis jedis = null;
+        try {
 
-        Jedis jedis = activityLogic.jedisPool.getResource();
-        int activityId = activity.getActivityId();
+            jedis = activityLogic.jedisPool.getResource();
+            int activityId = activity.getActivityId();
 
-        //活动商品
-        List<ActivityProductDto> products = ActivityLogic.GetActivityProductDtos(activityId);
-        if (products == null || products.isEmpty()) {
-            return false;
-        }
-
-        for (ActivityProductDto dto : products) {
-
-            ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, dto.getProductId(), dto.getProductSpecId()));
-            String key = String.format("%s:%s", productKey.getPrefix(), "INIT");
-            String readyKey = String.format("%s:%s", productKey.getPrefix(), "READYTIME");
-
-            //没有库存
-            if (dto.getStockCount() == 0) {
-                jedis.del(key);
-                continue;
+            //活动商品
+            List<ActivityProductDto> products = ActivityLogic.GetActivityProductDtos(activityId);
+            if (products == null || products.isEmpty()) {
+                return false;
             }
 
-            //已初始化
-            if (jedis.exists(key)) {
-                continue;
+            for (ActivityProductDto dto : products) {
+
+                ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, dto.getProductId(), dto.getProductSpecId()));
+                String key = String.format("%s:%s", productKey.getPrefix(), "INIT");
+                String readyKey = String.format("%s:%s", productKey.getPrefix(), "READYTIME");
+
+                //没有库存
+                if (dto.getStockCount() == 0) {
+                    jedis.del(key);
+                    continue;
+                }
+
+                //已初始化
+                if (jedis.exists(key)) {
+                    continue;
+                }
+
+                jedis.set(key, dto.getStockCount() + "");
+                jedis.set(readyKey, activity.getBeginTime() + "");
             }
 
-            jedis.set(key, dto.getStockCount() + "");
-            jedis.set(readyKey, activity.getBeginTime() + "");
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
         }
 
         return true;
@@ -417,22 +425,29 @@ public class ActivityLogic extends BaseLogic {
         if (products == null || products.isEmpty()) {
             return true;
         }
-        Jedis jedis = activityLogic.jedisPool.getResource();
+        Jedis jedis = null;
+        try {
 
-        for (ActivityProductDto dto : products) {
+            jedis = activityLogic.jedisPool.getResource();
+            for (ActivityProductDto dto : products) {
 
-            ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, dto.getProductId(), dto.getProductSpecId()));
+                ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, dto.getProductId(), dto.getProductSpecId()));
 
-            //已初始化
-            if (jedis.exists(productKey.RESULT())) {
-                return false;
+                //已初始化
+                if (jedis.exists(productKey.RESULT())) {
+                    return false;
+                }
+
             }
-
-        }
-        for (ActivityProductDto dto : products) {
-            ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, dto.getProductId(), dto.getProductSpecId()));
-            for (String k : productKey.TOTALS()) {
-                jedis.del(k);
+            for (ActivityProductDto dto : products) {
+                ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, dto.getProductId(), dto.getProductSpecId()));
+                for (String k : productKey.TOTALS()) {
+                    jedis.del(k);
+                }
+            }
+        } finally {
+            if (jedis != null) {
+                jedis.close();
             }
         }
 

@@ -27,7 +27,7 @@ import java.util.List;
 public class DeliveryNation extends DeliveryBase {
 
     public DeliveryNation() {
-        super(PropertyType.GOLDEN);
+        super(PropertyType.NATION);
     }
 
     @Autowired

@@ -1,11 +1,25 @@
 if (typeof shareConfig == "undefined") {
-    var url = location.protocol + "//" + location.host + virtualPath;
+    var url = location.protocol + "//" + location.host + ob.virtualPath;
     shareConfig = {
         title: "空铁管家",
         desc: "服务覆盖全国100个城市，300万商旅人士的出行首选！",
         link: url,
         imgUrl: "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68"
     };
+}
+
+//兼容小程序分享
+if (typeof wx != "undefined" && typeof wx.miniProgram != "undefined") {
+    wx.miniProgram.navigateBack({delta: 1});
+    // wx.miniProgram.postMessage({data: '获取成功'});
+    wx.miniProgram.postMessage({
+        data: {
+            link: shareConfig.link,
+            title: shareConfig.title,
+            desc: shareConfig.desc,
+            imgUrl: shareConfig.imgUrl
+        }
+    });
 }
 
 wx.ready(function () {
@@ -22,17 +36,6 @@ wx.ready(function () {
     shareConfig.desc = shareConfig.desc || "服务覆盖全国100个城市，300万商旅人士的出行首选！";
     shareConfig.title = shareConfig.title || "空铁管家";
     shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68";
-
-    if (typeof wx.miniProgram != "undefined") {
-        wx.miniProgram.navigateBack({delta: 1})
-        wx.miniProgram.postMessage({
-            link: shareConfig.link,
-            title: shareConfig.title,
-            desc: shareConfig.desc,
-            imgUrl: shareConfig.imgUrl
-        });
-        alert(wx.miniProgram);
-    }
 
     console.log(shareConfig);
     wx.onMenuShareAppMessage({

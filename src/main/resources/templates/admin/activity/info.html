@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <div class="layui-form-item">
+        <div class="layui-form-item" id="showTime">
 
             <div class="layui-inline">
                 <label class="layui-form-label">预热时间</label>
@@ -61,7 +61,7 @@
                 </div>
             </div>
 
-            <div class="layui-inline">
+            <div class="layui-inline" >
                 <label class="layui-form-label">结束时间</label>
                 <div class="layui-input-inline">
                     <input type="text" name="endTime" placeholder="yyyy-MM-dd HH:mm:ss"
@@ -105,7 +105,7 @@
             <div class="layui-form-mid layui-word-aux-red">*</div>
         </div>
 
-        <div class="layui-form-item">
+        <div class="layui-form-item" id="stock">
             <label class="layui-form-label">库存</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" name="stockCount"
@@ -121,7 +121,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">活动封面</label>
                     <div class="layui-input-4">
-                        <input type="hidden" name="img_path" id="img_path"></input>
+                        <input type="hidden" name="img_path" id="img_path"/>
                         <div class="layui-upload">
                             <button type="button" class="layui-btn layui-btn-primary" id="thumbBtn"
                                     style="width: 115px;">
@@ -181,7 +181,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">活动商品</label>
             <div class="layui-input-block" style="width:85%;">
-                <button class="layui-btn layui-btn-normal layui-btn-xs" type="button" id="btnChooseProducts"
+                <button class="layui-btn layui-btn-normal layui-btn-xs" th:if="${allowModify}" type="button" id="btnChooseProducts"
                         style="margin-top: 10px;">
                     <i class="layui-icon">&#xe654;</i> 添加商品
                 </button>
@@ -190,7 +190,7 @@
                     <thead>
                     <tr>
                         <th style="width: 8%;">编号</th>
-                        <th style="width: 8%;" style="display: none" class="seckillPicture">商品图片</th>
+                        <th style="width: 8%;display: none"  class="seckillPicture">商品图片</th>
                         <th>商品规格</th>
                         <th style="width: 8%;">售价</th>
                         <th style="width: 8%;">原价</th>
@@ -201,7 +201,7 @@
                     </thead>
                     <tbody id="content">
                     <th:block th:each="ap : ${activityProducts}">
-                        <tr>
+                        <tr th:attr="data-product-id=${ap.productId}">
                             <th:block th:with="pro=${productLogic.GetProduct(ap.productId)}">
                                 <td th:text="${ap.productSpecId}"></td>
                                 <td style="display: none" class="seckillPicture" th:if="${info.typeId == 20}">
@@ -227,19 +227,19 @@
                                            th:value="${ap.salePrice}" placeholder="请输入秒杀价"/>
                                 </td>
 
-                            <td>
-                                <input type="hidden" name="productSpecId" th:value="${ap.productSpecId}"/>
-                                <button type="button" th:attr="data-method='delete',data-id=${ap.productSpecId}"
-                                        class="layui-btn layui-btn-xs layui-btn-danger">
-                                    <i class="layui-icon">&#xe640;</i>
-                                </button>
+                                <td>
+                                    <input type="hidden" name="productSpecId" th:value="${ap.productSpecId}"/>
+                                    <button type="button" th:attr="data-method='delete',data-id=${ap.productSpecId}"
+                                            class="layui-btn layui-btn-xs layui-btn-danger">
+                                        <i class="layui-icon">&#xe640;</i>
+                                    </button>
 
-                                <button name="picBtn" th:title="|${pro.productName}秒杀图片|"
-                                        th:attr="data-tab-href=@{'/admin/activity/'+${activityId}+'/'+${ap.productId}}"
-                                        class="layui-btn layui-btn-normal layui-btn-xs">
-                                    <i class="layui-icon">&#xe64a;</i>
-                                </button>
-                            </td>
+                                    <button type="button" name="picBtn" th:title="|${pro.productName}秒杀图片|"
+                                            th:attr="data-activity-id=${activityId},data-product-id=${ap.productId}"
+                                            class="layui-btn layui-btn-normal layui-btn-xs">
+                                        <i class="layui-icon">&#xe64a;</i>
+                                    </button>
+                                </td>
                             </th:block>
                         </tr>
                     </th:block>
@@ -342,6 +342,9 @@
                 $("#price").hide();
                 $("td[skillprice], th[skillprice]").hide();
                 $("#pic").hide();
+                $("th[class='seckillPicture'],td[class='seckillPicture']").hide();
+                $("#showTime").hide();
+                $("#stock").hide();
                 $("button[name=picBtn]").hide();
 
 
@@ -349,6 +352,8 @@
                 $(":text[name='originalPrice']").attr("lay-verify", "float4");
                 $(":text[name='salePrice']").attr("lay-verify", "float4");
                 $(":text[name='productSpecSalePrice']").attr("lay-verify", "float4");
+                $(":text[name='stockCount']").attr("lay-verify", "num2");
+
 
                 //所选类型
                 var typeId = data.value;
@@ -363,6 +368,8 @@
                         $("#groupNumber").show();
                         $("#price").show();
                         $(":text[name='productSpecSalePrice']").removeAttr("lay-verify");
+                        $("#showTime").show();
+                        $("#stock").show();
                         break;
                     //秒杀
                     case "20":
@@ -372,6 +379,8 @@
                         $(":text[name='salePrice']").removeAttr("lay-verify");
                         $("th[class='seckillPicture'],td[class='seckillPicture']").show();
                         $("button[name='picBtn']").show();
+                        $("#showTime").show();
+                        $("#stock").show();
                         break;
                     case "30":
                         //组合
@@ -379,7 +388,18 @@
                         $("#pic").show();
                         $(":text[name='number']").removeAttr("lay-verify");
                         $(":text[name='productSpecSalePrice']").removeAttr("lay-verify");
+                        $("#showTime").show();
+                        $("#stock").show();
                         break;
+                    case "40":
+                        //权益兑换
+                        $(":text[name='number']").removeAttr("lay-verify");
+                        $(":text[name='originalPrice']").removeAttr("lay-verify", "float4");
+                        $(":text[name='salePrice']").removeAttr("lay-verify", "float4");
+                        $(":text[name='productSpecSalePrice']").removeAttr("lay-verify", "float4");
+                        $(":text[name='stockCount']").removeAttr("lay-verify", "num2")
+                        break;
+
                 }
                 form.render();
             });
@@ -417,7 +437,6 @@
                 }
             });
 
-            //日期
 
             //设置时间
             layui.use(['form', 'layedit', 'laydate', "jquery"], function () {
@@ -518,6 +537,22 @@
                 $(this).insertBefore(prev);
             });
 
+            $(document).on("click", "button[name='picBtn']", function () {
+
+                var activityId = $(this).attr("data-activity-id");
+                var productId = $(this).attr("data-product-id");
+
+                var url = "/admin/activity/" + activityId + "/" + productId;
+
+                window.TX.TEMP.LAYERINDEX = window.layer.open({
+                    title: "秒杀图片管理",
+                    type: 2,
+                    content: url,
+                    area: ["600px", "500px"]
+                });
+
+            });
+
         });
 
         function clickCurrentActivityType() {
@@ -563,7 +598,7 @@
                             if ($.inArray(item.productSpecId, choosedSpecIds) != -1) {
                                 return true;
                             }
-                            html.push('<tr>');
+                            html.push('<tr data-product-id="' + item.productId + '" >');
                             html.push('    <td></td>');
                             html.push('    <td style="display: none" class="seckillPicture">')
                             if (item.imgPath == null) {
@@ -586,7 +621,7 @@
                             html.push('     <button type="button" data-method="delete" data-id="' + item.productSpecId + '" class="layui-btn layui-btn-xs layui-btn-danger">');
                             html.push('     <i class="layui-icon">&#xe640;</i></button>');
 
-                            html.push(' <button name="picBtn" title="|' + item.productName + '秒杀图片|"  data-tab-href=@{"/admin/activity/"' + [[${activityId}]] + '/' + item.productId + '} class="layui-btn layui-btn-normal layui-btn-xs"> ');
+                            html.push(' <button type="button" name="picBtn" title="|' + item.productName + '秒杀图片|"  data-activity-id="' + [[${activityId}]] + '" data-product-id="' + item.productId + '"   class="layui-btn layui-btn-normal layui-btn-xs"> ');
                             html.push('  <i class="layui-icon">&#xe64a;</i></button>');
 
 
@@ -605,6 +640,14 @@
             });
         }
 
+        /**
+         * 设置图片路径
+         * @param productId
+         * @param src
+         */
+        function setImgPath(productId, src) {
+            $("tr[data-product-id='"+productId+"'] img").attr("src", src);
+        }
     </script>
 </th:block>
 </html>
