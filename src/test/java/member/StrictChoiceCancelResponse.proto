@@ -1,0 +1,8 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseResponse.proto";
+
+message StrictChoiceCancelResponse {
+   optional BaseResponse BaseResponse = 1;
+   optional int32 LockID = 2 [default = 0];
+}

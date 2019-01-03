@@ -1,0 +1,13 @@
+package com.jsj.member.ob.dto.proto;
+
+enum SourceWay {
+   SourceWayNoSetting = 0;
+   Web = 10;
+   Wap = 20;
+   IOS = 30;
+   Android = 40;
+   SmallAPP = 50;
+   CRM = 60;
+   WeChatMall = 70;
+   KTGJ = 80;
+}
