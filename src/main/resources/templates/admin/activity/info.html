@@ -181,7 +181,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">活动商品</label>
             <div class="layui-input-block" style="width:85%;">
-                <button class="layui-btn layui-btn-normal layui-btn-xs" type="button" id="btnChooseProducts"
+                <button class="layui-btn layui-btn-normal layui-btn-xs" th:if="${allowModify}" type="button" id="btnChooseProducts"
                         style="margin-top: 10px;">
                     <i class="layui-icon">&#xe654;</i> 添加商品
                 </button>
@@ -201,7 +201,7 @@
                     </thead>
                     <tbody id="content">
                     <th:block th:each="ap : ${activityProducts}">
-                        <tr>
+                        <tr th:attr="data-product-id=${ap.productId}">
                             <th:block th:with="pro=${productLogic.GetProduct(ap.productId)}">
                                 <td th:text="${ap.productSpecId}"></td>
                                 <td style="display: none" class="seckillPicture" th:if="${info.typeId == 20}">
@@ -227,19 +227,19 @@
                                            th:value="${ap.salePrice}" placeholder="请输入秒杀价"/>
                                 </td>
 
-                            <td>
-                                <input type="hidden" name="productSpecId" th:value="${ap.productSpecId}"/>
-                                <button type="button" th:attr="data-method='delete',data-id=${ap.productSpecId}"
-                                        class="layui-btn layui-btn-xs layui-btn-danger">
-                                    <i class="layui-icon">&#xe640;</i>
-                                </button>
+                                <td>
+                                    <input type="hidden" name="productSpecId" th:value="${ap.productSpecId}"/>
+                                    <button type="button" th:attr="data-method='delete',data-id=${ap.productSpecId}"
+                                            class="layui-btn layui-btn-xs layui-btn-danger">
+                                        <i class="layui-icon">&#xe640;</i>
+                                    </button>
 
-                                <button name="picBtn" th:title="|${pro.productName}秒杀图片|"
-                                        th:attr="data-tab-href=@{'/admin/activity/'+${activityId}+'/'+${ap.productId}}"
-                                        class="layui-btn layui-btn-normal layui-btn-xs">
-                                    <i class="layui-icon">&#xe64a;</i>
-                                </button>
-                            </td>
+                                    <button type="button" name="picBtn" th:title="|${pro.productName}秒杀图片|"
+                                            th:attr="data-activity-id=${activityId},data-product-id=${ap.productId}"
+                                            class="layui-btn layui-btn-normal layui-btn-xs">
+                                        <i class="layui-icon">&#xe64a;</i>
+                                    </button>
+                                </td>
                             </th:block>
                         </tr>
                     </th:block>
@@ -518,6 +518,22 @@
                 $(this).insertBefore(prev);
             });
 
+            $(document).on("click", "button[name='picBtn']", function () {
+
+                var activityId = $(this).attr("data-activity-id");
+                var productId = $(this).attr("data-product-id");
+
+                var url = "/admin/activity/" + activityId + "/" + productId;
+
+                window.TX.TEMP.LAYERINDEX = window.layer.open({
+                    title: "秒杀图片管理",
+                    type: 2,
+                    content: url,
+                    area: ["600px", "500px"]
+                });
+
+            });
+
         });
 
         function clickCurrentActivityType() {
@@ -563,7 +579,7 @@
                             if ($.inArray(item.productSpecId, choosedSpecIds) != -1) {
                                 return true;
                             }
-                            html.push('<tr>');
+                            html.push('<tr data-product-id="' + item.productId + '" >');
                             html.push('    <td></td>');
                             html.push('    <td style="display: none" class="seckillPicture">')
                             if (item.imgPath == null) {
@@ -586,7 +602,7 @@
                             html.push('     <button type="button" data-method="delete" data-id="' + item.productSpecId + '" class="layui-btn layui-btn-xs layui-btn-danger">');
                             html.push('     <i class="layui-icon">&#xe640;</i></button>');
 
-                            html.push(' <button name="picBtn" title="|' + item.productName + '秒杀图片|"  data-tab-href=@{"/admin/activity/"' + [[${activityId}]] + '/' + item.productId + '} class="layui-btn layui-btn-normal layui-btn-xs"> ');
+                            html.push(' <button type="button" name="picBtn" title="|' + item.productName + '秒杀图片|"  data-activity-id="' + [[${activityId}]] + '" data-product-id="' + item.productId + '"   class="layui-btn layui-btn-normal layui-btn-xs"> ');
                             html.push('  <i class="layui-icon">&#xe64a;</i></button>');
 
 
@@ -605,6 +621,14 @@
             });
         }
 
+        /**
+         * 设置图片路径
+         * @param productId
+         * @param src
+         */
+        function setImgPath(productId, src) {
+            $("tr[data-product-id='"+productId+"'] img").attr("src", src);
+        }
     </script>
 </th:block>
 </html>

@@ -5,7 +5,7 @@
 <div layout:fragment="content" class="admin-main layui-anim" style="margin: 15px;">
 
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend th:text="|${info.productName} 图片管理|"></legend>
+        <legend th:text="|${info.productName} 秒杀图片管理|"></legend>
     </fieldset>
 
     <form class="layui-form" method="post" action="">
@@ -34,7 +34,7 @@
                     </label>
                 </th:block>
 
-                <th:block th:if="${#lists.isEmpty(productImgs)}">
+                <th:block th:if="${#lists.isEmpty(productImgDtos)}">
                     <label style="position: relative; float: left;margin-right: 10px;">
                         <a style="position: absolute;right:0;top:0;padding: 3px;">X</a>
                         <img class="layui-upload-img" style="width:115px;height:115px;"/>
@@ -46,7 +46,7 @@
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label"></label>
-            <div class="layui-form-mid layui-word-aux">首张图片为封面，双击图片调整顺序，上传完成请点击保存操作。</div>
+            <div class="layui-form-mid layui-word-aux">只允许上传一张秒杀图片。</div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
@@ -80,7 +80,7 @@
                 , url: '/ueditor/uploadimage'
                 , accept: 'images' //普通文件
                 , field: "upfile"
-                , multiple: true
+                , multiple: false
                 , exts: 'jpg|png|gif|jpeg' //只允许上传压缩文件
                 , done: function (resp) {
 
@@ -139,6 +139,7 @@
                 }
             }
 
+            var productId = [[${productId}]];
             //提交保存
             form.on("submit", function (data) {
 
@@ -146,14 +147,18 @@
                     data: $("form.layui-form").serialize(),
                     success: function (resp) {
                         if (resp.baseResp.success) {
-                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                parent.tab.openTab("/admin/activity"+[[${activityId}]], {refershType: "reload"});
+                            TX.MSG.msg(resp.baseResp.message, {time: 1000,}, function () {
+                                if (parent.window.TX.TEMP.LAYERINDEX) {
+                                    parent.window.layer.close(parent.window.TX.TEMP.LAYERINDEX);
+                                    parent.setImgPath(productId, resp.datas[0])
+                                }
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
                         }
                     }
                 });
+
             });
 
 

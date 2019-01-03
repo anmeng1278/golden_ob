@@ -10,6 +10,7 @@ import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.enums.ProductImgType;
 import com.jsj.member.ob.enums.PropertyType;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.*;
@@ -178,6 +179,9 @@ public class AdminActivityController {
 
             //校验活动是否允许修改
             boolean allowModify = ActivityLogic.checkActivity(activityId);
+            if (!allowModify) {
+                throw new TipException("秒杀活动已开始，并且已有用户抢购成功！<br />不允许修改。");
+            }
 
             //修改
             activity = activityService.selectById(activityId);
@@ -356,11 +360,11 @@ public class AdminActivityController {
                 Product product = productService.selectById(ps.getProductId());
 
                 List<ProductImgDto> productImgDtos = ProductLogic.GetProductImgDtos(ps.getProductId(), ProductImgType.SECKILL);
-                if (productImgDtos.size() != 0){
+                if (productImgDtos.size() != 0) {
                     //商品的秒杀图片
-                    map.put("imgPath",productImgDtos.get(0).getImgPath());
-                }else {
-                    map.put("imgPath",null);
+                    map.put("imgPath", productImgDtos.get(0).getImgPath());
+                } else {
+                    map.put("imgPath", null);
                 }
 
                 map.put("productName", product.getProductName());
@@ -369,6 +373,7 @@ public class AdminActivityController {
                 map.put("originalPrice", ps.getOriginalPrice());
                 map.put("stockCount", ps.getStockCount());
                 map.put("productSpecId", ps.getProductSpecId());
+                map.put("productId", ps.getProductId());
 
                 maps.add(map);
             }
@@ -379,8 +384,6 @@ public class AdminActivityController {
 
         return RestResponseBo.ok();
     }
-
-
 
 
     @Autowired
@@ -394,7 +397,7 @@ public class AdminActivityController {
      * @return
      */
     @RequestMapping(value = "/{activityId}/{productId}", method = RequestMethod.GET)
-    public String productImgs(@PathVariable("productId") Integer productId,@PathVariable("activityId") Integer activityId, HttpServletRequest request) {
+    public String productImgs(@PathVariable("productId") Integer productId, @PathVariable("activityId") Integer activityId, HttpServletRequest request) {
 
         //商品信息
         Product entity = productService.selectById(productId);
@@ -404,6 +407,7 @@ public class AdminActivityController {
         request.setAttribute("info", entity);
         request.setAttribute("productImgDtos", productImgDtos);
         request.setAttribute("activityId", activityId);
+        request.setAttribute("productId", productId);
 
         return "admin/activity/productImgs";
     }
@@ -419,24 +423,31 @@ public class AdminActivityController {
     @RequestMapping(value = "/{activityId}/{productId}", method = RequestMethod.POST)
     @ResponseBody
     @Transactional(Constant.DBTRANSACTIONAL)
-    public RestResponseBo saveProductImgs(@PathVariable("productId") Integer productId,@PathVariable("activityId") Integer activityId, HttpServletRequest request) {
-
-        //删除所有图片
-        productImgService.delete(new EntityWrapper<ProductImg>().where("product_id={0} and type_id={1}", productId,ProductImgType.SECKILL.getValue()));
+    public RestResponseBo saveProductImgs(@PathVariable("productId") Integer productId, @PathVariable("activityId") Integer activityId, HttpServletRequest request) {
 
         //添加图片
         String[] imgPaths = request.getParameterValues("imgpath");
+        if (imgPaths == null || imgPaths.length == 0) {
+            throw new TipException("请上传秒杀图片");
+        }
+        if (StringUtils.isEmpty(imgPaths[0])) {
+            throw new TipException("请上传秒杀图片");
+        }
+
+        //删除所有图片
+        productImgService.delete(new EntityWrapper<ProductImg>().where("product_id={0} and type_id={1}",
+                productId, ProductImgType.SECKILL.getValue()));
+
 
         if (imgPaths != null && imgPaths.length > 0) {
-
 
             for (String imgPath : imgPaths) {
 
                 ProductImg productImg = new ProductImg();
-                productImg.setCreateTime(DateUtils.getCurrentUnixTime());
                 productImg.setImgPath(imgPath);
                 productImg.setProductId(productId);
                 productImg.setTypeId(ProductImgType.SECKILL.getValue());
+                productImg.setCreateTime(DateUtils.getCurrentUnixTime());
                 productImg.setUpdateTime(DateUtils.getCurrentUnixTime());
 
                 productImgService.insert(productImg);
@@ -444,10 +455,9 @@ public class AdminActivityController {
 
         }
 
-        return RestResponseBo.ok("操作成功");
+        return RestResponseBo.ok("操作成功", null, imgPaths);
 
     }
-
 
 
     /**

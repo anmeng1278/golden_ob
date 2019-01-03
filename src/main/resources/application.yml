@@ -71,7 +71,7 @@ webconfig:
   # 图片服务器
   imgServerURL: http://img.jsjinfo.cn/upload
   # 是否上传到图片服务器 (true为上传到图片服务器 false为上传到本地服务器)
-  imgServerSwitch: false
+  imgServerSwitch: true
   #获取 access_token
   accessTokenUrl: http://s5.jsjinfo.cn/awkmanage/v3/ktapi/GetAccessToken
   #获取 jsapi_ticket
