@@ -195,7 +195,7 @@ public class ActivityLogic extends BaseLogic {
 
         ActivityProduct activityProduct = activityLogic.activityProductService.selectOne(activityProductWrapper);
         if (activityProduct.getStockCount() < number) {
-            throw new TipException("库存不足，不允许下单");
+            throw new TipException(String.format("活动商品库存不足，暂不允许下单<br />活动编号：%d 商品编号：%d", activityId, productId));
         }
         activityProduct.setStockCount(activityProduct.getStockCount() - number);
 
