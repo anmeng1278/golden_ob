@@ -39,6 +39,16 @@ public class BaseInterceptor implements HandlerInterceptor {
             httpServletRequest.setAttribute(StringUtils.camelCase(bl.getClass().getSimpleName()), bl);
         }
         httpServletRequest.setAttribute("ob", this);
+
+        //获取浏览器版本
+        String userAgent = httpServletRequest.getHeader("User-Agent");
+        Boolean mini = false;
+        if (!org.apache.commons.lang3.StringUtils.isEmpty(userAgent)) {
+            userAgent = userAgent.toLowerCase();
+            mini = userAgent.indexOf("miniprogramhtmlwebview") > -1;
+        }
+
+        httpServletRequest.setAttribute("mini", mini);
     }
 
     @Override
