@@ -23,6 +23,17 @@ wx.ready(function () {
     shareConfig.title = shareConfig.title || "空铁管家";
     shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68";
 
+    if (typeof wx.miniProgram != "undefined") {
+        wx.miniProgram.navigateBack({delta: 1})
+        wx.miniProgram.postMessage({
+            link: shareConfig.link,
+            title: shareConfig.title,
+            desc: shareConfig.desc,
+            imgUrl: shareConfig.imgUrl
+        });
+        alert(wx.miniProgram);
+    }
+
     console.log(shareConfig);
     wx.onMenuShareAppMessage({
         title: shareConfig.title, // 分享标题
