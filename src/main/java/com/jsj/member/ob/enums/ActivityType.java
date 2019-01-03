@@ -10,7 +10,10 @@ public enum ActivityType {
 
     SECKILL(20, "秒杀"),
 
-    COMBINATION(30, "组合");
+    COMBINATION(30, "组合"),
+
+    RIGHTSEXCHANGE(40,"权益兑换");
+
 
     private Integer value;
 
@@ -39,6 +42,8 @@ public enum ActivityType {
                 return SECKILL;
             case 30:
                 return COMBINATION;
+            case 40:
+                return RIGHTSEXCHANGE;
             default:
                 throw new FatalException("未知的枚举值");
         }

@@ -14,6 +14,7 @@
 /*main start*/
 .main{ margin-bottom: 1.2rem;}
 .stock-title{ line-height: 1.2; font-size: 0.32rem; color: #333; border-left: 3px solid #C2191F; padding-left: 0.18rem; margin: 0.2rem 0.3rem;}
+.stock-title a{ float: right; font-size: 0.28rem; color: #C2191F;}
 .share-fail{ font-family: "microsoft yahei",arial; padding: 0 0.3rem; height: 0.88rem; line-height: 0.88rem; background: #FFEBD4;}
 .share-fail-tips{ line-height: 0.88rem; font-size: 0.32rem; color: #C2191F; font-weight: 700; float: left;}
 .share-fail-look{ font-size: 0.3rem; color: #C2191F; float: right;}
@@ -51,3 +52,9 @@
 .share-btn,.use-btn{ display: block; font-size: 0.36rem; color: #fff; font-weight: 700;}
 .disabled-use-btn{background: #ccc;}
 /*footer end*/
+
+/*share start*/
+.share{ background: rgba(0,0,0,0.6); position: fixed; top: 0; left: 0; bottom: 0; right: 0; z-index: 900;}
+.share-img-wx{ width: 5.16rem; position: absolute; top: 0.2rem; right: 0.3rem;}
+.share-img-xcx{ width: 5.16rem; position: absolute; top: 0.2rem; right: 1.25rem;}
+/*share end*/
