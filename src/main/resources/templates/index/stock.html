@@ -212,9 +212,9 @@
     <!--footer end-->
 
     <!--分享 start-->
-    <div class="share">
-        <img src="images/share.png" alt="1" class="share-img-wx" style="display: none;"/>
-        <img src="images/share.png" alt="1" class="share-img-xcx"/>
+    <div class="share" style="display: none;">
+        <img th:src="${ob.Img('/index/images/share.png')}" alt="1" class="share-img-wx" style="display: none;"/>
+        <img th:src="${ob.Img('/index/images/share.png')}" alt="1" class="share-img-xcx" />
     </div>
     <!--分享 end-->
 </div>
