@@ -61,7 +61,7 @@
                 </div>
             </div>
 
-            <div class="layui-inline" >
+            <div class="layui-inline">
                 <label class="layui-form-label">结束时间</label>
                 <div class="layui-input-inline">
                     <input type="text" name="endTime" placeholder="yyyy-MM-dd HH:mm:ss"
@@ -181,7 +181,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">活动商品</label>
             <div class="layui-input-block" style="width:85%;">
-                <button class="layui-btn layui-btn-normal layui-btn-xs" th:if="${allowModify}" type="button" id="btnChooseProducts"
+                <button class="layui-btn layui-btn-normal layui-btn-xs" th:if="${allowModify}" type="button"
+                        id="btnChooseProducts"
                         style="margin-top: 10px;">
                     <i class="layui-icon">&#xe654;</i> 添加商品
                 </button>
@@ -190,7 +191,7 @@
                     <thead>
                     <tr>
                         <th style="width: 8%;">编号</th>
-                        <th style="width: 8%;display: none"  class="seckillPicture">商品图片</th>
+                        <th style="width: 8%;display: none" class="seckillPicture">商品图片</th>
                         <th>商品规格</th>
                         <th style="width: 8%;">售价</th>
                         <th style="width: 8%;">原价</th>
@@ -204,7 +205,7 @@
                         <tr th:attr="data-product-id=${ap.productId}">
                             <th:block th:with="pro=${productLogic.GetProduct(ap.productId)}">
                                 <td th:text="${ap.productSpecId}"></td>
-                                <td style="display: none" class="seckillPicture" th:if="${info.typeId == 20}">
+                                <td style="display: none" class="seckillPicture">
                                     <th:block
                                             th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(ap.productId,seckill))}">
                                         <img th:src="${productLogic.GetProductImgDtos(ap.productId,seckill)[0].imgPath}"
@@ -645,7 +646,7 @@
          * @param src
          */
         function setImgPath(productId, src) {
-            $("tr[data-product-id='"+productId+"'] img").attr("src", src);
+            $("tr[data-product-id='" + productId + "'] img").attr("src", src);
         }
     </script>
 </th:block>
