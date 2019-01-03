@@ -147,7 +147,7 @@
 
     <!--main start-->
     <div class="main clear">
-        <h2 class="stock-title">库存商品</h2>
+        <h2 class="stock-title">库存商品<a href="javascript:void(0);">会员礼包兑换</a></h2>
         <div class="share-fail" th:if="${!#lists.isEmpty(giftDtos)}">
             <p class="share-fail-tips">您有<span th:text="${#lists.size(giftDtos)}">0</span>个礼包未分享</p>
             <a th:href="${ob.Nav('/gift')}" class="share-fail-look">查看></a>
@@ -211,7 +211,12 @@
     </div>
     <!--footer end-->
 
-
+    <!--分享 start-->
+    <div class="share">
+        <img src="images/share.png" alt="1" class="share-img-wx" style="display: none;"/>
+        <img src="images/share.png" alt="1" class="share-img-xcx"/>
+    </div>
+    <!--分享 end-->
 </div>
 
 </html>
