@@ -601,6 +601,8 @@ public class ProductController extends BaseController {
         requ.setActivityType(ActivityType.EXCHANGE);
         requ.getBaseRequ().setOpenId(openId);
         requ.setActivityId(activityId);
+        requ.getBaseRequ().setJsjId(111);
+
 
         for (JSONObject jo : jsonObjects) {
 
