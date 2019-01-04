@@ -215,7 +215,7 @@ public class WechatLogic extends BaseLogic {
     public static WechatRelation GetWechatRelation(String openId, WechatRelationType wechatRelationType) {
 
         Wrapper<WechatRelation> wrapper = new EntityWrapper<>();
-        wrapper.where("openId = {0}", openId);
+        wrapper.where("open_id = {0}", openId);
         wrapper.where("type_id = {0}", wechatRelationType.getValue());
 
         WechatRelation wechatRelation = wechatLogic.wechatRelationService.selectOne(wrapper);
