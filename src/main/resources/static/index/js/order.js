@@ -80,16 +80,15 @@ function createOrder(data, callback) {
             //调起微信支付
             function callPay(resp, successUrl, url) {
 
+                var timestamp = resp.datas.pay.responseBody.timeStamp;
+                var nonceStr = resp.datas.pay.responseBody.nonceStr;
+                var package = resp.datas.pay.responseBody._package;
+                var signType = resp.datas.pay.responseBody.signType;
+                var paySign = resp.datas.pay.responseBody.paySign;
+
                 if (ob.mini == true) {
-                    alert("小程序支付");
-                    var timestamp = resp.datas.pay.responseBody.timeStamp;
-                    var nonceStr = resp.datas.pay.responseBody.nonceStr;
-                    var package = resp.datas.pay.responseBody._package;
-                    var signType = resp.datas.pay.responseBody.signType;
-                    var paySign = resp.datas.pay.responseBody.paySign;
 
                     var url = '/pages/obpay/index?timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
-
                     wx.miniProgram.navigateTo({
                         url: url,
                         success: function (resp) {
@@ -106,8 +105,6 @@ function createOrder(data, callback) {
 
                     return;
                 }
-
-                alert("微信内支付");
 
                 //调起微信支付
                 wx.chooseWXPay({
