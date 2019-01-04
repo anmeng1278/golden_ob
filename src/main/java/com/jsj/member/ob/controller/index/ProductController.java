@@ -154,7 +154,7 @@ public class ProductController extends BaseController {
     //region (public) 兑换商品详情 exchangeProduct
 
     /**
-     * 组合商品详情
+     * 兑换商品活动详情
      *
      * @param request
      * @return
@@ -168,6 +168,23 @@ public class ProductController extends BaseController {
         if (StringUtils.isEmpty(request.getParameter("productId"))) {
             return this.Redirect("/");
         }
+
+        int activityId = Integer.parseInt(request.getParameter("activityId"));
+
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        ProductDto productDto = ProductLogic.GetProduct(productId);
+
+        //库存
+        int stockCount = 0;
+        if (productDto.getProductSpecDtos() != null) {
+            stockCount = productDto.getProductSpecDtos().stream().mapToInt(ProductSpecDto::getStockCount).sum();
+        }
+        request.setAttribute("stockCount", stockCount);
+
+        request.setAttribute("info",productDto);
+
+        request.setAttribute("activityId",activityId);
+
 
         return "index/product/exchangeActivityDetail";
     }
@@ -566,6 +583,16 @@ public class ProductController extends BaseController {
      */
     private CreateOrderRequ createExchangeOrderRequest(HttpServletRequest request) {
 
+        if (StringUtils.isEmpty(request.getParameter("activityId"))) {
+            throw new TipException("参数错误");
+        }
+
+        if (StringUtils.isEmpty(request.getParameter("p"))) {
+            throw new TipException("参数错误");
+        }
+        //活动编号
+        int activityId = Integer.parseInt(request.getParameter("activityId"));
+
         String openId = this.OpenId();
         String p = request.getParameter("p");
         List<JSONObject> jsonObjects = JSON.parseArray(p, JSONObject.class);
@@ -573,6 +600,9 @@ public class ProductController extends BaseController {
         CreateOrderRequ requ = new CreateOrderRequ();
         requ.setActivityType(ActivityType.EXCHANGE);
         requ.getBaseRequ().setOpenId(openId);
+        requ.setActivityId(activityId);
+        requ.getBaseRequ().setJsjId(111);
+
 
         for (JSONObject jo : jsonObjects) {
 

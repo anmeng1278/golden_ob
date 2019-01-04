@@ -250,160 +250,161 @@ Namespace.register("TX.TEMP");
 
     TX.INIT = function (callback) {
 
-        var me = this;
+        $(function () {
 
+            var me = this;
+            //我们强烈推荐你在代码最外层把需要用到的模块先加载
+            layui.use(['layer', 'form', 'element', 'jquery', 'laydate', 'upload', 'carousel'], function () {
 
-        //我们强烈推荐你在代码最外层把需要用到的模块先加载
-        layui.use(['layer', 'form', 'element', 'jquery', 'laydate', 'upload', 'carousel'], function () {
+                // var layer = layui.layer,
+                //     element = layui.element,
+                //     $ = layui.jquery;
+                window.$ = layui.jquery;
+                window.layer = layui.layer;
+                window.laydate = layui.laydate;
+                window.element = layui.element;
 
-            // var layer = layui.layer,
-            //     element = layui.element,
-            //     $ = layui.jquery;
-            window.$ = layui.jquery;
-            window.layer = layui.layer;
-            window.laydate = layui.laydate;
-            window.element = layui.element;
+                var form = layui.form;
 
-            var form = layui.form;
+                //自定义验证规则
+                form.verify({
 
-            //自定义验证规则
-            form.verify({
-
-                url2: function (value) {
-                    if (value.length > 0) {
-                        if (!/^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?$/.test(value)) {
-                            return "请输入正确网址";
+                    url2: function (value) {
+                        if (value.length > 0) {
+                            if (!/^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?$/.test(value)) {
+                                return "请输入正确网址";
+                            }
                         }
-                    }
-                },
+                    },
 
-                req: function (value, input) {
-                    var title = $(input).attr("title");
-                    if (title) {
-                        if (input.tagName == "SELECT") {
-                            title = "请选择" + title;
+                    req: function (value, input) {
+                        var title = $(input).attr("title");
+                        if (title) {
+                            if (input.tagName == "SELECT") {
+                                title = "请选择" + title;
+                            } else {
+                                title = "请填写" + title;
+                            }
                         } else {
-                            title = "请填写" + title;
+                            title = "必填项不能空"
                         }
-                    } else {
-                        title = "必填项不能空"
-                    }
 
-                    title = $(input).attr("tip-msg") || title;
-                    if ($.trim(value).length == 0) {
-                        $(input).focus();
-                        return title;
+                        title = $(input).attr("tip-msg") || title;
+                        if ($.trim(value).length == 0) {
+                            $(input).focus();
+                            return title;
+                        }
+                    },
+                    num: function (value, input) {
+                        var title = $(input).attr("title");
+                        if (title) {
+                            title = "\"" + title + "\"只能填写数字";
+                        } else {
+                            title = "只能填写数字";
+                        }
+                        if (!/^\d+$/.test(value)) {
+                            return title;
+                        }
+                    },
+                    num2: function (value, input) {
+                        var title = $(input).attr("title");
+                        if (title) {
+                            title = "\"" + title + "\"必须大于0的数字";
+                        } else {
+                            title = "必须大于0的数字";
+                        }
+                        if (!/^[1-9]([0-9])*$/.test(value)) {
+                            return title;
+                        }
+                    },
+                    chn: function (value, input) {
+                        var title = $(input).attr("title");
+                        if (title) {
+                            title = "\"" + title + "\"不能填写数字,英文";
+                        } else {
+                            title = "请填写单位张、个、盒...";
+                        }
+                        if (!/[\u4e00-\u9fa5]/g.test(value)) {
+                            return title;
+                        }
+                    },
+                    float: function (value, input) {
+                        var title = $(input).attr("title");
+                        if (title) {
+                            title = "\"" + title + "\"输入格式错误（小数或整数）";
+                        } else {
+                            title = "格式错误（小数或整数）";
+                        }
+                        if (!/^\d+(\.\d+)?$/.test(value)) {
+                            return title;
+                        }
+                    },
+                    float2: function (value, input) {
+                        var title = $(input).attr("title");
+                        if (title) {
+                            title = "\"" + title + "\"输入格式错误（小数或整数，允许输入负数）";
+                        } else {
+                            title = "格式错误（小数或整数）";
+                        }
+                        if (!/^(-)?\d+(\.\d+)?$/.test(value)) {
+                            return title;
+                        }
+                        if (parseFloat(value) == 0) {
+                            return "输入格式错误（不能充值0元）";
+                        }
+                    },
+                    float3: function (value, input) {
+                        var title = $(input).attr("title");
+                        if (title) {
+                            title = "\"" + title + "\"输入格式错误（0或小于0的最多四位小数，如：0.0002）";
+                        } else {
+                            title = "输入格式错误（0或小于0的最多四位小数，如：0.0002）";
+                        }
+                        if (!/^0(\.\d{1,4})?$/.test(value)) {
+                            return title;
+                        }
+                        if (parseFloat(value) == 0) {
+                            return "输入格式错误（0或小于0的最多四位小数，如：0.0002）";
+                        }
+                    },
+                    float4: function (value, input) {
+                        var title = $(input).attr("title");
+                        if (title) {
+                            title = "\"" + title + "\"必须大于0的小数或整数";
+                        } else {
+                            title = "必须大于0的小数或整数";
+                        }
+                        if (!/^\d+(\.\d+)?$/.test(value)) {
+                            return title;
+                        }
+                        if (parseFloat(value) <= 0) {
+                            return "必须大于0的小数或整数";
+                        }
                     }
-                },
-                num: function (value, input) {
-                    var title = $(input).attr("title");
-                    if (title) {
-                        title = "\"" + title + "\"只能填写数字";
-                    } else {
-                        title = "只能填写数字";
-                    }
-                    if (!/^\d+$/.test(value)) {
-                        return title;
-                    }
-                },
-                num2: function (value, input) {
-                    var title = $(input).attr("title");
-                    if (title) {
-                        title = "\"" + title + "\"必须大于0的数字";
-                    } else {
-                        title = "必须大于0的数字";
-                    }
-                    if (!/^[1-9]([0-9])*$/.test(value)) {
-                        return title;
-                    }
-                },
-                chn: function (value, input) {
-                    var title = $(input).attr("title");
-                    if (title) {
-                        title = "\"" + title + "\"不能填写数字,英文";
-                    } else {
-                        title = "请填写单位张、个、盒...";
-                    }
-                    if (!/[\u4e00-\u9fa5]/g.test(value)) {
-                        return title;
-                    }
-                },
-                float: function (value, input) {
-                    var title = $(input).attr("title");
-                    if (title) {
-                        title = "\"" + title + "\"输入格式错误（小数或整数）";
-                    } else {
-                        title = "格式错误（小数或整数）";
-                    }
-                    if (!/^\d+(\.\d+)?$/.test(value)) {
-                        return title;
-                    }
-                },
-                float2: function (value, input) {
-                    var title = $(input).attr("title");
-                    if (title) {
-                        title = "\"" + title + "\"输入格式错误（小数或整数，允许输入负数）";
-                    } else {
-                        title = "格式错误（小数或整数）";
-                    }
-                    if (!/^(-)?\d+(\.\d+)?$/.test(value)) {
-                        return title;
-                    }
-                    if (parseFloat(value) == 0) {
-                        return "输入格式错误（不能充值0元）";
-                    }
-                },
-                float3: function (value, input) {
-                    var title = $(input).attr("title");
-                    if (title) {
-                        title = "\"" + title + "\"输入格式错误（0或小于0的最多四位小数，如：0.0002）";
-                    } else {
-                        title = "输入格式错误（0或小于0的最多四位小数，如：0.0002）";
-                    }
-                    if (!/^0(\.\d{1,4})?$/.test(value)) {
-                        return title;
-                    }
-                    if (parseFloat(value) == 0) {
-                        return "输入格式错误（0或小于0的最多四位小数，如：0.0002）";
-                    }
-                },
-                float4: function (value, input) {
-                    var title = $(input).attr("title");
-                    if (title) {
-                        title = "\"" + title + "\"必须大于0的小数或整数";
-                    } else {
-                        title = "必须大于0的小数或整数";
-                    }
-                    if (!/^\d+(\.\d+)?$/.test(value)) {
-                        return title;
-                    }
-                    if (parseFloat(value) <= 0) {
-                        return "必须大于0的小数或整数";
-                    }
+                });
+
+
+                if (callback) {
+                    //你的代码都应该写在这里面
+                    callback(layui, me);
+
                 }
-            });
 
+                //新选项卡打开
+                $("*[data-tab-href]").unbind("click").click(function (e) {
 
-            if (callback) {
-                //你的代码都应该写在这里面
-                callback(layui, me);
+                    var title = $(this).attr("title") || $.trim($(this).html());
+                    var href = $(this).attr("data-tab-href");
+                    top.tab.tabAdd({
+                        title: title,
+                        href: href
+                    });
 
-            }
-
-            //新选项卡打开
-            $("*[data-tab-href]").unbind("click").click(function (e) {
-
-                var title = $(this).attr("title") || $.trim($(this).html());
-                var href = $(this).attr("data-tab-href");
-                top.tab.tabAdd({
-                    title: title,
-                    href: href
                 });
 
             });
 
         });
-
     };
 
     TX.REQUIRED = function () {
