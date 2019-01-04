@@ -121,6 +121,9 @@ public abstract class OrderBase {
                 stocks.add(st);
             }
         }
+        if (stocks.size() == 0 ||stocks == null){
+            throw new TipException("参数有误！");
+        }
         StockLogic.AddOrderStock(stocks);
 
         //红包
