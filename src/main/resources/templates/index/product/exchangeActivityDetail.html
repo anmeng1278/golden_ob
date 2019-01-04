@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="index/common/layout">
+
+<!-- 首页 \document\html\KTGJService\ExchangeGoodsDetail.html.html -->
+<head th:replace="index/common/layout :: header('金色严选-商品详情', '', '')"></head>
+
+<th:block layout:fragment="script">
+    <!--引入的js-->
+    <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="${ob.Url('/index/js/order.js')}" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" th:inline="javascript">
+
+        TX.INIT(function () {
+
+            $(".purchase-num-reduce").addClass("disabled");
+            $(".purchase-num-add").addClass("disabled");
+
+            //购买规格型号点击事件
+            $(document).on("click", "div.purchase-layer p.purchase-layer-p span", function () {
+
+                var parent = $(this).parents("div.purchase-layer:first");
+                if ($(this).hasClass("disabled")) {
+                    return;
+                }
+
+                $(".purchase-num-reduce", parent).addClass("disabled");
+                $(".purchase-num-add", parent).addClass("disabled");
+                window.specStockCount = 0;
+                $(":text[name='num']", parent).val(0);
+                $(this).siblings().removeClass("active");
+                $(this).addClass("active");
+
+                var stockCount = parseInt($(this).attr("data-spec-stockCount"), 10) || 0;
+                stockCount = stockCount < 0 ? 0 : stockCount;
+
+                if (stockCount > 0) {
+
+                    $(":text[name='num']", parent).val(1);
+                    window.specStockCount = stockCount;
+
+                    $(".purchase-num-reduce", parent).removeClass("disabled");
+                    $(".purchase-num-add", parent).removeClass("disabled");
+
+                }
+
+                calculateOrder();
+
+            });
+
+            //初始化规格型号点击
+            $("p.purchase-layer-p").each(function () {
+                $("span", $(this)).each(function () {
+                    if (!$(this).hasClass('disabled')) {
+                        $(this).click();
+                        return false;
+                    }
+                });
+            });
+
+            //立即购买
+            $(document).on("click", ".purchase-btn", function () {
+
+                if ($("div.purchase-layer p.purchase-layer-p span.active").length == 0) {
+                    TX.MSG.msg("商品售罄啦");
+                    return;
+                }
+                var activityId = [[${activityId}]];
+                var productId = [[${info.productId}]];
+                var productSpecId = $("div.purchase-layer p.purchase-layer-p span.active").attr("data-spec-id");
+                var num = parseInt($("div.purchase-layer div.purchase-num :text[name='num']").val() || 0, 10);
+
+                if (num == 0) {
+                    TX.MSG.msg("至少购买一个商品");
+                }
+
+                var datas = [];
+                datas.push({num: num, productSpecId: productSpecId, productId: productId});
+
+                //创建兑换权益订单
+                createOrder({
+                    activityTypeId: 40,
+                    activityId: activityId,
+
+                    p: JSON.stringify(datas),
+                });
+
+            });
+
+        });
+
+        //计算订单价格
+        function calculateOrder() {
+
+            $("p.purchase-footer-lt span.shopping-price em").html(0);
+
+            if ($("div.purchase-layer p.purchase-layer-p span.active").length == 0) {
+                return;
+            }
+            var activityId = [[${activityId}]];
+            var productId = [[${info.productId}]];
+            var productSpecId = $("div.purchase-layer p.purchase-layer-p span.active").attr("data-spec-id");
+            var num = parseInt($("div.purchase-layer div.purchase-num :text[name='num']").val() || 0, 10);
+
+            if (num == 0) {
+                return;
+            }
+
+            var datas = [];
+            datas.push({num: num, productSpecId: productSpecId, productId: productId});
+
+            //计算价格
+            calculateProductOrder({
+                activityTypeId: 40,
+                activityId: activityId,
+                p: JSON.stringify(datas)
+            }, function (resp) {
+                if (resp.baseResp.success) {
+                    $("p.purchase-footer-lt span.shopping-price em").html(resp.datas.amount);
+                } else {
+                    TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                }
+            });
+
+        }
+
+    </script>
+
+    <script th:src="${ob.Url('/index/js/GoodsDetail.js')}" type="text/javascript" charset="utf-8"></script>
+
+</th:block>
+
+<th:block layout:fragment="css">
+
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css', false)}"/>
+    <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GoodsDetail.css')}"/>
+    <style type="text/css" >
+        .footer-lt {
+            width: 50%;
+        }
+
+        .footer-rt {
+            width: 50%;
+        }
+
+        .footer-rt a {
+            width: 100%;
+        }
+
+        .shopping-cart-btn {
+            background: #D7686B;
+        }
+    </style>
+</th:block>
+
+<div layout:fragment="content">
+
+    <!--banner start-->
+    <div class="banner">
+        <!-- 轮播 start -->
+        <div class="swiper-container" th:if="${!#lists.isEmpty(info.productImgDtos)}">
+            <div class="swiper-wrapper">
+                <th:block th:each="img : ${info.productImgDtos}">
+                    <div class="swiper-slide">
+                        <img th:src="${img.imgPath}" alt="1" width="100%"/>
+                    </div>
+                </th:block>
+            </div>
+            <!-- Add Pagination -->
+            <div class="swiper-pagination"></div>
+        </div>
+        <!-- 轮播 end -->
+    </div>
+    <!--banner end-->
+
+    <!--goods-introduce start-->
+    <div class="goods-introduce">
+        <h2 class="goods-name" th:text="${info.productName}">素园野生素食参谜</h2>
+        <p class="goods-tips" th:text="${info.introduce}">旅行者百色行李箱，百变色彩，多色可选</p>
+        <span class="goods-num" th:text="|剩余${stockCount}${info.unit}|"></span>
+    </div>
+    <!--goods-introduce end-->
+
+    <!--main start-->
+    <div class="main">
+        <h2 class="goods-detail"><span>商品详情</span></h2>
+        <p th:utext="${info.useIntro}"></p>
+    </div>
+    <!--main end-->
+
+    <!--footer start-->
+    <div class="footer">
+        <p class="footer-lt">
+            <span class="shopping-price">&yen;<em th:text="${info.salePrice}">898</em></span>
+        </p>
+        <p class="footer-rt">
+            <a href="javascript:void(0);" class="shopping-cart-btn" style="display: none;">余额不足</a>
+            <a href="javascript:void(0);" class="purchase-show-btn">立即兑换</a>
+        </p>
+
+    </div>
+    <!--footer end-->
+
+    <!-- purchase-layer start -->
+    <div class="purchase-layer" style="display: none;">
+        <div class="purchase-layer-bg"></div>
+        <div class="purchase-layer-con">
+            <!--purchase-layer-main start-->
+            <div class="purchase-layer-main">
+                <dl class="purchase-layer-dl">
+                    <dt th:if="${!#lists.isEmpty(info.productImgDtos)}">
+                        <img th:src="${info.productImgDtos[0].imgPath}"/>
+                    </dt>
+                    <dd>
+                        <h2 class="purchase-goods-name" th:text="${info.productName}">素园野生素食参谜</h2>
+                        <p class="purchase-goods-tips" th:text="${info.introduce}">健康好参 立等即食</p>
+                    </dd>
+                </dl>
+                <div class="purchase-layer-div">
+                    <span class="purchase-layer-lable">规格</span>
+                    <p class="purchase-layer-p">
+                        <th:block th:each="spec,current : ${info.productSpecDtos}">
+                            <span th:attr="data-spec-id=${spec.productSpecId}, data-spec-stockCount=${spec.stockCount}"
+                                  th:classappend="${spec.stockCount > 0 ?'':'disabled'}"
+                                  th:text="${spec.specName}"></span>
+                        </th:block>
+                    </p>
+                </div>
+                <div class="purchase-layer-div">
+                    <span class="purchase-layer-lable">购买数量</span>
+                    <div class="purchase-num">
+                        <em class="purchase-num-reduce"></em>
+                        <input type="text" value="0" class="num" name="num"/>
+                        <em class="purchase-num-add"></em>
+                    </div>
+
+                </div>
+            </div>
+            <!--purchase-layer-main end-->
+
+            <!--purchase-footer start-->
+            <div class="purchase-footer">
+                <p class="purchase-footer-lt">
+                    <span class="shopping-price">&yen;<em>0</em></span>
+                </p>
+                <a href="javascript:void(0);" class="purchase-btn">立即购买</a>
+            </div>
+            <!--purchase-footer end-->
+        </div>
+    </div>
+    <!-- purchase-layer end -->
+
+</div>

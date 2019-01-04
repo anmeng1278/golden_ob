@@ -94,6 +94,16 @@ public class IndexController extends BaseController {
     @GetMapping(value = {"/exchange"})
     public String exchange(HttpServletRequest request) {
 
+        ActivityDto exchange = ActivityLogic.GetActivity(ActivityType.EXCHANGE);
+        List<ActivityProductDto> exchangeProducts = new ArrayList<>();
+
+        if (exchange != null) {
+            exchangeProducts = ActivityLogic.GetActivityProductDtos(exchange.getActivityId());
+        }
+        request.setAttribute("exchangeProducts", exchangeProducts);
+
+        request.setAttribute("exchange", exchange);
+
         return "index/exchange";
     }
     //endregion
