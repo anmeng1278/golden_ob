@@ -35,18 +35,13 @@ public final class StrictChoiceConsumeRequestOuterClass {
     int getJSJID();
 
     /**
-     * <code>optional string OrderID = 3;</code>
+     * <code>optional int32 OrderID = 3 [default = 0];</code>
      */
     boolean hasOrderID();
     /**
-     * <code>optional string OrderID = 3;</code>
+     * <code>optional int32 OrderID = 3 [default = 0];</code>
      */
-    String getOrderID();
-    /**
-     * <code>optional string OrderID = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getOrderIDBytes();
+    int getOrderID();
 
     /**
      * <code>optional double Money = 4 [default = 0];</code>
@@ -58,13 +53,13 @@ public final class StrictChoiceConsumeRequestOuterClass {
     double getMoney();
 
     /**
-     * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeUnSet];</code>
+     * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeNotSet];</code>
      */
     boolean hasOrderType();
     /**
-     * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeUnSet];</code>
+     * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeNotSet];</code>
      */
-    com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType getOrderType();
+    StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType getOrderType();
 
     /**
      * <code>optional int32 ProjectID = 6 [default = 0];</code>
@@ -168,10 +163,9 @@ public final class StrictChoiceConsumeRequestOuterClass {
               jSJID_ = input.readInt32();
               break;
             }
-            case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+            case 24: {
               bitField0_ |= 0x00000004;
-              orderID_ = bs;
+              orderID_ = input.readInt32();
               break;
             }
             case 33: {
@@ -181,7 +175,7 @@ public final class StrictChoiceConsumeRequestOuterClass {
             }
             case 40: {
               int rawValue = input.readEnum();
-              com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType value = com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType.valueOf(rawValue);
+              StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType value = StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(5, rawValue);
               } else {
@@ -283,45 +277,18 @@ public final class StrictChoiceConsumeRequestOuterClass {
     }
 
     public static final int ORDERID_FIELD_NUMBER = 3;
-    private Object orderID_;
+    private int orderID_;
     /**
-     * <code>optional string OrderID = 3;</code>
+     * <code>optional int32 OrderID = 3 [default = 0];</code>
      */
     public boolean hasOrderID() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional string OrderID = 3;</code>
+     * <code>optional int32 OrderID = 3 [default = 0];</code>
      */
-    public String getOrderID() {
-      Object ref = orderID_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          orderID_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string OrderID = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getOrderIDBytes() {
-      Object ref = orderID_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
-        orderID_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public int getOrderID() {
+      return orderID_;
     }
 
     public static final int MONEY_FIELD_NUMBER = 4;
@@ -340,17 +307,17 @@ public final class StrictChoiceConsumeRequestOuterClass {
     }
 
     public static final int ORDERTYPE_FIELD_NUMBER = 5;
-    private com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType orderType_;
+    private StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType orderType_;
     /**
-     * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeUnSet];</code>
+     * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeNotSet];</code>
      */
     public boolean hasOrderType() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeUnSet];</code>
+     * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeNotSet];</code>
      */
-    public com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType getOrderType() {
+    public StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType getOrderType() {
       return orderType_;
     }
 
@@ -429,9 +396,9 @@ public final class StrictChoiceConsumeRequestOuterClass {
     private void initFields() {
       baseRequest_ = BaseRequestOuterClass.BaseRequest.getDefaultInstance();
       jSJID_ = 0;
-      orderID_ = "";
+      orderID_ = 0;
       money_ = 0D;
-      orderType_ = com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType.StrictChoiceOrderTypeUnSet;
+      orderType_ = StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType.StrictChoiceOrderTypeNotSet;
       projectID_ = 0;
       depositDeptID_ = 0;
       remark_ = "";
@@ -456,7 +423,7 @@ public final class StrictChoiceConsumeRequestOuterClass {
         output.writeInt32(2, jSJID_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getOrderIDBytes());
+        output.writeInt32(3, orderID_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeDouble(4, money_);
@@ -492,7 +459,7 @@ public final class StrictChoiceConsumeRequestOuterClass {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getOrderIDBytes());
+          .computeInt32Size(3, orderID_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
@@ -640,11 +607,11 @@ public final class StrictChoiceConsumeRequestOuterClass {
         bitField0_ = (bitField0_ & ~0x00000001);
         jSJID_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
-        orderID_ = "";
+        orderID_ = 0;
         bitField0_ = (bitField0_ & ~0x00000004);
         money_ = 0D;
         bitField0_ = (bitField0_ & ~0x00000008);
-        orderType_ = com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType.StrictChoiceOrderTypeUnSet;
+        orderType_ = StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType.StrictChoiceOrderTypeNotSet;
         bitField0_ = (bitField0_ & ~0x00000010);
         projectID_ = 0;
         bitField0_ = (bitField0_ & ~0x00000020);
@@ -739,9 +706,7 @@ public final class StrictChoiceConsumeRequestOuterClass {
           setJSJID(other.getJSJID());
         }
         if (other.hasOrderID()) {
-          bitField0_ |= 0x00000004;
-          orderID_ = other.orderID_;
-          onChanged();
+          setOrderID(other.getOrderID());
         }
         if (other.hasMoney()) {
           setMoney(other.getMoney());
@@ -935,78 +900,34 @@ public final class StrictChoiceConsumeRequestOuterClass {
         return this;
       }
 
-      private Object orderID_ = "";
+      private int orderID_ ;
       /**
-       * <code>optional string OrderID = 3;</code>
+       * <code>optional int32 OrderID = 3 [default = 0];</code>
        */
       public boolean hasOrderID() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional string OrderID = 3;</code>
+       * <code>optional int32 OrderID = 3 [default = 0];</code>
        */
-      public String getOrderID() {
-        Object ref = orderID_;
-        if (!(ref instanceof String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            orderID_ = s;
-          }
-          return s;
-        } else {
-          return (String) ref;
-        }
+      public int getOrderID() {
+        return orderID_;
       }
       /**
-       * <code>optional string OrderID = 3;</code>
+       * <code>optional int32 OrderID = 3 [default = 0];</code>
        */
-      public com.google.protobuf.ByteString
-          getOrderIDBytes() {
-        Object ref = orderID_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (String) ref);
-          orderID_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string OrderID = 3;</code>
-       */
-      public Builder setOrderID(
-          String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+      public Builder setOrderID(int value) {
+        bitField0_ |= 0x00000004;
         orderID_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string OrderID = 3;</code>
+       * <code>optional int32 OrderID = 3 [default = 0];</code>
        */
       public Builder clearOrderID() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        orderID_ = getDefaultInstance().getOrderID();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string OrderID = 3;</code>
-       */
-      public Builder setOrderIDBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        orderID_ = value;
+        orderID_ = 0;
         onChanged();
         return this;
       }
@@ -1043,23 +964,23 @@ public final class StrictChoiceConsumeRequestOuterClass {
         return this;
       }
 
-      private com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType orderType_ = com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType.StrictChoiceOrderTypeUnSet;
+      private StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType orderType_ = StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType.StrictChoiceOrderTypeNotSet;
       /**
-       * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeUnSet];</code>
+       * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeNotSet];</code>
        */
       public boolean hasOrderType() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeUnSet];</code>
+       * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeNotSet];</code>
        */
-      public com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType getOrderType() {
+      public StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType getOrderType() {
         return orderType_;
       }
       /**
-       * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeUnSet];</code>
+       * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeNotSet];</code>
        */
-      public Builder setOrderType(com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType value) {
+      public Builder setOrderType(StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1069,11 +990,11 @@ public final class StrictChoiceConsumeRequestOuterClass {
         return this;
       }
       /**
-       * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeUnSet];</code>
+       * <code>optional .com.jsj.member.ob.dto.proto.StrictChoiceOrderType OrderType = 5 [default = StrictChoiceOrderTypeNotSet];</code>
        */
       public Builder clearOrderType() {
         bitField0_ = (bitField0_ & ~0x00000010);
-        orderType_ = com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType.StrictChoiceOrderTypeUnSet;
+        orderType_ = StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType.StrictChoiceOrderTypeNotSet;
         onChanged();
         return this;
       }
@@ -1245,15 +1166,15 @@ public final class StrictChoiceConsumeRequestOuterClass {
     String[] descriptorData = {
       "\n StrictChoiceConsumeRequest.proto\022\033com." +
       "jsj.member.ob.dto.proto\032\021BaseRequest.pro" +
-      "to\032\033StrictChoiceOrderType.proto\"\263\002\n\032Stri" +
+      "to\032\033StrictChoiceOrderType.proto\"\267\002\n\032Stri" +
       "ctChoiceConsumeRequest\022=\n\013BaseRequest\030\001 " +
       "\001(\0132(.com.jsj.member.ob.dto.proto.BaseRe" +
-      "quest\022\020\n\005JSJID\030\002 \001(\005:\0010\022\017\n\007OrderID\030\003 \001(\t" +
-      "\022\020\n\005Money\030\004 \001(\001:\0010\022a\n\tOrderType\030\005 \001(\01622." +
-      "com.jsj.member.ob.dto.proto.StrictChoice" +
-      "OrderType:\032StrictChoiceOrderTypeUnSet\022\024\n" +
-      "\tProjectID\030\006 \001(\005:\0010\022\030\n\rDepositDeptID\030\007 \001",
-      "(\005:\0010\022\016\n\006Remark\030\010 \001(\t"
+      "quest\022\020\n\005JSJID\030\002 \001(\005:\0010\022\022\n\007OrderID\030\003 \001(\005" +
+      ":\0010\022\020\n\005Money\030\004 \001(\001:\0010\022b\n\tOrderType\030\005 \001(\016" +
+      "22.com.jsj.member.ob.dto.proto.StrictCho" +
+      "iceOrderType:\033StrictChoiceOrderTypeNotSe" +
+      "t\022\024\n\tProjectID\030\006 \001(\005:\0010\022\030\n\rDepositDeptID",
+      "\030\007 \001(\005:\0010\022\016\n\006Remark\030\010 \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1267,7 +1188,7 @@ public final class StrictChoiceConsumeRequestOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           BaseRequestOuterClass.getDescriptor(),
-          com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.getDescriptor(),
+          StrictChoiceOrderTypeOuterClass.getDescriptor(),
         }, assigner);
     internal_static_com_jsj_member_ob_dto_proto_StrictChoiceConsumeRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -1276,7 +1197,7 @@ public final class StrictChoiceConsumeRequestOuterClass {
         internal_static_com_jsj_member_ob_dto_proto_StrictChoiceConsumeRequest_descriptor,
         new String[] { "BaseRequest", "JSJID", "OrderID", "Money", "OrderType", "ProjectID", "DepositDeptID", "Remark", });
     BaseRequestOuterClass.getDescriptor();
-    com.jsj.member.ob.dto.proto.StrictChoiceOrderTypeOuterClass.getDescriptor();
+    StrictChoiceOrderTypeOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

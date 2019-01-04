@@ -6,8 +6,12 @@ import com.jsj.member.ob.dto.thirdParty.GetAccessTokenRequ;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenResp;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.jsj.member.ob.logic.WechatLogic;
+import com.jsj.member.ob.utils.EncryptUtils;
 import com.jsj.member.ob.utils.SpringContextUtils;
+import jodd.util.URLDecoder;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class WxInterceptor extends HandlerInterceptorAdapter {
 
+    private final Logger logger = LoggerFactory.getLogger(WxInterceptor.class);
 
     @Autowired
     Webconfig webconfig;
@@ -35,11 +40,16 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
         StringBuilder requestURL = new StringBuilder(request.getRequestURL().toString());
         String queryString = request.getQueryString();
 
+        String url = "";
         if (queryString == null) {
-            return requestURL.toString();
+            url = requestURL.toString();
         } else {
-            return requestURL.append('?').append(queryString).toString();
+            url = requestURL.append('?').append(queryString).toString();
         }
+        if (url.indexOf("https") > -1) {
+            return url;
+        }
+        return url.replaceAll("http", "https");
     }
 
     @Override
@@ -52,6 +62,8 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
             wxUser.setOpenid("oeQDZt-rcgi9QhWm6F7o2mV3dSYY");
             wxUser.setNickname("测试账户");
             wxUser.setSubscribe(1);
+            wxUser.setJsjId(20612968);
+            wxUser.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epDoc6nkBKtPSZrP762lGiaTok7VtabocBcp0q0OUC1mmNq99ozG9GiaMib4DiauaI9w6u5w26CTgdeVg/132");
 
             request.getSession().setAttribute("wx", wxUser);
 
@@ -70,6 +82,8 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                 return false;
 
             } else {
+
+                int jsjId = this.parseJsjId(request);
 
                 //获取用户信息
                 String code = request.getParameter("code");
@@ -113,9 +127,9 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                 }
 
                 //{"subscribe":1,"openid":"o2JcesxmAIQWeqEEqA-vM-i44Miw","nickname":"张宁","sex":1,"language":"zh_CN","city":"朝阳","province":"北京","country":"中国","headimgurl":"http:\/\/thirdwx.qlogo.cn\/mmopen\/PiajxSqBRaEKFLsWN4XS5v1yCavjGU69d4MhTotaNU1oe0C5w9cdHTt2J1x3VTeEnDcfT4B3b5ml3ekmlcJHrNA\/132","subscribe_time":1538198776,"remark":"","groupid":0,"tagid_list":[],"subscribe_scene":"ADD_SCENE_SEARCH","qr_scene":0,"qr_scene_str":""}
-                WechatLogic.Init(wxUser);
+                WechatLogic.Init(wxUser, jsjId);
 
-                UserSession wx = UserSession.Init(wxUser);
+                UserSession wx = UserSession.Init(wxUser, jsjId);
                 request.getSession().setAttribute("wx", wx);
 
             }
@@ -161,4 +175,28 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
 
     }
+
+    //region (private) 解析会员编号 parseJsjId
+
+    /**
+     * 解析会员编号
+     *
+     * @param request
+     * @return
+     */
+    private int parseJsjId(HttpServletRequest request) {
+        int jsjId = 0;
+        String keys = request.getParameter("keys");
+        try {
+            if (!StringUtils.isEmpty(keys)) {
+                keys = URLDecoder.decode(keys, "UTF-8");
+                jsjId = Integer.parseInt(EncryptUtils.decrypt2(keys));
+            }
+            logger.info(String.format("解析正常：%s %d", keys, jsjId));
+        } catch (Exception ex) {
+            logger.error(String.format("解析出错：%s %d", keys, jsjId));
+        }
+        return jsjId;
+    }
+    //endregion
 }

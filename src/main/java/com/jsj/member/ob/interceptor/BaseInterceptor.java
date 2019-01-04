@@ -41,7 +41,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         Boolean mini = false;
         if (!org.apache.commons.lang3.StringUtils.isEmpty(userAgent)) {
             userAgent = userAgent.toLowerCase();
-            mini = userAgent.indexOf("miniprogramhtmlwebview") > -1;
+            mini = userAgent.indexOf("miniprogram") > -1;
         }
 
         httpServletRequest.setAttribute("mini", mini);

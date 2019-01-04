@@ -111,9 +111,9 @@
                 var num = parseInt($("div.purchase-layer div.purchase-num :text[name='num']").val() || 0, 10);
                 var wechatCouponId = 0;
 
-                if (num == 0) {
+              /*  if (num == 0) {
                     TX.MSG.msg("至少购买一个商品");
-                }
+                }*/
 
                 if ($("ul.purchase-coupon li.active").length > 0) {
                     wechatCouponId = $("ul.purchase-coupon li.active").attr("data-wechatCoupon-id");

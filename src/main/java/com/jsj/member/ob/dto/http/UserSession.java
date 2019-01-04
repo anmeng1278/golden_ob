@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class UserSession implements Serializable {
 
-    public static UserSession Init(User wxUser) {
+    public static UserSession Init(User wxUser, int jsjId) {
 
         UserSession userSession = new UserSession();
 
@@ -32,10 +32,12 @@ public class UserSession implements Serializable {
         userSession.setQr_scene_str(wxUser.getQr_scene_str());
         userSession.setTagid_list(wxUser.getTagid_list());
         userSession.setUnionid(wxUser.getUnionid());
+        userSession.setJsjId(jsjId);
 
         return userSession;
     }
 
+    private int jsjId;  //会员编号
 
     private Integer subscribe; // 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
 
@@ -236,5 +238,11 @@ public class UserSession implements Serializable {
         this.qr_scene_str = qr_scene_str;
     }
 
+    public int getJsjId() {
+        return jsjId;
+    }
 
+    public void setJsjId(int jsjId) {
+        this.jsjId = jsjId;
+    }
 }

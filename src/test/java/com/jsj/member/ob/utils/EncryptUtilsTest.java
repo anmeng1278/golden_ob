@@ -16,5 +16,19 @@ public class EncryptUtilsTest {
     public void decrypt() throws Exception {
         String decrypt = EncryptUtils.decrypt("2rpaS3MKnYw=");
         System.out.println(decrypt);
+
+        String decrypt1 = EncryptUtils.decrypt2("zaE8Ra+oECo69Uh7kbbPaQ==");
+
+        System.out.println(decrypt1);
+        System.out.println("15810212304");
+    }
+
+    @Test
+    public void rep(){
+
+        String url = "http://localhost/ot/product?activityId=22&productSpecId=12&activityType=40";
+        url = url.replaceAll("http", "https");
+
+        System.out.println(url);
     }
 }

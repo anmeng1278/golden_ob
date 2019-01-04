@@ -29,6 +29,17 @@ public class IndexController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
+    /**
+     * TODO 测试页面
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping(value = {"/test"})
+    public String test(HttpServletRequest request) {
+
+        return "index/test";
+    }
     //region (public) 首页 index
 
     /**
@@ -101,8 +112,10 @@ public class IndexController extends BaseController {
             exchangeProducts = ActivityLogic.GetActivityProductDtos(exchange.getActivityId());
         }
         request.setAttribute("exchangeProducts", exchangeProducts);
-
         request.setAttribute("exchange", exchange);
+
+        double balance = MemberLogic.StrictChoiceSearch(this.User().getJsjId());
+        request.setAttribute("balance", balance);
 
         return "index/exchange";
     }
