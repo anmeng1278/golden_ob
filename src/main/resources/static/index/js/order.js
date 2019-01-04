@@ -26,7 +26,7 @@ function createOrder(data, callback) {
     // return;
 
     if (ob.mini && data.activityTypeId != 40) {
-        TX.MSG.msg("小程序中暂时不支付商品购买<br />请到“空铁管理”微信公众号上购买。", {time: 3000}, function () {
+        TX.MSG.msg("小程序暂不支持商品购买，<br />请到“空铁管理”微信公众号上操作。", {time: 3000}, function () {
         });
         return;
     }
