@@ -36,6 +36,7 @@ public class UserSession implements Serializable {
         return userSession;
     }
 
+    private int jsjId;  //会员编号
 
     private Integer subscribe; // 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
 
@@ -236,5 +237,11 @@ public class UserSession implements Serializable {
         this.qr_scene_str = qr_scene_str;
     }
 
+    public int getJsjId() {
+        return jsjId;
+    }
 
+    public void setJsjId(int jsjId) {
+        this.jsjId = jsjId;
+    }
 }

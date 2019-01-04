@@ -91,10 +91,11 @@ public class WechatLogic extends BaseLogic {
     /**
      * 初始化会员数据
      *
-     * @param dto
+     * @param user
+     * @param jsjId
      * @return
      */
-    public static void Init(User user) {
+    public static void Init(User user, int jsjId) {
 
         Wechat wechat = wechatLogic.wechatService.selectById(user.getOpenid());
 
@@ -106,7 +107,7 @@ public class WechatLogic extends BaseLogic {
             wechat.setCountry(user.getCountry());
             wechat.setCreateTime(DateUtils.getCurrentUnixTime());
             wechat.setHeadimgurl(user.getHeadimgurl());
-            wechat.setJsjid(0);
+            wechat.setJsjid(jsjId);
 
             wechat.setLanguage(user.getLanguage());
             wechat.setNickname(user.getNickname());
@@ -130,6 +131,7 @@ public class WechatLogic extends BaseLogic {
             wechat.setCity(user.getCity());
             wechat.setCountry(user.getCountry());
             wechat.setHeadimgurl(user.getHeadimgurl());
+            wechat.setJsjid(jsjId);
 
             wechat.setLanguage(user.getLanguage());
             wechat.setNickname(user.getNickname());
