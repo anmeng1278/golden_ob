@@ -85,6 +85,7 @@ function createOrder(data, callback) {
                 var package = resp.datas.pay.responseBody._package;
                 var signType = resp.datas.pay.responseBody.signType;
                 var paySign = resp.datas.pay.responseBody.paySign;
+                var appId = resp.datas.pay.responseBody.appId;
 
                 if (ob.mini == true) {
 
