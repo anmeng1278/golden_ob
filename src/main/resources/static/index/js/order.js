@@ -80,8 +80,8 @@ function createOrder(data, callback) {
             //调起微信支付
             function callPay(resp, successUrl, url) {
 
-                if (wx && ob.mini) {
-
+                if (ob.mini == true) {
+                    alert("小程序支付");
                     var timestamp = resp.datas.pay.responseBody.timeStamp;
                     var nonceStr = resp.datas.pay.responseBody.nonceStr;
                     var package = resp.datas.pay.responseBody._package;
@@ -106,6 +106,8 @@ function createOrder(data, callback) {
 
                     return;
                 }
+
+                alert("微信内支付");
 
                 //调起微信支付
                 wx.chooseWXPay({
