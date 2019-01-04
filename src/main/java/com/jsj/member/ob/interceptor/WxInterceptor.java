@@ -35,6 +35,14 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     Webconfig webconfig;
 
+
+    //region (private) 获取完整Url路径 getFullURL
+
+    /**
+     * 获取完整Url路径
+     * @param request
+     * @return
+     */
     private String getFullURL(HttpServletRequest request) {
 
         StringBuilder requestURL = new StringBuilder(request.getRequestURL().toString());
@@ -51,6 +59,7 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
         }
         return url.replaceAll("http", "https");
     }
+    //endregion
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -187,14 +196,15 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     private int parseJsjId(HttpServletRequest request) {
         int jsjId = 0;
         String keys = request.getParameter("keys");
+        String url = this.getFullURL(request);
         try {
             if (!StringUtils.isEmpty(keys)) {
                 keys = URLDecoder.decode(keys, "UTF-8");
                 jsjId = Integer.parseInt(EncryptUtils.decrypt2(keys));
             }
-            logger.info(String.format("解析正常：%s %d", keys, jsjId));
+            logger.info(String.format("解析正常：%s %d %s", keys, jsjId, url));
         } catch (Exception ex) {
-            logger.error(String.format("解析出错：%s %d", keys, jsjId));
+            logger.error(String.format("解析出错：%s %d %s", keys, jsjId, url));
         }
         return jsjId;
     }
