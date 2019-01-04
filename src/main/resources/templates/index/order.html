@@ -63,6 +63,26 @@
                                 return;
                             }
 
+                            if (wx && ob.mini) {
+
+                                var url = '/pages/obpay/index?timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
+                                wx.miniProgram.navigateTo({
+                                    url: url,
+                                    success: function (resp) {
+                                        // 打开成功
+                                        alert(JSON.stringify(resp));
+                                    },
+                                    fail: function (resp) {
+                                        alert(JSON.stringify(resp));
+                                    },
+                                    complete: function (resp) {
+                                        alert(JSON.stringify(resp));
+                                    }
+                                })
+
+                                return;
+                            }
+
                             //调起微信支付
                             wx.chooseWXPay({
                                 appId: appId,

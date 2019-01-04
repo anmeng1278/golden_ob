@@ -29,6 +29,17 @@ public class IndexController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
+    /**
+     * TODO 测试页面
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping(value = {"/test"})
+    public String test(HttpServletRequest request) {
+
+        return "index/test";
+    }
     //region (public) 首页 index
 
     /**
