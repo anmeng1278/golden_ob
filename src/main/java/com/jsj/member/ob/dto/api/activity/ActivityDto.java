@@ -1,7 +1,7 @@
 package com.jsj.member.ob.dto.api.activity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
 import com.jsj.member.ob.enums.ActivityType;
+import com.jsj.member.ob.utils.RemoveHtmlUtils;
 
 public class ActivityDto {
 
@@ -82,6 +82,12 @@ public class ActivityDto {
      * 活动介绍
      */
     private String introduce;
+
+    private String intro;
+
+    public String getIntro() {
+        return RemoveHtmlUtils.Html2Text(introduce);
+    }
 
     public String getImgPath() {
         return imgPath;
