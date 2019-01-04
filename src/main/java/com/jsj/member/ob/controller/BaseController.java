@@ -206,9 +206,9 @@ public abstract class BaseController {
         PayDto payDto = this.GetPayDto(request);
         OrderDto orderDto = OrderLogic.GetOrder(orderId);
 
-        if (!orderDto.getOpenId().equals(payDto.getOpenId())) {
-            throw new TipException("非操作人订单不允许支付");
-        }
+        //if (!orderDto.getOpenId().equals(payDto.getOpenId())) {
+        //    throw new TipException("非操作人订单不允许支付");
+        //}
         if (orderDto.getPayAmount() <= 0) {
             throw new TipException("当前订单不需要支付");
         }

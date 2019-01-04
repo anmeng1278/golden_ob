@@ -25,11 +25,11 @@ function createOrder(data, callback) {
     //
     // return;
 
-    if (ob.mini && data.activityTypeId != 40) {
-        TX.MSG.msg("小程序暂不支持商品购买，<br />请到“空铁管家”微信公众号上操作。", {time: 3000}, function () {
-        });
-        return;
-    }
+    // if (ob.mini && data.activityTypeId != 40) {
+    //     TX.MSG.msg("小程序暂不支持商品购买，<br />请到“空铁管家”微信公众号上操作。", {time: 3000}, function () {
+    //     });
+    //     return;
+    // }
 
     TX.CORE.p({
         url: "/product/createOrder",
@@ -89,6 +89,7 @@ function createOrder(data, callback) {
 
                 if (ob.mini == true) {
 
+                    package = encodeURIComponent(package);
                     var url = '/pages/obpay/index?timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
                     wx.miniProgram.navigateTo({
                         url: url,
