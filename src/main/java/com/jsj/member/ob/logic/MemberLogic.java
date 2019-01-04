@@ -202,6 +202,66 @@ public class MemberLogic {
     }
     //endregion
 
+    //region (public) 严选资产余额 StrictChoiceSearch
+
+    /**
+     * 严选资产余额
+     *
+     * @return
+     */
+    public static StrictChoiceSearchResponseOuterClass.StrictChoiceSearchResponse StrictChoiceSearch(StrictChoiceSearchRequestOuterClass.StrictChoiceSearchRequest requ) {
+
+        StrictChoiceSearchResponseOuterClass.StrictChoiceSearchResponse resp = StrictChoiceSearchResponseOuterClass.StrictChoiceSearchResponse.getDefaultInstance();
+
+        try {
+
+            String url = memberLogic.webconfig.getMemberApiUrl();
+            ZRequestOuterClass.ZRequest.Builder zRequest = ZRequestOuterClass.ZRequest.newBuilder();
+            zRequest.setMethodName("StrictChoiceSearch");
+            zRequest.setZPack(requ.toByteString());
+
+            ZResponseOuterClass.ZResponse.Builder zResponse = HttpUtils.protobuf(zRequest, url);
+            if (zResponse.getIsSuccess()) {
+                resp = StrictChoiceSearchResponseOuterClass.StrictChoiceSearchResponse.parseFrom(zResponse.getZPack());
+            } else {
+                throw new Exception(zResponse.getExceptionMessage());
+            }
+            memberLogic.logger.info(String.format("%s %s %s", url, requ.toString(), resp.toString()));
+        } catch (Exception ex) {
+            memberLogic.logger.error("会员组接口失败：" + JSON.toJSONString(ex));
+            ex.printStackTrace();
+        }
+        return resp;
+
+    }
+    //endregion
+
+    //region (public) 严选资产余额 StrictChoiceSearch
+
+    /**
+     * 严选资产余额
+     *
+     * @param jsjId
+     * @return
+     */
+    public static double StrictChoiceSearch(int jsjId) {
+
+        double balance = 0d;
+        try {
+            StrictChoiceSearchRequestOuterClass.StrictChoiceSearchRequest.Builder requ = StrictChoiceSearchRequestOuterClass.StrictChoiceSearchRequest.newBuilder();
+            requ.setJSJID(jsjId);
+
+            StrictChoiceSearchResponseOuterClass.StrictChoiceSearchResponse resp = MemberLogic.StrictChoiceSearch(requ.build());
+            if (resp.getBaseResponse().getIsSuccess()) {
+                balance = resp.getCurrentStrictChoice();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return balance;
+
+    }
+    //endregion
 
     //region (public) 根据手机号获取会员编号 GetCustomerIdByPhone
 

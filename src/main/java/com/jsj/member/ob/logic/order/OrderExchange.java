@@ -6,6 +6,7 @@ import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
+import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.enums.ActivityType;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +79,7 @@ public class OrderExchange extends OrderBase {
         }
 
         if (requ.getBaseRequ().getJsjId() <= 0) {
-            throw new TipException("会员编号不能为空");
+            throw new TipException("只有会员才能参与兑换活动");
         }
 
         if (requ.getActivityId() == 0) {
@@ -173,7 +175,10 @@ public class OrderExchange extends OrderBase {
 
             orderProductDtos.add(orderProductDto);
 
-            orderAmount += apd.getSalePrice() * number;
+            //获取商品规格
+            ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(apd.getProductSpecId());
+
+            orderAmount += productSpecDto.getSalePrice() * number;
 
             //削减活动商品库存
             ActivityLogic.ReductionActivityProductStock(apd.getActivityId(), apd.getProductId(), apd.getProductSpecId(), number);
@@ -182,14 +187,19 @@ public class OrderExchange extends OrderBase {
         //削减规格库存
         ProductLogic.ReductionProductSpecStock(orderProductDtos, this.getActivityType(), null);
 
-        //TODO 商品兑换
-        double payAmount = super.Exchange(requ.getBaseRequ().getJsjId(), orderAmount, order);
-
+        double payAmount = 0d;
         //支付金额
         order.setPayAmount(payAmount);
+
         //订单金额
         order.setAmount(orderAmount);
+        order.setEquityPrice(orderAmount);
+        order.setRemarks("商品兑换");
+
         orderService.insert(order);
+
+        //商品兑换
+        super.Exchange(requ.getBaseRequ().getJsjId(), orderAmount, order);
 
         //更新订单商品中的订单编号
         orderProducts.stream().forEach(op -> {
@@ -215,6 +225,39 @@ public class OrderExchange extends OrderBase {
 
     @Override
     public CreateOrderResp CalculateOrder(CreateOrderRequ requ) {
-        throw new TipException("方法暂未实现");
+
+        //通用验证
+        super.validateCreateRequ(requ);
+
+        //参数校验
+        if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
+            throw new TipException("用户编号不能为空");
+        }
+        if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().size() == 0) {
+            throw new TipException("购买商品不能为空");
+        }
+
+        //订单应支付金额
+        double orderAmount = 0d;
+
+        for (OrderProductDto op : requ.getOrderProductDtos()) {
+            //获取商品规格
+            ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(op.getProductSpecId());
+            //获取规格金额
+            orderAmount += productSpecDto.getSalePrice() * op.getNumber();
+        }
+
+        //原价
+        orderAmount = new BigDecimal(orderAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+
+        CreateOrderResp resp = new CreateOrderResp();
+
+        resp.setAmount(orderAmount);
+        resp.setCouponAmount(0d);
+        resp.setOriginalAmount(orderAmount);
+        resp.setSuccess(true);
+
+        return resp;
+
     }
 }

@@ -72,18 +72,23 @@
                 var num = parseInt($("div.purchase-layer div.purchase-num :text[name='num']").val() || 0, 10);
 
                 if (num == 0) {
-                    TX.MSG.msg("至少购买一个商品");
+                    TX.MSG.msg("至少兑换一个商品");
                 }
 
-                var datas = [];
-                datas.push({num: num, productSpecId: productSpecId, productId: productId});
+                layer.confirm('兑换商品后暂不支持退换，确定兑换吗？', {icon: 3}, function (index) {
 
-                //创建兑换权益订单
-                createOrder({
-                    activityTypeId: 40,
-                    activityId: activityId,
+                    layer.close(index);
 
-                    p: JSON.stringify(datas),
+                    var datas = [];
+                    datas.push({num: num, productSpecId: productSpecId, productId: productId});
+
+                    //创建兑换权益订单
+                    createOrder({
+                        activityTypeId: 40,
+                        activityId: activityId,
+
+                        p: JSON.stringify(datas),
+                    });
                 });
 
             });
@@ -135,7 +140,7 @@
 
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/js/swiper/css/swiper.min.css', false)}"/>
     <link rel="stylesheet" type="text/css" th:href="${ob.Url('/index/css/GoodsDetail.css')}"/>
-    <style type="text/css" >
+    <style type="text/css">
         .footer-lt {
             width: 50%;
         }
@@ -195,8 +200,13 @@
             <span class="shopping-price">&yen;<em th:text="${info.salePrice}">898</em></span>
         </p>
         <p class="footer-rt">
-            <a href="javascript:void(0);" class="shopping-cart-btn" style="display: none;">余额不足</a>
-            <a href="javascript:void(0);" class="purchase-show-btn">立即兑换</a>
+            <th:block th:if="${wx.jsjId > 0}">
+                <a href="javascript:void(0);" th:if="${balance == 0}" class="shopping-cart-btn">余额不足</a>
+                <a href="javascript:void(0);" th:if="${balance > 0}" class="purchase-show-btn">立即兑换</a>
+            </th:block>
+            <th:block th:if="${wx.jsjId == 0}">
+                <a href="javascript:void(0);"  class="shopping-cart-btn">非会员禁止兑换</a>
+            </th:block>
         </p>
 
     </div>
@@ -221,14 +231,14 @@
                     <span class="purchase-layer-lable">规格</span>
                     <p class="purchase-layer-p">
                         <th:block th:each="spec,current : ${info.productSpecDtos}">
-                            <span th:attr="data-spec-id=${spec.productSpecId}, data-spec-stockCount=${spec.stockCount}"
-                                  th:classappend="${spec.stockCount > 0 ?'':'disabled'}"
+                            <span th:attr="data-spec-id=${spec.productSpecId}, data-spec-stockCount=${stockCount}"
+                                  th:classappend="${stockCount > 0 ?'':'disabled'}"
                                   th:text="${spec.specName}"></span>
                         </th:block>
                     </p>
                 </div>
                 <div class="purchase-layer-div">
-                    <span class="purchase-layer-lable">购买数量</span>
+                    <span class="purchase-layer-lable">兑换数量</span>
                     <div class="purchase-num">
                         <em class="purchase-num-reduce"></em>
                         <input type="text" value="0" class="num" name="num"/>
@@ -244,7 +254,7 @@
                 <p class="purchase-footer-lt">
                     <span class="shopping-price">&yen;<em>0</em></span>
                 </p>
-                <a href="javascript:void(0);" class="purchase-btn">立即购买</a>
+                <a href="javascript:void(0);" class="purchase-btn">立即兑换</a>
             </div>
             <!--purchase-footer end-->
         </div>

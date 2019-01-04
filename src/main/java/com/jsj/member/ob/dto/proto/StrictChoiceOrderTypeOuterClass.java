@@ -14,9 +14,9 @@ public final class StrictChoiceOrderTypeOuterClass {
   public enum StrictChoiceOrderType
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
-     * <code>StrictChoiceOrderTypeUnSet = 0;</code>
+     * <code>StrictChoiceOrderTypeNotSet = 0;</code>
      */
-    StrictChoiceOrderTypeUnSet(0, 0),
+    StrictChoiceOrderTypeNotSet(0, 0),
     /**
      * <code>StrictChoice = 1;</code>
      */
@@ -24,9 +24,9 @@ public final class StrictChoiceOrderTypeOuterClass {
     ;
 
     /**
-     * <code>StrictChoiceOrderTypeUnSet = 0;</code>
+     * <code>StrictChoiceOrderTypeNotSet = 0;</code>
      */
-    public static final int StrictChoiceOrderTypeUnSet_VALUE = 0;
+    public static final int StrictChoiceOrderTypeNotSet_VALUE = 0;
     /**
      * <code>StrictChoice = 1;</code>
      */
@@ -37,7 +37,7 @@ public final class StrictChoiceOrderTypeOuterClass {
 
     public static StrictChoiceOrderType valueOf(int value) {
       switch (value) {
-        case 0: return StrictChoiceOrderTypeUnSet;
+        case 0: return StrictChoiceOrderTypeNotSet;
         case 1: return StrictChoice;
         default: return null;
       }
@@ -100,9 +100,9 @@ public final class StrictChoiceOrderTypeOuterClass {
   static {
     String[] descriptorData = {
       "\n\033StrictChoiceOrderType.proto\022\033com.jsj.m" +
-      "ember.ob.dto.proto*I\n\025StrictChoiceOrderT" +
-      "ype\022\036\n\032StrictChoiceOrderTypeUnSet\020\000\022\020\n\014S" +
-      "trictChoice\020\001"
+      "ember.ob.dto.proto*J\n\025StrictChoiceOrderT" +
+      "ype\022\037\n\033StrictChoiceOrderTypeNotSet\020\000\022\020\n\014" +
+      "StrictChoice\020\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

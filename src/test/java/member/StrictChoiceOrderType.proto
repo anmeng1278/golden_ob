@@ -1,6 +1,6 @@
 package com.jsj.member.ob.dto.proto;
 
 enum StrictChoiceOrderType {
-   StrictChoiceOrderTypeUnSet = 0;
-   StrictChoice = 1;
+  StrictChoiceOrderTypeNotSet = 0;
+  StrictChoice = 1;
 }
