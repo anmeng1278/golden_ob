@@ -1,0 +1,8 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseResponse.proto";
+
+message StrictChoiceSearchResponse {
+   optional BaseResponse BaseResponse = 1;
+   optional double CurrentStrictChoice = 2 [default = 0];
+}

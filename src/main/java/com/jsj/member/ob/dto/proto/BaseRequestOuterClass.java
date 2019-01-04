@@ -33,7 +33,7 @@ public final class BaseRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.SourceWay SourceWay = 2 [default = SourceWayNoSetting];</code>
      */
-    com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay getSourceWay();
+    SourceWayOuterClass.SourceWay getSourceWay();
 
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.LanguageVersion LanguageVersion = 3 [default = CN];</code>
@@ -42,7 +42,7 @@ public final class BaseRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.LanguageVersion LanguageVersion = 3 [default = CN];</code>
      */
-    com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion getLanguageVersion();
+    LanguageVersionOuterClass.LanguageVersion getLanguageVersion();
 
     /**
      * <code>optional string TerminalExt = 4;</code>
@@ -116,7 +116,7 @@ public final class BaseRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.DataCommission DataCommission = 9 [default = DataCommissionNoSetting];</code>
      */
-    com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission getDataCommission();
+    DataCommissionOuterClass.DataCommission getDataCommission();
 
     /**
      * <code>optional int32 DeptID = 10 [default = 0];</code>
@@ -187,7 +187,7 @@ public final class BaseRequestOuterClass {
             }
             case 16: {
               int rawValue = input.readEnum();
-              com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay value = com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay.valueOf(rawValue);
+              SourceWayOuterClass.SourceWay value = SourceWayOuterClass.SourceWay.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
@@ -198,7 +198,7 @@ public final class BaseRequestOuterClass {
             }
             case 24: {
               int rawValue = input.readEnum();
-              com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion value = com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion.valueOf(rawValue);
+              LanguageVersionOuterClass.LanguageVersion value = LanguageVersionOuterClass.LanguageVersion.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(3, rawValue);
               } else {
@@ -238,7 +238,7 @@ public final class BaseRequestOuterClass {
             }
             case 72: {
               int rawValue = input.readEnum();
-              com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission value = com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission.valueOf(rawValue);
+              DataCommissionOuterClass.DataCommission value = DataCommissionOuterClass.DataCommission.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(9, rawValue);
               } else {
@@ -335,7 +335,7 @@ public final class BaseRequestOuterClass {
     }
 
     public static final int SOURCEWAY_FIELD_NUMBER = 2;
-    private com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay sourceWay_;
+    private SourceWayOuterClass.SourceWay sourceWay_;
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.SourceWay SourceWay = 2 [default = SourceWayNoSetting];</code>
      */
@@ -345,12 +345,12 @@ public final class BaseRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.SourceWay SourceWay = 2 [default = SourceWayNoSetting];</code>
      */
-    public com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay getSourceWay() {
+    public SourceWayOuterClass.SourceWay getSourceWay() {
       return sourceWay_;
     }
 
     public static final int LANGUAGEVERSION_FIELD_NUMBER = 3;
-    private com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion languageVersion_;
+    private LanguageVersionOuterClass.LanguageVersion languageVersion_;
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.LanguageVersion LanguageVersion = 3 [default = CN];</code>
      */
@@ -360,7 +360,7 @@ public final class BaseRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.LanguageVersion LanguageVersion = 3 [default = CN];</code>
      */
-    public com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion getLanguageVersion() {
+    public LanguageVersionOuterClass.LanguageVersion getLanguageVersion() {
       return languageVersion_;
     }
 
@@ -548,7 +548,7 @@ public final class BaseRequestOuterClass {
     }
 
     public static final int DATACOMMISSION_FIELD_NUMBER = 9;
-    private com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission dataCommission_;
+    private DataCommissionOuterClass.DataCommission dataCommission_;
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.DataCommission DataCommission = 9 [default = DataCommissionNoSetting];</code>
      */
@@ -558,7 +558,7 @@ public final class BaseRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.DataCommission DataCommission = 9 [default = DataCommissionNoSetting];</code>
      */
-    public com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission getDataCommission() {
+    public DataCommissionOuterClass.DataCommission getDataCommission() {
       return dataCommission_;
     }
 
@@ -579,14 +579,14 @@ public final class BaseRequestOuterClass {
 
     private void initFields() {
       appVersion_ = "";
-      sourceWay_ = com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay.SourceWayNoSetting;
-      languageVersion_ = com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion.CN;
+      sourceWay_ = SourceWayOuterClass.SourceWay.SourceWayNoSetting;
+      languageVersion_ = LanguageVersionOuterClass.LanguageVersion.CN;
       terminalExt_ = "";
       registrationId_ = "";
       iMEI_ = "";
       opEmployeeID_ = 0;
       token_ = "";
-      dataCommission_ = com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission.DataCommissionNoSetting;
+      dataCommission_ = DataCommissionOuterClass.DataCommission.DataCommissionNoSetting;
       deptID_ = 0;
     }
     private byte memoizedIsInitialized = -1;
@@ -800,9 +800,9 @@ public final class BaseRequestOuterClass {
         super.clear();
         appVersion_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        sourceWay_ = com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay.SourceWayNoSetting;
+        sourceWay_ = SourceWayOuterClass.SourceWay.SourceWayNoSetting;
         bitField0_ = (bitField0_ & ~0x00000002);
-        languageVersion_ = com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion.CN;
+        languageVersion_ = LanguageVersionOuterClass.LanguageVersion.CN;
         bitField0_ = (bitField0_ & ~0x00000004);
         terminalExt_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -814,7 +814,7 @@ public final class BaseRequestOuterClass {
         bitField0_ = (bitField0_ & ~0x00000040);
         token_ = "";
         bitField0_ = (bitField0_ & ~0x00000080);
-        dataCommission_ = com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission.DataCommissionNoSetting;
+        dataCommission_ = DataCommissionOuterClass.DataCommission.DataCommissionNoSetting;
         bitField0_ = (bitField0_ & ~0x00000100);
         deptID_ = 0;
         bitField0_ = (bitField0_ & ~0x00000200);
@@ -1045,7 +1045,7 @@ public final class BaseRequestOuterClass {
         return this;
       }
 
-      private com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay sourceWay_ = com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay.SourceWayNoSetting;
+      private SourceWayOuterClass.SourceWay sourceWay_ = SourceWayOuterClass.SourceWay.SourceWayNoSetting;
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.SourceWay SourceWay = 2 [default = SourceWayNoSetting];</code>
        */
@@ -1055,13 +1055,13 @@ public final class BaseRequestOuterClass {
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.SourceWay SourceWay = 2 [default = SourceWayNoSetting];</code>
        */
-      public com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay getSourceWay() {
+      public SourceWayOuterClass.SourceWay getSourceWay() {
         return sourceWay_;
       }
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.SourceWay SourceWay = 2 [default = SourceWayNoSetting];</code>
        */
-      public Builder setSourceWay(com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay value) {
+      public Builder setSourceWay(SourceWayOuterClass.SourceWay value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1075,12 +1075,12 @@ public final class BaseRequestOuterClass {
        */
       public Builder clearSourceWay() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        sourceWay_ = com.jsj.member.ob.dto.proto.SourceWayOuterClass.SourceWay.SourceWayNoSetting;
+        sourceWay_ = SourceWayOuterClass.SourceWay.SourceWayNoSetting;
         onChanged();
         return this;
       }
 
-      private com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion languageVersion_ = com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion.CN;
+      private LanguageVersionOuterClass.LanguageVersion languageVersion_ = LanguageVersionOuterClass.LanguageVersion.CN;
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.LanguageVersion LanguageVersion = 3 [default = CN];</code>
        */
@@ -1090,13 +1090,13 @@ public final class BaseRequestOuterClass {
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.LanguageVersion LanguageVersion = 3 [default = CN];</code>
        */
-      public com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion getLanguageVersion() {
+      public LanguageVersionOuterClass.LanguageVersion getLanguageVersion() {
         return languageVersion_;
       }
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.LanguageVersion LanguageVersion = 3 [default = CN];</code>
        */
-      public Builder setLanguageVersion(com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion value) {
+      public Builder setLanguageVersion(LanguageVersionOuterClass.LanguageVersion value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1110,7 +1110,7 @@ public final class BaseRequestOuterClass {
        */
       public Builder clearLanguageVersion() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        languageVersion_ = com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.LanguageVersion.CN;
+        languageVersion_ = LanguageVersionOuterClass.LanguageVersion.CN;
         onChanged();
         return this;
       }
@@ -1451,7 +1451,7 @@ public final class BaseRequestOuterClass {
         return this;
       }
 
-      private com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission dataCommission_ = com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission.DataCommissionNoSetting;
+      private DataCommissionOuterClass.DataCommission dataCommission_ = DataCommissionOuterClass.DataCommission.DataCommissionNoSetting;
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.DataCommission DataCommission = 9 [default = DataCommissionNoSetting];</code>
        */
@@ -1461,13 +1461,13 @@ public final class BaseRequestOuterClass {
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.DataCommission DataCommission = 9 [default = DataCommissionNoSetting];</code>
        */
-      public com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission getDataCommission() {
+      public DataCommissionOuterClass.DataCommission getDataCommission() {
         return dataCommission_;
       }
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.DataCommission DataCommission = 9 [default = DataCommissionNoSetting];</code>
        */
-      public Builder setDataCommission(com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission value) {
+      public Builder setDataCommission(DataCommissionOuterClass.DataCommission value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1481,7 +1481,7 @@ public final class BaseRequestOuterClass {
        */
       public Builder clearDataCommission() {
         bitField0_ = (bitField0_ & ~0x00000100);
-        dataCommission_ = com.jsj.member.ob.dto.proto.DataCommissionOuterClass.DataCommission.DataCommissionNoSetting;
+        dataCommission_ = DataCommissionOuterClass.DataCommission.DataCommissionNoSetting;
         onChanged();
         return this;
       }
@@ -1568,9 +1568,9 @@ public final class BaseRequestOuterClass {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.jsj.member.ob.dto.proto.SourceWayOuterClass.getDescriptor(),
-          com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.getDescriptor(),
-          com.jsj.member.ob.dto.proto.DataCommissionOuterClass.getDescriptor(),
+          SourceWayOuterClass.getDescriptor(),
+          LanguageVersionOuterClass.getDescriptor(),
+          DataCommissionOuterClass.getDescriptor(),
         }, assigner);
     internal_static_com_jsj_member_ob_dto_proto_BaseRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -1578,9 +1578,9 @@ public final class BaseRequestOuterClass {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_jsj_member_ob_dto_proto_BaseRequest_descriptor,
         new String[] { "AppVersion", "SourceWay", "LanguageVersion", "TerminalExt", "RegistrationId", "IMEI", "OpEmployeeID", "Token", "DataCommission", "DeptID", });
-    com.jsj.member.ob.dto.proto.SourceWayOuterClass.getDescriptor();
-    com.jsj.member.ob.dto.proto.LanguageVersionOuterClass.getDescriptor();
-    com.jsj.member.ob.dto.proto.DataCommissionOuterClass.getDescriptor();
+    SourceWayOuterClass.getDescriptor();
+    LanguageVersionOuterClass.getDescriptor();
+    DataCommissionOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

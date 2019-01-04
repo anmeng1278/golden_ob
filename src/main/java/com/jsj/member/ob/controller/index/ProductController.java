@@ -165,26 +165,40 @@ public class ProductController extends BaseController {
             return this.Redirect("/");
         }
 
-        if (StringUtils.isEmpty(request.getParameter("productId"))) {
+        if (StringUtils.isEmpty(request.getParameter("productSpecId"))) {
             return this.Redirect("/");
         }
 
         int activityId = Integer.parseInt(request.getParameter("activityId"));
+        int productSpecId = Integer.parseInt(request.getParameter("productSpecId"));
 
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        ProductDto productDto = ProductLogic.GetProduct(productId);
+        //兑换活动信息
+        ActivityDto info = ActivityLogic.GetActivity(activityId);
+        if (!info.getIfpass()) {
+            return this.Redirect("/");
+        }
+
+        //非兑换商品，不允许进此链接
+        if (!info.getActivityType().equals(ActivityType.EXCHANGE)) {
+            return this.Redirect("/");
+        }
+
+        //活动中的商品
+        List<ActivityProductDto> productDtos = ActivityLogic.GetActivityProductDtos(activityId, productSpecId);
+        if (productDtos.size() == 0) {
+            return this.Redirect("/");
+        }
+        ProductDto productDto = productDtos.get(0).getProductDto();
 
         //库存
-        int stockCount = 0;
-        if (productDto.getProductSpecDtos() != null) {
-            stockCount = productDto.getProductSpecDtos().stream().mapToInt(ProductSpecDto::getStockCount).sum();
-        }
+        int stockCount = productDtos.get(0).getStockCount();
+
         request.setAttribute("stockCount", stockCount);
+        request.setAttribute("info", productDto);
+        request.setAttribute("activityId", activityId);
 
-        request.setAttribute("info",productDto);
-
-        request.setAttribute("activityId",activityId);
-
+        double balance = MemberLogic.StrictChoiceSearch(this.User().getJsjId());
+        request.setAttribute("balance", balance);
 
         return "index/product/exchangeActivityDetail";
     }
@@ -573,7 +587,7 @@ public class ProductController extends BaseController {
     }
     //endregion
 
-    //region (private) 组织创建兑换订单请求 createNormalOrderRequest
+    //region (private) 组织创建兑换订单请求 createExchangeOrderRequest
 
     /**
      * 组织创建兑换订单请求
@@ -597,12 +611,17 @@ public class ProductController extends BaseController {
         String p = request.getParameter("p");
         List<JSONObject> jsonObjects = JSON.parseArray(p, JSONObject.class);
 
+        if (jsonObjects.size() == 0) {
+            throw new TipException("参数错误");
+        }
+
         CreateOrderRequ requ = new CreateOrderRequ();
+
         requ.setActivityType(ActivityType.EXCHANGE);
         requ.getBaseRequ().setOpenId(openId);
         requ.setActivityId(activityId);
-        requ.getBaseRequ().setJsjId(111);
-
+        requ.getBaseRequ().setJsjId(this.User().getJsjId());
+        requ.setNumber(jsonObjects.get(0).getIntValue("num"));
 
         for (JSONObject jo : jsonObjects) {
 
