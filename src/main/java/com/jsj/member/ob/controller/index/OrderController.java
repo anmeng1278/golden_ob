@@ -62,7 +62,7 @@ public class OrderController extends BaseController {
     public RestResponseBo createPay(HttpServletRequest request) throws Exception {
 
         int orderId = Integer.parseInt(request.getParameter("orderId"));
-        GetPayTradeResp pay = this.createPay(orderId);
+        GetPayTradeResp pay = this.createPay(request, orderId);
 
         OrderDto orderDto = OrderLogic.GetOrder(orderId);
 

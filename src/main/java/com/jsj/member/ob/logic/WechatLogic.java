@@ -1,10 +1,15 @@
 package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.entity.Wechat;
+import com.jsj.member.ob.entity.WechatRelation;
+import com.jsj.member.ob.enums.WechatRelationType;
+import com.jsj.member.ob.service.WechatRelationService;
 import com.jsj.member.ob.service.WechatService;
 import com.jsj.member.ob.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import weixin.popular.bean.user.User;
@@ -18,6 +23,9 @@ public class WechatLogic extends BaseLogic {
 
     @Autowired
     WechatService wechatService;
+
+    @Autowired
+    WechatRelationService wechatRelationService;
 
     @PostConstruct
     public void init() {
@@ -73,6 +81,7 @@ public class WechatLogic extends BaseLogic {
     }
     //endregion
 
+    //region (public) 获取新增用户 GetNewUsers
 
     /**
      * 获取新增用户
@@ -86,7 +95,9 @@ public class WechatLogic extends BaseLogic {
 
         return wechatLogic.wechatService.selectCount(wechatWrapper);
     }
+    //endregion
 
+    //region (public) 初始化会员数据 Init
 
     /**
      * 初始化会员数据
@@ -148,5 +159,69 @@ public class WechatLogic extends BaseLogic {
 
         }
     }
+
+    //endregion
+
+    //region (public) 绑定会员关系 BindRelation
+
+    /**
+     * 绑定会员关系
+     *
+     * @param openId
+     * @param relationOpenId
+     * @param wechatRelationType
+     */
+    public static void BindRelation(String openId, String relationOpenId, WechatRelationType wechatRelationType) {
+
+        if (StringUtils.isEmpty(openId)) {
+            return;
+        }
+        if (StringUtils.isEmpty(relationOpenId)) {
+            return;
+        }
+
+        Wrapper<WechatRelation> wrapper = new EntityWrapper<>();
+        wrapper.where("openId = {0}", openId);
+        wrapper.where("relation_open_id = {0}", relationOpenId);
+        wrapper.where("type_id = {0}", wechatRelationType.getValue());
+
+        WechatRelation wechatRelation = wechatLogic.wechatRelationService.selectOne(wrapper);
+        //已绑定
+        if (wechatRelation != null) {
+            return;
+        }
+
+        wechatRelation = new WechatRelation();
+        wechatRelation.setOpenId(openId);
+        wechatRelation.setRelationOpenId(relationOpenId);
+        wechatRelation.setTypeId(wechatRelationType.getValue());
+        wechatRelation.setCreateTime(DateUtils.getCurrentUnixTime());
+        wechatRelation.setUpdateTime(DateUtils.getCurrentUnixTime());
+
+        wechatLogic.wechatRelationService.insert(wechatRelation);
+
+    }
+    //endregion
+
+    //region (public) 根据openId获取绑定关系 GetWechatRelation
+
+    /**
+     * 根据openId获取绑定关系
+     *
+     * @param openId
+     * @param wechatRelationType
+     * @return
+     */
+    public static WechatRelation GetWechatRelation(String openId, WechatRelationType wechatRelationType) {
+
+        Wrapper<WechatRelation> wrapper = new EntityWrapper<>();
+        wrapper.where("openId = {0}", openId);
+        wrapper.where("type_id = {0}", wechatRelationType.getValue());
+
+        WechatRelation wechatRelation = wechatLogic.wechatRelationService.selectOne(wrapper);
+        return wechatRelation;
+
+    }
+    //endregion
 
 }

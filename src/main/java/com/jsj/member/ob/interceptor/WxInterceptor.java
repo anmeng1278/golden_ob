@@ -4,6 +4,7 @@ import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.http.UserSession;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenRequ;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenResp;
+import com.jsj.member.ob.enums.WechatRelationType;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.utils.EncryptUtils;
@@ -35,11 +36,11 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     Webconfig webconfig;
 
-
     //region (private) 获取完整Url路径 getFullURL
 
     /**
      * 获取完整Url路径
+     *
      * @param request
      * @return
      */
@@ -61,6 +62,17 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     }
     //endregion
 
+    //region (public) 拦截器，获取微信授权信息 preHandle postHandle
+
+    /**
+     * 拦截器，获取微信授权信息
+     *
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -92,7 +104,9 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
             } else {
 
+                //获取会员编号
                 int jsjId = this.parseJsjId(request);
+
 
                 //获取用户信息
                 String code = request.getParameter("code");
@@ -136,7 +150,11 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                 }
 
                 //{"subscribe":1,"openid":"o2JcesxmAIQWeqEEqA-vM-i44Miw","nickname":"张宁","sex":1,"language":"zh_CN","city":"朝阳","province":"北京","country":"中国","headimgurl":"http:\/\/thirdwx.qlogo.cn\/mmopen\/PiajxSqBRaEKFLsWN4XS5v1yCavjGU69d4MhTotaNU1oe0C5w9cdHTt2J1x3VTeEnDcfT4B3b5ml3ekmlcJHrNA\/132","subscribe_time":1538198776,"remark":"","groupid":0,"tagid_list":[],"subscribe_scene":"ADD_SCENE_SEARCH","qr_scene":0,"qr_scene_str":""}
+                //初始化会员
                 WechatLogic.Init(wxUser, jsjId);
+
+                //绑定会员关系
+                this.bindWechatRelation(request, wxUser.getOpenid());
 
                 UserSession wx = UserSession.Init(wxUser, jsjId);
                 request.getSession().setAttribute("wx", wx);
@@ -155,35 +173,8 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object o, ModelAndView modelAndView) throws Exception {
 
-        /*
-        GetAccessTokenResp getAccessTokenResp = null;
-
-        if (SpringContextUtils.getActiveProfile().equals("dev")) {
-            getAccessTokenResp = ThirdPartyLogic.GetAccessTokenDev(null);
-        } else {
-            getAccessTokenResp = ThirdPartyLogic.GetAccessToken(new GetAccessTokenRequ());
-        }
-
-        String timestamp = DateUtils.getCurrentUnixTime() + "";
-        String noncestr = UUID.randomUUID().toString();
-        String url = this.getFullURL(request);
-        String signature = "";
-
-        Ticket ticket = TicketAPI.ticketGetticket(getAccessTokenResp.getResponseBody().getAccessToken());
-        if (!StringUtils.isEmpty(ticket.getErrcode())) {
-            String ticket1 = ticket.getTicket();
-            signature = JsUtil.generateConfigSignature(noncestr, ticket1, timestamp, url);
-        }
-
-        request.setAttribute("signature", signature);
-        request.setAttribute("appId", webconfig.getAppId());
-        request.setAttribute("timestamp", timestamp);
-        request.setAttribute("noncestr", noncestr);
-             */
-        request.setAttribute("virtualPath", webconfig.getVirtualPath());
-
-
     }
+    //endregion
 
     //region (private) 解析会员编号 parseJsjId
 
@@ -209,4 +200,37 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
         return jsjId;
     }
     //endregion
+
+    //region (private) 绑定会员关系 bindWechatRelation
+
+    private void bindWechatRelation(HttpServletRequest request, String openId) {
+
+        String typeid = request.getParameter("typeid");
+        String relationOpenId = request.getParameter("openid");
+
+        if (StringUtils.isEmpty(typeid)) {
+            return;
+        }
+        if (StringUtils.isEmpty(relationOpenId)) {
+            return;
+        }
+        if (StringUtils.isEmpty(openId)) {
+            return;
+        }
+
+        try {
+
+            WechatRelationType wechatRelationType = WechatRelationType.valueOf(Integer.parseInt(typeid));
+            WechatLogic.BindRelation(openId, relationOpenId, wechatRelationType);
+
+            logger.info(String.format("绑定成功：%s %s %s", openId, relationOpenId, wechatRelationType.getMessage()));
+
+        } catch (Exception ex) {
+            logger.error(String.format("绑定失败：%s %s %s", openId, relationOpenId, typeid));
+        }
+
+    }
+
+    //endregion
+
 }

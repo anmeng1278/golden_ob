@@ -21,7 +21,7 @@
 .nav-wrap-item{ display: none;}
 .address-title{ line-height: 1.2; font-size: 0.32rem; color: #333; font-weight: 700; border-left: 2px solid #C2191F; padding-left: 0.1rem;}
 .address-item{ min-height: 1.1rem; border-bottom: 1px solid #eee; position: relative;}
-.address-lable{ width: 1.6rem; line-height: 1.1rem; font-size: 0.28rem; color: #333; position: absolute; top: 0; left: 0;}
+.address-lable{ width: 1.6rem; line-height: 1.1rem; font-size: 0.30rem; color: #333; position: absolute; top: 0; left: 0;}
 .address-rt{ padding: 0.25rem 0.2rem 0.25rem 1.7rem;}
 .address-input{ display: block; height: 0.6rem; line-height: 0.6rem; font-size: 0.28rem; color: #333; border: 0; padding: 0 !important; text-indent: 5px;}
 .address-textarea{ width: 100%; height: 1.2rem; line-height: 1.2; font-family: "microsoft yahei",arial; padding: 0.18rem 5px; font-size: 0.28rem; color: #333; resize: none; border: 0; text-align: justify;}

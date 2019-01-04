@@ -45,6 +45,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         }
 
         httpServletRequest.setAttribute("mini", mini);
+        httpServletRequest.setAttribute("virtualPath", webconfig.getVirtualPath());
     }
 
     @Override
@@ -56,6 +57,8 @@ public class BaseInterceptor implements HandlerInterceptor {
 
     @Autowired
     Webconfig webconfig;
+
+    //region (public) 获取资源文件路径 Url
 
     /**
      * 获取资源文件路径
@@ -77,6 +80,9 @@ public class BaseInterceptor implements HandlerInterceptor {
         }
         return url;
     }
+    //endregion
+
+    //region (public) 获取资源文件路径 Url
 
     /**
      * 获取资源文件路径
@@ -87,6 +93,9 @@ public class BaseInterceptor implements HandlerInterceptor {
     public String Url(String url) {
         return Url(url, true);
     }
+    //endregion
+
+    //region (public) 获取图片路径 Img
 
     /**
      * 获取图片路径
@@ -97,6 +106,9 @@ public class BaseInterceptor implements HandlerInterceptor {
     public String Img(String url) {
         return Url(url, false);
     }
+    //endregion
+
+    //region (public) 获取跳转链接 Nav
 
     /**
      * 获取跳转链接
@@ -109,6 +121,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         url = String.format(format, webconfig.getVirtualPath(), url);
         return url;
     }
+    //endregion
 
 
 }

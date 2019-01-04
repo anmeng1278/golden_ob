@@ -308,8 +308,8 @@ public class ThirdPartyLogic extends BaseLogic {
             LinkedMap<String, String> map = new LinkedMap<>();
             map.put("TimeStamp", requ.getRequestHead().getTimeStamp());
             map.put("SourceFrom", requ.getRequestHead().getSourceFrom());
-            map.put("PlatformAppId", thirdPartyLogic.webconfig.getPlatformAppId());
-            map.put("PlatformToken", thirdPartyLogic.webconfig.getPlatformToken());
+            map.put("PlatformAppId", requ.getRequestBody().getPlatformAppId());
+            map.put("PlatformToken", requ.getRequestBody().getPlatformToken());
             map.put("SourceWay", requ.getRequestBody().getSourceWay());
             map.put("SourceApp", requ.getRequestBody().getSourceApp());
             map.put("PayMethod", requ.getRequestBody().getPayMethod());
@@ -317,9 +317,6 @@ public class ThirdPartyLogic extends BaseLogic {
             map.put("PayAmount", requ.getRequestBody().getPayAmount());
             map.put("OpenId", requ.getRequestBody().getOpenId());
             map.put("OrderTimeOut", requ.getRequestBody().getOrderTimeOut());
-
-            requ.getRequestBody().setPlatformAppId(thirdPartyLogic.webconfig.getPlatformAppId());
-            requ.getRequestBody().setPlatformToken(thirdPartyLogic.webconfig.getPlatformToken());
 
             String sign = thirdPartyLogic.GetMd5str(map, "#wugf543sxcv5*$#");
             sign = Md5Utils.MD5(sign);

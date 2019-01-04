@@ -2,14 +2,15 @@ package com.jsj.member.ob.controller;
 
 import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.api.order.OrderDto;
+import com.jsj.member.ob.dto.api.pay.PayDto;
 import com.jsj.member.ob.dto.http.UserSession;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeRequ;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
+import com.jsj.member.ob.entity.WechatRelation;
 import com.jsj.member.ob.enums.OrderStatus;
+import com.jsj.member.ob.enums.WechatRelationType;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.logic.BaseLogic;
-import com.jsj.member.ob.logic.OrderLogic;
-import com.jsj.member.ob.logic.ThirdPartyLogic;
+import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.redis.AccessKey;
 import com.jsj.member.ob.redis.RedisService;
 import com.jsj.member.ob.utils.DateUtils;
@@ -200,12 +201,12 @@ public abstract class BaseController {
      * @param orderId
      * @return
      */
-    public GetPayTradeResp createPay(int orderId) {
+    public GetPayTradeResp createPay(HttpServletRequest request, int orderId) {
 
-        String openId = this.OpenId();
+        PayDto payDto = this.GetPayDto(request);
         OrderDto orderDto = OrderLogic.GetOrder(orderId);
 
-        if (!orderDto.getOpenId().equals(openId)) {
+        if (!orderDto.getOpenId().equals(payDto.getOpenId())) {
             throw new TipException("非操作人订单不允许支付");
         }
         if (orderDto.getPayAmount() <= 0) {
@@ -219,8 +220,11 @@ public abstract class BaseController {
 
         requ.getRequestBody().setOutTradeId(orderDto.getOrderId() + "");
         requ.getRequestBody().setPayAmount(orderDto.getPayAmount() + "");
-        requ.getRequestBody().setOpenId(openId);
+        requ.getRequestBody().setOpenId(payDto.getOpenId());
         requ.getRequestBody().setOrderTimeOut(DateUtils.formatDateByUnixTime(Long.parseLong(orderDto.getExpiredTime() + ""), "yyyyMMddHHmmss"));
+
+        requ.getRequestBody().setPlatformAppId(payDto.getPlatformAppId());
+        requ.getRequestBody().setPlatformToken(payDto.getPlatformToken());
 
         GetPayTradeResp resp = ThirdPartyLogic.GetPayTrade(requ);
 
@@ -232,5 +236,45 @@ public abstract class BaseController {
 
     }
 
+    //region (public) 获取支付实体 GetPayDto
+
+    /**
+     * 获取支付实体
+     * 必须在登录完成后调用
+     *
+     * @param request
+     * @return
+     */
+    public PayDto GetPayDto(HttpServletRequest request) {
+
+        PayDto payDto = new PayDto();
+
+        //初始化默认值
+        payDto.setOpenId(this.OpenId());
+
+        WechatRelationType wechatRelationType = null;
+
+        //获取浏览器版本
+        String userAgent = request.getHeader("User-Agent");
+        if (!org.apache.commons.lang3.StringUtils.isEmpty(userAgent)) {
+            userAgent = userAgent.toLowerCase();
+            boolean mini = userAgent.indexOf("miniprogram") > -1;
+            if (mini) {
+                wechatRelationType = WechatRelationType.AWKMINI;
+                WechatRelation wechatRelation = WechatLogic.GetWechatRelation(this.OpenId(), WechatRelationType.AWKMINI);
+                if (wechatRelation == null) {
+                    throw new TipException("未获取到小程序用户信息，暂无法支付");
+                }
+                payDto.setOpenId(wechatRelation.getRelationOpenId());
+            }
+        }
+
+        payDto.setPlatformAppId(ConfigLogic.GetPlatformAppId(wechatRelationType));
+        payDto.setPlatformToken(ConfigLogic.GetPlatformToken(wechatRelationType));
+
+        return payDto;
+
+    }
+    //endregion
 
 }
