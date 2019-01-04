@@ -195,16 +195,16 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
      */
     private int parseJsjId(HttpServletRequest request) {
         int jsjId = 0;
-        String keys = request.getParameter("keys");
+        String key = request.getParameter("key");
         String url = this.getFullURL(request);
         try {
-            if (!StringUtils.isEmpty(keys)) {
-                keys = URLDecoder.decode(keys, "UTF-8");
-                jsjId = Integer.parseInt(EncryptUtils.decrypt2(keys));
+            if (!StringUtils.isEmpty(key)) {
+                key = URLDecoder.decode(key, "UTF-8");
+                jsjId = Integer.parseInt(EncryptUtils.decrypt2(key));
             }
-            logger.info(String.format("解析正常：%s %d %s", keys, jsjId, url));
+            logger.info(String.format("解析正常：%s %d %s", key, jsjId, url));
         } catch (Exception ex) {
-            logger.error(String.format("解析出错：%s %d %s", keys, jsjId, url));
+            logger.error(String.format("解析出错：%s %d %s", key, jsjId, url));
         }
         return jsjId;
     }
