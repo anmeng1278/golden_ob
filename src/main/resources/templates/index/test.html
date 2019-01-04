@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>postMessage</title>
+</head>
+
+<body>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+<script type="text/javascript">
+    // wx.miniProgram.navigateBack({delta: 1})
+    // wx.miniProgram.postMessage({ data: '获取成功' })
+
+
+    wx.miniProgram.navigateTo({
+        url: '/pages/obpay/index?a=1&b=2',
+        success: function (resp) {
+            // 打开成功
+            alert(JSON.stringify(resp));
+        },
+        fail: function (resp) {
+            alert(JSON.stringify(resp));
+        },
+        complete: function (resp) {
+            alert(JSON.stringify(resp));
+        }
+    })
+
+</script>
+<br/>
+<th:block th:text="${mini}"></th:block>
+</body>
+</html>
