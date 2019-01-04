@@ -30,6 +30,9 @@
 
             $("em.purchase-num-reduce").click(function () {
                 var num = parseInt($(":text[name='num']").val(), 10);
+                if(isNaN(num)){
+                    return;
+                }
                 if (num <= 1) return;
                 num--;
                 $(":text[name='num']").val(num);
@@ -38,6 +41,9 @@
 
             $("em.purchase-num-add").click(function () {
                 var num = parseInt($(":text[name='num']").val(), 10);
+                if(isNaN(num)){
+                    num = 0;
+                }
                 if (num >= stockCount) {
                     return;
                 }
@@ -59,6 +65,10 @@
 
                 var activityId = [[${info.activityId}]];
                 var num = parseInt($(":text[name='num']").val(), 10);
+                if(isNaN(num)){
+                    TX.MSG.msg("请输入正确的数量");
+                    return;
+                }
 
                 //创建活动订单
                 createOrder({
@@ -119,7 +129,7 @@
                     <div class="purchase-discount-head">
                         <p class="purchase-discount-tips"><span>优惠组合</span></p>
                         <h2 class="purchase-discount-name" th:text="${info.activityName}">素园野生素食参谜</h2>
-                        <p class="purchase-discount-text" th:text="${info.introduce}">健康好参 立等即食</p>
+                        <p class="purchase-discount-text" th:text="${info.intro}">健康好参 立等即食</p>
                     </div>
                     <div class="purchase-discount-list clear">
 

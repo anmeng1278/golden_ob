@@ -39,6 +39,9 @@ $(function () {
         }
         var stockCount = window.specStockCount || 0;
         var n = parseInt($(this).prev().val(), 10);
+        if(isNaN(n)){
+            n=0;
+        }
         if (n >= stockCount) {
             return;
         }
@@ -69,6 +72,9 @@ $(function () {
             return;
         }
         var n = parseInt($(this).next().val(), 10);
+        if(isNaN(n)){
+            return;
+        }
         var num = n - 1;
         if (num == 0) {
             return
