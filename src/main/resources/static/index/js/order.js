@@ -87,7 +87,7 @@ function createOrder(data, callback) {
                 var paySign = resp.datas.pay.responseBody.paySign;
                 var appId = resp.datas.pay.responseBody.appId;
 
-                if (ob.mini == true) {
+                if (ob.mini) {
 
                     successUrl = encodeURIComponent(ob.host + successUrl);
                     url = encodeURIComponent(ob.host + url);
@@ -115,6 +115,14 @@ function createOrder(data, callback) {
                     return;
                 }
 
+                alert(timestamp);
+                alert(nonceStr);
+                alert(package);
+                alert(signType);
+                alert(paySign);
+                alert(appId);
+
+
                 //调起微信支付
                 wx.chooseWXPay({
                     appId: appId,
@@ -127,6 +135,7 @@ function createOrder(data, callback) {
                         location.href = successUrl;
                     },
                     fail: function (resp) {
+                        alert(JSON.stringify(resp))
                         TX.MSG.msg("对不起，支付失败了！", {time: 1500}, function () {
                             location.href = url;
                         });
