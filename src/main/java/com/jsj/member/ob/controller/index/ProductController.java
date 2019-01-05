@@ -109,7 +109,7 @@ public class ProductController extends BaseController {
         List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, openId);
         request.setAttribute("coupons", coupons);
 
-        if (info.getProductImgDtos() != null) {
+        if (info.getProductImgDtos() != null&& info.getProductImgDtos().size() > 0) {
             String imgUrl = info.getProductImgDtos().get(0).getImgPath();
             request.setAttribute("imgUrl", imgUrl);
         }
@@ -199,6 +199,11 @@ public class ProductController extends BaseController {
 
         double balance = MemberLogic.StrictChoiceSearch(this.User().getJsjId());
         request.setAttribute("balance", balance);
+
+        if (productDto.getProductImgDtos() != null && productDto.getProductImgDtos().size() > 0) {
+            String imgUrl = productDto.getProductImgDtos().get(0).getImgPath();
+            request.setAttribute("imgUrl", imgUrl);
+        }
 
         return "index/product/exchangeActivityDetail";
     }

@@ -26,8 +26,10 @@
 
 
         TX.INIT(function () {
+
+            //分享功能
             $("a.share-btn").click(function () {
-                $("div.share-layer").show();
+                ob.share();
             });
         });
 
@@ -131,7 +133,6 @@
     </div>
     <!--main end-->
 
-
     <!--footer start-->
     <div class="footer" th:if="${myDrawCount > 0}">
         <ul class="footer-ul">
@@ -148,14 +149,6 @@
     <!--footer end-->
 
     <a th:if="${myDrawCount == 0}" th:href="${ob.Nav('/')}" class="look-btn">去严选看看</a>
-
-    <div class="share-layer" style="display: none;">
-        <div class="share-layer-bg"></div>
-        <div class="share-layer-con">
-            <span class="share-layer-sanjiao"></span>
-            <p class="share-layer-p">点击右上角【•••】<br/>分享到朋友，朋友圈。<br/>让大家一起来试试手气吧</p>
-        </div>
-    </div>
 
 </div>
 </html>

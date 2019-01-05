@@ -29,23 +29,25 @@ public class BaseInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o,
+    public void postHandle(HttpServletRequest request, HttpServletResponse httpServletResponse, Object o,
                            ModelAndView modelAndView) throws Exception {
         for (BaseLogic bl : baseLogics) {
-            httpServletRequest.setAttribute(StringUtils.camelCase(bl.getClass().getSimpleName()), bl);
+            request.setAttribute(StringUtils.camelCase(bl.getClass().getSimpleName()), bl);
         }
-        httpServletRequest.setAttribute("ob", this);
+        request.setAttribute("ob", this);
 
         //获取浏览器版本
-        String userAgent = httpServletRequest.getHeader("User-Agent");
+        String userAgent = request.getHeader("User-Agent");
         Boolean mini = false;
         if (!org.apache.commons.lang3.StringUtils.isEmpty(userAgent)) {
             userAgent = userAgent.toLowerCase();
             mini = userAgent.indexOf("miniprogram") > -1;
         }
 
-        httpServletRequest.setAttribute("mini", mini);
-        httpServletRequest.setAttribute("virtualPath", webconfig.getVirtualPath());
+        request.setAttribute("mini", mini);
+        request.setAttribute("virtualPath", webconfig.getVirtualPath());
+        request.setAttribute("host", webconfig.getHost());
+
     }
 
     @Override
