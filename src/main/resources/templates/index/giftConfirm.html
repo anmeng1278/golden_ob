@@ -36,7 +36,7 @@
                         shareType: shareType
                     },
                     success: function (resp) {
-                        $("div.share-layer").show();
+                        ob.share();
                     }
                 })
 
@@ -181,14 +181,6 @@
     <div class="footer-bg"></div>
     <!--footer-bg end-->
 
-
-    <div class="share-layer" style="display: none;">
-        <div class="share-layer-bg"></div>
-        <div class="share-layer-con">
-            <span class="share-layer-sanjiao"></span>
-            <p class="share-layer-p">点击右上角【•••】<br/>分享到朋友，朋友圈。<br/>让大家一起来试试手气吧</p>
-        </div>
-    </div>
 
 </div>
 </html>

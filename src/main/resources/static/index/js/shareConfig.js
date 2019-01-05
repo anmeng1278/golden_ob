@@ -40,8 +40,7 @@ wx.ready(function () {
     console.log(shareConfig);
 
     if(ob.mini){
-
-        //TODO
+ 
         wx.miniProgram.postMessage({
             data: {
                 link: "/pages/obbrowser/index?url="+encodeURIComponent(shareConfig.link),

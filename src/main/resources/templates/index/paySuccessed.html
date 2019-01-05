@@ -18,11 +18,17 @@
             link: shareUrl,
             imgUrl: "http://img.jsjinfo.cn/7e44a6ab4aa7eedf1e3062ec24c340b9"
         };
+
+        $(function () {
+            //分享功能
+            $("a.share-btn").click(function () {
+                ob.share();
+            });
+        });
+
     </script>
 
-    <!--引入js-->
-    <script th:src="${ob.Url('/index/js/PaySuccess.js')}" type="text/javascript"
-            charset="utf-8"></script>
+
 
 </th:block>
 
@@ -38,14 +44,6 @@
         <a th:href="${ob.Nav('/stock')}" class="look-stock-btn">查看库存</a>
         <div class="share-hongbao">
             <a href="javascript:void(0);" class="share-btn">分享给好友</a>
-        </div>
-    </div>
-
-    <div class="share-layer" style="display: none;">
-        <div class="share-layer-bg"></div>
-        <div class="share-layer-con">
-            <span class="share-layer-sanjiao"></span>
-            <p class="share-layer-p">点击右上角【•••】<br/>分享到朋友，朋友圈。<br/>让大家一起来试试手气吧</p>
         </div>
     </div>
 
