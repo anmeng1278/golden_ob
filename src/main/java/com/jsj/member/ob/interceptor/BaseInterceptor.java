@@ -36,15 +36,17 @@ public class BaseInterceptor implements HandlerInterceptor {
         }
         request.setAttribute("ob", this);
 
-        //获取浏览器版本
-        String userAgent = request.getHeader("User-Agent");
-        Boolean mini = false;
-        if (!org.apache.commons.lang3.StringUtils.isEmpty(userAgent)) {
-            userAgent = userAgent.toLowerCase();
-            mini = userAgent.indexOf("miniprogram") > -1;
+        if (request.getAttribute("mini") == null) {
+            //获取浏览器版本
+            String userAgent = request.getHeader("User-Agent");
+            Boolean mini = false;
+            if (!org.apache.commons.lang3.StringUtils.isEmpty(userAgent)) {
+                userAgent = userAgent.toLowerCase();
+                mini = userAgent.indexOf("miniprogram") > -1;
+            }
+            request.setAttribute("mini", mini);
         }
 
-        request.setAttribute("mini", mini);
         request.setAttribute("virtualPath", webconfig.getVirtualPath());
         request.setAttribute("host", webconfig.getHost());
 
