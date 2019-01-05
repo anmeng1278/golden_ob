@@ -1,7 +1,7 @@
 package com.jsj.member.ob.logic;
 
 import com.jsj.member.ob.App;
-import com.jsj.member.ob.enums.WechatRelationType;
+import com.jsj.member.ob.enums.SourceType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +16,7 @@ public class WechatLogicTest {
     @Test
     public void bindRelation() {
 
-        WechatLogic.BindRelation("oeQDZt6hGZQDY0gUtw2FwNSVTYFw", "oG5Z_4iYeizOQSJ8za5qM0FMseQA", WechatRelationType.AWKMINI);
+        WechatLogic.BindRelation("oeQDZt6hGZQDY0gUtw2FwNSVTYFw", "oG5Z_4iYeizOQSJ8za5qM0FMseQA", SourceType.AWKMINI);
 
     }
 }

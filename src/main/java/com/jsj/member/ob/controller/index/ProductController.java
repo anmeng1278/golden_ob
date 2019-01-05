@@ -17,10 +17,12 @@ import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.SecKillStatus;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
+import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -402,11 +404,12 @@ public class ProductController extends BaseController {
             String successUrl = String.format("/pay/success/%s", resp.getOrderUniqueCode());
             if (resp.getAmount() > 0) {
                 //调起微信支付
-                GetPayTradeResp pay = this.createPay(request, resp.getOrderId());
-                if (!pay.getResponseHead().getCode().equals("0000")) {
-                    throw new TipException(pay.getResponseHead().getMessage());
+                TwoTuple<GetPayTradeResp, SourceType> twoTuple = this.createPay(resp.getOrderId());
+                if (!twoTuple.first.getResponseHead().getCode().equals("0000")) {
+                    throw new TipException(twoTuple.first.getResponseHead().getMessage());
                 }
-                data.put("pay", pay);
+                data.put("pay", twoTuple.first);
+                data.put("source", twoTuple.second.getValue());
             }
             data.put("successUrl", this.Url(successUrl));
         }
@@ -452,7 +455,7 @@ public class ProductController extends BaseController {
         int productSpecId = jsonObjects.get(0).getInteger("productSpecId");
 
         int createTime = DateUtils.getCurrentUnixTime();
-        SecKillStatus secKillStatus = ActivityLogic.RedisKill(activityId, productId, productSpecId, this.OpenId());
+        SecKillStatus secKillStatus = ActivityLogic.RedisKill(activityId, productId, productSpecId, this.OpenId(), this.GetSourceType(request));
 
         if (secKillStatus.equals(SecKillStatus.SUCCESS)) {
             //秒杀成功
@@ -520,6 +523,7 @@ public class ProductController extends BaseController {
             default:
                 throw new TipException("方法暂未实现");
         }
+        requ.setSourceType(this.GetSourceType(request));
         return requ;
     }
     //endregion

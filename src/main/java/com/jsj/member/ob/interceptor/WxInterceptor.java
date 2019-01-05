@@ -4,7 +4,7 @@ import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.http.UserSession;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenRequ;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenResp;
-import com.jsj.member.ob.enums.WechatRelationType;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.utils.EncryptUtils;
@@ -221,10 +221,10 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
         try {
 
-            WechatRelationType wechatRelationType = WechatRelationType.valueOf(Integer.parseInt(typeid));
-            WechatLogic.BindRelation(openId, relationOpenId, wechatRelationType);
+            SourceType sourceType = SourceType.valueOf(Integer.parseInt(typeid));
+            WechatLogic.BindRelation(openId, relationOpenId, sourceType);
 
-            logger.info(String.format("绑定成功：%s %s %s", openId, relationOpenId, wechatRelationType.getMessage()));
+            logger.info(String.format("绑定成功：%s %s %s", openId, relationOpenId, sourceType.getMessage()));
 
         } catch (Exception ex) {
             logger.error(String.format("绑定失败：%s %s %s", openId, relationOpenId, typeid));

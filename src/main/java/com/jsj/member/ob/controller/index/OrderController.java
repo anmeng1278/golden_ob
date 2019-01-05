@@ -5,8 +5,10 @@ import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.enums.OrderFlag;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.OrderLogic;
+import com.jsj.member.ob.tuple.TwoTuple;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,16 +64,16 @@ public class OrderController extends BaseController {
     public RestResponseBo createPay(HttpServletRequest request) throws Exception {
 
         int orderId = Integer.parseInt(request.getParameter("orderId"));
-        GetPayTradeResp pay = this.createPay(request, orderId);
+        TwoTuple<GetPayTradeResp, SourceType> twoTuple = this.createPay(orderId);
 
         OrderDto orderDto = OrderLogic.GetOrder(orderId);
-
         HashMap<String, Object> data = new HashMap<>();
 
-        if (!pay.getResponseHead().getCode().equals("0000")) {
-            throw new TipException(pay.getResponseHead().getMessage());
+        if (!twoTuple.first.getResponseHead().getCode().equals("0000")) {
+            throw new TipException(twoTuple.first.getResponseHead().getMessage());
         }
-        data.put("pay", pay);
+        data.put("pay", twoTuple.first);
+        data.put("source", twoTuple.second.getValue());
 
         String successUrl = String.format("/pay/success/%s", orderDto.getOrderUniqueCode());
         data.put("successUrl", this.Url(successUrl));

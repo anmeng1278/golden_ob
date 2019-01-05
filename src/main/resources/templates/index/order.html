@@ -57,13 +57,23 @@
                             var signType = resp.datas.pay.responseBody.signType;
                             var paySign = resp.datas.pay.responseBody.paySign;
 
+                            //订单来源 0空铁公众号 1空铁小程序 2金色世纪小程序 3金色世纪公众号
+                            var source = resp.datas.source;
+
                             if (typeof wx == "undefined") {
                                 TX.MSG.msg("当前环境无法调用微信客户端！", {time: 1500}, function () {
                                 });
                                 return;
                             }
 
-                            if (wx && ob.mini) {
+                            //小程序创建的订单或小程序环境，需要调起小程序支付
+                            if (ob.mini || source == 1) {
+
+                                if (source != 1) {
+                                    TX.MSG.msg("请到“空铁管家”公众号内完成支付！", {time: 5000}, function () {
+                                    });
+                                    return;
+                                }
 
                                 successUrl = encodeURIComponent(ob.host + successUrl);
 
@@ -84,27 +94,27 @@
                                     }
                                 })
 
-                                return;
-                            }
+                            } else {
 
-                            //调起微信支付
-                            wx.chooseWXPay({
-                                appId: appId,
-                                timestamp: timestamp,
-                                nonceStr: nonceStr,
-                                package: package,
-                                signType: signType,
-                                paySign: paySign,
-                                success: function (resp) {
-                                    location.href = successUrl;
-                                },
-                                fail: function (resp) {
-                                    TX.MSG.msg("对不起，支付失败了！", {time: 1500});
-                                },
-                                cancel: function (resp) {
-                                    TX.MSG.msg("您已取消支付！", {time: 1500});
-                                }
-                            });
+                                //调起微信支付
+                                wx.chooseWXPay({
+                                    appId: appId,
+                                    timestamp: timestamp,
+                                    nonceStr: nonceStr,
+                                    package: package,
+                                    signType: signType,
+                                    paySign: paySign,
+                                    success: function (resp) {
+                                        location.href = successUrl;
+                                    },
+                                    fail: function (resp) {
+                                        TX.MSG.msg("对不起，支付失败了！", {time: 1500});
+                                    },
+                                    cancel: function (resp) {
+                                        TX.MSG.msg("您已取消支付！", {time: 1500});
+                                    }
+                                });
+                            }
 
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});

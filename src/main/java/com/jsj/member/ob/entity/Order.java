@@ -11,7 +11,7 @@ import java.io.Serializable;
  *   @description : Order 订单表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2019-01-04
+ *   @since 2019-01-05
  */
 @TableName("_order")
 public class Order implements Serializable {
@@ -82,6 +82,11 @@ public class Order implements Serializable {
      */
 	@TableField("type_id")
 	private Integer typeId;
+    /**
+     * 订单来源 0空铁公众号 1空铁小程序 2金色世纪小程序 3金色世纪公众号
+     */
+	@TableField("order_source_id")
+	private Integer orderSourceId;
     /**
      * 支付时间
      */
@@ -221,6 +226,14 @@ public class Order implements Serializable {
 		this.typeId = typeId;
 	}
 
+	public Integer getOrderSourceId() {
+		return orderSourceId;
+	}
+
+	public void setOrderSourceId(Integer orderSourceId) {
+		this.orderSourceId = orderSourceId;
+	}
+
 	public Integer getPayTime() {
 		return payTime;
 	}
@@ -279,6 +292,7 @@ public class Order implements Serializable {
 			", activityId=" + activityId +
 			", activityOrderId=" + activityOrderId +
 			", typeId=" + typeId +
+			", orderSourceId=" + orderSourceId +
 			", payTime=" + payTime +
 			", expiredTime=" + expiredTime +
 			", createTime=" + createTime +

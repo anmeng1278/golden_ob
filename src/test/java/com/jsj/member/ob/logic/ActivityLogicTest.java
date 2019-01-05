@@ -4,6 +4,7 @@ import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.entity.Activity;
 import com.jsj.member.ob.enums.SecKillStatus;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.ThreadPoolUtils;
 import org.junit.Test;
@@ -81,7 +82,7 @@ public class ActivityLogicTest {
             String userId = userIds.get(i);
 
             Future future = ThreadPoolUtils.submit(() -> {
-                SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, 3, 4, userId);
+                SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, 3, 4, userId, SourceType.AWKTC);
 
                 if (secKillStatus == SecKillStatus.REPEAT) {
                     userIds1.add(userId);
@@ -149,7 +150,7 @@ public class ActivityLogicTest {
         //activity.setStockCount(3);
         //ActivityLogic.Sync2Redis(activity);
 
-        SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, 3, 4, "10001");
+        SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, 3, 4, "10001", SourceType.AWKTC);
         System.out.println(secKillStatus.getMessage());
 
     }

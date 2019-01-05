@@ -2,7 +2,9 @@ package com.jsj.member.ob.enums;
 
 import com.jsj.member.ob.exception.FatalException;
 
-public enum WechatRelationType {
+public enum SourceType {
+
+    AWKTC(0, "空铁公众号"),
 
     AWKMINI(1, "空铁小程序"),
 
@@ -15,7 +17,7 @@ public enum WechatRelationType {
 
     private String message;
 
-    WechatRelationType(Integer value, String message) {
+    SourceType(Integer value, String message) {
         this.value = value;
         this.message = message;
     }
@@ -28,8 +30,10 @@ public enum WechatRelationType {
         return message;
     }
 
-    public static WechatRelationType valueOf(int value) {
+    public static SourceType valueOf(int value) {
         switch (value) {
+            case 0:
+                return AWKTC;
             case 1:
                 return AWKMINI;
             case 2:
