@@ -89,10 +89,17 @@ function createOrder(data, callback) {
 
                 if (ob.mini == true) {
 
+                    successUrl = encodeURIComponent(ob.host + successUrl);
+                    url = encodeURIComponent(ob.host + url);
+
                     package = encodeURIComponent(package);
-                    var url = '/pages/obpay/index?timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
+
+                    var miniUrl = '/pages/obpay/index?source=2&timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
+                    miniUrl += "&successUrl=" + successUrl;
+                    miniUrl += "&failUrl=" + url;
+
                     wx.miniProgram.navigateTo({
-                        url: url,
+                        url: miniUrl,
                         success: function (resp) {
                             // 打开成功
                             // alert(JSON.stringify(resp));

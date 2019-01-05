@@ -9,18 +9,18 @@ if (typeof shareConfig == "undefined") {
 }
 
 //兼容小程序分享
-if (typeof wx != "undefined" && typeof wx.miniProgram != "undefined") {
-    wx.miniProgram.navigateBack({delta: 1});
-    // wx.miniProgram.postMessage({data: '获取成功'});
-    wx.miniProgram.postMessage({
-        data: {
-            link: shareConfig.link,
-            title: shareConfig.title,
-            desc: shareConfig.desc,
-            imgUrl: shareConfig.imgUrl
-        }
-    });
-}
+// if (typeof wx != "undefined" && typeof wx.miniProgram != "undefined") {
+//     // wx.miniProgram.navigateBack({delta: 1});
+//     // wx.miniProgram.postMessage({data: '获取成功'});
+//     wx.miniProgram.postMessage({
+//         data: {
+//             link: shareConfig.link,
+//             title: shareConfig.title,
+//             desc: shareConfig.desc,
+//             imgUrl: shareConfig.imgUrl
+//         }
+//     });
+// }
 
 wx.ready(function () {
 
@@ -30,7 +30,7 @@ wx.ready(function () {
             shareConfig.link = url + shareConfig.link;
         }
     } else {
-        shareConfig.link = url + virtualPath;
+        shareConfig.link = url + ob.virtualPath;
     }
 
     shareConfig.desc = shareConfig.desc || "服务覆盖全国100个城市，300万商旅人士的出行首选！";
@@ -38,6 +38,23 @@ wx.ready(function () {
     shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68";
 
     console.log(shareConfig);
+
+    if(ob.mini){
+
+        //TODO
+        wx.miniProgram.postMessage({
+            data: {
+                link: "/pages/obbrowser/index?url="+encodeURIComponent(shareConfig.link),
+                // link: "/pages/strictSelection/index?url="+encodeURIComponent("https://h5.ktgj.com/ob/exchange"),
+                title: shareConfig.title,
+                desc: shareConfig.desc,
+                imgUrl: shareConfig.imgUrl
+            }
+        });
+
+        return;
+    }
+
     wx.onMenuShareAppMessage({
         title: shareConfig.title, // 分享标题
         desc: shareConfig.desc, // 分享描述

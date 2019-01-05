@@ -12,6 +12,17 @@
 
     <script type="text/javascript" th:inline="javascript">
 
+        var shareTitle = "我在空铁管家发现了" + [[${info.productName}]];
+
+        shareConfig = {
+            title: shareTitle,
+            desc: [[${info.introduce}]],
+            link: location.href,
+            imgUrl: [[${imgUrl}]]
+        };
+
+        alert(shareConfig.imgUrl);
+
         TX.INIT(function () {
 
             $(".purchase-num-reduce").addClass("disabled");

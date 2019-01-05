@@ -6,7 +6,15 @@
 <head th:replace="index/common/layout :: header('兑换专区', '', '')"></head>
 
 <th:block layout:fragment="script">
-
+    <script type="text/javascript" th:inline="javascript">
+        var shareTitle = "空铁管家会员兑换专区";
+        shareConfig = {
+            title: shareTitle,
+            link: location.href,
+            desc:"会员权益兑换",
+            imgUrl: [[${imgUrl}]]
+        };
+    </script>
 </th:block>
 
 <th:block layout:fragment="css">

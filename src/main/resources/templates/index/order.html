@@ -65,18 +65,22 @@
 
                             if (wx && ob.mini) {
 
+                                successUrl = encodeURIComponent(ob.host + successUrl);
+
                                 var url = '/pages/obpay/index?timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
+                                url += "&successUrl=" + successUrl;
+
                                 wx.miniProgram.navigateTo({
                                     url: url,
                                     success: function (resp) {
                                         // 打开成功
-                                        alert(JSON.stringify(resp));
+                                        // alert(JSON.stringify(resp));
                                     },
                                     fail: function (resp) {
-                                        alert(JSON.stringify(resp));
+                                        // alert(JSON.stringify(resp));
                                     },
                                     complete: function (resp) {
-                                        alert(JSON.stringify(resp));
+                                        // alert(JSON.stringify(resp));
                                     }
                                 })
 

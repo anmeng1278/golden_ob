@@ -36,6 +36,7 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     Webconfig webconfig;
 
+
     //region (private) 获取完整Url路径 getFullURL
 
     /**
@@ -55,6 +56,7 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
         } else {
             url = requestURL.append('?').append(queryString).toString();
         }
+        //return url;
         if (url.indexOf("https") > -1) {
             return url;
         }
@@ -62,11 +64,10 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     }
     //endregion
 
-    //region (public) 拦截器，获取微信授权信息 preHandle postHandle
+    //region 拦截器，获取微信授权信息
 
     /**
      * 拦截器，获取微信授权信息
-     *
      * @param request
      * @param response
      * @param handler
@@ -230,7 +231,6 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
         }
 
     }
-
     //endregion
 
 }
