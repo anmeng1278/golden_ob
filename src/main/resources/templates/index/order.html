@@ -67,7 +67,7 @@
 
                                 successUrl = encodeURIComponent(ob.host + successUrl);
 
-                                var url = '/pages/obpay/index?timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
+                                var url = ob.conf.pay + '?timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
                                 url += "&successUrl=" + successUrl;
 
                                 wx.miniProgram.navigateTo({

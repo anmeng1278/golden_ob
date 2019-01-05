@@ -94,7 +94,7 @@ function createOrder(data, callback) {
 
                     package = encodeURIComponent(package);
 
-                    var miniUrl = '/pages/obpay/index?source=2&timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
+                    var miniUrl = ob.conf.pay + '?source=2&timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
                     miniUrl += "&successUrl=" + successUrl;
                     miniUrl += "&failUrl=" + url;
 

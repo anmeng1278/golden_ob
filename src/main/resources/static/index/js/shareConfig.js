@@ -40,10 +40,10 @@ wx.ready(function () {
     console.log(shareConfig);
 
     if(ob.mini){
- 
+
         wx.miniProgram.postMessage({
             data: {
-                link: "/pages/obbrowser/index?url="+encodeURIComponent(shareConfig.link),
+                link: ob.conf.browser + "?url="+encodeURIComponent(shareConfig.link),
                 // link: "/pages/strictSelection/index?url="+encodeURIComponent("https://h5.ktgj.com/ob/exchange"),
                 title: shareConfig.title,
                 desc: shareConfig.desc,
