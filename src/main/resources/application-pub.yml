@@ -50,7 +50,7 @@ webconfig:
   #虚拟目录
   virtualPath: "/ob"
   #域名
-  host: "http://h5.ktgj.com"
+  host: "https://h5.ktgj.com"
 
   ## 严选活动码生成地址
   activityUrl: https://s5.jsjinfo.cn/third/v1/ThirdApi/API2Partner.aspx
