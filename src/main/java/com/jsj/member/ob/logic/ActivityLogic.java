@@ -9,6 +9,7 @@ import com.jsj.member.ob.entity.ActivityProduct;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.SecKillStatus;
 import com.jsj.member.ob.enums.SingletonMap;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.exception.ActivityStockException;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.rabbitmq.MQSender;
@@ -574,7 +575,7 @@ public class ActivityLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static SecKillStatus RedisKill(int activityId, int productId, int productSpecId, String openId) {
+    public static SecKillStatus RedisKill(int activityId, int productId, int productSpecId, String openId, SourceType sourceType) {
 
         ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, productId, productSpecId));
         Jedis jedis = null;
@@ -637,6 +638,7 @@ public class ActivityLogic extends BaseLogic {
             dto.setOpenId(openId);
             dto.setProductId(productId);
             dto.setProductSpecId(productSpecId);
+            dto.setSourceType(sourceType);
 
             activityLogic.mqSender.sendNormal(dto);
 

@@ -8,12 +8,14 @@ import com.jsj.member.ob.dto.thirdParty.GetPayTradeRequ;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.entity.WechatRelation;
 import com.jsj.member.ob.enums.OrderStatus;
-import com.jsj.member.ob.enums.WechatRelationType;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.redis.AccessKey;
 import com.jsj.member.ob.redis.RedisService;
+import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.TupleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -201,10 +203,10 @@ public abstract class BaseController {
      * @param orderId
      * @return
      */
-    public GetPayTradeResp createPay(HttpServletRequest request, int orderId) {
+    public TwoTuple<GetPayTradeResp, SourceType> createPay(int orderId) {
 
-        PayDto payDto = this.GetPayDto(request);
         OrderDto orderDto = OrderLogic.GetOrder(orderId);
+        PayDto payDto = this.GetPayDto(orderDto.getSourceType());
 
         //if (!orderDto.getOpenId().equals(payDto.getOpenId())) {
         //    throw new TipException("非操作人订单不允许支付");
@@ -232,7 +234,7 @@ public abstract class BaseController {
             throw new TipException(resp.getResponseHead().getMessage());
         }
 
-        return resp;
+        return TupleUtils.tuple(resp, orderDto.getSourceType());
 
     }
 
@@ -247,34 +249,60 @@ public abstract class BaseController {
      */
     public PayDto GetPayDto(HttpServletRequest request) {
 
+        SourceType sourceType = this.GetSourceType(request);
+        return this.GetPayDto(sourceType);
+
+    }
+
+
+    public PayDto GetPayDto(SourceType sourceType) {
+
         PayDto payDto = new PayDto();
 
         //初始化默认值
         payDto.setOpenId(this.OpenId());
 
-        WechatRelationType wechatRelationType = null;
-
-        //获取浏览器版本
-        String userAgent = request.getHeader("User-Agent");
-        if (!org.apache.commons.lang3.StringUtils.isEmpty(userAgent)) {
-            userAgent = userAgent.toLowerCase();
-            boolean mini = userAgent.indexOf("miniprogram") > -1;
-            if (mini) {
-                wechatRelationType = WechatRelationType.AWKMINI;
-                WechatRelation wechatRelation = WechatLogic.GetWechatRelation(this.OpenId(), WechatRelationType.AWKMINI);
+        switch (sourceType) {
+            case AWKTC:
+                payDto.setOpenId(this.OpenId());
+                break;
+            default:
+                WechatRelation wechatRelation = WechatLogic.GetWechatRelation(this.OpenId(), sourceType);
                 if (wechatRelation == null) {
-                    throw new TipException("未获取到小程序用户信息，暂无法支付");
+                    throw new TipException("未获取用户信息，暂无法支付");
                 }
                 payDto.setOpenId(wechatRelation.getRelationOpenId());
-            }
+                break;
         }
 
-        payDto.setPlatformAppId(ConfigLogic.GetPlatformAppId(wechatRelationType));
-        payDto.setPlatformToken(ConfigLogic.GetPlatformToken(wechatRelationType));
+        payDto.setPlatformAppId(ConfigLogic.GetPlatformAppId(sourceType));
+        payDto.setPlatformToken(ConfigLogic.GetPlatformToken(sourceType));
 
         return payDto;
 
     }
+
     //endregion
 
+    //region (public) 获取请求来源 GetSourceType
+
+    /**
+     * 获取请求来源
+     *
+     * @param request
+     * @return
+     */
+    public SourceType GetSourceType(HttpServletRequest request) {
+
+        String userAgent = request.getHeader("User-Agent");
+        if (!org.apache.commons.lang3.StringUtils.isEmpty(userAgent)) {
+            userAgent = userAgent.toLowerCase();
+            if (userAgent.indexOf("miniprogram") > -1) {
+                return SourceType.AWKMINI;
+            }
+        }
+
+        return SourceType.AWKTC;
+    }
+    //endregion
 }

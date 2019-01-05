@@ -134,6 +134,8 @@ public class OrderSeckill extends OrderBase {
         order.setExpiredTime(DateUtils.getCurrentUnixTime() + Constant.ORDER_EXPIRED_TIME);
         order.setOrderUniqueCode(StringUtils.UUID32());
 
+        order.setOrderSourceId(requ.getSourceType().getValue());
+
         //用于创建商品订单
         List<OrderProduct> orderProducts = new ArrayList<>();
 

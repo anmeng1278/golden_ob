@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.entity.Wechat;
 import com.jsj.member.ob.entity.WechatRelation;
-import com.jsj.member.ob.enums.WechatRelationType;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.service.WechatRelationService;
 import com.jsj.member.ob.service.WechatService;
 import com.jsj.member.ob.utils.DateUtils;
@@ -169,9 +169,9 @@ public class WechatLogic extends BaseLogic {
      *
      * @param openId
      * @param relationOpenId
-     * @param wechatRelationType
+     * @param sourceType
      */
-    public static void BindRelation(String openId, String relationOpenId, WechatRelationType wechatRelationType) {
+    public static void BindRelation(String openId, String relationOpenId, SourceType sourceType) {
 
         if (StringUtils.isEmpty(openId)) {
             return;
@@ -183,7 +183,7 @@ public class WechatLogic extends BaseLogic {
         Wrapper<WechatRelation> wrapper = new EntityWrapper<>();
         wrapper.where("open_id = {0}", openId);
         wrapper.where("relation_open_id = {0}", relationOpenId);
-        wrapper.where("type_id = {0}", wechatRelationType.getValue());
+        wrapper.where("type_id = {0}", sourceType.getValue());
 
         WechatRelation wechatRelation = wechatLogic.wechatRelationService.selectOne(wrapper);
         //已绑定
@@ -194,7 +194,7 @@ public class WechatLogic extends BaseLogic {
         wechatRelation = new WechatRelation();
         wechatRelation.setOpenId(openId);
         wechatRelation.setRelationOpenId(relationOpenId);
-        wechatRelation.setTypeId(wechatRelationType.getValue());
+        wechatRelation.setTypeId(sourceType.getValue());
         wechatRelation.setCreateTime(DateUtils.getCurrentUnixTime());
         wechatRelation.setUpdateTime(DateUtils.getCurrentUnixTime());
 
@@ -209,14 +209,14 @@ public class WechatLogic extends BaseLogic {
      * 根据openId获取绑定关系
      *
      * @param openId
-     * @param wechatRelationType
+     * @param sourceType
      * @return
      */
-    public static WechatRelation GetWechatRelation(String openId, WechatRelationType wechatRelationType) {
+    public static WechatRelation GetWechatRelation(String openId, SourceType sourceType) {
 
         Wrapper<WechatRelation> wrapper = new EntityWrapper<>();
         wrapper.where("open_id = {0}", openId);
-        wrapper.where("type_id = {0}", wechatRelationType.getValue());
+        wrapper.where("type_id = {0}", sourceType.getValue());
 
         WechatRelation wechatRelation = wechatLogic.wechatRelationService.selectOne(wrapper);
         return wechatRelation;

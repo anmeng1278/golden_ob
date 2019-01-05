@@ -1,7 +1,7 @@
 package com.jsj.member.ob.logic;
 
 import com.jsj.member.ob.config.Webconfig;
-import com.jsj.member.ob.enums.WechatRelationType;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.exception.TipException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,15 +31,15 @@ public class ConfigLogic extends BaseLogic {
     /**
      * 获取支付的AppId
      *
-     * @param wechatRelationType
+     * @param sourceType
      * @return
      */
-    public static String GetPlatformAppId(WechatRelationType wechatRelationType) {
+    public static String GetPlatformAppId(SourceType sourceType) {
         String platformAppId = configLogic.webconfig.getPlatformAppId();
-        if (wechatRelationType == null) {
+        if (sourceType == null) {
             return platformAppId;
         }
-        switch (wechatRelationType) {
+        switch (sourceType) {
             case AWKMINI:
                 return String.format("%s-mini", platformAppId);
             default:
@@ -53,15 +53,15 @@ public class ConfigLogic extends BaseLogic {
     /**
      * 获取支付的AppToken
      *
-     * @param wechatRelationType
+     * @param sourceType
      * @return
      */
-    public static String GetPlatformToken(WechatRelationType wechatRelationType) {
+    public static String GetPlatformToken(SourceType sourceType) {
         String platformToken = configLogic.webconfig.getPlatformToken();
-        if (wechatRelationType == null) {
+        if (sourceType == null) {
             return platformToken;
         }
-        switch (wechatRelationType) {
+        switch (sourceType) {
             case AWKMINI:
                 return String.format("%s-mini", platformToken);
             default:
