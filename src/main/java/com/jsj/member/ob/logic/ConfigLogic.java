@@ -40,6 +40,8 @@ public class ConfigLogic extends BaseLogic {
             return platformAppId;
         }
         switch (sourceType) {
+            case AWKTC:
+                return platformAppId;
             case AWKMINI:
                 return String.format("%s-mini", platformAppId);
             default:
@@ -62,6 +64,8 @@ public class ConfigLogic extends BaseLogic {
             return platformToken;
         }
         switch (sourceType) {
+            case AWKTC:
+                return platformToken;
             case AWKMINI:
                 return String.format("%s-mini", platformToken);
             default:
