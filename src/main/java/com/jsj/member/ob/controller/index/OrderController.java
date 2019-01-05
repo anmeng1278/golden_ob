@@ -45,7 +45,7 @@ public class OrderController extends BaseController {
 
         request.setAttribute("orderDtos", orderDtos);
         request.setAttribute("orderFlag", orderFlag);
-        request.setAttribute("mini", true);
+        //request.setAttribute("mini", true);
         return "index/order";
     }
 
