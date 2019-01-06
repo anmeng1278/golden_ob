@@ -69,11 +69,11 @@
                             //小程序创建的订单或小程序环境，需要调起小程序支付
                             if (ob.mini) {
 
-                                // if (source != 1) {
-                                //     TX.MSG.msg("请到“空铁管家”公众号内完成支付！", {time: 5000}, function () {
-                                //     });
-                                //     return;
-                                // }
+                                if (source != 1) {
+                                    TX.MSG.msg("请到“空铁管家”公众号内完成支付！", {time: 5000}, function () {
+                                    });
+                                    return;
+                                }
 
                                 successUrl = encodeURIComponent(ob.host + successUrl);
 
@@ -96,11 +96,11 @@
 
                             } else {
 
-                                // if(source == 1){
-                                //     TX.MSG.msg("请到“空铁管家”小程序内完成支付！", {time: 5000}, function () {
-                                //     });
-                                //     return;
-                                // }
+                                if(source == 1){
+                                    TX.MSG.msg("请到“空铁管家”小程序内完成支付！", {time: 5000}, function () {
+                                    });
+                                    return;
+                                }
 
                                 //调起微信支付
                                 wx.chooseWXPay({
@@ -114,6 +114,7 @@
                                         location.href = successUrl;
                                     },
                                     fail: function (resp) {
+                                        alert(JSON.stringify(resp));
                                         TX.MSG.msg("对不起，支付失败了！", {time: 1500});
                                     },
                                     cancel: function (resp) {
