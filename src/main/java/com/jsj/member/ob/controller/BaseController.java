@@ -203,10 +203,12 @@ public abstract class BaseController {
      * @param orderId
      * @return
      */
-    public TwoTuple<GetPayTradeResp, SourceType> createPay(int orderId) {
+    public TwoTuple<GetPayTradeResp, SourceType> createPay(HttpServletRequest request, int orderId) {
 
         OrderDto orderDto = OrderLogic.GetOrder(orderId);
-        PayDto payDto = this.GetPayDto(orderDto.getSourceType());
+        //PayDto payDto = this.GetPayDto(orderDto.getSourceType());
+
+        PayDto payDto = this.GetPayDto(request);
 
         //if (!orderDto.getOpenId().equals(payDto.getOpenId())) {
         //    throw new TipException("非操作人订单不允许支付");
