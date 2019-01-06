@@ -404,7 +404,7 @@ public class ProductController extends BaseController {
             String successUrl = String.format("/pay/success/%s", resp.getOrderUniqueCode());
             if (resp.getAmount() > 0) {
                 //调起微信支付
-                TwoTuple<GetPayTradeResp, SourceType> twoTuple = this.createPay(resp.getOrderId());
+                TwoTuple<GetPayTradeResp, SourceType> twoTuple = this.createPay(request, resp.getOrderId());
                 if (!twoTuple.first.getResponseHead().getCode().equals("0000")) {
                     throw new TipException(twoTuple.first.getResponseHead().getMessage());
                 }
