@@ -56,11 +56,11 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
         } else {
             url = requestURL.append('?').append(queryString).toString();
         }
-        //return url;
-        if (url.indexOf("https") > -1) {
-            return url;
-        }
-        return url.replaceAll("http", "https");
+        return url;
+        //if (url.indexOf("https") > -1) {
+        //    return url;
+        //}
+        //return url.replaceAll("http", "https");
     }
     //endregion
 
