@@ -30,7 +30,6 @@ build_deploy:
   script:
     - echo "开始编译"
     - echo $PWD
-    - mvn clean package -DskipTests
 
     - echo "开始发布"
     - pname="memberob"
@@ -48,11 +47,7 @@ build_deploy:
     -   docker stop $(docker ps -f "name=${pname}" -q)
     - fi
 
-    - docker run -d --rm \
-    - -p 8090:80 \
-    - -e RUN_MODEL="--spring.profiles.active=pub" \
-    - --name ${pname} \
-    - maven.jsjit.cn:9911/member/ob:latest ;
+    - docker run -d --rm -p 8090:80 -e RUN_MODEL="--spring.profiles.active=pub" --name ${pname} maven.jsjit.cn:9911/member/ob:latest
 
     - echo "服务创建 [OK]"
 
