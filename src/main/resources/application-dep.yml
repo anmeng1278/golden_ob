@@ -1,0 +1,120 @@
+server:
+  port: 80
+
+logging:
+  level:
+    com:
+      jsj:
+        member:
+          ob:
+            dao: info
+#spring
+spring:
+  datasource:
+      type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:mysql://****:3306/golden_ob?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      username: zhangning
+      password: zhangning123
+      driver-class-name: com.mysql.jdbc.Driver
+#  redis:
+#    host: 172.16.5.64
+#    port: 6379
+#    timeout: 10000
+#    pool:
+#      max-idle: 500
+#      max-wait: 500
+#      max-active: 1000
+  rabbitmq:
+    host: 172.16.2.28
+    port: 5672
+    username: jsj
+    password: jssj@jssj
+    virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
+  redis:
+    host: 172.16.5.143
+    timeout: 10000
+    port: 16379
+    password: JSB@#$%2345
+
+webconfig:
+  # 图片服务器
+  imgServerURL: http://img.jsjinfo.cn/upload
+  # 是否上传到图片服务器 (true为上传到图片服务器 false为上传到本地服务器)
+  imgServerSwitch: true
+  # 公众号appid
+  appId: wx555b169abb4d62ce
+  # 公众号 appSecrect
+  appSecrect: a8eb3f7e02ed7cb761220cb4363ff2b6
+
+  #虚拟目录
+  virtualPath: "/ob"
+  #域名
+  host: "https://h5.ktgj.com"
+
+  ## 严选活动码生成地址
+  activityUrl: https://s5.jsjinfo.cn/third/v1/ThirdApi/API2Partner.aspx
+
+  ## 开卡地址
+  openCardUrl: http://s5.jsjinfo.cn/awkmanage/v3/ktapi/OpenVPCardFromWx
+
+  ## 严选登录名
+  partnerLoginName: jinseyanxuan
+  ## 严选登录密码
+  partnerLoginPassword: jinseyanxuan_123
+
+  ## 会员组接口
+  memberApiUrl: http://memberapi.jsjinfo.cn/hosts/Jmember.aspx
+
+  WxTemplate:
+    ## {{first.DATA}}
+    ## 付款金额：{{keyword1.DATA}}
+    ## 交易单号：{{keyword2.DATA}}
+    ## {{remark.DATA}}
+    PaySuccessed: DygyNvij6eJN34pQbj372iBpZTIYq6HukBcwrcmBhIo
+
+    ## {{first.DATA}}
+    ## 产品名称：{{keyword1.DATA}}
+    ## 激活时间：{{keyword2.DATA}}
+    ## 截止时间：{{keyword3.DATA}}
+    ## {{remark.DATA}}
+    OpenCardConfirm: Oz_Ldo8XAmB8mEVJsWYJrV3Hjl0p2Ezr3v0UpkvhhkQ
+
+    ## {{first.DATA}}
+    ## 顾客昵称：{{keyword1.DATA}}
+    ## 消费时间：{{keyword2.DATA}}
+    ## {{remark.DATA}}
+    QrcodeUseSuccessed: YdD4hzFM3mOnufS2AunKUN18MQUFjEJmOQgtQsk3wt8
+
+    ## {{first.DATA}}
+    ## 商品名称：{{keyword1.DATA}}
+    ## 数量：{{keyword2.DATA}}
+    ## 金额：{{keyword3.DATA}}
+    ## 状态：{{keyword4.DATA}}
+    ## {{remark.DATA}}
+    EntityUseSuccessed: -f5vgpqxIPIKnA0cem4DewNe-2IJHN14DR0rZcUv6aI
+
+    ## {{first.DATA}}
+    ## 订单号：{{keyword1.DATA}}
+    ## 产品名称：{{keyword2.DATA}}
+    ## 订单金额：{{keyword3.DATA}}
+    ## 订单取消原因：{{keyword4.DATA}}
+    ## {{remark.DATA}}
+    CancelUnPayOrder: pRqThOciBj7f9ZnOFYa6CsVrsjo8tvk9icCGcHlKXOs
+
+    ## {{first.DATA}}
+    ## 公司名称：{{keyword1.DATA}}
+    ## 出卡时间：{{keyword2.DATA}}
+    ## {{remark.DATA}}
+    OpenCardSuccess: A7p3NcrvEGlbqS56PRbHTE9qGRz25lGrb1Fpo4bTHDU
+
+
+redis:
+  host: 172.16.5.143
+  port: 16379
+  timeout: 10000
+  pool-max-total: 1000
+  pool-max-idle: 500
+  pool-max-wait: 500
+  password: JSB@#$%2345
