@@ -30,7 +30,6 @@ build_deploy:
   script:
     - echo "开始编译"
     - echo $PWD
-
     - echo "开始发布"
     - pname="memberob"
 
