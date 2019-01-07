@@ -714,6 +714,25 @@ public class GiftLogic extends BaseLogic {
     }
     //endregion
 
+    //region (public) 获取用户赠送数量 GetGiveCount
+
+    /**
+     * 获取用户赠送数量
+     * @param openId
+     * @param giftStatus
+     * @return
+     */
+    public static int GetGiveCount(String openId, GiftStatus giftStatus) {
+
+        EntityWrapper<Gift> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null and open_id={0}", openId);
+        if (giftStatus != null) {
+            wrapper.where("status = {0}", giftStatus.getValue());
+        }
+        return giftLogic.giftService.selectCount(wrapper);
+    }
+    //endregion
+
 
     //region (public) 获得用户领取列表 GetReceived
 
