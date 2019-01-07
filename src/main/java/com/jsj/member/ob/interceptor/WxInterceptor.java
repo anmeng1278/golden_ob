@@ -68,6 +68,7 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
     /**
      * 拦截器，获取微信授权信息
+     *
      * @param request
      * @param response
      * @param handler
@@ -91,6 +92,9 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
         }
 
+        //获取会员编号
+        int jsjId = this.parseJsjId(request);
+
         //当前用户是否登录
         if (request.getSession().getAttribute("wx") == null) {
 
@@ -104,10 +108,6 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                 return false;
 
             } else {
-
-                //获取会员编号
-                int jsjId = this.parseJsjId(request);
-
 
                 //获取用户信息
                 String code = request.getParameter("code");
@@ -154,9 +154,6 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                 //初始化会员
                 WechatLogic.Init(wxUser, jsjId);
 
-                //绑定会员关系
-                this.bindWechatRelation(request, wxUser.getOpenid());
-
                 UserSession wx = UserSession.Init(wxUser, jsjId);
                 request.getSession().setAttribute("wx", wx);
 
@@ -166,6 +163,12 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
         UserSession wx = (UserSession) request.getSession().getAttribute("wx");
         request.setAttribute("wx", wx);
+
+        //绑定会员关系
+        this.bindWechatRelation(request, wx.getOpenid());
+
+        //绑定会员编号
+        WechatLogic.BindJSJId(wx.getOpenid(), jsjId);
 
         return true;
     }

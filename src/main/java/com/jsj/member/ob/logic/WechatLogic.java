@@ -203,6 +203,22 @@ public class WechatLogic extends BaseLogic {
     }
     //endregion
 
+    //region (public) 绑定会员编号 BindJSJId
+
+    /**
+     * 绑定会员编号
+     * @param openId
+     * @param jsjId
+     */
+    public static void BindJSJId(String openId, int jsjId) {
+        Wechat wechat = wechatLogic.wechatService.selectById(openId);
+        if (wechat.getJsjid() == null || wechat.getJsjid() == 0) {
+            wechat.setJsjid(jsjId);
+            wechatLogic.wechatService.updateById(wechat);
+        }
+    }
+    //endregion
+
     //region (public) 根据openId获取绑定关系 GetWechatRelation
 
     /**
