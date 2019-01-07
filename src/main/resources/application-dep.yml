@@ -12,7 +12,7 @@ logging:
 spring:
   datasource:
       type: com.alibaba.druid.pool.DruidDataSource
-      url: jdbc:mysql://172.16.5.102:3306/golden_ob?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      url: jdbc:mysql://****:3306/golden_ob?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
       username: zhangning
       password: zhangning123
       driver-class-name: com.mysql.jdbc.Driver
@@ -25,17 +25,18 @@ spring:
 #      max-wait: 500
 #      max-active: 1000
   rabbitmq:
-    host: 172.16.5.64
+    host: 172.16.2.28
     port: 5672
-    username: guest
-    password: guest
+    username: jsj
+    password: jssj@jssj
     virtual-host: /
     publisher-confirms: true
     publisher-returns: true
   redis:
-    host: 172.16.5.64
+    host: 172.16.5.143
     timeout: 10000
-    port: 6379
+    port: 16379
+    password: JSB@#$%2345
 
 webconfig:
   # 图片服务器
@@ -56,7 +57,7 @@ webconfig:
   activityUrl: https://s5.jsjinfo.cn/third/v1/ThirdApi/API2Partner.aspx
 
   ## 开卡地址
-  openCardUrl: http://172.16.6.134/awk/v3/ktapi/OpenVPCardFromWx
+  openCardUrl: http://s5.jsjinfo.cn/awkmanage/v3/ktapi/OpenVPCardFromWx
 
   ## 严选登录名
   partnerLoginName: jinseyanxuan
@@ -64,7 +65,7 @@ webconfig:
   partnerLoginPassword: jinseyanxuan_123
 
   ## 会员组接口
-  memberApiUrl: http://memberapi.jsjit.cn/hosts/Jmember.aspx
+  memberApiUrl: http://memberapi.jsjinfo.cn/hosts/Jmember.aspx
 
   WxTemplate:
     ## {{first.DATA}}
@@ -110,9 +111,10 @@ webconfig:
 
 
 redis:
-  host: 172.16.5.64
-  port: 6379
+  host: 172.16.5.143
+  port: 16379
   timeout: 10000
   pool-max-total: 1000
   pool-max-idle: 500
   pool-max-wait: 500
+  password: JSB@#$%2345

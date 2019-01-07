@@ -210,9 +210,10 @@ public abstract class OrderBase {
      * @param jsjId
      * @param orderAmount
      * @param order
+     * @param productName
      * @return
      */
-    public double Exchange(int jsjId, double orderAmount, Order order) {
+    public double Exchange(int jsjId, double orderAmount, Order order, String productName) {
 
         if (jsjId <= 0) {
             throw new TipException("没有绑定会员，不允许兑换商品。");
@@ -231,6 +232,7 @@ public abstract class OrderBase {
         requ.setOrderID(order.getOrderId());
         requ.setRemark("严选商品兑换");
         requ.setProjectID(13006);
+        requ.setTradeName(productName);
 
         StrictChoiceConsumeResponseOuterClass.StrictChoiceConsumeResponse resp = MemberLogic.StrictChoiceConsume(requ.build());
 
