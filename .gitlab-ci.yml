@@ -24,7 +24,7 @@ build_ob:
 build_deploy:
   stage: build
   tags:
-    - build
+    - release
   only:
     - master.deploy
   script:
