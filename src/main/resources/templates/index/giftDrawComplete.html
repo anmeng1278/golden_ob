@@ -141,8 +141,8 @@
             </li>
             <li>
                 <a th:href="${ob.Nav('/stock')}" class="mystock-btn">我的库存</a>
-                <span class="mystock-num" th:text="${myDrawCount}">1</span>
-                <span class="mystock-tips">礼物已经成功放入你的存货库</span>
+                <span class="mystock-num" th:text="|+${myDrawCount}|"></span>
+                <span class="mystock-tips" >礼物已成功放入你的库存</span>
             </li>
         </ul>
     </div>
