@@ -19,4 +19,9 @@ public class WechatLogicTest {
         WechatLogic.BindRelation("oeQDZt6hGZQDY0gUtw2FwNSVTYFw", "oG5Z_4iYeizOQSJ8za5qM0FMseQA", SourceType.AWKMINI);
 
     }
+
+    @Test
+    public void bindJsjId(){
+        WechatLogic.BindJSJId("oeQDZt-rcgi9QhWm6F7o2mV3dSYY", 222);
+    }
 }
