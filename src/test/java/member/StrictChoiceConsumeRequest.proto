@@ -12,4 +12,5 @@ message StrictChoiceConsumeRequest {
    optional int32 ProjectID = 6 [default = 0];
    optional int32 DepositDeptID = 7 [default = 0];
    optional string Remark = 8;
+   optional string TradeName = 9;
 }

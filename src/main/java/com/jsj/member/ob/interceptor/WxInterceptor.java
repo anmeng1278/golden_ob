@@ -160,14 +160,17 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
         }
 
+        //获取登录信息
         UserSession wx = (UserSession) request.getSession().getAttribute("wx");
-        request.setAttribute("wx", wx);
 
         //绑定会员关系
         this.bindWechatRelation(request, wx.getOpenid());
 
         //绑定会员编号
-        WechatLogic.BindJSJId(wx.getOpenid(), jsjId);
+        jsjId = WechatLogic.BindJSJId(wx.getOpenid(), jsjId);
+        wx.setJsjId(jsjId);
+
+        request.setAttribute("wx", wx);
 
         return true;
     }

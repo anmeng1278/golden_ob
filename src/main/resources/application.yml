@@ -81,8 +81,10 @@ webconfig:
   #微信公众号支付
   payTradeUrl: http://zs5.jsjinfo.cn/v5/ParTrade.ashx
 
-  #授权码
+  #支付授权码
   PlatformAppId: ws975af9-2341-1234-9751-6ababc10aab3
+
+  #支付授权码
   PlatformToken: wsscr975ppd8v46b5678f8fxh2xdhv0975xlx08h8btn6tt9754aab3
 
   #密钥

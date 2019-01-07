@@ -152,6 +152,8 @@ public class OrderExchange extends OrderBase {
         //订单金额
         double orderAmount = 0d;
 
+        String productName = "";
+
         for (ActivityProductDto apd : activityProductDtos) {
 
             if (apd.getStockCount() < number) {
@@ -184,6 +186,8 @@ public class OrderExchange extends OrderBase {
 
             //削减活动商品库存
             ActivityLogic.ReductionActivityProductStock(apd.getActivityId(), apd.getProductId(), apd.getProductSpecId(), number);
+
+            productName += productSpecDto.getProductDto().getProductName() + " ";
         }
 
         //削减规格库存
@@ -201,7 +205,7 @@ public class OrderExchange extends OrderBase {
         orderService.insert(order);
 
         //商品兑换
-        super.Exchange(requ.getBaseRequ().getJsjId(), orderAmount, order);
+        super.Exchange(requ.getBaseRequ().getJsjId(), orderAmount, order, productName);
 
         //更新订单商品中的订单编号
         orderProducts.stream().forEach(op -> {

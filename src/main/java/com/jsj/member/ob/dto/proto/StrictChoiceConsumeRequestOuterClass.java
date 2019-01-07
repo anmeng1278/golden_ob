@@ -92,6 +92,20 @@ public final class StrictChoiceConsumeRequestOuterClass {
      */
     com.google.protobuf.ByteString
         getRemarkBytes();
+
+    /**
+     * <code>optional string TradeName = 9;</code>
+     */
+    boolean hasTradeName();
+    /**
+     * <code>optional string TradeName = 9;</code>
+     */
+    String getTradeName();
+    /**
+     * <code>optional string TradeName = 9;</code>
+     */
+    com.google.protobuf.ByteString
+        getTradeNameBytes();
   }
   /**
    * Protobuf type {@code com.jsj.member.ob.dto.proto.StrictChoiceConsumeRequest}
@@ -198,6 +212,12 @@ public final class StrictChoiceConsumeRequestOuterClass {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000080;
               remark_ = bs;
+              break;
+            }
+            case 74: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000100;
+              tradeName_ = bs;
               break;
             }
           }
@@ -393,6 +413,48 @@ public final class StrictChoiceConsumeRequestOuterClass {
       }
     }
 
+    public static final int TRADENAME_FIELD_NUMBER = 9;
+    private Object tradeName_;
+    /**
+     * <code>optional string TradeName = 9;</code>
+     */
+    public boolean hasTradeName() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    /**
+     * <code>optional string TradeName = 9;</code>
+     */
+    public String getTradeName() {
+      Object ref = tradeName_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          tradeName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string TradeName = 9;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTradeNameBytes() {
+      Object ref = tradeName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        tradeName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       baseRequest_ = BaseRequestOuterClass.BaseRequest.getDefaultInstance();
       jSJID_ = 0;
@@ -402,6 +464,7 @@ public final class StrictChoiceConsumeRequestOuterClass {
       projectID_ = 0;
       depositDeptID_ = 0;
       remark_ = "";
+      tradeName_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -439,6 +502,9 @@ public final class StrictChoiceConsumeRequestOuterClass {
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         output.writeBytes(8, getRemarkBytes());
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        output.writeBytes(9, getTradeNameBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -480,6 +546,10 @@ public final class StrictChoiceConsumeRequestOuterClass {
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(8, getRemarkBytes());
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(9, getTradeNameBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -619,6 +689,8 @@ public final class StrictChoiceConsumeRequestOuterClass {
         bitField0_ = (bitField0_ & ~0x00000040);
         remark_ = "";
         bitField0_ = (bitField0_ & ~0x00000080);
+        tradeName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000100);
         return this;
       }
 
@@ -683,6 +755,10 @@ public final class StrictChoiceConsumeRequestOuterClass {
           to_bitField0_ |= 0x00000080;
         }
         result.remark_ = remark_;
+        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+          to_bitField0_ |= 0x00000100;
+        }
+        result.tradeName_ = tradeName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -723,6 +799,11 @@ public final class StrictChoiceConsumeRequestOuterClass {
         if (other.hasRemark()) {
           bitField0_ |= 0x00000080;
           remark_ = other.remark_;
+          onChanged();
+        }
+        if (other.hasTradeName()) {
+          bitField0_ |= 0x00000100;
+          tradeName_ = other.tradeName_;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -1139,6 +1220,82 @@ public final class StrictChoiceConsumeRequestOuterClass {
         return this;
       }
 
+      private Object tradeName_ = "";
+      /**
+       * <code>optional string TradeName = 9;</code>
+       */
+      public boolean hasTradeName() {
+        return ((bitField0_ & 0x00000100) == 0x00000100);
+      }
+      /**
+       * <code>optional string TradeName = 9;</code>
+       */
+      public String getTradeName() {
+        Object ref = tradeName_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            tradeName_ = s;
+          }
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <code>optional string TradeName = 9;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTradeNameBytes() {
+        Object ref = tradeName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          tradeName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string TradeName = 9;</code>
+       */
+      public Builder setTradeName(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000100;
+        tradeName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string TradeName = 9;</code>
+       */
+      public Builder clearTradeName() {
+        bitField0_ = (bitField0_ & ~0x00000100);
+        tradeName_ = getDefaultInstance().getTradeName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string TradeName = 9;</code>
+       */
+      public Builder setTradeNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000100;
+        tradeName_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:com.jsj.member.ob.dto.proto.StrictChoiceConsumeRequest)
     }
 
@@ -1166,7 +1323,7 @@ public final class StrictChoiceConsumeRequestOuterClass {
     String[] descriptorData = {
       "\n StrictChoiceConsumeRequest.proto\022\033com." +
       "jsj.member.ob.dto.proto\032\021BaseRequest.pro" +
-      "to\032\033StrictChoiceOrderType.proto\"\267\002\n\032Stri" +
+      "to\032\033StrictChoiceOrderType.proto\"\312\002\n\032Stri" +
       "ctChoiceConsumeRequest\022=\n\013BaseRequest\030\001 " +
       "\001(\0132(.com.jsj.member.ob.dto.proto.BaseRe" +
       "quest\022\020\n\005JSJID\030\002 \001(\005:\0010\022\022\n\007OrderID\030\003 \001(\005" +
@@ -1174,7 +1331,8 @@ public final class StrictChoiceConsumeRequestOuterClass {
       "22.com.jsj.member.ob.dto.proto.StrictCho" +
       "iceOrderType:\033StrictChoiceOrderTypeNotSe" +
       "t\022\024\n\tProjectID\030\006 \001(\005:\0010\022\030\n\rDepositDeptID",
-      "\030\007 \001(\005:\0010\022\016\n\006Remark\030\010 \001(\t"
+      "\030\007 \001(\005:\0010\022\016\n\006Remark\030\010 \001(\t\022\021\n\tTradeName\030\t" +
+      " \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1195,7 +1353,7 @@ public final class StrictChoiceConsumeRequestOuterClass {
     internal_static_com_jsj_member_ob_dto_proto_StrictChoiceConsumeRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_jsj_member_ob_dto_proto_StrictChoiceConsumeRequest_descriptor,
-        new String[] { "BaseRequest", "JSJID", "OrderID", "Money", "OrderType", "ProjectID", "DepositDeptID", "Remark", });
+        new String[] { "BaseRequest", "JSJID", "OrderID", "Money", "OrderType", "ProjectID", "DepositDeptID", "Remark", "TradeName", });
     BaseRequestOuterClass.getDescriptor();
     StrictChoiceOrderTypeOuterClass.getDescriptor();
   }
