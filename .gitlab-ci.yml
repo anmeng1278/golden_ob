@@ -26,7 +26,7 @@ build_deploy:
   tags:
     - build
   only:
-    - master.deploy
+    - master
   script:
     - echo "开始编译"
     - echo $PWD
