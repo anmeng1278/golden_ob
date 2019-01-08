@@ -72,11 +72,13 @@ webconfig:
   memberApiUrl: http://memberapi.jsjinfo.cn/hosts/Jmember.aspx
 
   WxTemplate:
+
     ## {{first.DATA}}
-    ## 付款金额：{{keyword1.DATA}}
-    ## 交易单号：{{keyword2.DATA}}
+    ## 订单号：{{keyword1.DATA}}
+    ## 商品名称：{{keyword2.DATA}}
+    ## 支付金额：{{keyword3.DATA}}
     ## {{remark.DATA}}
-    PaySuccessed: DygyNvij6eJN34pQbj372iBpZTIYq6HukBcwrcmBhIo
+    PaySuccessed: 3fo6b1wXLfjep8kp0CKGwN7MVEIC-qO-fDPCTsQae2g
 
     ## {{first.DATA}}
     ## 产品名称：{{keyword1.DATA}}

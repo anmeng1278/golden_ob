@@ -12,7 +12,7 @@
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
             <form class="layui-form">
-                <div class="layui-form-item" style="margin:0;float: right">
+                <div class="layui-form-item" style="margin:0;">
 
                     <div class="layui-input-inline">
                         <button class="layui-btn" type="button" style="float: left;" id="btnChooseProducts">
@@ -20,33 +20,34 @@
                         </button>
                     </div>
 
+                    <div style="float: right">
+                        <label class="layui-form-label">获取方式</label>
+                        <div class="layui-input-inline">
+                            <select name="stockType" title="获取方式">
+                                <option value="">获取方式</option>
+                                <th:block th:each="ss : ${stockTypes}">
+                                    <option th:value="${ss.value}" th:text="${ss.message}"
+                                            th:selected="${ss.value == stockType}"></option>
+                                </th:block>
+                            </select>
+                        </div>
 
-                    <label class="layui-form-label">获取方式</label>
-                    <div class="layui-input-inline">
-                        <select name="stockType" title="获取方式">
-                            <option value="">获取方式</option>
-                            <th:block th:each="ss : ${stockTypes}">
-                                <option th:value="${ss.value}" th:text="${ss.message}"
-                                        th:selected="${ss.value == stockType}"></option>
-                            </th:block>
-                        </select>
-                    </div>
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-inline">
+                            <select name="stockStatus" title="状态">
+                                <option value="">状态</option>
+                                <th:block th:each="ss : ${stockStatuses}">
+                                    <option th:value="${ss.value}" th:text="${ss.message}"
+                                            th:selected="${ss.value == stockStatus}"></option>
+                                </th:block>
+                            </select>
+                        </div>
 
-                    <label class="layui-form-label">状态</label>
-                    <div class="layui-input-inline">
-                        <select name="stockStatus" title="状态">
-                            <option value="">状态</option>
-                            <th:block th:each="ss : ${stockStatuses}">
-                                <option th:value="${ss.value}" th:text="${ss.message}"
-                                        th:selected="${ss.value == stockStatus}"></option>
-                            </th:block>
-                        </select>
-                    </div>
-
-                    <div class="layui-input-inline">
-                        <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
-                            <i class="layui-icon">&#xe615;</i> 查询
-                        </button>
+                        <div class="layui-input-inline">
+                            <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
+                                <i class="layui-icon">&#xe615;</i> 查询
+                            </button>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -179,7 +180,7 @@
                     type: 2,
                     btn: ['选择', '关闭'],
                     content: "/admin/wechat/chooseProducts",
-                    area: ["800px", "600px"],
+                    area: ["850px", "700px"],
                     yes: function (index, layero) {
                         var iframe = layero.find('iframe');
                         iframe.contents().find("button[lay-submit]").click();
@@ -227,7 +228,7 @@
             var openId = [[${wechat.openId}]];
 
             TX.CORE.p({
-                data: { p: JSON.stringify(datas),openId:openId},
+                data: {p: JSON.stringify(datas), openId: openId},
                 url: "/admin/wechat/createOrder",
                 success: function (resp) {
                     if (resp.baseResp.success) {
