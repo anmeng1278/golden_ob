@@ -111,7 +111,7 @@ public class ProductController extends BaseController {
         List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, openId);
         request.setAttribute("coupons", coupons);
 
-        if (info.getProductImgDtos() != null&& info.getProductImgDtos().size() > 0) {
+        if (info.getProductImgDtos() != null && info.getProductImgDtos().size() > 0) {
             String imgUrl = info.getProductImgDtos().get(0).getImgPath();
             request.setAttribute("imgUrl", imgUrl);
         }
@@ -146,8 +146,20 @@ public class ProductController extends BaseController {
         //活动中的商品
         List<ActivityProductDto> productDtos = ActivityLogic.GetActivityProductDtos(activityId);
 
+        int stockCount = 0;
+        if (!productDtos.isEmpty()) {
+            stockCount = Integer.MAX_VALUE;
+            for (ActivityProductDto apd : productDtos) {
+                stockCount = Math.min(stockCount, apd.getStockCount());
+                ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(apd.getProductSpecId());
+                stockCount = Math.min(stockCount, productSpecDto.getStockCount());
+            }
+        }
+
+
         request.setAttribute("info", info);
         request.setAttribute("productDtos", productDtos);
+        request.setAttribute("stockCount", stockCount);
 
         return "index/product/combActivityDetail";
     }
@@ -190,10 +202,12 @@ public class ProductController extends BaseController {
         if (productDtos.size() == 0) {
             return this.Redirect("/");
         }
+
         ProductDto productDto = productDtos.get(0).getProductDto();
+        ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(productSpecId);
 
         //库存
-        int stockCount = productDtos.get(0).getStockCount();
+        int stockCount = Math.min(productDtos.get(0).getStockCount(), productSpecDto.getStockCount());
 
         request.setAttribute("stockCount", stockCount);
         request.setAttribute("info", productDto);
@@ -249,8 +263,11 @@ public class ProductController extends BaseController {
             return this.Redirect("/");
         }
         ProductDto productDto = productDtos.get(0).getProductDto();
+        ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(productSpecId);
 
-        int stockCount = productDtos.get(0).getStockCount();
+        //库存
+        int stockCount = Math.min(productDtos.get(0).getStockCount(), productSpecDto.getStockCount());
+
         //未开始
         int flag = 0;
         if (info.getBeginTime() > DateUtils.getCurrentUnixTime()) {

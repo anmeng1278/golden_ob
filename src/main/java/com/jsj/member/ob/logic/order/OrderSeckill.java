@@ -215,6 +215,7 @@ public class OrderSeckill extends OrderBase {
         resp.setOrderUniqueCode(order.getOrderUniqueCode());
         resp.setExpiredTime(order.getExpiredTime());
         resp.setSuccess(true);
+        resp.setMessage("秒杀成功");
 
         return resp;
 

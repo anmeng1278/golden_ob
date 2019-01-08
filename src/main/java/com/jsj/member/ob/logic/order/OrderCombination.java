@@ -199,6 +199,7 @@ public class OrderCombination extends OrderBase {
         resp.setOrderUniqueCode(order.getOrderUniqueCode());
         resp.setExpiredTime(order.getExpiredTime());
         resp.setSuccess(true);
+        resp.setMessage("创建订单成功");
 
         return resp;
 

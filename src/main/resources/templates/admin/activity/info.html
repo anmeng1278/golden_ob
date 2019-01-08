@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <div class="layui-form-item" >
+        <div class="layui-form-item">
             <label class="layui-form-label">预热时间</label>
             <div class="layui-input-inline">
                 <input type="text" name="showTime" placeholder="yyyy-MM-dd HH:mm:ss"
@@ -213,14 +213,16 @@
                                              style="width:50px;height: 50px;"/>
                                     </th:block>
                                 </td>
-                                <td>
-                                    <th:block th:text="${pro.productName}"></th:block>
-                                    <th:block
-                                            th:text="${productLogic.GetProductSpec(ap.productSpecId).specName}"></th:block>
-                                </td>
-                                <td th:text="${pro.salePrice}"></td>
-                                <td th:text="${pro.originalPrice}"></td>
-                                <td th:text="${pro.stockCount}"></td>
+                                <th:block th:with="spec=${productLogic.GetProductSpec(ap.productSpecId)}">
+                                    <td>
+                                        <th:block th:text="${pro.productName}"></th:block>
+                                        <th:block
+                                                th:text="${spec.specName}"></th:block>
+                                    </td>
+                                    <td th:text="${pro.salePrice}"></td>
+                                    <td th:text="${pro.originalPrice}"></td>
+                                    <td th:text="${spec.stockCount}"></td>
+                                </th:block>
                                 <td>
                                     <input type="text" class="layui-input" name="productSpecStockCount"
                                            lay-verify="num2"
@@ -370,14 +372,14 @@
 
                 switch (typeId) {
 
-                    //团单
+                        //团单
                     case "10":
                         $("#groupNumber").show();
                         $("#price").show();
                         $(":text[name='productSpecSalePrice']").removeAttr("lay-verify");
                         $("#stock").show();
                         break;
-                    //秒杀
+                        //秒杀
                     case "20":
                         $("td[skillprice], th[skillprice]").show();
                         $(":text[name='number']").removeAttr("lay-verify");
@@ -445,9 +447,9 @@
             //设置时间
             layui.use(['form', 'layedit', 'laydate', "jquery"], function () {
                 var form = layui.form
-                    , layer = layui.layer
-                    , $ = layui.jquery
-                    , laydate = layui.laydate;
+                        , layer = layui.layer
+                        , $ = layui.jquery
+                        , laydate = layui.laydate;
                 var nowTime = new Date().valueOf();
 
                 //日期

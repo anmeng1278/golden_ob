@@ -1,17 +1,15 @@
 package com.jsj.member.ob.logic;
 
 import com.alibaba.fastjson.JSON;
-import com.jsj.member.ob.App;
+import com.googlecode.protobuf.format.JsonFormat;
 import com.jsj.member.ob.dto.proto.*;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = App.class)
-@WebAppConfiguration
+import java.nio.charset.StandardCharsets;
+
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@SpringBootTest(classes = App.class)
+//@WebAppConfiguration
 public class MemberLogicTest {
 
     @Test
@@ -61,17 +59,42 @@ public class MemberLogicTest {
         requ.setRemark("严选商品兑换");
         requ.setProjectID(13006);
 
-        StrictChoiceConsumeResponseOuterClass.StrictChoiceConsumeResponse resp = MemberLogic.StrictChoiceConsume(requ.build());
+        //Map<Descriptors.FieldDescriptor, Object> allFields = requ.build().getAllFields();
+        //
+        //for (Descriptors.FieldDescriptor key : allFields.keySet()) {
+        //    System.out.println("Key = " + key.getName());
+        //    System.out.println(allFields.get(key));
+        //}
+        //
+        //System.out.println(requ.build().toString().replaceAll("\n", " "));
 
-        System.out.println(resp.toString());
+        String jsonFormat = JsonFormat.printToString(requ.build());
+        System.out.println(jsonFormat);
+        //StrictChoiceConsumeResponseOuterClass.StrictChoiceConsumeResponse resp = MemberLogic.StrictChoiceConsume(requ.build());
+        //
+        //System.out.println(resp.toString());
 
+    }
+
+    private static String hexStr2Str(String hexStr) {
+        String str = "0123456789abcdef";
+        char[] hexs = hexStr.toCharArray();
+        byte[] bytes = new byte[hexStr.length() / 2];
+        int n;
+        for (int i = 0; i < bytes.length; i++) {
+            n = str.indexOf(hexs[2 * i]) * 16;
+            n += str.indexOf(hexs[2 * i + 1]);
+            bytes[i] = (byte) (n & 0xff);
+        }
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     @Test
     public void strictChoiceSearch() {
 
         StrictChoiceSearchRequestOuterClass.StrictChoiceSearchRequest.Builder requ = StrictChoiceSearchRequestOuterClass.StrictChoiceSearchRequest.newBuilder();
-        requ.setJSJID(20612968);
+        //requ.setJSJID(20612968);
+        requ.setJSJID(20613259);
 
         StrictChoiceSearchResponseOuterClass.StrictChoiceSearchResponse resp = MemberLogic.StrictChoiceSearch(requ.build());
         System.out.println(resp.toBuilder().toString());
