@@ -433,7 +433,7 @@ public class ProductController extends BaseController {
         data.put("resp", resp);
 
         String url = this.Url("/order");
-        return RestResponseBo.ok("创建订单成功", url, data);
+        return RestResponseBo.ok(resp.getMessage(), url, data);
 
     }
     //endregion
