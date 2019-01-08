@@ -39,11 +39,15 @@ wx.ready(function () {
 
     console.log(shareConfig);
 
-    if(ob.mini){
+    if (shareConfig.link.toLowerCase().indexOf("https") == -1) {
+        shareConfig.link = shareConfig.link.replace("http", "https");
+    }
+
+    if (ob.mini) {
 
         wx.miniProgram.postMessage({
             data: {
-                link: ob.conf.browser + "?url="+encodeURIComponent(shareConfig.link),
+                link: ob.conf.browser + "?url=" + encodeURIComponent(shareConfig.link),
                 // link: "/pages/strictSelection/index?url="+encodeURIComponent("https://h5.ktgj.com/ob/exchange"),
                 title: shareConfig.title,
                 desc: shareConfig.desc,
