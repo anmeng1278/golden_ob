@@ -2,11 +2,11 @@ package com.jsj.member.ob.jobs;
 
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
+import com.jsj.member.ob.logic.ConfigLogic;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.rabbitmq.card.CardSender;
 import com.jsj.member.ob.rabbitmq.card.CreateCardDto;
 import com.jsj.member.ob.service.DeliveryService;
-import com.jsj.member.ob.utils.SpringContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class CreateGoldenCardJob {
     @Scheduled(cron = "0 0/1 * * * ?")
     public void updateDeliveryStatus() {
 
-        if (SpringContextUtils.getActiveProfile().equals("dev")) {
+        if(!ConfigLogic.GetWebConfig().getRunJob()){
             return;
         }
 
