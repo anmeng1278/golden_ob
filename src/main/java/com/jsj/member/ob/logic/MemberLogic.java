@@ -1,6 +1,7 @@
 package com.jsj.member.ob.logic;
 
 import com.alibaba.fastjson.JSON;
+import com.googlecode.protobuf.format.JsonFormat;
 import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.proto.*;
 import com.jsj.member.ob.utils.HttpUtils;
@@ -53,10 +54,11 @@ public class MemberLogic {
             } else {
                 throw new Exception(zResponse.getExceptionMessage());
             }
-            memberLogic.logger.info(String.format("%s %s %s", url, requ.toString(), resp.toString()));
+
+            memberLogic.logger.info(String.format("%s %s %s", url, JsonFormat.printToString(requ), JsonFormat.printToString(resp)));
 
         } catch (Exception ex) {
-            memberLogic.logger.error("会员组接口失败：" + JSON.toJSONString(ex));
+            memberLogic.logger.error(String.format("会员组接口失败：%s %s", JsonFormat.printToString(requ), JSON.toJSONString(ex)));
             ex.printStackTrace();
         }
         return resp;
@@ -88,10 +90,10 @@ public class MemberLogic {
             } else {
                 throw new Exception(zResponse.getExceptionMessage());
             }
-            memberLogic.logger.info(String.format("%s %s %s", url, requ.toString(), resp.toString()));
+            memberLogic.logger.info(String.format("%s %s %s", url, JsonFormat.printToString(requ), JsonFormat.printToString(resp)));
 
         } catch (Exception ex) {
-            memberLogic.logger.error("会员组接口失败：" + JSON.toJSONString(ex));
+            memberLogic.logger.error(String.format("会员组接口失败：%s %s", JsonFormat.printToString(requ), JSON.toJSONString(ex)));
             ex.printStackTrace();
         }
         return resp;
@@ -123,10 +125,10 @@ public class MemberLogic {
             } else {
                 throw new Exception(zResponse.getExceptionMessage());
             }
-            memberLogic.logger.info(String.format("%s %s %s", url, requ.toString(), resp.toString()));
+            memberLogic.logger.info(String.format("%s %s %s", url, JsonFormat.printToString(requ), JsonFormat.printToString(resp)));
 
         } catch (Exception ex) {
-            memberLogic.logger.error("会员组接口失败：" + JSON.toJSONString(ex));
+            memberLogic.logger.error(String.format("会员组接口失败：%s %s", JsonFormat.printToString(requ), JSON.toJSONString(ex)));
             ex.printStackTrace();
         }
         return resp;
@@ -158,9 +160,10 @@ public class MemberLogic {
             } else {
                 throw new Exception(zResponse.getExceptionMessage());
             }
-            memberLogic.logger.info(String.format("%s %s %s", url, requ.toString(), resp.toString()));
+            memberLogic.logger.info(String.format("%s %s %s", url, JsonFormat.printToString(requ), JsonFormat.printToString(resp)));
+
         } catch (Exception ex) {
-            memberLogic.logger.error("会员组接口失败：" + JSON.toJSONString(ex));
+            memberLogic.logger.error(String.format("会员组接口失败：%s %s", JsonFormat.printToString(requ), JSON.toJSONString(ex)));
             ex.printStackTrace();
         }
         return resp;
@@ -192,9 +195,10 @@ public class MemberLogic {
             } else {
                 throw new Exception(zResponse.getExceptionMessage());
             }
-            memberLogic.logger.info(String.format("%s %s %s", url, requ.toString(), resp.toString()));
+            memberLogic.logger.info(String.format("%s %s %s", url, JsonFormat.printToString(requ), JsonFormat.printToString(resp)));
+
         } catch (Exception ex) {
-            memberLogic.logger.error("会员组接口失败：" + JSON.toJSONString(ex));
+            memberLogic.logger.error(String.format("会员组接口失败：%s %s", JsonFormat.printToString(requ), JSON.toJSONString(ex)));
             ex.printStackTrace();
         }
         return resp;
@@ -226,9 +230,10 @@ public class MemberLogic {
             } else {
                 throw new Exception(zResponse.getExceptionMessage());
             }
-            memberLogic.logger.info(String.format("%s %s %s", url, requ.toString(), resp.toString()));
+            memberLogic.logger.info(String.format("%s %s %s", url, JsonFormat.printToString(requ), JsonFormat.printToString(resp)));
+
         } catch (Exception ex) {
-            memberLogic.logger.error("会员组接口失败：" + JSON.toJSONString(ex));
+            memberLogic.logger.error(String.format("会员组接口失败：%s %s", JsonFormat.printToString(requ), JSON.toJSONString(ex)));
             ex.printStackTrace();
         }
         return resp;
@@ -287,10 +292,10 @@ public class MemberLogic {
             } else {
                 throw new Exception(zResponse.getExceptionMessage());
             }
-            memberLogic.logger.info(String.format("%s %s %s", url, requ.toString(), resp.toString()));
+            memberLogic.logger.info(String.format("%s %s %s", url, JsonFormat.printToString(requ), JsonFormat.printToString(resp)));
 
         } catch (Exception ex) {
-            memberLogic.logger.error("会员组接口失败：" + JSON.toJSONString(ex));
+            memberLogic.logger.error(String.format("会员组接口失败：%s %s", JsonFormat.printToString(requ), JSON.toJSONString(ex)));
             ex.printStackTrace();
         }
         return resp;

@@ -33,9 +33,9 @@ spring:
     publisher-confirms: true
     publisher-returns: true
   redis:
-    host: 172.16.5.143
+    host: zen_yalow
     timeout: 10000
-    port: 16379
+    port: 6379
     password: JSB@#$%2345
 
 webconfig:
@@ -115,10 +115,10 @@ webconfig:
 
 
 redis:
-  host: 172.16.5.143
-  port: 16379
+  host: zen_yalow
+  port: 6379
   timeout: 10000
-  pool-max-total: 1000
+  pool-max-total: 100
   pool-max-idle: 500
   pool-max-wait: 500
   password: JSB@#$%2345

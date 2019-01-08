@@ -26,6 +26,8 @@ import java.util.List;
 @RequestMapping("${webconfig.virtualPath}/order")
 public class OrderController extends BaseController {
 
+    //region (public) 订单列表 index
+
     /**
      * 订单列表
      *
@@ -48,7 +50,15 @@ public class OrderController extends BaseController {
         //request.setAttribute("mini", true);
         return "index/order";
     }
+    //endregion
 
+    //region (public) 取消订单 cancel
+
+    /**
+     * 取消订单
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/cancel", method = RequestMethod.POST)
     @ResponseBody
     public RestResponseBo cancel(HttpServletRequest request) {
@@ -58,7 +68,16 @@ public class OrderController extends BaseController {
 
         return RestResponseBo.ok("订单取消成功");
     }
+    //endregion
 
+    //region (public) 创建支付请求 createPay
+
+    /**
+     * 创建支付请求
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/createPay", method = RequestMethod.POST)
     @ResponseBody
     public RestResponseBo createPay(HttpServletRequest request) throws Exception {
@@ -79,8 +98,9 @@ public class OrderController extends BaseController {
         data.put("successUrl", this.Url(successUrl));
 
         String url = this.Url("/order");
-        return RestResponseBo.ok("创建订单成功", url, data);
+        return RestResponseBo.ok("请求成功", url, data);
 
     }
+    //endregion
 
 }

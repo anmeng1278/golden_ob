@@ -151,9 +151,9 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
                 //{"subscribe":1,"openid":"o2JcesxmAIQWeqEEqA-vM-i44Miw","nickname":"张宁","sex":1,"language":"zh_CN","city":"朝阳","province":"北京","country":"中国","headimgurl":"http:\/\/thirdwx.qlogo.cn\/mmopen\/PiajxSqBRaEKFLsWN4XS5v1yCavjGU69d4MhTotaNU1oe0C5w9cdHTt2J1x3VTeEnDcfT4B3b5ml3ekmlcJHrNA\/132","subscribe_time":1538198776,"remark":"","groupid":0,"tagid_list":[],"subscribe_scene":"ADD_SCENE_SEARCH","qr_scene":0,"qr_scene_str":""}
                 //初始化会员
-                WechatLogic.Init(wxUser, jsjId);
+                WechatLogic.Init(wxUser);
 
-                UserSession wx = UserSession.Init(wxUser, jsjId);
+                UserSession wx = UserSession.Init(wxUser);
                 request.getSession().setAttribute("wx", wx);
 
             }

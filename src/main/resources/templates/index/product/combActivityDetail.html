@@ -166,8 +166,8 @@
                         <span class="purchase-layer-lable">购买数量</span>
                         <div class="purchase-num">
                             <em class="purchase-num-reduce"></em>
-                            <input type="text" value="0" name="num" class="num"/>
-                            <input type="hidden" name="stockCount" th:value="${info.stockCount}"/>
+                            <input type="text" readonly="readonly" unselectable="on" value="0" name="num" class="num"/>
+                            <input type="hidden" name="stockCount" th:value="${stockCount}"/>
                             <em class="purchase-num-add"></em>
                         </div>
                     </div>

@@ -11,7 +11,7 @@ public enum SecKillStatus {
 
     SOLDOUT(2, "商品已售罄"),
 
-    SUCCESS(3, "下单成功"),
+    SUCCESS(3, "秒杀成功"),
 
     REPEATREQUEST(4, "重复请求"),
 

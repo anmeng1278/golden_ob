@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class UserSession implements Serializable {
 
-    public static UserSession Init(User wxUser, int jsjId) {
+    public static UserSession Init(User wxUser) {
 
         UserSession userSession = new UserSession();
 
@@ -32,7 +32,6 @@ public class UserSession implements Serializable {
         userSession.setQr_scene_str(wxUser.getQr_scene_str());
         userSession.setTagid_list(wxUser.getTagid_list());
         userSession.setUnionid(wxUser.getUnionid());
-        userSession.setJsjId(jsjId);
 
         return userSession;
     }
