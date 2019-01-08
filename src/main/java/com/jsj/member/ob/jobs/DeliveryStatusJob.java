@@ -6,11 +6,11 @@ import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.PropertyType;
+import com.jsj.member.ob.logic.ConfigLogic;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.utils.DateUtils;
-import com.jsj.member.ob.utils.SpringContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class DeliveryStatusJob {
     @Scheduled(cron = "0 0 0 * * ?")
     public void updateDeliveryStatus() {
 
-        if (SpringContextUtils.getActiveProfile().equals("dev")) {
+        if(!ConfigLogic.GetWebConfig().getRunJob()){
             return;
         }
 

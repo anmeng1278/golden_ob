@@ -11,9 +11,15 @@
 
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
+            <form class="layui-form">
+                <div class="layui-form-item" style="margin:0;float: right">
 
-            <form class="layui-form" method="get" style="float:right;">
-                <div class="layui-form-item" style="margin:0;">
+                    <div class="layui-input-inline">
+                        <button class="layui-btn" type="button" style="float: left;" id="btnChooseProducts">
+                            <i class="layui-icon">&#xe654;</i> 添加库存
+                        </button>
+                    </div>
+
 
                     <label class="layui-form-label">获取方式</label>
                     <div class="layui-input-inline">
@@ -42,7 +48,6 @@
                             <i class="layui-icon">&#xe615;</i> 查询
                         </button>
                     </div>
-
                 </div>
             </form>
         </blockquote>
@@ -62,9 +67,7 @@
                 <tbody id="content">
                 <th:block th:each="info : ${infos.list}">
                     <tr>
-                        <td>
-                            <th:block th:text="${info.stockId}"></th:block>
-                        </td>
+                        <td th:text="${info.stockId}"></td>
                         <td>
                             <th:block th:text="${productLogic.GetProduct(info.productId).productName}"></th:block>
                             <th:block th:with="spec=${productLogic.GetProductSpec(info.productSpecId)}">
@@ -101,6 +104,12 @@
                                     th:attr="data-method='stockFlows', data-id=${info.stockId}"
                                     class="layui-btn layui-btn-xs layui-btn-normal">流转日志
                             </button>
+
+                            <input type="hidden" name="productSpecId" th:value="${info.productSpecId}"/>
+                            <button type="button" th:attr="data-method='delete',data-id=${info.stockId}"
+                                    class="layui-btn layui-btn-xs layui-btn-danger">
+                                <i class="layui-icon">&#xe640;</i>
+                            </button>
                         </td>
                     </tr>
                 </th:block>
@@ -126,7 +135,6 @@
                 if (method == "stockFlows") {
                     getStockFlows(id, that);
                 }
-
 
             });
 
@@ -163,7 +171,76 @@
                 });
             }
 
+            //选择商品
+            $("#btnChooseProducts").click(function () {
+
+                window.TX.TEMP.LAYERINDEX = window.layer.open({
+                    title: "",
+                    type: 2,
+                    btn: ['选择', '关闭'],
+                    content: "/admin/wechat/chooseProducts",
+                    area: ["800px", "600px"],
+                    yes: function (index, layero) {
+                        var iframe = layero.find('iframe');
+                        iframe.contents().find("button[lay-submit]").click();
+                    }
+                });
+            });
+
+
+            /**
+             * 删除商品
+             */
+            $(document).on("click", "button[data-method='delete']", function () {
+                var openId = [[${wechat.openId}]];
+                var stockId = $(this).attr("data-id");
+                layer.confirm('确定删除所选商品吗?', {icon: 3}, function (index) {
+
+                    TX.CORE.p({
+                        data: {openId: openId, stockId: stockId},
+                        url: "/admin/wechat/delete",
+                        success: function (resp) {
+                            if (resp.baseResp.success) {
+                                TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                    location.href = location.href;
+                                });
+                            } else {
+                                TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                            }
+                        }
+                    });
+                });
+
+            });
+
         });
+
+        /**
+         * 选择商品规格
+         * @param pss
+         */
+        function createOrder(datas) {
+
+            if (datas.length == 0) {
+                return;
+            }
+            var openId = [[${wechat.openId}]];
+
+            TX.CORE.p({
+                data: { p: JSON.stringify(datas),openId:openId},
+                url: "/admin/wechat/createOrder",
+                success: function (resp) {
+                    if (resp.baseResp.success) {
+                        TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                            location.reload(true);
+                        });
+                    } else {
+                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                    }
+                }
+            });
+        }
+
     </script>
 </th:block>
 

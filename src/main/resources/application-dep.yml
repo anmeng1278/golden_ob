@@ -12,7 +12,7 @@ logging:
 spring:
   datasource:
       type: com.alibaba.druid.pool.DruidDataSource
-      url: jdbc:mysql://****:3306/golden_ob?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      url: jdbc:mysql://172.16.5.102:3306/golden_ob?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
       username: zhangning
       password: zhangning123
       driver-class-name: com.mysql.jdbc.Driver
@@ -39,6 +39,10 @@ spring:
     password: JSB@#$%2345
 
 webconfig:
+
+  #执行任务
+  runJob: false
+
   # 图片服务器
   imgServerURL: http://img.jsjinfo.cn/upload
   # 是否上传到图片服务器 (true为上传到图片服务器 false为上传到本地服务器)

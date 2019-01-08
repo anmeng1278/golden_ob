@@ -63,6 +63,11 @@ public class Webconfig {
      */
     private String memberApiUrl;
 
+    /**
+     * 是否执行任务
+     */
+    private Boolean runJob;
+
     public String getAppId() {
         return appId;
     }
@@ -237,5 +242,13 @@ public class Webconfig {
 
     public void setMemberApiUrl(String memberApiUrl) {
         this.memberApiUrl = memberApiUrl;
+    }
+
+    public Boolean getRunJob() {
+        return runJob;
+    }
+
+    public void setRunJob(Boolean runJob) {
+        this.runJob = runJob;
     }
 }
