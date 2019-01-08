@@ -36,7 +36,7 @@ public class TemplateDtoTest {
     @Test
     public void newOrderPaySuccessed() {
 
-        Order order = orderService.selectById(10036);
+        Order order = orderService.selectById(10279);
         Map map = new HashMap();
         map.put("productName","超级大螃蟹");
         TemplateDto dto = TemplateDto.NewOrderPaySuccessed(order, map);
