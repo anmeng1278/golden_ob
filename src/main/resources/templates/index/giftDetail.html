@@ -136,7 +136,7 @@
     <!--main end-->
 
     <!--footer start-->
-    <div class="footer">
+    <div class="footer" th:if="${giftDto.giftStatus.value != 40}">
 
         <th:block th:if="${giftDto.giftStatus.value != 60}">
             <a href="javascript:;" th:attr="data-gift-uniqueId=${giftDto.giftUniqueCode}" class="cancel-btn">取消赠送</a>
