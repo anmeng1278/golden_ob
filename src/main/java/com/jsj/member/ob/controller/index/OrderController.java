@@ -79,7 +79,7 @@ public class OrderController extends BaseController {
         data.put("successUrl", this.Url(successUrl));
 
         String url = this.Url("/order");
-        return RestResponseBo.ok("创建订单成功", url, data);
+        return RestResponseBo.ok("请求成功", url, data);
 
     }
 
