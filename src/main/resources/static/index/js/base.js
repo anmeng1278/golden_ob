@@ -62,7 +62,9 @@ ob.share = function () {
         $(html.join('')).appendTo($(document.body));
     }
 
-    $("div.share-layer").show();
+    $("div.share-layer").show().click(function () {
+        $(this).hide();
+    });
 
 };
 
