@@ -524,6 +524,10 @@ public class GiftLogic extends BaseLogic {
         List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
         List<StockDto> stockDtos = new ArrayList<>();
 
+        if(giftStocks.size() == 0 || giftStocks == null){
+            return stockDtos;
+        }
+
         for (GiftStock giftStock : giftStocks) {
             StockDto stockDto = StockLogic.GetStock(giftStock.getStockId());
             stockDtos.add(stockDto);
@@ -703,6 +707,10 @@ public class GiftLogic extends BaseLogic {
         List<Gift> gifts = giftLogic.giftService.selectList(wrapper);
 
         List<GiftDto> giftDtos = new ArrayList<>();
+        if(gifts.size() == 0 || gifts == null){
+            return giftDtos;
+        }
+
         for (Gift gift : gifts) {
             GiftDto giftDto = GiftLogic.ToDto(gift);
             List<StockDto> stockDtos = GiftLogic.GetGiftStocks(gift.getGiftId());
@@ -718,6 +726,7 @@ public class GiftLogic extends BaseLogic {
 
     /**
      * 获取用户赠送数量
+     *
      * @param openId
      * @param giftStatus
      * @return
@@ -747,8 +756,13 @@ public class GiftLogic extends BaseLogic {
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
+        List<GiftDto> giftDtos = new ArrayList<>();
+
         //用户领取的库存
         List<StockDto> stockDtos = StockLogic.GetStocks(openId, StockType.GIFT, null);
+        if (stockDtos.size() == 0 || stockDtos == null) {
+            return giftDtos;
+        }
 
         //用户领取库存的父编号
         List<Integer> parentStockIds = stockDtos.stream().map(StockDto::getParentStockId).collect(Collectors.toList());
@@ -760,7 +774,7 @@ public class GiftLogic extends BaseLogic {
         wrapper.orderBy("create_time desc");
         List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
 
-        List<GiftDto> giftDtos = new ArrayList<>();
+
         for (GiftStock giftStock : giftStocks) {
 
             GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
@@ -779,7 +793,6 @@ public class GiftLogic extends BaseLogic {
         //排序
         List<GiftDto> collect = dtos.stream().sorted(Comparator.comparing(GiftDto::getCreateTime).reversed())
                 .collect(Collectors.toList());
-
         return collect;
     }
     //endregion
