@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.product.ProductImgDto;
+import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.DictType;
@@ -285,17 +286,24 @@ public class AdminActivityController {
                 double specSalePrice = Double.parseDouble(productSpecSalePrices[i]);
                 int productSpecStockCount = Integer.parseInt(productSpecStockCounts[i]);
 
+                ProductSpecDto specDto = ProductLogic.GetProductSpec(specId);
+                if (productSpecStockCount > specDto.getStockCount()) {
+                    throw new TipException(String.format("\"%s %s\"<br />使用库存不能大于剩余库存<br />当前使用：%d<br />当前剩余：%d",
+                            specDto.getProductDto().getProductName(),
+                            specDto.getSpecName(),
+                            productSpecStockCount,
+                            specDto.getStockCount()));
+                }
+
                 ActivityProduct activityProduct = activityProductService.selectOne(new EntityWrapper<ActivityProduct>().where("activity_id={0} and product_spec_id={1}", activityId, specId));
                 if (activityProduct == null) {
-
-                    ProductSpec productSpec = productSpecService.selectById(specId);
 
                     activityProduct = new ActivityProduct();
                     activityProduct.setSalePrice(specSalePrice);
                     activityProduct.setActivityId(activityId);
                     activityProduct.setCreateTime(DateUtils.getCurrentUnixTime());
                     activityProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
-                    activityProduct.setProductId(productSpec.getProductId());
+                    activityProduct.setProductId(specDto.getProductId());
                     activityProduct.setProductSpecId(specId);
                     activityProduct.setSort(i);
                     activityProduct.setStockCount(productSpecStockCount);

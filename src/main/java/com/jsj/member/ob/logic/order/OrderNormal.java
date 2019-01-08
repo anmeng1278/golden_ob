@@ -147,6 +147,7 @@ public class OrderNormal extends OrderBase {
         resp.setOrderUniqueCode(order.getOrderUniqueCode());
         resp.setExpiredTime(order.getExpiredTime());
         resp.setSuccess(true);
+        resp.setMessage("订单创建成功");
 
         return resp;
 

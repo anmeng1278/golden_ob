@@ -197,6 +197,8 @@ public class OrderGroupon extends OrderBase {
         });
 
         resp.setSuccess(true);
+        resp.setMessage("订单创建成功");
+
         return resp;
 
     }

@@ -224,6 +224,7 @@ public class OrderExchange extends OrderBase {
         resp.setOrderUniqueCode(order.getOrderUniqueCode());
         resp.setExpiredTime(order.getExpiredTime());
         resp.setSuccess(true);
+        resp.setMessage("兑换成功");
 
         return resp;
 
