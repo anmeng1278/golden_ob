@@ -32,6 +32,9 @@ spring:
 
 webconfig:
 
+  #执行任务
+  runJob: false
+
   # 公众号appid
   appId: wxe0942a1e2a5f53e3
   # 公众号 appSecrect

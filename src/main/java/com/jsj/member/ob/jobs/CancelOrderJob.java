@@ -1,8 +1,8 @@
 package com.jsj.member.ob.jobs;
 
 import com.alibaba.fastjson.JSON;
+import com.jsj.member.ob.logic.ConfigLogic;
 import com.jsj.member.ob.logic.OrderLogic;
-import com.jsj.member.ob.utils.SpringContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,9 +21,10 @@ public class CancelOrderJob {
     @Scheduled(cron = "0/10 * * * * ?")
     public synchronized void begin() {
 
-        if (SpringContextUtils.getActiveProfile().equals("dev")) {
+        if(!ConfigLogic.GetWebConfig().getRunJob()){
             return;
         }
+
         try {
             List<Integer> orderIds = OrderLogic.CancelOrder();
             if (!orderIds.isEmpty()) {
