@@ -35,42 +35,42 @@
                     <input type="checkbox" name="typeId"
                            style="width:20px;height:20px;"
                            lay-filter="typeId"
+                           th:disabled="${info.activityId > 0 && info.typeId != type.value}"
                            th:title="${type.message}" th:value="${type.value}"
                            th:checked="${info.typeId == type.value}">
                 </th:block>
             </div>
         </div>
 
-        <div class="layui-form-item" id="showTime">
-
-            <div class="layui-inline">
-                <label class="layui-form-label">预热时间</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="showTime" placeholder="yyyy-MM-dd HH:mm:ss"
-                           th:value="${dateUtils.formatDateByUnixTime(info.showTime, 'yyyy-MM-dd HH:mm:ss')}"
-                           autocomplete="off" class="layui-input" id="show" readonly="readonly">
-                </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">预热时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="showTime" placeholder="yyyy-MM-dd HH:mm:ss"
+                       lay-verify="req" title="预热时间"
+                       th:value="${dateUtils.formatDateByUnixTime(info.showTime, 'yyyy-MM-dd HH:mm:ss')}"
+                       autocomplete="off" class="layui-input" id="show" readonly="readonly">
             </div>
+            <div class="layui-form-mid layui-word-aux-red">*</div>
 
-            <div class="layui-inline">
-                <label class="layui-form-label">开始时间</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="beginTime" placeholder="yyyy-MM-dd HH:mm:ss"
-                           th:value="${dateUtils.formatDateByUnixTime(info.beginTime, 'yyyy-MM-dd HH:mm:ss')}"
-                           autocomplete="off" class="layui-input" id="start" readonly="readonly">
-                </div>
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="beginTime" placeholder="yyyy-MM-dd HH:mm:ss"
+                       lay-verify="req" title="开始时间"
+                       th:value="${dateUtils.formatDateByUnixTime(info.beginTime, 'yyyy-MM-dd HH:mm:ss')}"
+                       autocomplete="off" class="layui-input" id="start" readonly="readonly">
             </div>
+            <div class="layui-form-mid layui-word-aux-red">*</div>
 
-            <div class="layui-inline" >
-                <label class="layui-form-label">结束时间</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="endTime" placeholder="yyyy-MM-dd HH:mm:ss"
-                           th:value="${dateUtils.formatDateByUnixTime(info.endTime, 'yyyy-MM-dd HH:mm:ss')}"
-                           autocomplete="off" class="layui-input" id="end" readonly="readonly">
-                </div>
+            <label class="layui-form-label">结束时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="endTime" placeholder="yyyy-MM-dd HH:mm:ss"
+                       lay-verify="req" title="结束时间"
+                       th:value="${dateUtils.formatDateByUnixTime(info.endTime, 'yyyy-MM-dd HH:mm:ss')}"
+                       autocomplete="off" class="layui-input" id="end" readonly="readonly">
             </div>
-
+            <div class="layui-form-mid layui-word-aux-red">*</div>
         </div>
+
 
         <div class="layui-form-item" id="price" style="display: none;">
             <label class="layui-form-label">售价</label>
@@ -105,7 +105,7 @@
             <div class="layui-form-mid layui-word-aux-red">*</div>
         </div>
 
-        <div class="layui-form-item" id="stock">
+        <div class="layui-form-item" style="display: none;" id="stock">
             <label class="layui-form-label">库存</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" name="stockCount"
@@ -116,7 +116,7 @@
             <div class="layui-form-mid layui-word-aux-red">*</div>
         </div>
 
-        <div id="pic">
+        <div id="pic" style="display: none;">
             <div class="layui-form-item">
                 <div class="layui-form-item">
                     <label class="layui-form-label">活动封面</label>
@@ -181,7 +181,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">活动商品</label>
             <div class="layui-input-block" style="width:85%;">
-                <button class="layui-btn layui-btn-normal layui-btn-xs" th:if="${allowModify}" type="button" id="btnChooseProducts"
+                <button class="layui-btn layui-btn-normal layui-btn-xs" th:if="${allowModify}" type="button"
+                        id="btnChooseProducts"
                         style="margin-top: 10px;">
                     <i class="layui-icon">&#xe654;</i> 添加商品
                 </button>
@@ -190,12 +191,13 @@
                     <thead>
                     <tr>
                         <th style="width: 8%;">编号</th>
-                        <th style="width: 8%;display: none"  class="seckillPicture">商品图片</th>
+                        <th style="width: 8%;display: none" class="seckillPicture">商品图片</th>
                         <th>商品规格</th>
                         <th style="width: 8%;">售价</th>
                         <th style="width: 8%;">原价</th>
-                        <th style="width: 8%;">库存</th>
-                        <th style="width: 10%; display: none;" skillprice>秒杀价</th>
+                        <th style="width: 10%;">剩余库存</th>
+                        <th style="width: 10%;">使用库存</th>
+                        <th style="width: 8%; display: none;" skillprice>秒杀价格</th>
                         <th style="width: 12%;">操作</th>
                     </tr>
                     </thead>
@@ -204,21 +206,30 @@
                         <tr th:attr="data-product-id=${ap.productId}">
                             <th:block th:with="pro=${productLogic.GetProduct(ap.productId)}">
                                 <td th:text="${ap.productSpecId}"></td>
-                                <td style="display: none" class="seckillPicture" th:if="${info.typeId == 20}">
+                                <td style="display: none" class="seckillPicture">
                                     <th:block
                                             th:if="${!#lists.isEmpty(productLogic.GetProductImgDtos(ap.productId,seckill))}">
                                         <img th:src="${productLogic.GetProductImgDtos(ap.productId,seckill)[0].imgPath}"
                                              style="width:50px;height: 50px;"/>
                                     </th:block>
                                 </td>
+                                <th:block th:with="spec=${productLogic.GetProductSpec(ap.productSpecId)}">
+                                    <td>
+                                        <th:block th:text="${pro.productName}"></th:block>
+                                        <th:block
+                                                th:text="${spec.specName}"></th:block>
+                                    </td>
+                                    <td th:text="${pro.salePrice}"></td>
+                                    <td th:text="${pro.originalPrice}"></td>
+                                    <td th:text="${spec.stockCount}"></td>
+                                </th:block>
                                 <td>
-                                    <th:block th:text="${pro.productName}"></th:block>
-                                    <th:block
-                                            th:text="${productLogic.GetProductSpec(ap.productSpecId).specName}"></th:block>
+                                    <input type="text" class="layui-input" name="productSpecStockCount"
+                                           lay-verify="num2"
+                                           title="库存"
+                                           style="height:20px;"
+                                           th:value="${ap.stockCount}" placeholder="请输入库存"/>
                                 </td>
-                                <td th:text="${pro.salePrice}"></td>
-                                <td th:text="${pro.originalPrice}"></td>
-                                <td th:text="${pro.stockCount}"></td>
                                 <td style="display: none;" skillprice>
                                     <input type="text" class="layui-input" name="productSpecSalePrice"
                                            lay-verify="float4"
@@ -343,7 +354,6 @@
                 $("td[skillprice], th[skillprice]").hide();
                 $("#pic").hide();
                 $("th[class='seckillPicture'],td[class='seckillPicture']").hide();
-                $("#showTime").hide();
                 $("#stock").hide();
                 $("button[name=picBtn]").hide();
 
@@ -354,7 +364,6 @@
                 $(":text[name='productSpecSalePrice']").attr("lay-verify", "float4");
                 $(":text[name='stockCount']").attr("lay-verify", "num2");
 
-
                 //所选类型
                 var typeId = data.value;
 
@@ -363,15 +372,14 @@
 
                 switch (typeId) {
 
-                    //团单
+                        //团单
                     case "10":
                         $("#groupNumber").show();
                         $("#price").show();
                         $(":text[name='productSpecSalePrice']").removeAttr("lay-verify");
-                        $("#showTime").show();
                         $("#stock").show();
                         break;
-                    //秒杀
+                        //秒杀
                     case "20":
                         $("td[skillprice], th[skillprice]").show();
                         $(":text[name='number']").removeAttr("lay-verify");
@@ -379,8 +387,7 @@
                         $(":text[name='salePrice']").removeAttr("lay-verify");
                         $("th[class='seckillPicture'],td[class='seckillPicture']").show();
                         $("button[name='picBtn']").show();
-                        $("#showTime").show();
-                        $("#stock").show();
+                        $(":text[name='stockCount']").removeAttr("lay-verify");
                         break;
                     case "30":
                         //组合
@@ -388,16 +395,15 @@
                         $("#pic").show();
                         $(":text[name='number']").removeAttr("lay-verify");
                         $(":text[name='productSpecSalePrice']").removeAttr("lay-verify");
-                        $("#showTime").show();
                         $("#stock").show();
                         break;
                     case "40":
                         //权益兑换
                         $(":text[name='number']").removeAttr("lay-verify");
-                        $(":text[name='originalPrice']").removeAttr("lay-verify", "float4");
-                        $(":text[name='salePrice']").removeAttr("lay-verify", "float4");
-                        $(":text[name='productSpecSalePrice']").removeAttr("lay-verify", "float4");
-                        $(":text[name='stockCount']").removeAttr("lay-verify", "num2")
+                        $(":text[name='originalPrice']").removeAttr("lay-verify");
+                        $(":text[name='salePrice']").removeAttr("lay-verify");
+                        $(":text[name='productSpecSalePrice']").removeAttr("lay-verify");
+                        $(":text[name='stockCount']").removeAttr("lay-verify");
                         break;
 
                 }
@@ -441,9 +447,9 @@
             //设置时间
             layui.use(['form', 'layedit', 'laydate', "jquery"], function () {
                 var form = layui.form
-                    , layer = layui.layer
-                    , $ = layui.jquery
-                    , laydate = layui.laydate;
+                        , layer = layui.layer
+                        , $ = layui.jquery
+                        , laydate = layui.laydate;
                 var nowTime = new Date().valueOf();
 
                 //日期
@@ -610,7 +616,8 @@
                             html.push('    <td>' + item.productName + item.specName + '</td>');
                             html.push('    <td>' + item.salePrice + '</td>');
                             html.push('    <td>' + item.originalPrice + '</td>');
-                            html.push('    <td>' + item.stockCount + '</td> ');
+                            html.push('    <td>' + item.stockCount + '</td>');
+                            html.push('    <td><input type="text" class="layui-input" name="productSpecStockCount" lay-verify="num2" title="库存" style="height:20px;" value="0" placeholder="请输入库存"/></td> ');
 
                             html.push('    <td style="display: none;" skillprice>');
                             html.push('     <input type="text" class="layui-input" name="productSpecSalePrice" lay-verify="req" title="秒杀价" style="height:20px;" value="0" placeholder="请输入秒杀价"/>');
@@ -646,7 +653,7 @@
          * @param src
          */
         function setImgPath(productId, src) {
-            $("tr[data-product-id='"+productId+"'] img").attr("src", src);
+            $("tr[data-product-id='" + productId + "'] img").attr("src", src);
         }
     </script>
 </th:block>

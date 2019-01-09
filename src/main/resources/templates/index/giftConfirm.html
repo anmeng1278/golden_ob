@@ -26,7 +26,7 @@
             $(document).on("click", "a[data-share-type]", function () {
 
                 //动态获取数据
-                var blessings = $("div.head-wrap-item p.blessings").html();
+                var blessings = $("div.head-wrap-item textarea.blessings").val();
                 var shareType = $(this).attr("data-share-type");
 
                 TX.CORE.p({
@@ -36,7 +36,7 @@
                         shareType: shareType
                     },
                     success: function (resp) {
-                        $("div.share-layer").show();
+                        ob.share();
                     }
                 })
 
@@ -70,7 +70,7 @@
                     data: {typeId: typeId},
                     success: function (resp) {
                         if (resp.baseResp.success) {
-                            $("div.head-wrap-item p.blessings").html(resp.datas.remark);
+                            $("div.head-wrap-item textarea.blessings").attr("value",resp.datas.remark);
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
                         }
@@ -129,7 +129,7 @@
                 </ul>
                 <div class="head-wrap clear">
                     <div class="head-wrap-item" style="display: block">
-                        <p class="blessings">天气凉了，这份礼物带有我的温度~</p>
+                        <textarea style= "background:transparent;border-style:none;width: 100%;height: 70% " class="blessings" value="">天气凉了，这份礼物带有我的温度~</textarea>
                         <p class="blessings-btn"><span>换一句</span></p>
                     </div>
                 </div>
@@ -181,14 +181,6 @@
     <div class="footer-bg"></div>
     <!--footer-bg end-->
 
-
-    <div class="share-layer" style="display: none;">
-        <div class="share-layer-bg"></div>
-        <div class="share-layer-con">
-            <span class="share-layer-sanjiao"></span>
-            <p class="share-layer-p">点击右上角【•••】<br/>分享到朋友，朋友圈。<br/>让大家一起来试试手气吧</p>
-        </div>
-    </div>
 
 </div>
 </html>

@@ -5,8 +5,10 @@ import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.enums.OrderFlag;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.OrderLogic;
+import com.jsj.member.ob.tuple.TwoTuple;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,8 @@ import java.util.List;
 @Controller
 @RequestMapping("${webconfig.virtualPath}/order")
 public class OrderController extends BaseController {
+
+    //region (public) 订单列表 index
 
     /**
      * 订单列表
@@ -43,10 +47,18 @@ public class OrderController extends BaseController {
 
         request.setAttribute("orderDtos", orderDtos);
         request.setAttribute("orderFlag", orderFlag);
-
+        //request.setAttribute("mini", true);
         return "index/order";
     }
+    //endregion
 
+    //region (public) 取消订单 cancel
+
+    /**
+     * 取消订单
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/cancel", method = RequestMethod.POST)
     @ResponseBody
     public RestResponseBo cancel(HttpServletRequest request) {
@@ -56,29 +68,39 @@ public class OrderController extends BaseController {
 
         return RestResponseBo.ok("订单取消成功");
     }
+    //endregion
 
+    //region (public) 创建支付请求 createPay
+
+    /**
+     * 创建支付请求
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/createPay", method = RequestMethod.POST)
     @ResponseBody
     public RestResponseBo createPay(HttpServletRequest request) throws Exception {
 
         int orderId = Integer.parseInt(request.getParameter("orderId"));
-        GetPayTradeResp pay = this.createPay(orderId);
+        TwoTuple<GetPayTradeResp, SourceType> twoTuple = this.createPay(request,orderId);
 
         OrderDto orderDto = OrderLogic.GetOrder(orderId);
-
         HashMap<String, Object> data = new HashMap<>();
 
-        if (!pay.getResponseHead().getCode().equals("0000")) {
-            throw new TipException(pay.getResponseHead().getMessage());
+        if (!twoTuple.first.getResponseHead().getCode().equals("0000")) {
+            throw new TipException(twoTuple.first.getResponseHead().getMessage());
         }
-        data.put("pay", pay);
+        data.put("pay", twoTuple.first);
+        data.put("source", twoTuple.second.getValue());
 
         String successUrl = String.format("/pay/success/%s", orderDto.getOrderUniqueCode());
         data.put("successUrl", this.Url(successUrl));
 
         String url = this.Url("/order");
-        return RestResponseBo.ok("创建订单成功", url, data);
+        return RestResponseBo.ok("请求成功", url, data);
 
     }
+    //endregion
 
 }

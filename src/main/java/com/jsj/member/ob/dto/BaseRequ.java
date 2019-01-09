@@ -12,6 +12,13 @@ public class BaseRequ {
      */
     private String openId;
 
+
+    /**
+     * 会员编号
+     */
+    private int jsjId;
+
+
     public int getTimeStamp() {
         return timeStamp;
     }
@@ -26,5 +33,13 @@ public class BaseRequ {
 
     public void setOpenId(String openId) {
         this.openId = openId;
+    }
+
+    public int getJsjId() {
+        return jsjId;
+    }
+
+    public void setJsjId(int jsjId) {
+        this.jsjId = jsjId;
     }
 }

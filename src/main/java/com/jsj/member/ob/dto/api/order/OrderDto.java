@@ -2,6 +2,7 @@ package com.jsj.member.ob.dto.api.order;
 
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.enums.OrderStatus;
+import com.jsj.member.ob.enums.SourceType;
 
 import java.util.List;
 
@@ -66,6 +67,12 @@ public class OrderDto {
      * 支付有效时间
      */
     private Integer expiredTime;
+
+    /**
+     * 订单来源
+     */
+    private SourceType sourceType;
+
     /**
      * 创建时间
      */
@@ -254,5 +261,13 @@ public class OrderDto {
 
     public void setOrderUniqueCode(String orderUniqueCode) {
         this.orderUniqueCode = orderUniqueCode;
+    }
+
+    public SourceType getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(SourceType sourceType) {
+        this.sourceType = sourceType;
     }
 }

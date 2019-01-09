@@ -11,7 +11,7 @@ import java.io.Serializable;
  *   @description : Order 订单表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2019-01-05
  */
 @TableName("_order")
 public class Order implements Serializable {
@@ -61,6 +61,8 @@ public class Order implements Serializable {
      */
 	@TableField("coupon_price")
 	private Double couponPrice;
+	@TableField("equity_price")
+	private Double equityPrice;
     /**
      * 备注
      */
@@ -80,6 +82,11 @@ public class Order implements Serializable {
      */
 	@TableField("type_id")
 	private Integer typeId;
+    /**
+     * 订单来源 0空铁公众号 1空铁小程序 2金色世纪小程序 3金色世纪公众号
+     */
+	@TableField("order_source_id")
+	private Integer orderSourceId;
     /**
      * 支付时间
      */
@@ -179,6 +186,14 @@ public class Order implements Serializable {
 		this.couponPrice = couponPrice;
 	}
 
+	public Double getEquityPrice() {
+		return equityPrice;
+	}
+
+	public void setEquityPrice(Double equityPrice) {
+		this.equityPrice = equityPrice;
+	}
+
 	public String getRemarks() {
 		return remarks;
 	}
@@ -209,6 +224,14 @@ public class Order implements Serializable {
 
 	public void setTypeId(Integer typeId) {
 		this.typeId = typeId;
+	}
+
+	public Integer getOrderSourceId() {
+		return orderSourceId;
+	}
+
+	public void setOrderSourceId(Integer orderSourceId) {
+		this.orderSourceId = orderSourceId;
 	}
 
 	public Integer getPayTime() {
@@ -264,10 +287,12 @@ public class Order implements Serializable {
 			", transactionId=" + transactionId +
 			", wechatCouponId=" + wechatCouponId +
 			", couponPrice=" + couponPrice +
+			", equityPrice=" + equityPrice +
 			", remarks=" + remarks +
 			", activityId=" + activityId +
 			", activityOrderId=" + activityOrderId +
 			", typeId=" + typeId +
+			", orderSourceId=" + orderSourceId +
 			", payTime=" + payTime +
 			", expiredTime=" + expiredTime +
 			", createTime=" + createTime +

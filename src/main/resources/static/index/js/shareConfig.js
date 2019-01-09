@@ -1,43 +1,69 @@
 if (typeof shareConfig == "undefined") {
-    var url = location.protocol + "//" + location.host + ob.virtualPath;
     shareConfig = {
         title: "空铁管家",
         desc: "服务覆盖全国100个城市，300万商旅人士的出行首选！",
-        link: url,
+        link: location.href,
         imgUrl: "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68"
     };
 }
 
 //兼容小程序分享
-if (typeof wx != "undefined" && typeof wx.miniProgram != "undefined") {
-    wx.miniProgram.navigateBack({delta: 1});
-    // wx.miniProgram.postMessage({data: '获取成功'});
-    wx.miniProgram.postMessage({
-        data: {
-            link: shareConfig.link,
-            title: shareConfig.title,
-            desc: shareConfig.desc,
-            imgUrl: shareConfig.imgUrl
-        }
-    });
+// if (typeof wx != "undefined" && typeof wx.miniProgram != "undefined") {
+//     // wx.miniProgram.navigateBack({delta: 1});
+//     // wx.miniProgram.postMessage({data: '获取成功'});
+//     wx.miniProgram.postMessage({
+//         data: {
+//             link: shareConfig.link,
+//             title: shareConfig.title,
+//             desc: shareConfig.desc,
+//             imgUrl: shareConfig.imgUrl
+//         }
+//     });
+// }
+
+if (shareConfig.link) {
+    if (shareConfig.link.indexOf(ob.host) == -1) {
+        shareConfig.link = ob.host + shareConfig.link;
+    }
+} else {
+    shareConfig.link = location.href;
 }
+
+shareConfig.desc = shareConfig.desc || "服务覆盖全国100个城市，300万商旅人士的出行首选！";
+shareConfig.title = shareConfig.title || "空铁管家";
+shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68";
+
+if (shareConfig.link.indexOf(location.host) == -1) {
+    shareConfig.link = "https://" + location.host + shareConfig.link;
+}
+
+if (shareConfig.link.indexOf("https") == -1) {
+    shareConfig.link = "https" + shareConfig.link.substring(shareConfig.link.indexOf(":"));
+}
+
+if (location.host.indexOf("localhost") > -1) {
+    shareConfig.link = "http" + shareConfig.link.substring(shareConfig.link.indexOf(":"));
+}
+
+console.log(shareConfig);
 
 wx.ready(function () {
 
-    var url = location.protocol + "//" + location.host;
-    if (shareConfig.link) {
-        if (shareConfig.link.indexOf(location.host) == -1) {
-            shareConfig.link = url + shareConfig.link;
-        }
-    } else {
-        shareConfig.link = url + virtualPath;
+    if (ob.mini) {
+
+        wx.miniProgram.postMessage({
+            data: {
+                link: ob.conf.browser + "?url=" + encodeURIComponent(shareConfig.link),
+                // link: "/pages/strictSelection/index?url="+encodeURIComponent("https://h5.ktgj.com/ob/exchange"),
+                title: shareConfig.title,
+                desc: shareConfig.desc,
+                imgUrl: shareConfig.imgUrl
+            }
+        });
+
+        return;
     }
 
-    shareConfig.desc = shareConfig.desc || "服务覆盖全国100个城市，300万商旅人士的出行首选！";
-    shareConfig.title = shareConfig.title || "空铁管家";
-    shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68";
-
-    console.log(shareConfig);
     wx.onMenuShareAppMessage({
         title: shareConfig.title, // 分享标题
         desc: shareConfig.desc, // 分享描述

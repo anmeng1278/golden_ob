@@ -1,0 +1,8 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseResponse.proto";
+
+message StrictChoiceBackResponse {
+   optional BaseResponse BaseResponse = 1;
+   optional int32 ChoiceID = 2 [default = 0];
+}

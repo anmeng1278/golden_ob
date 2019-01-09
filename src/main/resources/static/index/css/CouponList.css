@@ -9,7 +9,7 @@ html,body{ background: #F5F5F5;}
 .coupon-item-back:before{ right: -0.15rem; background: #7665FF;}
 .coupon-item-lt{ width: 2.6rem; height: 1.6rem; text-align: center; border-right: 1px dashed #ECECEC; position: absolute; top: 50%; left: 0; margin-top: -0.8rem;}
 .coupon-item-price{ position: relative; margin-top: 0.3rem;}
-.coupon-item-price span:nth-child(1){ font-size: 0.6rem; color: #151515; font-weight: 700;}
+.coupon-item-price span:nth-child(1){ font-size: 0.8rem; color: #151515; font-weight: 700;}
 .coupon-item-price span:nth-child(2){ font-size: 0.30rem; color: #333; font-weight: 700; position: absolute; top: 0;}
 .coupon-price-tips{ font-size: 0.24rem; color: #999; padding-top: 0.16rem;}
 .coupon-item-rt{ margin: 0.42rem 0 0 3.2rem;}

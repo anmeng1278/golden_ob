@@ -1,28 +1,27 @@
 package com.jsj.member.ob.controller.admin;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.coupon.CouponDto;
-import com.jsj.member.ob.dto.api.coupon.WechatCouponDto;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
+import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
+import com.jsj.member.ob.dto.api.order.CreateOrderResp;
+import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.stock.StockFlowDto;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
+import com.jsj.member.ob.dto.proto.NotifyModelOuterClass;
 import com.jsj.member.ob.entity.*;
-import com.jsj.member.ob.enums.CouponType;
-import com.jsj.member.ob.enums.StockStatus;
-import com.jsj.member.ob.enums.StockType;
-import com.jsj.member.ob.logic.CouponLogic;
-import com.jsj.member.ob.logic.GiftLogic;
-import com.jsj.member.ob.logic.StockLogic;
-import com.jsj.member.ob.logic.WechatLogic;
-import com.jsj.member.ob.service.CouponService;
-import com.jsj.member.ob.service.StockService;
-import com.jsj.member.ob.service.WechatCouponService;
-import com.jsj.member.ob.service.WechatService;
+import com.jsj.member.ob.enums.*;
+import com.jsj.member.ob.logic.*;
+import com.jsj.member.ob.logic.order.OrderBase;
+import com.jsj.member.ob.logic.order.OrderFactory;
+import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.CCPage;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +34,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,6 +58,15 @@ public class AdminWechatController extends BaseController {
 
     @Autowired
     WechatCouponService wechatCouponService;
+
+    @Autowired
+    ProductService productService;
+
+    @Autowired
+    DictService dictService;
+
+    @Autowired
+    ProductSpecService productSpecService;
 
 
     /**
@@ -133,6 +140,7 @@ public class AdminWechatController extends BaseController {
 
         request.setAttribute("stockType", stockType);
         request.setAttribute("stockStatus", stockStatus);
+
 
         return "admin/wechat/wechatStock";
 
@@ -241,6 +249,107 @@ public class AdminWechatController extends BaseController {
             wechatCouponService.insertBatch(wechatCoupons);
         }
         return RestResponseBo.ok("赠送成功");
+    }
+
+
+
+    /**
+     * 选择活动商品页面
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/chooseProducts")
+    public String chooseProducts(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+            @RequestParam(value = "typeId", defaultValue = "0") Integer typeId,
+            @RequestParam(value = "propertyTypeId", defaultValue = "0") Integer propertyTypeId,
+            @RequestParam(value = "keys", defaultValue = "") String keys,
+            HttpServletRequest request) {
+
+        EntityWrapper<Product> wrapper = new EntityWrapper<>();
+
+        wrapper.where("delete_time is null and ifpass = 1");
+        wrapper.where(!StringUtils.isBlank(keys), "(product_name LIKE concat(concat('%',{0}),'%') )", keys);
+        wrapper.where("exists( select * from _product_spec where product_id = _product.product_id )");
+        if (typeId > 0) {
+            wrapper.where("type_id={0}", typeId);
+        }
+        if (propertyTypeId > 0) {
+            wrapper.where("property_type_id={0}", propertyTypeId);
+        }
+        wrapper.orderBy("create_time desc");
+
+        Page<Product> pageInfo = new Page<>(page, limit);
+        Page<Product> pp = productService.selectPage(pageInfo, wrapper);
+
+        //商品分类
+        List<Dict> productType = DictLogic.GetDicts(DictType.PRODUCTTYPE);
+
+        //商品属性
+        List<PropertyType> productProperty = Arrays.asList(PropertyType.values());
+
+        request.setAttribute("infos", new CCPage<Dict>(pp, limit));
+        request.setAttribute("typeId", typeId);
+        request.setAttribute("keys", keys);
+        request.setAttribute("propertyTypeId", propertyTypeId);
+        request.setAttribute("productType", productType);
+        request.setAttribute("productProperty", productProperty);
+
+        return "admin/wechat/chooseProducts";
+    }
+
+
+    @PostMapping("/createOrder")
+    @ResponseBody
+    public RestResponseBo createOrder(HttpServletRequest request) {
+
+        String openId = request.getParameter("openId");
+        String p = request.getParameter("p");
+        List<JSONObject> jsonObjects = JSON.parseArray(p, JSONObject.class);
+
+
+        CreateOrderRequ requ = new CreateOrderRequ();
+        requ.setActivityType(ActivityType.NORMAL);
+        requ.getBaseRequ().setOpenId(openId);
+        requ.setSourceType(SourceType.AWKTC);
+        requ.setRemarks("手动添加库存");
+
+        for (JSONObject jo : jsonObjects) {
+
+            int productId = jo.getIntValue("productId");
+            int num = jo.getIntValue("num");
+            int productSpecId = jo.getInteger("productSpecId");
+
+            OrderProductDto orderProduct = new OrderProductDto();
+            orderProduct.setProductId(productId);
+            orderProduct.setProductSpecId(productSpecId);
+            orderProduct.setNumber(num);
+
+            requ.getOrderProductDtos().add(orderProduct);
+        }
+
+        //获取创建订单请求
+        OrderBase orderBase = OrderFactory.GetInstance(ActivityType.NORMAL);
+        CreateOrderResp resp = orderBase.CreateOrder(requ);
+
+        NotifyModelOuterClass.NotifyModel notifyModel = NotifyModelOuterClass.NotifyModel.getDefaultInstance();
+        orderBase.PaySuccessed(resp.getOrderId(), notifyModel);
+
+        return RestResponseBo.ok("添加成功");
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public RestResponseBo deleteProduct(HttpServletRequest request){
+
+        String stockId = request.getParameter("stockId");
+        Stock stock = stockService.selectById(stockId);
+        stock.setDeleteTime(DateUtils.getCurrentUnixTime());
+        stockService.updateById(stock);
+
+        return RestResponseBo.ok("删除成功");
     }
 
 }

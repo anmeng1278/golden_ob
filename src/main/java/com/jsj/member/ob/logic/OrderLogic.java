@@ -12,6 +12,7 @@ import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.OrderFlag;
 import com.jsj.member.ob.enums.OrderStatus;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
@@ -164,17 +165,19 @@ public class OrderLogic extends BaseLogic {
             orderLogic.orderService.updateById(o);
 
             //未支付订单取消客服消息
-            Map<String,Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>();
             StringBuilder sb = new StringBuilder();
             for (OrderProductDto orderProductDto : orderProductDtos) {
-                sb.append(orderProductDto.getProductDto().getProductName() +"*"+ orderProductDto.getNumber()).append(",");
+                sb.append(orderProductDto.getProductDto().getProductName() + "*" + orderProductDto.getNumber()).append(",");
 
             }
-            if(sb.length()>0){
-                sb.deleteCharAt(sb.length()-1);
+            if (sb.length() > 0) {
+                sb.deleteCharAt(sb.length() - 1);
             }
-            map.put("productName",sb);
-            TemplateDto temp = TemplateDto.CancelUnPayOrder(o,map);
+            map.put("productName", sb);
+            map.put("title","您有订单在30分钟内未完成支付已被取消");
+            map.put("reason","超时未支付");
+            TemplateDto temp = TemplateDto.CancelUnPayOrder(o, map);
             orderLogic.wxSender.sendNormal(temp);
         }
 
@@ -209,6 +212,22 @@ public class OrderLogic extends BaseLogic {
 
         //取消订单
         orderLogic.orderService.updateById(order);
+
+        //未支付订单取消客服消息
+        Map<String, Object> map = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+        for (OrderProductDto orderProductDto : orderProductDtos) {
+            sb.append(orderProductDto.getProductDto().getProductName() + "*" + orderProductDto.getNumber()).append(",");
+
+        }
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        map.put("productName", sb);
+        map.put("title","您的订单取消已完成");
+        map.put("reason","手动取消");
+        TemplateDto temp = TemplateDto.CancelUnPayOrder(order, map);
+        orderLogic.wxSender.sendNormal(temp);
 
     }
     //endregion
@@ -297,6 +316,7 @@ public class OrderLogic extends BaseLogic {
 
     /**
      * 实体转换
+     *
      * @param entity
      * @return
      */
@@ -323,6 +343,7 @@ public class OrderLogic extends BaseLogic {
         dto.setUpdateTime(entity.getUpdateTime());
 
         dto.setOrderUniqueCode(entity.getOrderUniqueCode());
+        dto.setSourceType(SourceType.valueOf(entity.getOrderSourceId()));
 
         return dto;
 
@@ -333,6 +354,7 @@ public class OrderLogic extends BaseLogic {
 
     /**
      * 获取订单
+     *
      * @param orderId
      * @return
      */
@@ -349,6 +371,7 @@ public class OrderLogic extends BaseLogic {
 
     /**
      * 获取订单
+     *
      * @param orderUniqueCode
      * @return
      */

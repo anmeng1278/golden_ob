@@ -17,5 +17,43 @@ build_ob:
     - if [ $(docker ps -a -q -f "name=test-$pname" | wc -l) -eq 1 ] ;
     -   then docker stop $(docker ps -a -q -f "name=test-$pname") && docker rm $(docker ps -a -q -f "name=test-$pname") ;
     - fi
-    - docker run -d -v "$PWD/target/":/usr/src/myapp -p 8090:80 --name "test-$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --spring.profiles.active=pub
+    - docker run -d -v "$PWD/target/":/usr/src/myapp -e TZ="Asia/Shanghai" -p 8090:80 --name "test-$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --webconfig.runJob=true --spring.profiles.active=pub -Duser.timezone=Asia/Jerusalem
     - echo "发布成功"
+
+
+build_deploy:
+  stage: build
+  tags:
+    - release
+  only:
+    - master.deploy
+  script:
+    - echo "开始编译"
+    - echo $PWD
+    - echo "开始发布"
+    - pname="memberob"
+
+    - docker run -i --rm -v /opt/.m2:/root/.m2 -v $PWD:/usr/src/mymaven -w /usr/src/mymaven maven:3.5.3-jdk-8 mvn clean package -DskipTests
+    - echo "编译并打包服务 [OK]"
+
+    - docker build --no-cache -t maven.jsjit.cn:9911/member/ob:latest .
+    - echo "构建镜像 [OK]"
+
+    - docker push maven.jsjit.cn:9911/member/ob:latest
+    - echo "推送镜像 [OK]"
+
+    - if [[ $(docker ps -f "name=${pname}" -q | wc -l) -ne 0 ]]; then
+    -   docker stop $(docker ps -f "name=${pname}" -q)
+    - fi
+
+    - if [[ $(docker ps -f "name=${pname}-task" -q | wc -l) -ne 0 ]]; then
+    -   docker stop $(docker ps -f "name=${pname}-task" -q)
+    - fi
+
+    - docker run -d --link zen_yalow --rm -p 8090:80 -e RUN_MODEL="--spring.profiles.active=dep" --name ${pname} maven.jsjit.cn:9911/member/ob:latest
+    - docker run -d --link zen_yalow --rm -p 18090:80 -e RUN_MODEL="--spring.profiles.active=dep --webconfig.runJob=true" --name ${pname}-task maven.jsjit.cn:9911/member/ob:latest
+
+    - echo "服务创建 [OK]"
+
+
+

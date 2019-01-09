@@ -38,10 +38,14 @@ spring:
     port: 6379
 
 webconfig:
+
+  #执行任务
+  runJob: false
+
   # 图片服务器
   imgServerURL: http://img.jsjinfo.cn/upload
   # 是否上传到图片服务器 (true为上传到图片服务器 false为上传到本地服务器)
-  imgServerSwitch: false
+  imgServerSwitch: true
   # 公众号appid
   appId: wx555b169abb4d62ce
   # 公众号 appSecrect
@@ -50,7 +54,7 @@ webconfig:
   #虚拟目录
   virtualPath: "/ob"
   #域名
-  host: "http://h5.ktgj.com"
+  host: "https://h5.ktgj.com"
 
   ## 严选活动码生成地址
   activityUrl: https://s5.jsjinfo.cn/third/v1/ThirdApi/API2Partner.aspx
@@ -63,12 +67,17 @@ webconfig:
   ## 严选登录密码
   partnerLoginPassword: jinseyanxuan_123
 
+  ## 会员组接口
+  memberApiUrl: http://memberapi.jsjit.cn/hosts/Jmember.aspx
+
   WxTemplate:
+
     ## {{first.DATA}}
-    ## 付款金额：{{keyword1.DATA}}
-    ## 交易单号：{{keyword2.DATA}}
+    ## 订单号：{{keyword1.DATA}}
+    ## 商品名称：{{keyword2.DATA}}
+    ## 支付金额：{{keyword3.DATA}}
     ## {{remark.DATA}}
-    PaySuccessed: DygyNvij6eJN34pQbj372iBpZTIYq6HukBcwrcmBhIo
+    PaySuccessed: 3fo6b1wXLfjep8kp0CKGwN7MVEIC-qO-fDPCTsQae2g
 
     ## {{first.DATA}}
     ## 产品名称：{{keyword1.DATA}}

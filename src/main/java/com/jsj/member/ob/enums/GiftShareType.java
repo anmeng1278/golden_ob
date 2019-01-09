@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum GiftShareType {
+public enum GiftShareType implements IEnum {
 
     UNSEND(0, "未赠送"),
 

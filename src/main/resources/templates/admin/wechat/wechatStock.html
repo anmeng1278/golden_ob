@@ -11,38 +11,44 @@
 
         <blockquote class="layui-elem-quote" style="float: left;width:97%;">
 
-
-            <form class="layui-form" method="get" style="float:right;">
+            <form class="layui-form">
                 <div class="layui-form-item" style="margin:0;">
 
-                    <label class="layui-form-label">获取方式</label>
                     <div class="layui-input-inline">
-                        <select name="stockType" title="获取方式">
-                            <option value="">获取方式</option>
-                            <th:block th:each="ss : ${stockTypes}">
-                                <option th:value="${ss.value}" th:text="${ss.message}"
-                                        th:selected="${ss.value == stockType}"></option>
-                            </th:block>
-                        </select>
-                    </div>
-
-                    <label class="layui-form-label">状态</label>
-                    <div class="layui-input-inline">
-                        <select name="stockStatus" title="状态">
-                            <option value="">状态</option>
-                            <th:block th:each="ss : ${stockStatuses}">
-                                <option th:value="${ss.value}" th:text="${ss.message}"
-                                        th:selected="${ss.value == stockStatus}"></option>
-                            </th:block>
-                        </select>
-                    </div>
-
-                    <div class="layui-input-inline">
-                        <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
-                            <i class="layui-icon">&#xe615;</i> 查询
+                        <button class="layui-btn" type="button" style="float: left;" id="btnChooseProducts">
+                            <i class="layui-icon">&#xe654;</i> 添加库存
                         </button>
                     </div>
 
+                    <div style="float: right">
+                        <label class="layui-form-label">获取方式</label>
+                        <div class="layui-input-inline">
+                            <select name="stockType" title="获取方式">
+                                <option value="">获取方式</option>
+                                <th:block th:each="ss : ${stockTypes}">
+                                    <option th:value="${ss.value}" th:text="${ss.message}"
+                                            th:selected="${ss.value == stockType}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-inline">
+                            <select name="stockStatus" title="状态">
+                                <option value="">状态</option>
+                                <th:block th:each="ss : ${stockStatuses}">
+                                    <option th:value="${ss.value}" th:text="${ss.message}"
+                                            th:selected="${ss.value == stockStatus}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+
+                        <div class="layui-input-inline">
+                            <button lay-filter="search" class="layui-btn" type="submit" style="float: right;">
+                                <i class="layui-icon">&#xe615;</i> 查询
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </blockquote>
@@ -62,9 +68,7 @@
                 <tbody id="content">
                 <th:block th:each="info : ${infos.list}">
                     <tr>
-                        <td>
-                            <th:block th:text="${info.stockId}"></th:block>
-                        </td>
+                        <td th:text="${info.stockId}"></td>
                         <td>
                             <th:block th:text="${productLogic.GetProduct(info.productId).productName}"></th:block>
                             <th:block th:with="spec=${productLogic.GetProductSpec(info.productSpecId)}">
@@ -101,6 +105,12 @@
                                     th:attr="data-method='stockFlows', data-id=${info.stockId}"
                                     class="layui-btn layui-btn-xs layui-btn-normal">流转日志
                             </button>
+
+                            <input type="hidden" name="productSpecId" th:value="${info.productSpecId}"/>
+                            <button type="button" th:attr="data-method='delete',data-id=${info.stockId}"
+                                    class="layui-btn layui-btn-xs layui-btn-danger">
+                                <i class="layui-icon">&#xe640;</i>
+                            </button>
                         </td>
                     </tr>
                 </th:block>
@@ -126,7 +136,6 @@
                 if (method == "stockFlows") {
                     getStockFlows(id, that);
                 }
-
 
             });
 
@@ -163,7 +172,76 @@
                 });
             }
 
+            //选择商品
+            $("#btnChooseProducts").click(function () {
+
+                window.TX.TEMP.LAYERINDEX = window.layer.open({
+                    title: "",
+                    type: 2,
+                    btn: ['选择', '关闭'],
+                    content: "/admin/wechat/chooseProducts",
+                    area: ["850px", "700px"],
+                    yes: function (index, layero) {
+                        var iframe = layero.find('iframe');
+                        iframe.contents().find("button[lay-submit]").click();
+                    }
+                });
+            });
+
+
+            /**
+             * 删除商品
+             */
+            $(document).on("click", "button[data-method='delete']", function () {
+                var openId = [[${wechat.openId}]];
+                var stockId = $(this).attr("data-id");
+                layer.confirm('确定删除所选商品吗?', {icon: 3}, function (index) {
+
+                    TX.CORE.p({
+                        data: {openId: openId, stockId: stockId},
+                        url: "/admin/wechat/delete",
+                        success: function (resp) {
+                            if (resp.baseResp.success) {
+                                TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                                    location.href = location.href;
+                                });
+                            } else {
+                                TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                            }
+                        }
+                    });
+                });
+
+            });
+
         });
+
+        /**
+         * 选择商品规格
+         * @param pss
+         */
+        function createOrder(datas) {
+
+            if (datas.length == 0) {
+                return;
+            }
+            var openId = [[${wechat.openId}]];
+
+            TX.CORE.p({
+                data: {p: JSON.stringify(datas), openId: openId},
+                url: "/admin/wechat/createOrder",
+                success: function (resp) {
+                    if (resp.baseResp.success) {
+                        TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                            location.reload(true);
+                        });
+                    } else {
+                        TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                    }
+                }
+            });
+        }
+
     </script>
 </th:block>
 

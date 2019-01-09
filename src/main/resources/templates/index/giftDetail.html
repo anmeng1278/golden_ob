@@ -6,6 +6,7 @@
 <head th:replace="index/common/layout :: header('赠送详情', '', '')"></head>
 
 <th:block layout:fragment="script">
+
     <script th:src="${ob.Url('/index/js/swiper/js/swiper.min.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/nav.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/GiveDetail.js')}" type="text/javascript" charset="utf-8"></script>
@@ -135,7 +136,7 @@
     <!--main end-->
 
     <!--footer start-->
-    <div class="footer">
+    <div class="footer" th:if="${giftDto.giftStatus.value != 40}">
 
         <th:block th:if="${giftDto.giftStatus.value != 60}">
             <a href="javascript:;" th:attr="data-gift-uniqueId=${giftDto.giftUniqueCode}" class="cancel-btn">取消赠送</a>
@@ -149,14 +150,5 @@
 
     </div>
     <!--footer end-->
-
-    <div class="share-layer" style="display: none;">
-        <div class="share-layer-bg"></div>
-        <div class="share-layer-con">
-            <span class="share-layer-sanjiao"></span>
-            <p class="share-layer-p">点击右上角【•••】<br/>分享到朋友，朋友圈。<br/>让大家一起来试试手气吧</p>
-        </div>
-    </div>
-
 
 </div>

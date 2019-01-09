@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.product.ProductImgDto;
+import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.entity.*;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.DictType;
@@ -110,6 +111,8 @@ public class AdminActivityController {
 
         } else {
             activity.setTypeId(ActivityType.GROUPON.getValue());
+            activity.setShowTime(DateUtils.getCurrentUnixTime());
+            activity.setBeginTime(DateUtils.getCurrentUnixTime());
         }
         //获取活动类型
         List<ActivityType> activityTypes = Arrays.asList(ActivityType.values()).stream().filter(x -> !x.equals(ActivityType.NORMAL)).collect(Collectors.toList());
@@ -143,47 +146,22 @@ public class AdminActivityController {
 
         Activity activity = new Activity();
 
+        //活动名称
         String activityName = request.getParameter("activityName");
-        int typeId = Integer.parseInt(request.getParameter("typeId"));
-        String beginTime = request.getParameter("beginTime");
-        if (StringUtils.isBlank(beginTime)) {
-            beginTime = String.valueOf(DateUtils.getCurrentUnixTime());
-        }
-        String endTime = request.getParameter("endTime");
-        if (StringUtils.isBlank(beginTime)) {
-            beginTime = "4070880000";
-        }
-        String showTime = request.getParameter("showTime");
-        if (StringUtils.isBlank(showTime)) {
-            showTime = String.valueOf(DateUtils.getCurrentUnixTime());
-        }
-        String salePrice = request.getParameter("salePrice");
-        if (StringUtils.isBlank(salePrice)) {
-            salePrice = "0";
-        }
+        //类型
+        ActivityType activityType = ActivityType.valueOf(Integer.parseInt(request.getParameter("typeId")));
 
-        String introduce = request.getParameter("introduce");
-        if (StringUtils.isBlank(introduce)) {
-            introduce = " ";
-        }
-
-        String imgPath = request.getParameter("imgPath");
-        if (StringUtils.isBlank(imgPath)) {
-            imgPath = null;
-        }
-
-        String originalPrice = request.getParameter("originalPrice");
-        if (StringUtils.isBlank(originalPrice)) {
-            originalPrice = "0";
-        }
-
+        //下划线为可选部分
+        String _salePrice = request.getParameter("salePrice");
+        String _introduce = request.getParameter("introduce");
+        String _imgPath = request.getParameter("imgPath");
+        String _originalPrice = request.getParameter("originalPrice");
         String _number = request.getParameter("number");
-        if (StringUtils.isBlank(_number)) {
-            _number = "0";
-        }
+        String _stockCount = request.getParameter("stockCount");
 
-        int number = Integer.valueOf(_number);
-        int stockCount = Integer.parseInt(request.getParameter("stockCount"));
+        String beginTime = request.getParameter("beginTime");
+        String endTime = request.getParameter("endTime");
+        String showTime = request.getParameter("showTime");
 
         int beginTimeUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(beginTime, "yyyy-MM-dd HH:mm:ss"));
         int endTimeUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(endTime, "yyyy-MM-dd HH:mm:ss"));
@@ -191,6 +169,50 @@ public class AdminActivityController {
 
         //是否审核
         boolean ifpass = !StringUtils.isBlank(request.getParameter("ifpass"));
+
+        String[] productSpecIds = request.getParameterValues("productSpecId");
+        String[] productSpecSalePrices = request.getParameterValues("productSpecSalePrice");
+        String[] productSpecStockCounts = request.getParameterValues("productSpecStockCount");
+
+        if (productSpecIds == null || productSpecIds.length == 0) {
+            throw new TipException("请添加活动商品");
+        }
+        int stockCount = 0;
+        double salePrice = 0, originalPrice = 0;
+        String introduce = "";
+        String imgPath = "";
+        int number = 0;
+
+        String final_stockCount = _stockCount;
+
+        switch (activityType) {
+            case GROUPON:
+                stockCount = Integer.parseInt(_stockCount);
+                if (Arrays.stream(productSpecStockCounts).filter(x -> !x.equals(final_stockCount)).findFirst().isPresent()) {
+                    throw new TipException("团购库存必须与商品使用库存完全一致");
+                }
+                salePrice = Double.parseDouble(_salePrice);
+                originalPrice = Double.parseDouble(_originalPrice);
+                number = Integer.parseInt(_number);
+                break;
+            case SECKILL:
+            case EXCHANGE:
+                break;
+            case COMBINATION:
+                if (StringUtils.isEmpty(_imgPath)) {
+                    throw new TipException("请上传活动封面");
+                }
+                stockCount = Integer.parseInt(_stockCount);
+                if (Arrays.stream(productSpecStockCounts).filter(x -> !x.equals(final_stockCount)).findFirst().isPresent()) {
+                    throw new TipException("组合活动库存必须与商品使用库存完全一致");
+                }
+                salePrice = Double.parseDouble(_salePrice);
+                originalPrice = Double.parseDouble(_originalPrice);
+                introduce = _introduce;
+                imgPath = _imgPath;
+                break;
+        }
+
 
         if (activityId > 0) {
 
@@ -208,12 +230,11 @@ public class AdminActivityController {
             activity.setBeginTime(beginTimeUnix);
             activity.setEndTime(endTimeUnix);
             activity.setShowTime(showTimeUnix);
-            activity.setStockCount(stockCount);
 
             activity.setNumber(number);
-            activity.setOriginalPrice(Double.valueOf(originalPrice));
-            activity.setSalePrice(Double.valueOf(salePrice));
-            activity.setTypeId(typeId);
+            activity.setOriginalPrice(originalPrice);
+            activity.setSalePrice(salePrice);
+            activity.setTypeId(activityType.getValue());
             activity.setIfpass(ifpass);
             activity.setIntroduce(introduce);
             activity.setImgPath(imgPath);
@@ -229,13 +250,12 @@ public class AdminActivityController {
             activity.setBeginTime(beginTimeUnix);
             activity.setEndTime(endTimeUnix);
             activity.setShowTime(showTimeUnix);
-            activity.setStockCount(stockCount);
 
             activity.setIfpass(ifpass);
             activity.setNumber(number);
-            activity.setOriginalPrice(Double.valueOf(originalPrice));
-            activity.setSalePrice(Double.valueOf(salePrice));
-            activity.setTypeId(typeId);
+            activity.setOriginalPrice(originalPrice);
+            activity.setSalePrice(salePrice);
+            activity.setTypeId(activityType.getValue());
             activity.setIntroduce(introduce);
             activity.setImgPath(imgPath);
 
@@ -258,35 +278,42 @@ public class AdminActivityController {
 
         activityId = activity.getActivityId();
 
-        String[] productSpecIds = request.getParameterValues("productSpecId");
-        String[] productSpecSalePrices = request.getParameterValues("productSpecSalePrice");
-
         if (productSpecIds != null) {
 
             for (int i = 0; i < productSpecIds.length; i++) {
 
                 int specId = Integer.parseInt(productSpecIds[i]);
                 double specSalePrice = Double.parseDouble(productSpecSalePrices[i]);
+                int productSpecStockCount = Integer.parseInt(productSpecStockCounts[i]);
+
+                ProductSpecDto specDto = ProductLogic.GetProductSpec(specId);
+                if (productSpecStockCount > specDto.getStockCount()) {
+                    throw new TipException(String.format("\"%s %s\"<br />使用库存不能大于剩余库存<br />当前使用：%d<br />当前剩余：%d",
+                            specDto.getProductDto().getProductName(),
+                            specDto.getSpecName(),
+                            productSpecStockCount,
+                            specDto.getStockCount()));
+                }
 
                 ActivityProduct activityProduct = activityProductService.selectOne(new EntityWrapper<ActivityProduct>().where("activity_id={0} and product_spec_id={1}", activityId, specId));
                 if (activityProduct == null) {
-
-                    ProductSpec productSpec = productSpecService.selectById(specId);
 
                     activityProduct = new ActivityProduct();
                     activityProduct.setSalePrice(specSalePrice);
                     activityProduct.setActivityId(activityId);
                     activityProduct.setCreateTime(DateUtils.getCurrentUnixTime());
                     activityProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
-                    activityProduct.setProductId(productSpec.getProductId());
+                    activityProduct.setProductId(specDto.getProductId());
                     activityProduct.setProductSpecId(specId);
                     activityProduct.setSort(i);
+                    activityProduct.setStockCount(productSpecStockCount);
                     activityProductService.insert(activityProduct);
 
                 } else {
                     activityProduct.setSalePrice(specSalePrice);
                     activityProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
                     activityProduct.setDeleteTime(null);
+                    activityProduct.setStockCount(productSpecStockCount);
                     activityProduct.setSort(i);
                     activityProductService.updateAllColumnById(activityProduct);
                 }

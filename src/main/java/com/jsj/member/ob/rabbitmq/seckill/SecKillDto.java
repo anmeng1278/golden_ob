@@ -1,6 +1,7 @@
 package com.jsj.member.ob.rabbitmq.seckill;
 
 
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.rabbitmq.BaseDto;
 
 public class SecKillDto extends BaseDto {
@@ -24,6 +25,11 @@ public class SecKillDto extends BaseDto {
      * 型号编号
      */
     private Integer productSpecId;
+
+    /**
+     * 订单来源
+     */
+    private SourceType sourceType;
 
     public String getOpenId() {
         return openId;
@@ -55,5 +61,13 @@ public class SecKillDto extends BaseDto {
 
     public void setProductSpecId(Integer productSpecId) {
         this.productSpecId = productSpecId;
+    }
+
+    public SourceType getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(SourceType sourceType) {
+        this.sourceType = sourceType;
     }
 }

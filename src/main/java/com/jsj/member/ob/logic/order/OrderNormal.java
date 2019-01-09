@@ -95,6 +95,8 @@ public class OrderNormal extends OrderBase {
         order.setExpiredTime(DateUtils.getCurrentUnixTime() + Constant.ORDER_EXPIRED_TIME);
         order.setOrderUniqueCode(StringUtils.UUID32());
 
+        order.setOrderSourceId(requ.getSourceType().getValue());
+
         List<com.jsj.member.ob.entity.OrderProduct> orderProducts = new ArrayList<>();
 
         //订单应支付金额
@@ -145,6 +147,7 @@ public class OrderNormal extends OrderBase {
         resp.setOrderUniqueCode(order.getOrderUniqueCode());
         resp.setExpiredTime(order.getExpiredTime());
         resp.setSuccess(true);
+        resp.setMessage("订单创建成功");
 
         return resp;
 

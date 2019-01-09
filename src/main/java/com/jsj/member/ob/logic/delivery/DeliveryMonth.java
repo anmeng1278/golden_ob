@@ -127,7 +127,7 @@ public class DeliveryMonth extends DeliveryBase {
 
 
             // 开卡成功发送模板消息
-            TemplateDto temp = TemplateDto.OpenCardSuccess(dto,delivery);
+            TemplateDto temp = TemplateDto.OpenCardSuccess(dto);
             wxSender.sendNormal(temp);
 
             //更新发货状态

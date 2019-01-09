@@ -10,7 +10,6 @@ import com.jsj.member.ob.dto.api.delivery.CreateDeliveryResp;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
 import com.jsj.member.ob.dto.api.gift.CreateGiftRequ;
 import com.jsj.member.ob.dto.api.gift.CreateGiftResp;
-import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.gift.GiftProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.stock.UseProductDto;
@@ -70,8 +69,8 @@ public class StockController extends BaseController {
         request.setAttribute("stockDtos", stockDtos);
 
         //分享失败的礼包
-        List<GiftDto> giftDtos = GiftLogic.GetGives(openId, GiftStatus.UNSHARE);
-        request.setAttribute("giftDtos", giftDtos);
+        int unShareCount = GiftLogic.GetGiveCount(openId, GiftStatus.UNSHARE);
+        request.setAttribute("unShareCount", unShareCount);
 
         //存在未使用的活动码
         DeliveryDto unDeliveryDto = DeliveryFactory.GetInstance(PropertyType.ACTIVITYCODE).GetUnDeliveryDto(openId);

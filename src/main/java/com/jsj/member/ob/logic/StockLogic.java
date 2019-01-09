@@ -2,7 +2,6 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
@@ -70,6 +69,7 @@ public class StockLogic extends BaseLogic {
 
     }
     //endregion
+
 
 
     public static List<StockDto> GetStocks(int giftId) {
@@ -231,7 +231,7 @@ public class StockLogic extends BaseLogic {
             ProductDto productDto = ProductLogic.GetProduct(stock.getProductId());
             stockDto.setProductDto(productDto);
 
-            EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
+            /*EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
             wrapper.where("stock_id={0}", stock.getStockId());
             wrapper.orderBy("create_time desc");
 
@@ -239,7 +239,7 @@ public class StockLogic extends BaseLogic {
             if (giftStock != null) {
                 GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
                 stockDto.setGiftDto(giftDto);
-            }
+            }*/
             stockDtos.add(stockDto);
         }
         return stockDtos;
@@ -543,7 +543,7 @@ public class StockLogic extends BaseLogic {
         WechatDto wechatDto = WechatLogic.GetWechat(stock.getOpenId());
         stockDto.setWechatDto(wechatDto);
 
-        EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
+        /*EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
         wrapper.where("stock_id = {0}", stock.getStockId());
         wrapper.orderBy("create_time desc");
         GiftStock giftStock = stockLogic.giftStockService.selectOne(wrapper);
@@ -551,7 +551,7 @@ public class StockLogic extends BaseLogic {
         if (giftStock != null) {
             GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
             stockDto.setGiftDto(giftDto);
-        }
+        }*/
 
         return stockDto;
     }

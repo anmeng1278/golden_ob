@@ -17,10 +17,12 @@ import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.SecKillStatus;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
+import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -66,6 +68,9 @@ public class ProductController extends BaseController {
 
             case COMBINATION:
                 return this.combProduct(request);
+
+            case EXCHANGE:
+                return this.exchangeProduct(request);
         }
 
         return this.Redirect("/");
@@ -106,7 +111,7 @@ public class ProductController extends BaseController {
         List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, openId);
         request.setAttribute("coupons", coupons);
 
-        if (info.getProductImgDtos() != null) {
+        if (info.getProductImgDtos() != null && info.getProductImgDtos().size() > 0) {
             String imgUrl = info.getProductImgDtos().get(0).getImgPath();
             request.setAttribute("imgUrl", imgUrl);
         }
@@ -141,10 +146,81 @@ public class ProductController extends BaseController {
         //活动中的商品
         List<ActivityProductDto> productDtos = ActivityLogic.GetActivityProductDtos(activityId);
 
+        int stockCount = info.getStockCount();
+        if (!productDtos.isEmpty()) {
+            for (ActivityProductDto apd : productDtos) {
+                stockCount = Math.min(stockCount, apd.getStockCount());
+                ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(apd.getProductSpecId());
+                stockCount = Math.min(stockCount, productSpecDto.getStockCount());
+            }
+        }
+
+
         request.setAttribute("info", info);
         request.setAttribute("productDtos", productDtos);
+        request.setAttribute("stockCount", stockCount);
 
         return "index/product/combActivityDetail";
+    }
+    //endregion
+
+    //region (public) 兑换商品详情 exchangeProduct
+
+    /**
+     * 兑换商品活动详情
+     *
+     * @param request
+     * @return
+     */
+    public String exchangeProduct(HttpServletRequest request) {
+
+        if (StringUtils.isEmpty(request.getParameter("activityId"))) {
+            return this.Redirect("/");
+        }
+
+        if (StringUtils.isEmpty(request.getParameter("productSpecId"))) {
+            return this.Redirect("/");
+        }
+
+        int activityId = Integer.parseInt(request.getParameter("activityId"));
+        int productSpecId = Integer.parseInt(request.getParameter("productSpecId"));
+
+        //兑换活动信息
+        ActivityDto info = ActivityLogic.GetActivity(activityId);
+        if (!info.getIfpass()) {
+            return this.Redirect("/");
+        }
+
+        //非兑换商品，不允许进此链接
+        if (!info.getActivityType().equals(ActivityType.EXCHANGE)) {
+            return this.Redirect("/");
+        }
+
+        //活动中的商品
+        List<ActivityProductDto> productDtos = ActivityLogic.GetActivityProductDtos(activityId, productSpecId);
+        if (productDtos.size() == 0) {
+            return this.Redirect("/");
+        }
+
+        ProductDto productDto = productDtos.get(0).getProductDto();
+        ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(productSpecId);
+
+        //库存
+        int stockCount = Math.min(productDtos.get(0).getStockCount(), productSpecDto.getStockCount());
+
+        request.setAttribute("stockCount", stockCount);
+        request.setAttribute("info", productDto);
+        request.setAttribute("activityId", activityId);
+
+        double balance = MemberLogic.StrictChoiceSearch(this.User().getJsjId());
+        request.setAttribute("balance", balance);
+
+        if (productDto.getProductImgDtos() != null && productDto.getProductImgDtos().size() > 0) {
+            String imgUrl = productDto.getProductImgDtos().get(0).getImgPath();
+            request.setAttribute("imgUrl", imgUrl);
+        }
+
+        return "index/product/exchangeActivityDetail";
     }
     //endregion
 
@@ -186,8 +262,11 @@ public class ProductController extends BaseController {
             return this.Redirect("/");
         }
         ProductDto productDto = productDtos.get(0).getProductDto();
+        ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(productSpecId);
 
-        int stockCount = productDtos.get(0).getStockCount();
+        //库存
+        int stockCount = Math.min(productDtos.get(0).getStockCount(), productSpecDto.getStockCount());
+
         //未开始
         int flag = 0;
         if (info.getBeginTime() > DateUtils.getCurrentUnixTime()) {
@@ -341,18 +420,19 @@ public class ProductController extends BaseController {
             String successUrl = String.format("/pay/success/%s", resp.getOrderUniqueCode());
             if (resp.getAmount() > 0) {
                 //调起微信支付
-                GetPayTradeResp pay = this.createPay(resp.getOrderId());
-                if (!pay.getResponseHead().getCode().equals("0000")) {
-                    throw new TipException(pay.getResponseHead().getMessage());
+                TwoTuple<GetPayTradeResp, SourceType> twoTuple = this.createPay(request, resp.getOrderId());
+                if (!twoTuple.first.getResponseHead().getCode().equals("0000")) {
+                    throw new TipException(twoTuple.first.getResponseHead().getMessage());
                 }
-                data.put("pay", pay);
+                data.put("pay", twoTuple.first);
+                data.put("source", twoTuple.second.getValue());
             }
             data.put("successUrl", this.Url(successUrl));
         }
         data.put("resp", resp);
 
         String url = this.Url("/order");
-        return RestResponseBo.ok("创建订单成功", url, data);
+        return RestResponseBo.ok(resp.getMessage(), url, data);
 
     }
     //endregion
@@ -391,7 +471,7 @@ public class ProductController extends BaseController {
         int productSpecId = jsonObjects.get(0).getInteger("productSpecId");
 
         int createTime = DateUtils.getCurrentUnixTime();
-        SecKillStatus secKillStatus = ActivityLogic.RedisKill(activityId, productId, productSpecId, this.OpenId());
+        SecKillStatus secKillStatus = ActivityLogic.RedisKill(activityId, productId, productSpecId, this.OpenId(), this.GetSourceType(request));
 
         if (secKillStatus.equals(SecKillStatus.SUCCESS)) {
             //秒杀成功
@@ -453,9 +533,13 @@ public class ProductController extends BaseController {
             case COMBINATION:
                 requ = this.createCombOrderRequest(request);
                 break;
+            case EXCHANGE:
+                requ = this.createExchangeOrderRequest(request);
+                break;
             default:
                 throw new TipException("方法暂未实现");
         }
+        requ.setSourceType(this.GetSourceType(request));
         return requ;
     }
     //endregion
@@ -528,5 +612,59 @@ public class ProductController extends BaseController {
     }
     //endregion
 
+    //region (private) 组织创建兑换订单请求 createExchangeOrderRequest
+
+    /**
+     * 组织创建兑换订单请求
+     *
+     * @param request
+     * @return
+     */
+    private CreateOrderRequ createExchangeOrderRequest(HttpServletRequest request) {
+
+        if (StringUtils.isEmpty(request.getParameter("activityId"))) {
+            throw new TipException("参数错误");
+        }
+
+        if (StringUtils.isEmpty(request.getParameter("p"))) {
+            throw new TipException("参数错误");
+        }
+        //活动编号
+        int activityId = Integer.parseInt(request.getParameter("activityId"));
+
+        String openId = this.OpenId();
+        String p = request.getParameter("p");
+        List<JSONObject> jsonObjects = JSON.parseArray(p, JSONObject.class);
+
+        if (jsonObjects.size() == 0) {
+            throw new TipException("参数错误");
+        }
+
+        CreateOrderRequ requ = new CreateOrderRequ();
+
+        requ.setActivityType(ActivityType.EXCHANGE);
+        requ.getBaseRequ().setOpenId(openId);
+        requ.setActivityId(activityId);
+        requ.getBaseRequ().setJsjId(this.User().getJsjId());
+        requ.setNumber(jsonObjects.get(0).getIntValue("num"));
+
+        for (JSONObject jo : jsonObjects) {
+
+            int productId = jo.getIntValue("productId");
+            int num = jo.getIntValue("num");
+            int productSpecId = jo.getInteger("productSpecId");
+
+            OrderProductDto orderProduct = new OrderProductDto();
+            orderProduct.setProductId(productId);
+            orderProduct.setProductSpecId(productSpecId);
+            orderProduct.setNumber(num);
+
+            requ.getOrderProductDtos().add(orderProduct);
+        }
+
+        return requ;
+
+    }
+    //endregion
 
 }

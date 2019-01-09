@@ -51,6 +51,7 @@ public class SecKillReceiver {
             orderProductDto.setProductSpecId(dto.getProductSpecId());
             orderProductDto.setProductId(dto.getProductId());
             requ.getOrderProductDtos().add(orderProductDto);
+            requ.setSourceType(dto.getSourceType());
 
             CreateOrderResp resp = OrderLogic.CreateOrder(requ);
 

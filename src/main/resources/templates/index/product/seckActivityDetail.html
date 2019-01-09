@@ -12,13 +12,12 @@
 
     <script type="text/javascript" th:inline="javascript">
 
-        var shareUrl = [[${shareUrl}]];
         var shareTitle = "我在空铁管家发现了" + [[${info.productName}]];
 
         shareConfig = {
             title: shareTitle,
             desc: [[${info.introduce}]],
-            link: shareUrl,
+            link: location.href,
             imgUrl: [[${imgUrl}]]
         };
 

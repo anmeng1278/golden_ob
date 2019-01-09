@@ -1,5 +1,36 @@
 function createOrder(data, callback) {
 
+    //{\"appId\":\"wx555b169abb4d62ce\",\"timeStamp\":\"1546596919\",\"nonceStr\":\"nsupowk0oknvji2lhn7ncfh8trh1tggv\",\"package\":\"prepay_id=wx041015200353636bc361b7940149570223\",\"signType\":\"MD5\",\"paySign\":\"22AAED9B6A767C20008DC1A551306FDF\"}
+    // var timestamp = "1546596919";
+    // var nonceStr = "nsupowk0oknvji2lhn7ncfh8trh1tggv";
+    // var package = encodeURIComponent("prepay_id=wx041015200353636bc361b7940149570223");
+    // var signType = "MD5";
+    // var paySign = "22AAED9B6A767C20008DC1A551306FDF";
+    //
+    // var url = '/pages/obpay/index?timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
+    //
+    // wx.miniProgram.navigateTo({
+    //     url: url,
+    //     success: function (resp) {
+    //         // 打开成功
+    //         // alert(JSON.stringify(resp));
+    //     },
+    //     fail: function (resp) {
+    //         // alert(JSON.stringify(resp));
+    //     },
+    //     complete: function (resp) {
+    //         // alert(JSON.stringify(resp));
+    //     }
+    // })
+    //
+    // return;
+
+    // if (ob.mini && data.activityTypeId != 40) {
+    //     TX.MSG.msg("小程序暂不支持商品购买，<br />请到“空铁管家”微信公众号上操作。", {time: 3000}, function () {
+    //     });
+    //     return;
+    // }
+
     TX.CORE.p({
         url: "/product/createOrder",
         data: data,
@@ -49,12 +80,40 @@ function createOrder(data, callback) {
             //调起微信支付
             function callPay(resp, successUrl, url) {
 
-                var appId = resp.datas.pay.responseBody.appId;
                 var timestamp = resp.datas.pay.responseBody.timeStamp;
                 var nonceStr = resp.datas.pay.responseBody.nonceStr;
                 var package = resp.datas.pay.responseBody._package;
                 var signType = resp.datas.pay.responseBody.signType;
                 var paySign = resp.datas.pay.responseBody.paySign;
+                var appId = resp.datas.pay.responseBody.appId;
+
+                if (ob.mini) {
+
+                    successUrl = encodeURIComponent(ob.host + successUrl);
+                    url = encodeURIComponent(ob.host + url);
+
+                    package = encodeURIComponent(package);
+
+                    var miniUrl = ob.conf.pay + '?source=2&timeStamp=' + timestamp + '&nonceStr=' + nonceStr + '&_package=' + package + '&signType=' + signType + '&paySign=' + paySign;
+                    miniUrl += "&successUrl=" + successUrl;
+                    miniUrl += "&failUrl=" + url;
+
+                    wx.miniProgram.navigateTo({
+                        url: miniUrl,
+                        success: function (resp) {
+                            // 打开成功
+                            // alert(JSON.stringify(resp));
+                        },
+                        fail: function (resp) {
+                            // alert(JSON.stringify(resp));
+                        },
+                        complete: function (resp) {
+                            // alert(JSON.stringify(resp));
+                        }
+                    })
+
+                    return;
+                }
 
                 //调起微信支付
                 wx.chooseWXPay({

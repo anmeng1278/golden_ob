@@ -4,10 +4,15 @@ import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.http.UserSession;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenRequ;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenResp;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.jsj.member.ob.logic.WechatLogic;
+import com.jsj.member.ob.utils.EncryptUtils;
 import com.jsj.member.ob.utils.SpringContextUtils;
+import jodd.util.URLDecoder;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,22 +31,51 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class WxInterceptor extends HandlerInterceptorAdapter {
 
+    private final Logger logger = LoggerFactory.getLogger(WxInterceptor.class);
 
     @Autowired
     Webconfig webconfig;
 
+
+    //region (private) 获取完整Url路径 getFullURL
+
+    /**
+     * 获取完整Url路径
+     *
+     * @param request
+     * @return
+     */
     private String getFullURL(HttpServletRequest request) {
 
         StringBuilder requestURL = new StringBuilder(request.getRequestURL().toString());
         String queryString = request.getQueryString();
 
+        String url;
         if (queryString == null) {
-            return requestURL.toString();
+            url = requestURL.toString();
         } else {
-            return requestURL.append('?').append(queryString).toString();
+            url = requestURL.append('?').append(queryString).toString();
         }
-    }
+        if (!url.startsWith("https")) {
+            url = "https" + url.substring(url.indexOf(":"));
+        }
 
+        logger.info(String.format("当前页面地址：%s", url));
+        return url;
+    }
+    //endregion
+
+    //region 拦截器，获取微信授权信息
+
+    /**
+     * 拦截器，获取微信授权信息
+     *
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -52,10 +86,15 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
             wxUser.setOpenid("oeQDZt-rcgi9QhWm6F7o2mV3dSYY");
             wxUser.setNickname("测试账户");
             wxUser.setSubscribe(1);
+            wxUser.setJsjId(20612968);
+            wxUser.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epDoc6nkBKtPSZrP762lGiaTok7VtabocBcp0q0OUC1mmNq99ozG9GiaMib4DiauaI9w6u5w26CTgdeVg/132");
 
             request.getSession().setAttribute("wx", wxUser);
 
         }
+
+        //获取会员编号
+        int jsjId = this.parseJsjId(request);
 
         //当前用户是否登录
         if (request.getSession().getAttribute("wx") == null) {
@@ -113,6 +152,7 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                 }
 
                 //{"subscribe":1,"openid":"o2JcesxmAIQWeqEEqA-vM-i44Miw","nickname":"张宁","sex":1,"language":"zh_CN","city":"朝阳","province":"北京","country":"中国","headimgurl":"http:\/\/thirdwx.qlogo.cn\/mmopen\/PiajxSqBRaEKFLsWN4XS5v1yCavjGU69d4MhTotaNU1oe0C5w9cdHTt2J1x3VTeEnDcfT4B3b5ml3ekmlcJHrNA\/132","subscribe_time":1538198776,"remark":"","groupid":0,"tagid_list":[],"subscribe_scene":"ADD_SCENE_SEARCH","qr_scene":0,"qr_scene_str":""}
+                //初始化会员
                 WechatLogic.Init(wxUser);
 
                 UserSession wx = UserSession.Init(wxUser);
@@ -122,7 +162,16 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 
         }
 
+        //获取登录信息
         UserSession wx = (UserSession) request.getSession().getAttribute("wx");
+
+        //绑定会员关系
+        this.bindWechatRelation(request, wx.getOpenid());
+
+        //绑定会员编号
+        jsjId = WechatLogic.BindJSJId(wx.getOpenid(), jsjId);
+        wx.setJsjId(jsjId);
+
         request.setAttribute("wx", wx);
 
         return true;
@@ -132,33 +181,63 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object o, ModelAndView modelAndView) throws Exception {
 
-        /*
-        GetAccessTokenResp getAccessTokenResp = null;
+    }
+    //endregion
 
-        if (SpringContextUtils.getActiveProfile().equals("dev")) {
-            getAccessTokenResp = ThirdPartyLogic.GetAccessTokenDev(null);
-        } else {
-            getAccessTokenResp = ThirdPartyLogic.GetAccessToken(new GetAccessTokenRequ());
-        }
+    //region (private) 解析会员编号 parseJsjId
 
-        String timestamp = DateUtils.getCurrentUnixTime() + "";
-        String noncestr = UUID.randomUUID().toString();
+    /**
+     * 解析会员编号
+     *
+     * @param request
+     * @return
+     */
+    private int parseJsjId(HttpServletRequest request) {
+        int jsjId = 0;
+        String key = request.getParameter("key");
         String url = this.getFullURL(request);
-        String signature = "";
+        try {
+            if (!StringUtils.isEmpty(key)) {
+                key = URLDecoder.decode(key, "UTF-8");
+                jsjId = Integer.parseInt(EncryptUtils.decrypt2(key));
+            }
+            logger.info(String.format("解析正常：%s %d %s", key, jsjId, url));
+        } catch (Exception ex) {
+            logger.error(String.format("解析出错：%s %d %s", key, jsjId, url));
+        }
+        return jsjId;
+    }
+    //endregion
 
-        Ticket ticket = TicketAPI.ticketGetticket(getAccessTokenResp.getResponseBody().getAccessToken());
-        if (!StringUtils.isEmpty(ticket.getErrcode())) {
-            String ticket1 = ticket.getTicket();
-            signature = JsUtil.generateConfigSignature(noncestr, ticket1, timestamp, url);
+    //region (private) 绑定会员关系 bindWechatRelation
+
+    private void bindWechatRelation(HttpServletRequest request, String openId) {
+
+        String typeid = request.getParameter("typeid");
+        String relationOpenId = request.getParameter("openid");
+
+        if (StringUtils.isEmpty(typeid)) {
+            return;
+        }
+        if (StringUtils.isEmpty(relationOpenId)) {
+            return;
+        }
+        if (StringUtils.isEmpty(openId)) {
+            return;
         }
 
-        request.setAttribute("signature", signature);
-        request.setAttribute("appId", webconfig.getAppId());
-        request.setAttribute("timestamp", timestamp);
-        request.setAttribute("noncestr", noncestr);
-             */
-        request.setAttribute("virtualPath", webconfig.getVirtualPath());
+        try {
 
+            SourceType sourceType = SourceType.valueOf(Integer.parseInt(typeid));
+            WechatLogic.BindRelation(openId, relationOpenId, sourceType);
+
+            logger.info(String.format("绑定成功：%s %s %s", openId, relationOpenId, sourceType.getMessage()));
+
+        } catch (Exception ex) {
+            logger.error(String.format("绑定失败：%s %s %s", openId, relationOpenId, typeid));
+        }
 
     }
+    //endregion
+
 }

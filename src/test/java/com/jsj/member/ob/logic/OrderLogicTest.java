@@ -5,7 +5,6 @@ import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
-import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.proto.NotifyModelOuterClass;
 import com.jsj.member.ob.enums.ActivityType;
@@ -20,7 +19,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -195,7 +196,17 @@ public class OrderLogicTest {
 
     @Test
     public void geyMyOrder() {
-        List<OrderDto> orderDtos = OrderLogic.GetOrders("111");
+        List<OrderProductDto> orderProductDtos = OrderLogic.GetOrderProducts(10177);
+
+        Map<String, Object> map = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+        for (OrderProductDto orderProductDto : orderProductDtos) {
+            sb.append(orderProductDto.getProductDto().getProductName() +"*"+ orderProductDto.getNumber()).append(",");
+
+        }
+        map.put("prudctName",sb);
+        System.out.println(map.get("prudctName"));
+
     }
 
 }

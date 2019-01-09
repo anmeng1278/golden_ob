@@ -6,7 +6,7 @@ import com.jsj.member.ob.dto.api.coupon.UseCouponResp;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.stock.StockDto;
-import com.jsj.member.ob.dto.proto.NotifyModelOuterClass;
+import com.jsj.member.ob.dto.proto.*;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.entity.Stock;
@@ -14,6 +14,7 @@ import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.CouponLogic;
+import com.jsj.member.ob.logic.MemberLogic;
 import com.jsj.member.ob.logic.RedpacketLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
@@ -28,6 +29,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * 削减库存规则
+ * 1.普通商品 削减商品规格库存
+ * 2.组合商品 削减活动库存+削减活动商品库存+商品规格库存
+ * 3.团购     削减活动库存+削减活动商品库存+商品规格库存
+ * 4.秒杀     削减活动商品库存+商品规格库存
+ * 5.兑换     削减活动商品库存+商品规格库存
+ */
 
 public abstract class OrderBase {
 
@@ -111,6 +121,9 @@ public abstract class OrderBase {
                 stocks.add(st);
             }
         }
+        if (stocks.size() == 0 || stocks == null) {
+            throw new TipException("参数有误！");
+        }
         StockLogic.AddOrderStock(stocks);
 
         //红包
@@ -191,4 +204,43 @@ public abstract class OrderBase {
 
     }
 
+    /**
+     * 商品兑换
+     *
+     * @param jsjId
+     * @param orderAmount
+     * @param order
+     * @param productName
+     * @return
+     */
+    public double Exchange(int jsjId, double orderAmount, Order order, String productName) {
+
+        if (jsjId <= 0) {
+            throw new TipException("没有绑定会员，不允许兑换商品。");
+        }
+
+        //扣减兑换金额
+        StrictChoiceConsumeRequestOuterClass.StrictChoiceConsumeRequest.Builder requ = StrictChoiceConsumeRequestOuterClass.StrictChoiceConsumeRequest.newBuilder();
+
+        BaseRequestOuterClass.BaseRequest.Builder baseRequ = BaseRequestOuterClass.BaseRequest.newBuilder();
+        baseRequ.setSourceWay(SourceWayOuterClass.SourceWay.KTGJ);
+
+        requ.setBaseRequest(baseRequ.build());
+        requ.setJSJID(jsjId);
+        requ.setMoney(orderAmount);
+        requ.setOrderType(StrictChoiceOrderTypeOuterClass.StrictChoiceOrderType.StrictChoice);
+        requ.setOrderID(order.getOrderId());
+        requ.setRemark("严选商品兑换");
+        requ.setProjectID(13006);
+        requ.setTradeName(productName);
+
+        StrictChoiceConsumeResponseOuterClass.StrictChoiceConsumeResponse resp = MemberLogic.StrictChoiceConsume(requ.build());
+
+        if (!resp.getBaseResponse().getIsSuccess()) {
+            throw new TipException(resp.getBaseResponse().getErrorMessage());
+        }
+
+        return 0;
+
+    }
 }

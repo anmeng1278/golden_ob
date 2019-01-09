@@ -12,13 +12,12 @@
 
     <script type="text/javascript" th:inline="javascript">
 
-        var shareUrl = [[${shareUrl}]];
         var shareTitle = "我在空铁管家发现了" + [[${info.productName}]];
 
         shareConfig = {
             title: shareTitle,
             desc: [[${info.introduce}]],
-            link: shareUrl,
+            link: location.href,
             imgUrl: [[${imgUrl}]]
         };
 
@@ -111,9 +110,9 @@
                 var num = parseInt($("div.purchase-layer div.purchase-num :text[name='num']").val() || 0, 10);
                 var wechatCouponId = 0;
 
-                if (num == 0) {
+              /*  if (num == 0) {
                     TX.MSG.msg("至少购买一个商品");
-                }
+                }*/
 
                 if ($("ul.purchase-coupon li.active").length > 0) {
                     wechatCouponId = $("ul.purchase-coupon li.active").attr("data-wechatCoupon-id");
@@ -158,7 +157,7 @@
                     success: function (resp) {
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
-                                // location.href = location.href;
+                                location.href = [[${ob.Nav('/')}]];
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
@@ -269,8 +268,10 @@
             <span class="shopping-price">&yen;<em th:text="${salePrice}">898</em></span>
         </p>
         <p class="footer-rt">
-            <a href="javascript:void(0);" class="shopping-cart-btn">加入购物车</a>
-            <a href="javascript:void(0);" class="purchase-show-btn">立即购买</a>
+            <a href="javascript:void(0);" th:style="${stockCount == 0 ?'visibility:hidden':''}" class="shopping-cart-btn">加入购物车</a>
+
+            <a href="javascript:void(0);" th:if="${stockCount > 0}" class="purchase-show-btn">立即购买</a>
+            <a href="javascript:void(0);" th:if="${stockCount <= 0}" class="purchase-btn-saleout">已售罄</a>
         </p>
 
     </div>
@@ -305,7 +306,7 @@
                     <span class="purchase-layer-lable">购买数量</span>
                     <div class="purchase-num">
                         <em class="purchase-num-reduce"></em>
-                        <input type="text" value="0" class="num" name="num"/>
+                        <input type="text" value="0" class="num" readonly="readonly" unselectable="on" name="num"/>
                         <em class="purchase-num-add"></em>
                     </div>
                     <!--<p class="purchase-num-tips">每个账号限购1件</p>  -->
@@ -378,7 +379,7 @@
                     <span class="purchase-layer-lable">购买数量</span>
                     <div class="purchase-num">
                         <em class="purchase-num-reduce"></em>
-                        <input type="text" value="0" class="num" name="num"/>
+                        <input type="text" value="0" class="num" readonly="readonly" unselectable="on" name="num"/>
                         <em class="purchase-num-add"></em>
                     </div>
                     <!--<p class="purchase-num-tips">每个账号限购1件</p>     -->

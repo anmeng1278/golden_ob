@@ -1,0 +1,9 @@
+package com.jsj.member.ob.dto.proto;
+
+enum DataCommission {
+   DataCommissionNoSetting = 0;
+   Personal = 1;
+   Department = 2;
+   DepartmentAndSub = 3;
+   All = 4;
+}

@@ -1,0 +1,6 @@
+package com.jsj.member.ob.dto.proto;
+
+enum LanguageVersion {
+   CN = 0;
+   EN = 1;
+}

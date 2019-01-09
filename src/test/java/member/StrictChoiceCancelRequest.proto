@@ -1,0 +1,9 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseRequest.proto";
+
+message StrictChoiceCancelRequest {
+   optional BaseRequest BaseRequest = 1;
+   optional int32 LockID = 2 [default = 0];
+   optional string OperaContent = 3;
+}

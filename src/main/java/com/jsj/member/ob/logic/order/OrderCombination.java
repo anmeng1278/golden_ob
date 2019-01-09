@@ -127,6 +127,8 @@ public class OrderCombination extends OrderBase {
         order.setExpiredTime(DateUtils.getCurrentUnixTime() + Constant.ORDER_EXPIRED_TIME);
         order.setOrderUniqueCode(StringUtils.UUID32());
 
+        order.setOrderSourceId(requ.getSourceType().getValue());
+
         //用于创建商品订单
         List<OrderProduct> orderProducts = new ArrayList<>();
 
@@ -157,6 +159,8 @@ public class OrderCombination extends OrderBase {
 
             orderProductDtos.add(orderProductDto);
 
+            //削减活动商品库存
+            ActivityLogic.ReductionActivityProductStock(apd.getActivityId(), apd.getProductId(), apd.getProductSpecId(), number);
         }
 
         //消减活动库存
@@ -195,6 +199,7 @@ public class OrderCombination extends OrderBase {
         resp.setOrderUniqueCode(order.getOrderUniqueCode());
         resp.setExpiredTime(order.getExpiredTime());
         resp.setSuccess(true);
+        resp.setMessage("创建订单成功");
 
         return resp;
 

@@ -2,17 +2,20 @@ package com.jsj.member.ob.controller;
 
 import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.api.order.OrderDto;
+import com.jsj.member.ob.dto.api.pay.PayDto;
 import com.jsj.member.ob.dto.http.UserSession;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeRequ;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
+import com.jsj.member.ob.entity.WechatRelation;
 import com.jsj.member.ob.enums.OrderStatus;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.logic.BaseLogic;
-import com.jsj.member.ob.logic.OrderLogic;
-import com.jsj.member.ob.logic.ThirdPartyLogic;
+import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.redis.AccessKey;
 import com.jsj.member.ob.redis.RedisService;
+import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.TupleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -200,14 +203,16 @@ public abstract class BaseController {
      * @param orderId
      * @return
      */
-    public GetPayTradeResp createPay(int orderId) {
+    public TwoTuple<GetPayTradeResp, SourceType> createPay(HttpServletRequest request, int orderId) {
 
-        String openId = this.OpenId();
         OrderDto orderDto = OrderLogic.GetOrder(orderId);
+        //PayDto payDto = this.GetPayDto(orderDto.getSourceType());
 
-        if (!orderDto.getOpenId().equals(openId)) {
-            throw new TipException("非操作人订单不允许支付");
-        }
+        PayDto payDto = this.GetPayDto(request);
+
+        //if (!orderDto.getOpenId().equals(payDto.getOpenId())) {
+        //    throw new TipException("非操作人订单不允许支付");
+        //}
         if (orderDto.getPayAmount() <= 0) {
             throw new TipException("当前订单不需要支付");
         }
@@ -219,8 +224,11 @@ public abstract class BaseController {
 
         requ.getRequestBody().setOutTradeId(orderDto.getOrderId() + "");
         requ.getRequestBody().setPayAmount(orderDto.getPayAmount() + "");
-        requ.getRequestBody().setOpenId(openId);
+        requ.getRequestBody().setOpenId(payDto.getOpenId());
         requ.getRequestBody().setOrderTimeOut(DateUtils.formatDateByUnixTime(Long.parseLong(orderDto.getExpiredTime() + ""), "yyyyMMddHHmmss"));
+
+        requ.getRequestBody().setPlatformAppId(payDto.getPlatformAppId());
+        requ.getRequestBody().setPlatformToken(payDto.getPlatformToken());
 
         GetPayTradeResp resp = ThirdPartyLogic.GetPayTrade(requ);
 
@@ -228,9 +236,75 @@ public abstract class BaseController {
             throw new TipException(resp.getResponseHead().getMessage());
         }
 
-        return resp;
+        return TupleUtils.tuple(resp, orderDto.getSourceType());
+
+    }
+
+    //region (public) 获取支付实体 GetPayDto
+
+    /**
+     * 获取支付实体
+     * 必须在登录完成后调用
+     *
+     * @param request
+     * @return
+     */
+    public PayDto GetPayDto(HttpServletRequest request) {
+
+        SourceType sourceType = this.GetSourceType(request);
+        return this.GetPayDto(sourceType);
 
     }
 
 
+    public PayDto GetPayDto(SourceType sourceType) {
+
+        PayDto payDto = new PayDto();
+
+        //初始化默认值
+        payDto.setOpenId(this.OpenId());
+
+        switch (sourceType) {
+            case AWKTC:
+                payDto.setOpenId(this.OpenId());
+                break;
+            default:
+                WechatRelation wechatRelation = WechatLogic.GetWechatRelation(this.OpenId(), sourceType);
+                if (wechatRelation == null) {
+                    throw new TipException("未获取用户信息，暂无法支付");
+                }
+                payDto.setOpenId(wechatRelation.getRelationOpenId());
+                break;
+        }
+
+        payDto.setPlatformAppId(ConfigLogic.GetPlatformAppId(sourceType));
+        payDto.setPlatformToken(ConfigLogic.GetPlatformToken(sourceType));
+
+        return payDto;
+
+    }
+
+    //endregion
+
+    //region (public) 获取请求来源 GetSourceType
+
+    /**
+     * 获取请求来源
+     *
+     * @param request
+     * @return
+     */
+    public SourceType GetSourceType(HttpServletRequest request) {
+
+        String userAgent = request.getHeader("User-Agent");
+        if (!org.apache.commons.lang3.StringUtils.isEmpty(userAgent)) {
+            userAgent = userAgent.toLowerCase();
+            if (userAgent.indexOf("miniprogram") > -1) {
+                return SourceType.AWKMINI;
+            }
+        }
+
+        return SourceType.AWKTC;
+    }
+    //endregion
 }

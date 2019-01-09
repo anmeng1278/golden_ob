@@ -29,6 +29,17 @@ public class IndexController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
+    /**
+     * TODO 测试页面
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping(value = {"/test"})
+    public String test(HttpServletRequest request) {
+
+        return "index/test";
+    }
     //region (public) 首页 index
 
     /**
@@ -79,11 +90,35 @@ public class IndexController extends BaseController {
 
         //用户未支付订单数
         int size = OrderLogic.GetOrders(openId, OrderFlag.UNPAIDORDERS).size();
-        request.setAttribute("size",size);
+        request.setAttribute("size", size);
 
         return "index/index";
     }
     //endregion
 
+    /**
+     * 兑换专区
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping(value = {"/exchange"})
+    public String exchange(HttpServletRequest request) {
+
+        ActivityDto exchange = ActivityLogic.GetActivity(ActivityType.EXCHANGE);
+        List<ActivityProductDto> exchangeProducts = new ArrayList<>();
+
+        if (exchange != null) {
+            exchangeProducts = ActivityLogic.GetActivityProductDtos(exchange.getActivityId());
+        }
+        request.setAttribute("exchangeProducts", exchangeProducts);
+        request.setAttribute("exchange", exchange);
+
+        double balance = MemberLogic.StrictChoiceSearch(this.User().getJsjId());
+        request.setAttribute("balance", balance);
+
+        return "index/exchange";
+    }
+    //endregion
 
 }

@@ -2,6 +2,7 @@ package com.jsj.member.ob.dto.api.order;
 
 import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.enums.ActivityType;
+import com.jsj.member.ob.enums.SourceType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,10 @@ public class CreateOrderRequ {
      */
     private int number;
 
+    /**
+     * 订单来源
+     */
+    private SourceType sourceType;
 
     /**
      * 订单类型
@@ -113,5 +118,13 @@ public class CreateOrderRequ {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public SourceType getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(SourceType sourceType) {
+        this.sourceType = sourceType;
     }
 }

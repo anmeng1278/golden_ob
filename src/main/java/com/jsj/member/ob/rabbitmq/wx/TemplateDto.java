@@ -252,12 +252,13 @@ public class TemplateDto extends BaseDto {
         */
         TemplateDto dto = new TemplateDto();
         dto.setToUser(order.getOpenId());
-        dto.setTemplateType(TemplateType.PAYSUCCESSED);
-        dto.setFirst("您取消了该订单\n");
+        dto.setTemplateType(TemplateType.CANCELUNPAYORDER);
+        dto.setFirst(map.get("title").toString()+"\n");
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(order.getOrderId() + "", color));
         dto.getData().put("keyword2", new TemplateData(map.get("productName").toString(), color));
         dto.getData().put("keyword3", new TemplateData(order.getPayAmount() + "", color));
+        dto.getData().put("keyword4", new TemplateData(map.get("reason").toString(), color));
         dto.setRemark("\n金色严选祝您生活愉快");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/order", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
@@ -360,7 +361,7 @@ public class TemplateDto extends BaseDto {
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(delivery.getProductDtos().get(0).getProductName() + "", color));
         dto.getData().put("keyword2", new TemplateData(effectiveDate, color));
-        dto.getData().put("keyword3", new TemplateData("点击详情查看使用说明", color));
+        dto.getData().put("keyword3", new TemplateData("依据卡的使用说明", color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/stock", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
@@ -375,7 +376,7 @@ public class TemplateDto extends BaseDto {
      * @param goldenDto
      * @return
      */
-    public static TemplateDto OpenCardSuccess(DeliveryDto goldenDto,Delivery delivery) {
+    public static TemplateDto OpenCardSuccess(DeliveryDto goldenDto) {
 
         /*
             {{first.DATA}}
@@ -388,7 +389,7 @@ public class TemplateDto extends BaseDto {
         String openCardDate = DateUtils.formatDateByUnixTime(Long.parseLong(DateUtils.getCurrentUnixTime() + ""), "yyyy-MM-dd");
 
         TemplateDto dto = new TemplateDto();
-        dto.setToUser(delivery.getOpenId());
+        dto.setToUser(goldenDto.getOpenId());
         dto.setTemplateType(TemplateType.OPENCARDSUCCESS);
         dto.setFirst(String.format("您的%s已成功开通\n", goldenDto.getPropertyType().getMessage()));
         dto.setFirstColor(gold_color);
