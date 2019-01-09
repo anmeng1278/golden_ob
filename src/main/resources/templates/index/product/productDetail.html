@@ -271,7 +271,7 @@
             <a href="javascript:void(0);" th:style="${stockCount == 0 ?'visibility:hidden':''}" class="shopping-cart-btn">加入购物车</a>
 
             <a href="javascript:void(0);" th:if="${stockCount > 0}" class="purchase-show-btn">立即购买</a>
-            <a href="javascript:void(0);" th:if="${stockCount <= 0}" class=".shopping-cart-btn ">已售罄</a>
+            <a href="javascript:void(0);" th:if="${stockCount <= 0}" class="purchase-btn-saleout">已售罄</a>
         </p>
 
     </div>
