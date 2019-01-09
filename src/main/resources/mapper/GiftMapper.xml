@@ -4,22 +4,87 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.Gift">
-        <id column="gift_id" property="giftId" />
-        <result column="gift_unique_code" property="giftUniqueCode" />
-        <result column="open_id" property="openId" />
-        <result column="blessings" property="blessings" />
-        <result column="status" property="status" />
-        <result column="remarks" property="remarks" />
-        <result column="share_type" property="shareType" />
-        <result column="expired_time" property="expiredTime" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="delete_time" property="deleteTime" />
+        <id column="gift_id" property="giftId"/>
+        <result column="gift_unique_code" property="giftUniqueCode"/>
+        <result column="open_id" property="openId"/>
+        <result column="blessings" property="blessings"/>
+        <result column="status" property="status"/>
+        <result column="remarks" property="remarks"/>
+        <result column="share_type" property="shareType"/>
+        <result column="expired_time" property="expiredTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="delete_time" property="deleteTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         gift_id AS giftId, gift_unique_code AS giftUniqueCode, open_id AS openId, blessings, status, remarks, share_type AS shareType, expired_time AS expiredTime, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
+
+
+    <!-- 获取我领取的 -->
+    <select id="getUserDraws" resultType="com.jsj.member.ob.dto.api.gift.UserDrawDto">
+        <![CDATA[
+
+             select
+                    g.gift_id as giftId,
+                    g.gift_unique_code as giftUniqueCode,
+                    ifnull(w.nickname, '匿名') as nickName,
+                    g.create_time as createTime,
+                    min(a.status) as stockStatus,
+                    pi.img_path as imgPath,
+                    a.product_id as productId,
+                    a.product_spec_id as productSpecId,
+                    a.create_time as drawTime,
+                    count(*) as count
+                from _stock as a
+                inner join _gift_stock as b
+                        on a.gift_stock_id = b.gift_stock_id
+                inner join _gift as g
+                        on b.gift_id = g.gift_id
+                left join _wechat as w
+                    on g.open_id = w.open_id
+                left join _product_img as pi
+                    on ( a.product_id = pi.product_id and pi.type_id = 0)
+                where a.open_id = #{openId} and a.type_id = 2
+                group by g.gift_id
+
+                order by a.status asc,a.create_time desc
+        ]]>
+    </select>
+
+    <select id="getUserGifts" resultType="com.jsj.member.ob.dto.api.gift.UserGiftDto">
+        <![CDATA[
+
+        select
+            a.gift_id as giftId,
+            a.gift_unique_code as giftUniqueCode,
+            a.status as giftStatus,
+            a.share_type as giftShareType,
+            a.create_time as createTime,
+            pi.img_path as imgPath,
+            w.nickname as nickName,
+            w.headimgurl as headImgUrl,
+            w.open_id as openId,
+            count(*) as count
+
+        from _gift as a
+            inner join _gift_stock as b
+                on a.gift_id = b.gift_id
+            left join _stock as c
+                on b.gift_stock_id = c.gift_stock_id
+            left join _stock as d
+                on b.stock_id = d.stock_id
+            left join _product_img as pi
+                on ( d.product_id = pi.product_id and pi.type_id = 0)
+            left join _wechat as w
+                on c.open_id = w.open_id
+
+        where a.open_id =  #{openId}
+        group by a.gift_id
+        order by a.status asc, a.create_time desc
+        ]]>
+    </select>
 
 </mapper>

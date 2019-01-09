@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum StockStatus {
+public enum StockStatus implements IEnum {
 
     //0 未使用  10 赠送中(未领取)  11 赠送成功  20 已使用(提货)  30 已发货',
 

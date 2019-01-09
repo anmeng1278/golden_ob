@@ -1,9 +1,8 @@
 if (typeof shareConfig == "undefined") {
-    var url = location.protocol + "//" + location.host + ob.virtualPath;
     shareConfig = {
         title: "空铁管家",
         desc: "服务覆盖全国100个城市，300万商旅人士的出行首选！",
-        link: url,
+        link: location.href,
         imgUrl: "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68"
     };
 }
@@ -22,26 +21,33 @@ if (typeof shareConfig == "undefined") {
 //     });
 // }
 
+if (shareConfig.link) {
+    if (shareConfig.link.indexOf(ob.host) == -1) {
+        shareConfig.link = ob.host + shareConfig.link;
+    }
+} else {
+    shareConfig.link = location.href;
+}
+
+shareConfig.desc = shareConfig.desc || "服务覆盖全国100个城市，300万商旅人士的出行首选！";
+shareConfig.title = shareConfig.title || "空铁管家";
+shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68";
+
+if (shareConfig.link.indexOf(location.host) == -1) {
+    shareConfig.link = "https://" + location.host + shareConfig.link;
+}
+
+if (shareConfig.link.indexOf("https") == -1) {
+    shareConfig.link = "https" + shareConfig.link.substring(shareConfig.link.indexOf(":"));
+}
+
+if (location.host.indexOf("localhost") > -1) {
+    shareConfig.link = "http" + shareConfig.link.substring(shareConfig.link.indexOf(":"));
+}
+
+console.log(shareConfig);
+
 wx.ready(function () {
-
-    var url = location.protocol + "//" + location.host;
-    if (shareConfig.link) {
-        if (shareConfig.link.indexOf(location.host) == -1) {
-            shareConfig.link = url + shareConfig.link;
-        }
-    } else {
-        shareConfig.link = url + ob.virtualPath;
-    }
-
-    shareConfig.desc = shareConfig.desc || "服务覆盖全国100个城市，300万商旅人士的出行首选！";
-    shareConfig.title = shareConfig.title || "空铁管家";
-    shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68";
-
-    console.log(shareConfig);
-
-    if (shareConfig.link.toLowerCase().indexOf("https") == -1) {
-        shareConfig.link = shareConfig.link.replace("http", "https");
-    }
 
     if (ob.mini) {
 

@@ -677,8 +677,8 @@ public class GiftLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static List<GiftDto> GetGives(String openId) {
-        return GetGives(openId, null);
+    public static List<UserGiftDto> GetGives(String openId) {
+        return giftLogic.giftService.getUserGifts(openId);
     }
     //endregion
 
@@ -718,6 +718,7 @@ public class GiftLogic extends BaseLogic {
 
     /**
      * 获取用户赠送数量
+     *
      * @param openId
      * @param giftStatus
      * @return
@@ -742,45 +743,48 @@ public class GiftLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static List<GiftDto> GetReceived(String openId) {
+    public static List<UserDrawDto> GetReceived(String openId) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
-        //用户领取的库存
-        List<StockDto> stockDtos = StockLogic.GetStocks(openId, StockType.GIFT, null);
 
-        //用户领取库存的父编号
-        List<Integer> parentStockIds = stockDtos.stream().map(StockDto::getParentStockId).collect(Collectors.toList());
-
-        //用户领取库存对应的礼包
-        EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null");
-        wrapper.in("stock_id", parentStockIds);
-        wrapper.orderBy("create_time desc");
-        List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
-
-        List<GiftDto> giftDtos = new ArrayList<>();
-        for (GiftStock giftStock : giftStocks) {
-
-            GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
-            List<StockDto> dtos = GiftLogic.GetGiftRecevied(openId, giftStock.getGiftId());
-            giftDto.setStockDtos(dtos);
-            giftDtos.add(giftDto);
-
-        }
-
-        //去重
-        ArrayList<GiftDto> dtos = giftDtos.stream().collect(
-                Collectors.collectingAndThen(
-                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(GiftDto::getGiftId))), ArrayList::new)
-        );
-
-        //排序
-        List<GiftDto> collect = dtos.stream().sorted(Comparator.comparing(GiftDto::getCreateTime).reversed())
-                .collect(Collectors.toList());
-
-        return collect;
+        List<UserDrawDto> userDraws = giftLogic.giftService.getUserDraws(openId);
+        return userDraws;
+        ////用户领取的库存
+        //List<StockDto> stockDtos = StockLogic.GetStocks(openId, StockType.GIFT, null);
+        //
+        ////用户领取库存的父编号
+        //List<Integer> parentStockIds = stockDtos.stream().map(StockDto::getParentStockId).collect(Collectors.toList());
+        //
+        ////用户领取库存对应的礼包
+        //EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
+        //wrapper.where("delete_time is null");
+        //wrapper.in("stock_id", parentStockIds);
+        //wrapper.orderBy("create_time desc");
+        //List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
+        //
+        //List<GiftDto> giftDtos = new ArrayList<>();
+        //for (GiftStock giftStock : giftStocks) {
+        //
+        //    GiftDto giftDto = GiftLogic.GetGift(giftStock.getGiftId());
+        //    List<StockDto> dtos = GiftLogic.GetGiftRecevied(openId, giftStock.getGiftId());
+        //    giftDto.setStockDtos(dtos);
+        //    giftDtos.add(giftDto);
+        //
+        //}
+        //
+        ////去重
+        //ArrayList<GiftDto> dtos = giftDtos.stream().collect(
+        //        Collectors.collectingAndThen(
+        //                Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(GiftDto::getGiftId))), ArrayList::new)
+        //);
+        //
+        ////排序
+        //List<GiftDto> collect = dtos.stream().sorted(Comparator.comparing(GiftDto::getCreateTime).reversed())
+        //        .collect(Collectors.toList());
+        //
+        //return collect;
     }
     //endregion
 

@@ -146,9 +146,8 @@ public class ProductController extends BaseController {
         //活动中的商品
         List<ActivityProductDto> productDtos = ActivityLogic.GetActivityProductDtos(activityId);
 
-        int stockCount = 0;
+        int stockCount = info.getStockCount();
         if (!productDtos.isEmpty()) {
-            stockCount = Integer.MAX_VALUE;
             for (ActivityProductDto apd : productDtos) {
                 stockCount = Math.min(stockCount, apd.getStockCount());
                 ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(apd.getProductSpecId());
