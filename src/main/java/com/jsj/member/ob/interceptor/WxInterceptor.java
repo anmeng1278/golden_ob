@@ -50,16 +50,18 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
         StringBuilder requestURL = new StringBuilder(request.getRequestURL().toString());
         String queryString = request.getQueryString();
 
-        String url = "";
+        String url;
         if (queryString == null) {
             url = requestURL.toString();
         } else {
             url = requestURL.append('?').append(queryString).toString();
         }
-        if (url.indexOf("https") > -1) {
-            return url;
+        if (!url.startsWith("https")) {
+            url = "https" + url.substring(url.indexOf(":"));
         }
-        return url.replaceAll("http", "https");
+
+        logger.info(String.format("当前页面地址：%s", url));
+        return url;
     }
     //endregion
 

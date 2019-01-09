@@ -5,6 +5,8 @@ import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.gift.CancelGiftRequ;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
+import com.jsj.member.ob.dto.api.gift.UserDrawDto;
+import com.jsj.member.ob.dto.api.gift.UserGiftDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.enums.GiftStatus;
 import com.jsj.member.ob.exception.TipException;
@@ -44,14 +46,12 @@ public class GiftController extends BaseController {
         String openId = this.OpenId();
 
         //用户所有赠送的
-        List<GiftDto> giveStocks = GiftLogic.GetGives(openId);
-
-        request.setAttribute("giveStocks", giveStocks);
+        List<UserGiftDto> giftDtos = GiftLogic.GetGives(openId);
+        request.setAttribute("giftDtos", giftDtos);
 
         //用户所有领取的
-        List<GiftDto> receiveStocks = GiftLogic.GetReceived(openId);
-
-        request.setAttribute("receiveStocks", receiveStocks);
+        List<UserDrawDto> drawDtos = GiftLogic.GetReceived(openId);
+        request.setAttribute("drawDtos", drawDtos);
 
         return "index/gift";
     }
