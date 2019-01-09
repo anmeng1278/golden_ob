@@ -41,8 +41,8 @@
                     <a th:href="${ob.Nav('/gift/give/'+info.giftUniqueCode)}">
                         <dl class="give-item-dl clear">
                             <dt>
-                                <img th:if="${count <= 1}" th:src="${info.imgPath}">
-                                <img th:if="${count > 1}" th:src="${ob.Img('/index/images/gift_default.png')}" alt="1"/>
+                                <img th:if="${info.count <= 1}" th:src="${info.imgPath}">
+                                <img th:if="${info.count > 1}" th:src="${ob.Img('/index/images/gift_default.png')}" alt="1"/>
                             </dt>
                             <dd>
                                 <p class="give-dd-p">
@@ -65,8 +65,8 @@
                         <dl class="give-item-dl clear">
 
                             <dt>
-                                <img th:if="${count <= 1}" th:src="${info.imgPath}">
-                                <img th:if="${count > 1}" th:src="${ob.Img('/index/images/gift_default.png')}" alt="1"/>
+                                <img th:if="${info.count <= 1}" th:src="${info.imgPath}">
+                                <img th:if="${info.count > 1}" th:src="${ob.Img('/index/images/gift_default.png')}" alt="1"/>
                             </dt>
                             <dd>
                                 <p class="give-dd-p">
