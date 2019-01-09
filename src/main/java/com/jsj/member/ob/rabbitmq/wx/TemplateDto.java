@@ -253,12 +253,12 @@ public class TemplateDto extends BaseDto {
         TemplateDto dto = new TemplateDto();
         dto.setToUser(order.getOpenId());
         dto.setTemplateType(TemplateType.CANCELUNPAYORDER);
-        dto.setFirst(String.format("您的%s订单超时未支付系统已自动取消\n",order.getOrderId()));
+        dto.setFirst(map.get("title").toString()+"\n");
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(order.getOrderId() + "", color));
         dto.getData().put("keyword2", new TemplateData(map.get("productName").toString(), color));
         dto.getData().put("keyword3", new TemplateData(order.getPayAmount() + "", color));
-        dto.getData().put("keyword4", new TemplateData("超时未支付", color));
+        dto.getData().put("keyword4", new TemplateData(map.get("reason").toString(), color));
         dto.setRemark("\n金色严选祝您生活愉快");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/order", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
