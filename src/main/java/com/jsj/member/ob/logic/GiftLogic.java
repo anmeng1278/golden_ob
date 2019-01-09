@@ -681,8 +681,8 @@ public class GiftLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static List<GiftDto> GetGives(String openId) {
-        return GetGives(openId, null);
+    public static List<UserGiftDto> GetGives(String openId) {
+        return giftLogic.giftService.getUserGifts(openId);
     }
     //endregion
 
