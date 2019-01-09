@@ -204,6 +204,17 @@
 
             });
 
+            $(document).on("dblclick", "#content tr", function (e) {
+
+                if ($(this).index() == 0) {
+                    return;
+                }
+                var method="top";
+                var id=$(this).find('button[data-method]').attr("data-id");
+                modifyStatus(method, id);
+
+            });
+
 
         });
 
