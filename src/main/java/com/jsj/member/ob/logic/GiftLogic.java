@@ -524,6 +524,10 @@ public class GiftLogic extends BaseLogic {
         List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
         List<StockDto> stockDtos = new ArrayList<>();
 
+        if(giftStocks.size() == 0 || giftStocks == null){
+            return stockDtos;
+        }
+
         for (GiftStock giftStock : giftStocks) {
             StockDto stockDto = StockLogic.GetStock(giftStock.getStockId());
             stockDtos.add(stockDto);
@@ -677,8 +681,8 @@ public class GiftLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static List<UserGiftDto> GetGives(String openId) {
-        return giftLogic.giftService.getUserGifts(openId);
+    public static List<GiftDto> GetGives(String openId) {
+        return GetGives(openId, null);
     }
     //endregion
 
@@ -718,7 +722,6 @@ public class GiftLogic extends BaseLogic {
 
     /**
      * 获取用户赠送数量
-     *
      * @param openId
      * @param giftStatus
      * @return
