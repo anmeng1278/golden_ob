@@ -20,7 +20,7 @@
 .give-head-img{ width: 0.44rem; height: 0.44rem; border-radius: 50%;}
 .give-come-from-text{ line-height: 0.44rem; font-size: 0.3rem; color: #AF693A ;}
 /*main end*/
-
+ 
 /*footer start*/
 .footer{ height: 1.1rem; background: #C2191F; position: fixed; left: 0; bottom: 0; right: 0; z-index: 100;}
 .footer-ul{}
