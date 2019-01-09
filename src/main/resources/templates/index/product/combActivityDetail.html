@@ -14,7 +14,7 @@
             title: shareTitle,
             desc: [[${info.introduce}]],
             imgUrl: [[${info.imgPath}]],
-            link: location.href,
+            link: location.href
         };
 
     </script>
@@ -181,7 +181,9 @@
                 <p class="footer-lt">
                     <span class="shopping-price">&yen;<em>0</em></span>
                 </p>
-                <a href="javascript:void(0);" class="purchase-btn">立即购买</a>
+                <th:b
+                <a href="javascript:void(0);" th:if="${stockCount > 0}" class="purchase-btn">立即购买</a>
+                <a href="javascript:void(0);" th:if="${stockCount <= 0}" class="shopping-cart-btn">已售罄</a>
             </div>
             <!--purchase-footer end-->
         </div>
