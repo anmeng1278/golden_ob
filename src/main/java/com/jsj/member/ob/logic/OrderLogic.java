@@ -175,6 +175,8 @@ public class OrderLogic extends BaseLogic {
                 sb.deleteCharAt(sb.length() - 1);
             }
             map.put("productName", sb);
+            map.put("title","您有订单在30分钟内未完成支付已被取消");
+            map.put("reason","超时未支付");
             TemplateDto temp = TemplateDto.CancelUnPayOrder(o, map);
             orderLogic.wxSender.sendNormal(temp);
         }
@@ -210,6 +212,22 @@ public class OrderLogic extends BaseLogic {
 
         //取消订单
         orderLogic.orderService.updateById(order);
+
+        //未支付订单取消客服消息
+        Map<String, Object> map = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+        for (OrderProductDto orderProductDto : orderProductDtos) {
+            sb.append(orderProductDto.getProductDto().getProductName() + "*" + orderProductDto.getNumber()).append(",");
+
+        }
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        map.put("productName", sb);
+        map.put("title","您的订单取消已完成");
+        map.put("reason","手动取消");
+        TemplateDto temp = TemplateDto.CancelUnPayOrder(order, map);
+        orderLogic.wxSender.sendNormal(temp);
 
     }
     //endregion
