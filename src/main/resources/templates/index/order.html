@@ -191,7 +191,7 @@
         <th:block th:each="info:${orderDtos}">
 
             <!--待支付，支付失败-->
-            <th:block th:if="${info.status.value == 0 || info.status.value == 20}">
+            <th:block th:if="${info.orderStatus.value == 0 || info.orderStatus.value == 20}">
                 <div class="order-item" th:fragment="unPayOrders">
                     <div class="order-item-head">
                            <span class="order-num" th:text="|订单号:${info.orderId}|">
@@ -201,21 +201,21 @@
                                 class="joinm">0</span>分<span class="joins">0</span>秒后失效</p>
                     </div>
                     <div class="order-item-main">
-                        <th:block th:if="${!#lists.isEmpty(info.orderProductDtos)}"
-                                  th:each="pro:${info.orderProductDtos}">
+                        <th:block th:if="${!#lists.isEmpty(info.item.product)}"
+                                  th:each="pro:${info.item.product}">
                             <a th:href="${ob.Nav('/product?productId='+pro.productId)}">
                                 <dl class="order-item-dl">
-                                    <dt th:if="${!#lists.isEmpty(pro.productDto.productImgDtos)}">
-                                        <img th:src="${pro.productDto.productImgDtos[0].imgPath}" alt="1" width="100%"/>
+                                    <dt>
+                                        <img th:src="${pro.imgPath}" alt="1" width="100%"/>
                                     </dt>
                                     <dd>
-                                        <h2 class="order-dd-name" th:text="${pro.productDto.productName}">素园野生素食参谜</h2>
+                                        <h2 class="order-dd-name" th:text="${pro.productName}">素园野生素食参谜</h2>
                                         <p class="order-dd-tips"
-                                           th:text="|规格：${productLogic.GetProductSpec(pro.productSpecId).specName}|">
+                                           th:text="|规格：${pro.specName}|">
                                         </p>
                                         <p class="order-dd-time">
                                             <span th:text="|数量：${pro.number}|"></span>
-                                            <span th:text="|&yen;${pro.productDto.salePrice}|"></span>
+                                            <span th:text="|&yen;${pro.salePrice}|"></span>
                                         </p>
                                     </dd>
                                 </dl>
@@ -233,26 +233,26 @@
             </th:block>
 
             <!--支付成功-->
-            <th:block th:if="${info.status.value == 10}">
+            <th:block th:if="${info.orderStatus.value == 10}">
                 <div class="order-item" th:fragment="paidOrders">
                     <p class="order-item-head">
                         <span class="order-num" th:text="|订单号:${info.orderId}|"></span>
-                        <span class="order-price" th:text="${info.status.message}"></span>
+                        <span class="order-price" th:text="${info.orderStatus.message}"></span>
                     </p>
-                    <th:block th:if="${!#lists.isEmpty(info.orderProductDtos)}"
-                              th:each="pro:${info.orderProductDtos}">
+                    <th:block th:if="${!#lists.isEmpty(info.item.product)}"
+                              th:each="pro:${info.item.product}">
                         <a th:href="${ob.Nav('/product?productId='+pro.productId)}">
                             <dl class="order-item-dl">
-                                <dt th:if="${!#lists.isEmpty(pro.productDto.productImgDtos)}">
-                                    <img th:src="${pro.productDto.productImgDtos[0].imgPath}" alt="1" width="100%"/>
+                                <dt>
+                                    <img th:src="${pro.imgPath}" alt="1" width="100%"/>
                                 </dt>
                                 <dd>
-                                    <h2 class="order-dd-name" th:text="${pro.productDto.productName}">越甲科技20寸旅行箱</h2>
+                                    <h2 class="order-dd-name" th:text="${pro.productName}">越甲科技20寸旅行箱</h2>
                                     <p class="order-dd-tips"
-                                       th:text="|规格：${productLogic.GetProductSpec(pro.productSpecId).specName}|"></p>
+                                       th:text="|规格：${pro.specName}|"></p>
                                     <p class="order-dd-time">
                                         <span th:text="|数量：${pro.number}|"></span>
-                                        <span th:text="|&yen;${pro.productDto.salePrice}|"></span>
+                                        <span th:text="|&yen;${pro.salePrice}|"></span>
                                     </p>
                                 </dd>
                             </dl>
@@ -265,26 +265,26 @@
             </th:block>
 
             <!--已取消-->
-            <th:block th:if="${info.status.value == 60}">
+            <th:block th:if="${info.orderStatus.value == 60}">
                 <div class="order-item" th:fragment="cancelOrders">
                     <p class="order-item-head">
                         <span class="order-num" th:text="|订单号:${info.orderId}|">  </span>
-                        <span class="order-price" th:text="${info.status.message}"></span>
+                        <span class="order-price" th:text="${info.orderStatus.message}"></span>
                     </p>
-                    <th:block th:if="${!#lists.isEmpty(info.orderProductDtos)}"
-                              th:each="pro:${info.orderProductDtos}">
+                    <th:block th:if="${!#lists.isEmpty(info.item.product)}"
+                              th:each="pro:${info.item.product}">
                         <a th:href="${ob.Nav('/product?productId='+pro.productId)}">
                             <dl class="order-item-dl">
-                                <dt th:if="${!#lists.isEmpty(pro.productDto.productImgDtos)}">
-                                    <img th:src="${pro.productDto.productImgDtos[0].imgPath}" alt="1" width="100%"/>
+                                <dt>
+                                    <img th:src="${pro.imgPath}" alt="1" width="100%"/>
                                 </dt>
                                 <dd>
-                                    <h2 class="order-dd-name" th:text="${pro.productDto.productName}">越甲科技20寸旅行箱</h2>
+                                    <h2 class="order-dd-name" th:text="${pro.productName}">越甲科技20寸旅行箱</h2>
                                     <p class="order-dd-tips"
-                                       th:text="|规格：${productLogic.GetProductSpec(pro.productSpecId).specName}|"></p>
+                                       th:text="|规格：${pro.specName}|"></p>
                                     <p class="order-dd-time">
                                         <span th:text="|数量：${pro.number}|"></span>
-                                        <span th:text="|&yen;${pro.productDto.salePrice}|"></span>
+                                        <span th:text="|&yen;${pro.salePrice}|"></span>
                                     </p>
                                 </dd>
                             </dl>

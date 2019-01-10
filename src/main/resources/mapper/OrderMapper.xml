@@ -4,31 +4,127 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.Order">
-        <id column="order_id" property="orderId" />
-        <result column="order_unique_code" property="orderUniqueCode" />
-        <result column="open_id" property="openId" />
-        <result column="amount" property="amount" />
-        <result column="pay_amount" property="payAmount" />
-        <result column="status" property="status" />
-        <result column="transaction_id" property="transactionId" />
-        <result column="wechat_coupon_id" property="wechatCouponId" />
-        <result column="coupon_price" property="couponPrice" />
-        <result column="equity_price" property="equityPrice" />
-        <result column="remarks" property="remarks" />
-        <result column="activity_id" property="activityId" />
-        <result column="activity_order_id" property="activityOrderId" />
-        <result column="type_id" property="typeId" />
-        <result column="order_source_id" property="orderSourceId" />
-        <result column="pay_time" property="payTime" />
-        <result column="expired_time" property="expiredTime" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="delete_time" property="deleteTime" />
+        <id column="order_id" property="orderId"/>
+        <result column="order_unique_code" property="orderUniqueCode"/>
+        <result column="open_id" property="openId"/>
+        <result column="amount" property="amount"/>
+        <result column="pay_amount" property="payAmount"/>
+        <result column="status" property="status"/>
+        <result column="transaction_id" property="transactionId"/>
+        <result column="wechat_coupon_id" property="wechatCouponId"/>
+        <result column="coupon_price" property="couponPrice"/>
+        <result column="equity_price" property="equityPrice"/>
+        <result column="remarks" property="remarks"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="activity_order_id" property="activityOrderId"/>
+        <result column="type_id" property="typeId"/>
+        <result column="order_source_id" property="orderSourceId"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="expired_time" property="expiredTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="delete_time" property="deleteTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         order_id AS orderId, order_unique_code AS orderUniqueCode, open_id AS openId, amount, pay_amount AS payAmount, status, transaction_id AS transactionId, wechat_coupon_id AS wechatCouponId, coupon_price AS couponPrice, equity_price AS equityPrice, remarks, activity_id AS activityId, activity_order_id AS activityOrderId, type_id AS typeId, order_source_id AS orderSourceId, pay_time AS payTime, expired_time AS expiredTime, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
+
+    <select id="getAllOrders" resultType="com.jsj.member.ob.dto.api.order.UserOrderDto">
+        <![CDATA[
+
+                SELECT
+                  o.open_id AS openId,
+                  ifnull(w.nickname, '匿名') AS nickName,
+                  o.order_id AS orderId,
+                  o. STATUS AS status,
+                  o.pay_amount AS payAmount,
+                  o.expired_time as expiredTime,
+
+                concat('<item>', GROUP_CONCAT(
+                    '<product>',
+                    concat( '<productId>' ,  op.product_id , '</productId>' ),
+                    concat( '<specId>' ,  op.product_spec_id , '</specId>' ),
+                    concat( '<productName>' ,  p.product_name , '</productName>' ),
+                    concat( '<specName>' ,  ps.spec_name , '</specName>' ),
+                    concat( '<salePrice>' , ps.sale_price , '</salePrice>' ),
+                    concat( '<number>' ,  op.number , '</number>' ),
+                    concat( '<imgPath>' ,  pi.img_path , '</imgPath>' ),
+                    '</product>'
+                    SEPARATOR ''
+                  ),'</item>' )as xml
+                FROM
+                  _order as o
+                    INNER JOIN _order_product AS op
+                      on o.order_id = op.order_id
+                    INNER JOIN _product_spec AS ps
+                      on op.product_spec_id = ps.product_spec_id
+                    INNER JOIN _product AS p
+                      on op.product_id = p.product_id
+                    LEFT JOIN _product_img AS pi
+                      on (pi.product_id = op.product_id AND pi.type_id = 0 )
+                    LEFT JOIN _wechat AS w
+                      ON o.open_id = w.open_id
+                WHERE
+                  o.open_id = #{openId}
+                AND o.delete_time IS NULL
+                GROUP BY o.order_id
+                ORDER BY
+                  o. STATUS ASC,
+                  o.create_time DESC
+
+
+        ]]>
+    </select>
+
+    <select id="getUnPayOrders" resultType="com.jsj.member.ob.dto.api.order.UserOrderDto">
+        <![CDATA[
+
+
+                SELECT
+                  o.open_id AS openId,
+                  ifnull(w.nickname, '匿名') AS nickName,
+                  o.order_id AS orderId,
+                  o. STATUS AS status,
+                  o.pay_amount AS payAmount,
+                  o.expired_time as expiredTime,
+
+                concat('<item>', GROUP_CONCAT(
+                    '<product>',
+                    concat( '<productId>' ,  op.product_id , '</productId>' ),
+                    concat( '<specId>' ,  op.product_spec_id , '</specId>' ),
+                    concat( '<productName>' ,  p.product_name , '</productName>' ),
+                    concat( '<specName>' ,  ps.spec_name , '</specName>' ),
+                    concat( '<salePrice>' , ps.sale_price , '</salePrice>' ),
+                    concat( '<number>' ,  op.number , '</number>' ),
+                    concat( '<imgPath>' ,  pi.img_path , '</imgPath>' ),
+                    '</product>'
+                    SEPARATOR ''
+                  ),'</item>' )as xml
+                FROM
+                  _order as o
+                    INNER JOIN _order_product AS op
+                      on o.order_id = op.order_id
+                    INNER JOIN _product_spec AS ps
+                      on op.product_spec_id = ps.product_spec_id
+                    INNER JOIN _product AS p
+                      on op.product_id = p.product_id
+                    LEFT JOIN _product_img AS pi
+                      on (pi.product_id = op.product_id AND pi.type_id = 0 )
+                    LEFT JOIN _wechat AS w
+                      ON o.open_id = w.open_id
+                WHERE
+                  o.open_id = #{openId}
+                AND o.delete_time IS NULL
+                 AND o.status in (0,20)
+                GROUP BY o.order_id
+                ORDER BY
+                  o. STATUS ASC,
+                  o.create_time DESC
+
+
+        ]]>
+    </select>
 
 </mapper>
