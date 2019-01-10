@@ -399,6 +399,11 @@ public class AdminProductController {
         if (method.equals("up") || method.equals("down")) {
             ProductLogic.Sort(id, method.equals("up"));
         }
+        if (method.equals("top")) {
+            product.setSort(0);
+            product.setUpdateTime(DateUtils.getCurrentUnixTime());
+            productService.updateById(product);
+        }
 
         return RestResponseBo.ok("操作成功");
 

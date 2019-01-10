@@ -15,7 +15,6 @@ import com.jsj.member.ob.service.CouponProductService;
 import com.jsj.member.ob.service.CouponService;
 import com.jsj.member.ob.service.WechatCouponService;
 import com.jsj.member.ob.utils.DateUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -202,36 +201,20 @@ public class CouponLogic extends BaseLogic {
     //region (public) 获得用户可使用的优惠券 GetWechatCouponDtos
 
     /**
-     * 获得用户可使用的优惠券
+     * 获得所有过期的优惠券
      *
-     * @param openId
      * @return
      */
-    public static List<WechatCouponDto> GetWechatCouponDtos(String openId) {
+    public static List<WechatCoupon> GetExpiredWechatCoupons() {
 
-        if (StringUtils.isBlank(openId)) {
-            throw new TipException("参数不合法，用户openId不能为空");
-        }
 
         EntityWrapper<WechatCoupon> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null and open_id={0}", openId);
+        wrapper.where("delete_time is null");
         wrapper.where("status=0");
-        wrapper.le("expired_time", DateUtils.getCurrentUnixTime());
+        wrapper.lt("expired_time", DateUtils.getCurrentUnixTime());
         List<WechatCoupon> wechatCoupons = couponLogic.wechatCouponService.selectList(wrapper);
 
-        List<WechatCouponDto> wechatCouponDtos = new ArrayList<>();
-
-        for (WechatCoupon entity : wechatCoupons) {
-
-            //获取优惠券详情
-            CouponDto couponDto = CouponLogic.GetCoupon(entity.getCouponId());
-
-            WechatCouponDto wechatCouponDto = CouponLogic.ToWechatCouponDto(entity);
-            wechatCouponDto.setCouponDto(couponDto);
-
-            wechatCouponDtos.add(wechatCouponDto);
-        }
-        return wechatCouponDtos;
+        return wechatCoupons;
 
     }
     //endregion
