@@ -2,10 +2,7 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
-import com.jsj.member.ob.dto.api.order.CreateOrderResp;
-import com.jsj.member.ob.dto.api.order.OrderDto;
-import com.jsj.member.ob.dto.api.order.OrderProductDto;
+import com.jsj.member.ob.dto.api.order.*;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
@@ -267,7 +264,7 @@ public class OrderLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static List<OrderDto> GetOrders(String openId) {
+    public static List<UserOrderDto> GetOrders(String openId) {
         return OrderLogic.GetOrders(openId, OrderFlag.ALLORDERS);
     }
     //endregion
@@ -280,37 +277,21 @@ public class OrderLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static List<OrderDto> GetOrders(String openId, OrderFlag orderFlag) {
+    public static List<UserOrderDto> GetOrders(String openId, OrderFlag orderFlag) {
 
-        EntityWrapper<Order> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null and open_id={0}", openId);
+        List<UserOrderDto> orders = null;
 
         if (orderFlag == OrderFlag.UNPAIDORDERS) {
-
-            List<Integer> orderStatuses = new ArrayList<>();
-            orderStatuses.add(OrderStatus.UNPAY.getValue());
-            orderStatuses.add(OrderStatus.PAYFAIL.getValue());
-
-            wrapper.in("status", orderStatuses);
+            orders = orderLogic.orderService.getUnPayOrders(openId);
         }
 
-        wrapper.orderBy(" status asc ,create_time desc");
-
-        List<Order> orders = orderLogic.orderService.selectList(wrapper);
-        List<OrderDto> orderDtos = new ArrayList<>();
-
-        for (Order entity : orders) {
-
-            OrderDto dto = OrderLogic.ToDto(entity);
-
-            List<OrderProductDto> orderProductDtos = OrderLogic.GetOrderProducts(entity.getOrderId());
-            dto.setOrderProductDtos(orderProductDtos);
-
-            orderDtos.add(dto);
+        if (orderFlag == OrderFlag.ALLORDERS) {
+            orders = orderLogic.orderService.getAllOrders(openId);
         }
-        return orderDtos;
+
+        return orders;
     }
-    //endregion
+
 
     //region (public) 实体转换 ToDto
 

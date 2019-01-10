@@ -259,7 +259,6 @@
                         if (resp.baseResp.success) {
                             TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
                                 parent.tab.openTab("/admin/redpacket", {refershType: "reload"});
-                                // location.href = "/admin/redpacket";
                             });
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
@@ -339,18 +338,6 @@
             }
             var chooseCoupons = getChoosedCoupon();
 
-            //判断是否存在
-            // $("input[type='hidden'][name='couponIds']").each(function (j) {
-            //     var value = this.value;
-            //     var self = this;
-            //     for (var i = 0; i < couponIds.length; i++) {
-            //         if (value == couponIds[i]) {
-            //             layer.msg("优惠券已存在,请重新选择!", {icon: 2});
-            //             type = 2;
-            //             return false;
-            //         }
-            //     }
-            // });
 
                 TX.CORE.p({
                     data: {couponIds: couponIds.join(',')},
