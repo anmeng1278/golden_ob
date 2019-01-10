@@ -20,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.thymeleaf.spring4.context.SpringWebContext;
@@ -50,31 +49,22 @@ public abstract class BaseController {
     /**
      * 设置页面缓存
      *
-     * @param keys
      * @param request
      * @param response
-     * @param model
-     * @param expireSeconds
      * @return
      */
     public String SetAccessCache(
-            String keys,
             HttpServletRequest request,
             HttpServletResponse response,
-            Model model,
-            int expireSeconds
+            AccessKey accessKey,
+            String templateName
     ) {
-
-        for (BaseLogic bl : baseLogics) {
-            String logicName = com.jsj.member.ob.utils.StringUtils.camelCase(bl.getClass().getSimpleName());
-            model.addAttribute(logicName, bl);
-        }
         SpringWebContext ctx = new SpringWebContext(request, response,
-                request.getServletContext(), request.getLocale(), model.asMap(), applicationContext);
-        String html = thymeleafViewResolver.getTemplateEngine().process("admin/wechat/index", ctx);
+                request.getServletContext(), request.getLocale(), null, applicationContext);
+        String html = thymeleafViewResolver.getTemplateEngine().process(templateName, ctx);
 
         if (!StringUtils.isBlank(html)) {
-            redisService.set(AccessKey.withExpire(expireSeconds), keys, html);
+            redisService.set(accessKey, accessKey.getPrefix(), html);
         }
 
         return html;
@@ -83,11 +73,10 @@ public abstract class BaseController {
     /**
      * 获取页面缓存
      *
-     * @param keys
      * @return
      */
-    public String GetAccessCache(String keys) {
-        String s = redisService.get(AccessKey.withExpire(0), keys, String.class);
+    public String GetAccessCache(AccessKey accessKey) {
+        String s = redisService.get(accessKey, accessKey.getPrefix(), String.class);
         return s;
     }
 
@@ -125,7 +114,13 @@ public abstract class BaseController {
      * @return
      */
     protected String Redirect(String path) {
-        return Redirect(path, true);
+
+        try {
+            Redirect(path, true);
+        } catch (Exception ex) {
+
+        }
+        return "";
     }
 
 
@@ -136,14 +131,26 @@ public abstract class BaseController {
      * @return
      */
     protected String Redirect(String path, boolean enabledCache) {
-        int timeStamp = DateUtils.getCurrentUnixTime();
-        if (enabledCache) {
-            return String.format("redirect:%s%s", webconfig.getVirtualPath(), path);
+
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletResponse response = attr.getResponse();
+
+        try {
+            int timeStamp = DateUtils.getCurrentUnixTime();
+            if (enabledCache) {
+                response.sendRedirect(String.format("%s%s%s", webconfig.getHost(), webconfig.getVirtualPath(), path));
+                //return String.format("redirect:%s%s", webconfig.getVirtualPath(), path);
+            }
+            if (path.indexOf("?") > -1) {
+                response.sendRedirect(String.format("%s%s&%d", webconfig.getHost(), webconfig.getVirtualPath(), path, timeStamp));
+                //return String.format("redirect:%s%s&%d", webconfig.getVirtualPath(), path, timeStamp);
+            }
+            response.sendRedirect(String.format("%s%s%s?%d", webconfig.getHost(), webconfig.getVirtualPath(), path, timeStamp));
+            //return String.format("redirect:%s%s?%d", webconfig.getVirtualPath(), path, timeStamp);
+        } catch (Exception ex) {
+
         }
-        if (path.indexOf("?") > -1) {
-            return String.format("redirect:%s%s&%d", webconfig.getVirtualPath(), path, timeStamp);
-        }
-        return String.format("redirect:%s%s?%d", webconfig.getVirtualPath(), path, timeStamp);
+        return "";
     }
 
     /**

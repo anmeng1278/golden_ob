@@ -81,7 +81,7 @@ public class GiftController extends BaseController {
         List<StockDto> receiveStocks = StockLogic.FilterData(receiveStock);
 
         //未分享
-        if(giftDto.getGiftStatus() == GiftStatus.UNSHARE){
+        if (giftDto.getGiftStatus() == GiftStatus.UNSHARE) {
 
             String shareUrl = this.Url(String.format("/share/gift/%s/draw", giftDto.getGiftUniqueCode()), false);
             request.setAttribute("shareUrl", shareUrl);
@@ -137,7 +137,7 @@ public class GiftController extends BaseController {
     @PostMapping(value = "/cancel")
     @Transactional(Constant.DBTRANSACTIONAL)
     @ResponseBody
-    public RestResponseBo cancelGift(HttpServletRequest request){
+    public RestResponseBo cancelGift(HttpServletRequest request) {
 
         String openId = this.OpenId();
 
@@ -146,7 +146,7 @@ public class GiftController extends BaseController {
         //判断是否本人取消
         GiftDto giftDto = GiftLogic.GetGift(giftUniqueCode);
         if (!giftDto.getOpenId().equals(openId)) {
-           Redirect("/stock");
+            this.Redirect("/stock");
         }
 
         try {
@@ -158,7 +158,7 @@ public class GiftController extends BaseController {
 
             return RestResponseBo.ok("取消成功");
 
-        }catch (TipException ex) {
+        } catch (TipException ex) {
 
             return RestResponseBo.fail(ex.getMessage(), null);
 

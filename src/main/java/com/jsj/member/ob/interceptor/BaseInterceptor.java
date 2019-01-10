@@ -25,12 +25,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
-        return true;
-    }
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse httpServletResponse, Object o,
-                           ModelAndView modelAndView) throws Exception {
         for (BaseLogic bl : baseLogics) {
             request.setAttribute(StringUtils.camelCase(bl.getClass().getSimpleName()), bl);
         }
@@ -49,6 +44,14 @@ public class BaseInterceptor implements HandlerInterceptor {
 
         request.setAttribute("virtualPath", webconfig.getVirtualPath());
         request.setAttribute("host", webconfig.getHost());
+
+        return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse httpServletResponse, Object o,
+                           ModelAndView modelAndView) throws Exception {
+
 
     }
 
