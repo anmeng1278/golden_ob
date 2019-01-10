@@ -71,9 +71,11 @@ public class ProductController extends BaseController {
 
             case EXCHANGE:
                 return this.exchangeProduct(request);
+
+            default:
+                throw new TipException("方法暂未实现");
         }
 
-        return this.Redirect("/");
     }
     //endregion
 
@@ -131,7 +133,7 @@ public class ProductController extends BaseController {
     public String combProduct(HttpServletRequest request) {
 
         if (StringUtils.isEmpty(request.getParameter("activityId"))) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         int activityId = Integer.parseInt(request.getParameter("activityId"));
@@ -140,7 +142,7 @@ public class ProductController extends BaseController {
 
         //非组合商品，不允许进此链接
         if (!info.getActivityType().equals(ActivityType.COMBINATION)) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         //活动中的商品
@@ -175,11 +177,11 @@ public class ProductController extends BaseController {
     public String exchangeProduct(HttpServletRequest request) {
 
         if (StringUtils.isEmpty(request.getParameter("activityId"))) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         if (StringUtils.isEmpty(request.getParameter("productSpecId"))) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         int activityId = Integer.parseInt(request.getParameter("activityId"));
@@ -188,18 +190,18 @@ public class ProductController extends BaseController {
         //兑换活动信息
         ActivityDto info = ActivityLogic.GetActivity(activityId);
         if (!info.getIfpass()) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         //非兑换商品，不允许进此链接
         if (!info.getActivityType().equals(ActivityType.EXCHANGE)) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         //活动中的商品
         List<ActivityProductDto> productDtos = ActivityLogic.GetActivityProductDtos(activityId, productSpecId);
         if (productDtos.size() == 0) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         ProductDto productDto = productDtos.get(0).getProductDto();
@@ -235,11 +237,11 @@ public class ProductController extends BaseController {
     public String secKillProduct(HttpServletRequest request) {
 
         if (StringUtils.isEmpty(request.getParameter("activityId"))) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         if (StringUtils.isEmpty(request.getParameter("productSpecId"))) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         int activityId = Integer.parseInt(request.getParameter("activityId"));
@@ -248,18 +250,18 @@ public class ProductController extends BaseController {
         //秒杀活动信息
         ActivityDto info = ActivityLogic.GetActivity(activityId);
         if (!info.getIfpass()) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         //非组合商品，不允许进此链接
         if (!info.getActivityType().equals(ActivityType.SECKILL)) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         //活动中的商品
         List<ActivityProductDto> productDtos = ActivityLogic.GetActivityProductDtos(activityId, productSpecId);
         if (productDtos.size() == 0) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
         ProductDto productDto = productDtos.get(0).getProductDto();
         ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(productSpecId);

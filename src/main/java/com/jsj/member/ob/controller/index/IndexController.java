@@ -9,16 +9,22 @@ import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.BannerType;
 import com.jsj.member.ob.enums.OrderFlag;
 import com.jsj.member.ob.enums.ProductType;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.*;
+import com.jsj.member.ob.redis.AccessKey;
 import com.jsj.member.ob.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +44,13 @@ public class IndexController extends BaseController {
     @GetMapping(value = {"/test"})
     public String test(HttpServletRequest request) {
 
-        return "index/test";
+        try {
+            throw new TipException("出错了");
+        } catch (Exception ex) {
+            this.Redirect("/");
+        }
+
+        return "index/index";
     }
     //region (public) 首页 index
 
@@ -49,7 +61,14 @@ public class IndexController extends BaseController {
      * @return
      */
     @GetMapping(value = {""})
-    public String index(HttpServletRequest request) {
+    @ResponseBody
+    public String index(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+
+        String html = this.GetAccessCache(AccessKey.pageIndex);
+        if (!StringUtils.isEmpty(html)) {
+            return html;
+        }
 
         //首页轮播图
         List<Banner> banners = BannerLogic.GetBanner(BannerType.COVER.getValue());
@@ -92,7 +111,9 @@ public class IndexController extends BaseController {
         int size = OrderLogic.GetOrders(openId, OrderFlag.UNPAIDORDERS).size();
         request.setAttribute("size", size);
 
-        return "index/index";
+        return this.SetAccessCache(request, response, AccessKey.pageIndex, "index/index");
+
+        //return "index/index";
     }
     //endregion
 

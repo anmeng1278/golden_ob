@@ -117,27 +117,27 @@ public class ShareController extends BaseController {
 
         GiftDto giftDto = GiftLogic.GetGift(obs);
         if (giftDto == null) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         if (giftDto.getStockDtos().size() == 0) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         String openId = this.OpenId();
         if (!giftDto.getOpenId().equals(openId)) {
             //不是本人操作的分享，不允查看
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         //取消分享，跳转到库存页面
         if (giftDto.getGiftStatus().equals(GiftStatus.CANCEL)) {
-            return this.Redirect("/stock", false);
+            this.Redirect("/stock", false);
         }
 
         //已分享，跳转到领取页面
         if (giftDto.getGiftStatus().equals(GiftStatus.SHARED)) {
-            return this.Redirect(String.format("/share/gift/%s/draw", obs), false);
+            this.Redirect(String.format("/share/gift/%s/draw", obs), false);
         }
 
         //文案类型
@@ -177,27 +177,27 @@ public class ShareController extends BaseController {
 
         GiftDto giftDto = GiftLogic.GetGift(obs);
         if (giftDto == null) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         if (giftDto.getStockDtos().size() == 0) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         //已领完或取消分享，跳转到领取详情页面
         if (giftDto.getGiftStatus().equals(GiftStatus.BROUGHTOUT) || giftDto.getGiftStatus().equals(GiftStatus.CANCEL)) {
-            return this.Redirect(String.format("/share/gift/%s", obs));
+            this.Redirect(String.format("/share/gift/%s", obs));
         }
 
         //判断会员本人是否允许领取
         String openId = this.OpenId();
         if (!GiftLogic.userSelfCanDraw(giftDto, openId)) {
-            return this.Redirect(String.format("/share/gift/%s", obs));
+            this.Redirect(String.format("/share/gift/%s", obs));
         }
 
         //判断当前操作人是否已领取
         if (GiftLogic.userIsDraw(giftDto.getGiftId(), openId)) {
-            return this.Redirect(String.format("/share/gift/%s", obs));
+            this.Redirect(String.format("/share/gift/%s", obs));
         }
 
         //分享链接
@@ -262,10 +262,10 @@ public class ShareController extends BaseController {
 
         GiftDto giftDto = GiftLogic.GetGift(obs);
         if (giftDto == null) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
         if (giftDto.getStockDtos().size() == 0) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         //赠送的库存

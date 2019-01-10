@@ -3,6 +3,7 @@ package com.jsj.member.ob.controller.index;
 import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.order.OrderDto;
+import com.jsj.member.ob.dto.api.order.UserOrderDto;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
 import com.jsj.member.ob.enums.OrderFlag;
 import com.jsj.member.ob.enums.SourceType;
@@ -43,11 +44,10 @@ public class OrderController extends BaseController {
         }
 
         String openId = this.OpenId();
-        List<OrderDto> orderDtos = OrderLogic.GetOrders(openId, orderFlag);
+        List<UserOrderDto> orderDtos = OrderLogic.GetOrders(openId, orderFlag);
 
         request.setAttribute("orderDtos", orderDtos);
         request.setAttribute("orderFlag", orderFlag);
-        //request.setAttribute("mini", true);
         return "index/order";
     }
     //endregion

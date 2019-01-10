@@ -213,7 +213,7 @@ public class StockController extends BaseController {
         //获取缓存数据
         String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
-            return this.Redirect("/stock", false);
+            this.Redirect("/stock", false);
         }
 
         try {
@@ -233,7 +233,7 @@ public class StockController extends BaseController {
             request.setAttribute("trains", train);
         } catch (TipException ex) {
             logger.error(JSON.toJSONString(ex));
-            return this.Redirect("/stock", false);
+            this.Redirect("/stock", false);
         }
 
         return "index/stockUse1";
@@ -342,7 +342,7 @@ public class StockController extends BaseController {
         //获取缓存数据
         String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
-            return this.Redirect("/stock", false);
+            this.Redirect("/stock", false);
         }
 
         try {
@@ -359,7 +359,7 @@ public class StockController extends BaseController {
 
         } catch (TipException ex) {
             logger.error(JSON.toJSONString(ex));
-            return this.Redirect("/stock", false);
+            this.Redirect("/stock", false);
         }
 
         return "index/stockUse2";
@@ -439,14 +439,14 @@ public class StockController extends BaseController {
         //获取缓存数据
         String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
-            return this.Redirect("/stock", false);
+            this.Redirect("/stock", false);
         }
         try {
             List<StockDto> stockDtos = JSON.parseArray(p, StockDto.class);
             request.setAttribute("stockDtos", stockDtos);
         } catch (TipException ex) {
             logger.error(JSON.toJSONString(ex));
-            return this.Redirect("/stock", false);
+            this.Redirect("/stock", false);
         }
 
         return "index/stockUse3";
@@ -536,7 +536,7 @@ public class StockController extends BaseController {
 
         //非本人的
         if (!deliveryDto.getOpenId().equals(openId)) {
-            return this.Redirect("/");
+            this.Redirect("/");
         }
 
         String imgUrl;
