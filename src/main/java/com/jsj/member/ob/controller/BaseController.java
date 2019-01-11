@@ -307,7 +307,7 @@ public abstract class BaseController {
         if (!org.apache.commons.lang3.StringUtils.isEmpty(userAgent)) {
             userAgent = userAgent.toLowerCase();
             if (userAgent.indexOf("miniprogram") > -1) {
-                return SourceType.AWKMINI;
+                return SourceType.GOLDENOBMINI;
             }
         }
 
