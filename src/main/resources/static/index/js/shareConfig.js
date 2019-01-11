@@ -32,7 +32,7 @@ if (shareConfig.link) {
 
 shareConfig.desc = shareConfig.desc || "服务覆盖全国100个城市，300万商旅人士的出行首选！";
 shareConfig.title = shareConfig.title || "空铁管家";
-shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68";
+shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/362ffe641c608b4f2c2ff2caf4f3a985";
 
 if (shareConfig.link.indexOf(location.host) == -1) {
     shareConfig.link = "https://" + location.host + shareConfig.link;
