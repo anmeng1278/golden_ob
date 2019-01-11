@@ -52,12 +52,12 @@ webconfig:
   appSecrect: a8eb3f7e02ed7cb761220cb4363ff2b6
 
   #虚拟目录
-  virtualPath: "/ob"
+  virtualPath: "/ot"
   #域名
   host: "https://h5.ktgj.com"
 
   ## 严选活动码生成地址
-  activityUrl: https://s5.jsjinfo.cn/third/v1/ThirdApi/API2Partner.aspx
+  activityUrl: http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx
 
   ## 开卡地址
   openCardUrl: http://172.16.6.134/awk/v3/ktapi/OpenVPCardFromWx
