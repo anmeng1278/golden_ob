@@ -92,7 +92,7 @@
             </th:block>
 
             <!--coupon-no-list start-->
-            <dl class="coupon-no-list" th:if="${#lists.isEmpty(giveStocks)}">
+            <dl class="coupon-no-list" th:if="${#lists.isEmpty(giftDtos)}">
                 <dt><img th:src="${ob.Img('/index/images/no_gift.png')}" alt="1" width="62px"/></dt>
                 <dd>暂无赠送记录</dd>
             </dl>
