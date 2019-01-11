@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.golango.ccp.dao.AdminMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.Admin">
+        <id column="admin_id" property="adminId" />
+        <result column="login_name" property="loginName" />
+        <result column="password" property="password" />
+        <result column="last_login_ip" property="lastLoginIp" />
+        <result column="last_login_time" property="lastLoginTime" />
+        <result column="real_name" property="realName" />
+        <result column="ifpass" property="ifpass" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="delete_time" property="deleteTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        admin_id AS adminId, login_name AS loginName, password, last_login_ip AS lastLoginIp, last_login_time AS lastLoginTime, real_name AS realName, ifpass, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+    </sql>
+
+</mapper>

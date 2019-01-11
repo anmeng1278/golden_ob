@@ -1,23 +1,33 @@
 package com.jsj.member.ob.logic;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.jsj.member.ob.dto.api.wechat.Jscode2SessionRequest;
+import com.jsj.member.ob.dto.api.wechat.Jscode2SessionResponse;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.entity.Wechat;
 import com.jsj.member.ob.entity.WechatRelation;
 import com.jsj.member.ob.enums.SourceType;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.WechatRelationService;
 import com.jsj.member.ob.service.WechatService;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import weixin.popular.api.SnsAPI;
+import weixin.popular.bean.sns.Jscode2sessionResult;
 import weixin.popular.bean.user.User;
 
 import javax.annotation.PostConstruct;
 
 @Component
 public class WechatLogic extends BaseLogic {
+
+    private final Logger logger = LoggerFactory.getLogger(WechatLogic.class);
 
     public static WechatLogic wechatLogic;
 
@@ -237,6 +247,48 @@ public class WechatLogic extends BaseLogic {
 
         WechatRelation wechatRelation = wechatLogic.wechatRelationService.selectOne(wrapper);
         return wechatRelation;
+
+    }
+    //endregion
+
+    //region (public) 小程序jscode换取openId JsCode2Session
+
+    /**
+     * 小程序jscode换取openId
+     * 登录凭证校验。通过 wx.login() 接口获得临时登录凭证 code 后传到开发者服务器调用此接口完成登录流程。
+     * https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code
+     *
+     * @param request
+     * @return
+     */
+    public static Jscode2SessionResponse JsCode2Session(Jscode2SessionRequest request) {
+
+        Jscode2SessionResponse resp = new Jscode2SessionResponse();
+
+        try {
+
+            String appId = "wx9ccdd5f8678c78d0";
+            String appSecret = "b15b8332ace80da296226dde7666cc3e";
+
+            Jscode2sessionResult jscode2session = SnsAPI.jscode2session(appId, appSecret, request.getJsCode());
+
+            wechatLogic.logger.info(String.format("%s %s", JSON.toJSON(request), JSON.toJSONString(jscode2session)));
+
+            if (!jscode2session.isSuccess()) {
+                throw new TipException(jscode2session.getErrmsg());
+            }
+            resp.setOpenId(jscode2session.getOpenid());
+            resp.setSessionKey(jscode2session.getSession_key());
+            resp.setUnionId(jscode2session.getUnionid());
+            resp.getBaseResp().setSuccess(true);
+
+        } catch (Exception ex) {
+            resp.getBaseResp().setSuccess(false);
+            resp.getBaseResp().setMessage(ex.getMessage());
+
+        }
+
+        return resp;
 
     }
     //endregion
