@@ -58,3 +58,8 @@
 .share-img-wx{ width: 5.16rem; position: absolute; top: 0.2rem; right: 0.3rem;}
 .share-img-xcx{ width: 5.16rem; position: absolute; top: 0.2rem; right: 1.25rem;}
 /*share end*/
+
+/*order-no-list start*/
+.coupon-no-list{ margin-top: 2.4rem; text-align: center;}
+.coupon-no-list dd{ font-size: 0.32rem; color: #C0C0C0; padding-top: 0.6rem;}
+/*order-no-list end*/
