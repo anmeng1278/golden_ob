@@ -52,6 +52,11 @@ wx.ready(function () {
 
     if (ob.mini) {
 
+        shareConfig.title = shareConfig.title.replace("空铁管家", "金色严选");
+        if(shareConfig.desc){
+            shareConfig.desc = shareConfig.desc.replace("空铁管家", "金色严选");
+        }
+
         wx.miniProgram.postMessage({
             data: {
                 link: ob.conf.browser + "?url=" + encodeURIComponent(shareConfig.link),
