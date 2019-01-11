@@ -44,6 +44,8 @@ public class ConfigLogic extends BaseLogic {
                 return platformAppId;
             case AWKMINI:
                 return String.format("%s-mini", platformAppId);
+            case GOLDENOBMINI:
+                return String.format("%s-mini-ob", platformAppId);
             default:
                 throw new TipException("未知的枚举类型");
         }
@@ -68,6 +70,8 @@ public class ConfigLogic extends BaseLogic {
                 return platformToken;
             case AWKMINI:
                 return String.format("%s-mini", platformToken);
+            case GOLDENOBMINI:
+                return String.format("%s-mini-ob", platformToken);
             default:
                 throw new TipException("未知的枚举类型");
         }

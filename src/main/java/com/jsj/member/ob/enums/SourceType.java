@@ -10,7 +10,9 @@ public enum SourceType {
 
     GOLDENMINI(2, "金色世纪小程序"),
 
-    GOLDENTC(3, "金色世纪公众号");
+    GOLDENTC(3, "金色世纪公众号"),
+
+    GOLDENOBMINI(4, "金色严选小程序");
 
 
     private Integer value;
@@ -40,6 +42,8 @@ public enum SourceType {
                 return GOLDENMINI;
             case 3:
                 return GOLDENTC;
+            case 4:
+                return GOLDENOBMINI;
             default:
                 throw new FatalException("未知的枚举值");
         }
