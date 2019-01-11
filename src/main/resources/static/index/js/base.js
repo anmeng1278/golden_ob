@@ -71,7 +71,7 @@ ob.share = function () {
 //小程序配置
 ob.conf = {
     //浏览器
-    browser: "/pages/strictSelection/index",
+    browser: "/pages/browser/index",
     //支付页面
-    pay:"/pages/obpay/index"
+    pay:"/pages/pay/index"
 };
