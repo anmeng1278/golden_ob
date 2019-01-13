@@ -228,29 +228,31 @@ public class AdminWechatController extends BaseController {
     public RestResponseBo addCoupon(@PathVariable("openId") String openId, HttpServletRequest request) {
         String couponIds = request.getParameter("couponIds");
         List<WechatCoupon> wechatCoupons = new ArrayList<>();
-        WechatCoupon wechatCoupon = new WechatCoupon();
+
         if (!StringUtils.isBlank(couponIds)) {
 
             List<Integer> couponIdLists = Arrays.asList(couponIds.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
 
             for (int i = 0; i < couponIdLists.size(); i++) {
+
                 Integer couponId = couponIdLists.get(i);
                 CouponDto couponDto = CouponLogic.GetCoupon(couponId);
 
+                WechatCoupon wechatCoupon = new WechatCoupon();
                 wechatCoupon.setOpenId(openId);
                 wechatCoupon.setCouponId(Integer.valueOf(couponId));
-                wechatCoupon.setExpiredTime(DateUtils.getCurrentUnixTime() + couponDto.getValidDays() * 86400);
+                wechatCoupon.setExpiredTime(DateUtils.getCurrentUnixTime() + couponDto.getValidDays() * 60 * 60 * 24);
                 wechatCoupon.setAmount(couponDto.getAmount());
                 wechatCoupon.setTypeId(couponDto.getCouponType().getValue());
                 wechatCoupon.setCreateTime(DateUtils.getCurrentUnixTime());
                 wechatCoupon.setUpdateTime(DateUtils.getCurrentUnixTime());
                 wechatCoupons.add(wechatCoupon);
+
             }
             wechatCouponService.insertBatch(wechatCoupons);
         }
         return RestResponseBo.ok("赠送成功");
     }
-
 
 
     /**
@@ -342,7 +344,7 @@ public class AdminWechatController extends BaseController {
 
     @PostMapping("/delete")
     @ResponseBody
-    public RestResponseBo deleteProduct(HttpServletRequest request){
+    public RestResponseBo deleteProduct(HttpServletRequest request) {
 
         String stockId = request.getParameter("stockId");
         Stock stock = stockService.selectById(stockId);
