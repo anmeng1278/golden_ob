@@ -118,7 +118,7 @@
         <div class="section clear">
             <h2  style="display: none;" class="section-title">兑换专区</h2>
             <!--section-con start-->
-            <div class="section-con">
+            <div class="section-con" style="margin-top: 10px;" >
                 <th:block th:if="${!#lists.isEmpty(exchangeProducts)}" th:each="info:${exchangeProducts}">
                     <a th:href="${ob.Nav('/product?activityId='+exchange.activityId+'&productSpecId='+info.productSpecId+'&activityType=40')}">
                         <dl class="section-con-dl">

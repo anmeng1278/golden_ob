@@ -26,7 +26,7 @@
     <script th:src="${ob.Url('/index/js/nav.js')}" type="text/javascript" charset="utf-8"></script>
     <script th:src="${ob.Url('/index/js/index.js')}" type="text/javascript" charset="utf-8"></script>
 
-    <script>
+    <script type="text/javascript" >
         TX.INIT(function () {
 
             $("div[data-skill-begin]").each(function () {
@@ -62,6 +62,7 @@
                         if (unPayCount > 0) {
                             $("#divUnpay").show();
                         }
+                        $("#divShopping").show();
                     }
                 }
             })
@@ -243,7 +244,7 @@
     <!--footer-tips end-->
 
     <!--shopping-cart start-->
-    <div id="divShopping" class="shopping-cart">
+    <div id="divShopping" class="shopping-cart" >
         <a th:href="${ob.Nav('/cart')}">
             <img th:src="${ob.Img('/index/images/shoppingCart.png')}" alt="1" class="shopping-icon"/>
             <span class="shopping-num">0</span>
