@@ -181,6 +181,7 @@ public class IndexController extends BaseController {
         Map<String, Object> map = new HashMap<>();
         map.put("cartCount", cartCount);
         map.put("unPayCount", unPayCount);
+        map.put("wx", this.User());
 
         return RestResponseBo.ok(map);
     }
