@@ -24,6 +24,11 @@ TX.INIT(function () {
     })
 
     window.onpageshow = function (event) {
+
+        if (ob.unRefresh) {
+            return;
+        }
+
         var needRefresh = sessionStorage.getItem("need-refresh");
         var lo = location.href;
         if (needRefresh && needRefresh != lo && needRefresh != document.referrer) {
@@ -73,5 +78,5 @@ ob.conf = {
     //浏览器
     browser: "/pages/browser/index",
     //支付页面
-    pay:"/pages/pay/index"
+    pay: "/pages/pay/index"
 };

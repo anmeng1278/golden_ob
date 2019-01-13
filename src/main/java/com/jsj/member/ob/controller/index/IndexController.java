@@ -106,6 +106,7 @@ public class IndexController extends BaseController {
         List<ActivityDto> setSales = ActivityLogic.GetActivityByType(ActivityType.COMBINATION);
         request.setAttribute("setSales", setSales);
         request.setAttribute("skillBegin", skillBegin);
+        request.setAttribute("unRefresh", true);
 
         return this.SetAccessCache(request, response, AccessKey.pageIndex, "index/index");
 
@@ -139,7 +140,7 @@ public class IndexController extends BaseController {
         }
         request.setAttribute("exchangeProducts", exchangeProducts);
         request.setAttribute("exchange", exchange);
-
+        request.setAttribute("unRefresh", true);
 
         return this.SetAccessCache(request, response, AccessKey.pageExchange, "index/exchange");
 
