@@ -36,7 +36,11 @@
                         shareType: shareType
                     },
                     success: function (resp) {
-                        ob.share();
+                        if (resp.baseResp.success) {
+                            ob.share();
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
                     }
                 })
 
@@ -70,7 +74,7 @@
                     data: {typeId: typeId},
                     success: function (resp) {
                         if (resp.baseResp.success) {
-                            $("div.head-wrap-item textarea.blessings").attr("value",resp.datas.remark);
+                            $("div.head-wrap-item textarea.blessings").attr("value", resp.datas.remark);
                         } else {
                             TX.MSG.msg(resp.baseResp.message, {icon: 2});
                         }
@@ -129,7 +133,8 @@
                 </ul>
                 <div class="head-wrap clear">
                     <div class="head-wrap-item" style="display: block">
-                        <textarea style= "background:transparent;border-style:none;width: 100%;height: 70% " class="blessings" value="">天气凉了，这份礼物带有我的温度~</textarea>
+                        <textarea style="background:transparent;border-style:none;width: 100%;height: 70% "
+                                  class="blessings" value=""></textarea>
                         <p class="blessings-btn"><span>换一句</span></p>
                     </div>
                 </div>

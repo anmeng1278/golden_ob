@@ -10,6 +10,8 @@ import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.logic.WechatLogic;
+import com.jsj.member.ob.redis.AccessKey;
+import com.jsj.member.ob.redis.RedisService;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.Md5Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -53,12 +55,25 @@ public class AdminController {
     }
 
 
+    /**
+     * 登录首页
+     *
+     * @return
+     */
     @GetMapping(value = {"/login"})
     public String login() {
         return "admin/login";
     }
 
 
+    /**
+     * 登录系统
+     *
+     * @param username
+     * @param password
+     * @param request
+     * @return
+     */
     @PostMapping(value = "/login")
     @ResponseBody
     public RestResponseBo doLogin(@RequestParam String username, @RequestParam String password,
@@ -102,6 +117,13 @@ public class AdminController {
         response.sendRedirect("/admin/login");
     }
 
+    /**
+     * 系统主页
+     *
+     * @param request
+     * @param map
+     * @return
+     */
     @GetMapping(value = {"/main"})
     public String main(HttpServletRequest request, ModelMap map) {
 
@@ -142,4 +164,29 @@ public class AdminController {
     }
 
 
+    @Autowired
+    RedisService redisService;
+
+    /**
+     * 更新缓存
+     *
+     * @return
+     */
+    @PostMapping(value = "/updateCache")
+    @ResponseBody
+    public RestResponseBo updateCache(HttpServletRequest request) {
+
+        String method = request.getParameter("method");
+
+        switch (method) {
+            case "index":
+                redisService.delete(AccessKey.pageIndex);
+                break;
+            case "exchange":
+                redisService.delete(AccessKey.pageExchange);
+        }
+
+        return RestResponseBo.ok("更新成功");
+
+    }
 }

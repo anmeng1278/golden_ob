@@ -99,6 +99,7 @@ public class ShareController extends BaseController {
         if (op.equals("ready")) {
             int shareType = Integer.parseInt(request.getParameter("shareType"));
             String blessings = request.getParameter("blessings");
+
             GiftLogic.GiftReadyToShare(obs, GiftShareType.valueOf(shareType), blessings);
         }
 

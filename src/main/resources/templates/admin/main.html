@@ -47,7 +47,8 @@
                                                 </a>
                                             </li>
                                             <li class="layui-col-xs3">
-                                                <a data-tab-href="/admin/redpacket" title="礼包列表" style="cursor:pointer;">
+                                                <a data-tab-href="/admin/redpacket" title="礼包列表"
+                                                   style="cursor:pointer;">
                                                     <i class="layui-icon layui-icon-survey"></i>
                                                     <cite>礼包</cite>
                                                 </a>
@@ -190,12 +191,8 @@
                 <div class="layui-card">
                     <div class="layui-card-header">缓存设置</div>
                     <div class="layui-card-body layui-text">
-                        <button lay-filter="search" class="layui-btn" type="submit" >
-                            <i class="layui-icon">&#xe615;</i> 查询
-                        </button>
-                        <button lay-filter="search" class="layui-btn" type="submit" >
-                            <i class="layui-icon">&#xe615;</i> 查询
-                        </button>
+                        <button data-method="index" class="layui-btn" type="button">更新首页缓存</button>
+                        <button data-method="exchange" class="layui-btn" type="button">更新兑换缓存</button>
                     </div>
                 </div>
             </div>
@@ -292,6 +289,25 @@
             //使用制定的配置项和数据显示图表
             myChart.setOption(option);
 
+
+            $("button[data-method]").click(function () {
+
+                var method = $(this).attr("data-method");
+
+                TX.CORE.p({
+                    url: "/admin/updateCache",
+                    data: {method: method},
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            TX.MSG.msg(resp.baseResp.message, {time: 1500}, function () {
+                            });
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2});
+                        }
+                    }
+                })
+
+            });
         });
     </script>
 </th:block>

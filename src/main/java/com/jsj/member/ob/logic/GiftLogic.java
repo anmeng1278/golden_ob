@@ -524,7 +524,7 @@ public class GiftLogic extends BaseLogic {
         List<GiftStock> giftStocks = giftLogic.giftStockService.selectList(wrapper);
         List<StockDto> stockDtos = new ArrayList<>();
 
-        if(giftStocks.size() == 0 || giftStocks == null){
+        if (giftStocks.size() == 0 || giftStocks == null) {
             return stockDtos;
         }
 
@@ -722,6 +722,7 @@ public class GiftLogic extends BaseLogic {
 
     /**
      * 获取用户赠送数量
+     *
      * @param openId
      * @param giftStatus
      * @return
@@ -840,6 +841,14 @@ public class GiftLogic extends BaseLogic {
         GiftDto giftDto = ToDto(gift);
 
         if (giftDto.getGiftStatus().equals(GiftStatus.UNSHARE)) {
+
+            if (StringUtils.isEmpty(blessings)) {
+                throw new TipException("请输入赠送祝福语");
+            }
+            if(blessings.length() > 255){
+                throw new TipException("赠送祝福语不能超过255个字符");
+            }
+
             gift.setBlessings(blessings);
             gift.setShareType(giftShareType.getValue());
             giftLogic.giftService.updateById(gift);

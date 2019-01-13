@@ -1,6 +1,7 @@
 package com.jsj.member.ob.controller.index;
 
 import com.jsj.member.ob.controller.BaseController;
+import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
@@ -26,7 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @ApiIgnore
 @Controller
@@ -99,17 +103,7 @@ public class IndexController extends BaseController {
         //组合优惠
         List<ActivityDto> setSales = ActivityLogic.GetActivityByType(ActivityType.COMBINATION);
         request.setAttribute("setSales", setSales);
-
-
-        //用户购物车的商品数量
-        String openId = this.OpenId();
-        int count = CartLogic.GetCartProductCount(openId);
-        request.setAttribute("count", count);
         request.setAttribute("skillBegin", skillBegin);
-
-        //用户未支付订单数
-        int size = OrderLogic.GetOrders(openId, OrderFlag.UNPAIDORDERS).size();
-        request.setAttribute("size", size);
 
         return this.SetAccessCache(request, response, AccessKey.pageIndex, "index/index");
 
@@ -124,7 +118,14 @@ public class IndexController extends BaseController {
      * @return
      */
     @GetMapping(value = {"/exchange"})
-    public String exchange(HttpServletRequest request) {
+    @ResponseBody
+    public String exchange(HttpServletRequest request, HttpServletResponse response) {
+
+
+        String html = this.GetAccessCache(AccessKey.pageExchange);
+        if (!StringUtils.isEmpty(html)) {
+            return html;
+        }
 
         ActivityDto exchange = ActivityLogic.GetActivity(ActivityType.EXCHANGE);
         List<ActivityProductDto> exchangeProducts = new ArrayList<>();
@@ -135,11 +136,49 @@ public class IndexController extends BaseController {
         request.setAttribute("exchangeProducts", exchangeProducts);
         request.setAttribute("exchange", exchange);
 
-        double balance = MemberLogic.StrictChoiceSearch(this.User().getJsjId());
-        request.setAttribute("balance", balance);
 
-        return "index/exchange";
+        return this.SetAccessCache(request, response, AccessKey.pageExchange, "index/exchange");
+
     }
-    //endregion
+
+
+    /**
+     * 账户余额
+     *
+     * @return
+     */
+    @PostMapping(value = "/account/balance")
+    @ResponseBody
+    public RestResponseBo account(HttpServletRequest request) {
+
+        double balance = MemberLogic.StrictChoiceSearch(this.User().getJsjId());
+        Map<String, Object> map = new HashMap<>();
+        map.put("balance", balance);
+
+        return RestResponseBo.ok(map);
+
+    }
+
+    /**
+     * 账户基本信息
+     *
+     * @return
+     */
+    @PostMapping(value = "/account/info")
+    @ResponseBody
+    public RestResponseBo accountInfo(HttpServletRequest request) {
+
+        //用户购物车的商品数量
+        String openId = this.OpenId();
+        int cartCount = CartLogic.GetCartProductCount(openId);
+        //用户未支付订单数
+        int unPayCount = OrderLogic.GetOrders(openId, OrderFlag.UNPAIDORDERS).size();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("cartCount", cartCount);
+        map.put("unPayCount", unPayCount);
+
+        return RestResponseBo.ok(map);
+    }
 
 }
