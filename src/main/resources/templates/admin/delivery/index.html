@@ -89,7 +89,7 @@
                             <th:block th:text="${status.getMessage(propertyType)}"></th:block>
                         </td>
                         <td>
-                            <button th:title="|配送详情|"
+                            <button th:title="|配送详情 ${info.deliveryId}|"
                                     th:attr="data-tab-href=@{'/admin/delivery/sendInfo/'+${info.deliveryId}}"
                                     class="layui-btn layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe642;</i>

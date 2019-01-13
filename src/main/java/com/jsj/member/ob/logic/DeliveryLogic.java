@@ -233,6 +233,7 @@ public class DeliveryLogic extends BaseLogic {
         dto.setAirportName(delivery.getAirportName());
 
         dto.setIdTypeId(delivery.getIdTypeId());
+        dto.setDeleteTime(delivery.getDeleteTime());
 
         return dto;
     }
