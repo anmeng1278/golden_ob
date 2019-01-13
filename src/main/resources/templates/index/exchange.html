@@ -17,11 +17,25 @@
 
         TX.INIT(function () {
 
+            //余额
             TX.CORE.p({
                 url:"/account/balance",
                 success:function (resp) {
                     if(resp.baseResp.success){
                         $("span.head-price").html("可用余额￥" + resp.datas.balance);
+                    }
+                }
+            })
+
+            //基本信息
+            TX.CORE.p({
+                url: "/account/info",
+                success: function (resp) {
+                    if (resp.baseResp.success) {
+
+                        $("img", $("dl.head")).attr("src", resp.datas.wx.headimgurl).show();
+                        $("span.head-name", $("dl.head")).html(resp.datas.wx.nickname);
+
                     }
                 }
             })
@@ -91,9 +105,9 @@
 
     <!--head start-->
     <dl class="head">
-        <dt><img th:src="${wx.headimgurl}" alt="1"/></dt>
+        <dt><img  alt="1" style="display: none;"/></dt>
         <dd>
-            <span class="head-name" th:text="${wx.nickname}">王德否</span>
+            <span class="head-name" ></span>
             <span class="head-price">可用余额￥0</span>
         </dd>
     </dl>
