@@ -36,7 +36,7 @@ public class IndexController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
     /**
-     * TODO 测试页面
+     * 测试页面
      *
      * @param request
      * @return
