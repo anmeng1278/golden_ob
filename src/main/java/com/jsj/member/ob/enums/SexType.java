@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum SexType {
+public enum SexType implements IEnum {
     UNKNOWED(0, "未知"),
 
     MAN(1, "男"),

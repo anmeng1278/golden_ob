@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum SourceType {
+public enum SourceType implements IEnum {
 
     AWKTC(0, "空铁公众号"),
 

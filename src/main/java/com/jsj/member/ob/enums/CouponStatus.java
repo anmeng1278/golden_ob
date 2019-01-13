@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum CouponStatus {
+public enum CouponStatus implements IEnum {
 
     UNUSE(0, "未使用"),
 

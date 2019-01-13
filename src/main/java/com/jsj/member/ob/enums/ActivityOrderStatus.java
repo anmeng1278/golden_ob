@@ -1,9 +1,10 @@
 package com.jsj.member.ob.enums;
 
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum ActivityOrderStatus {
+public enum ActivityOrderStatus  implements IEnum {
 
     //组团状态 0 组团中  10 组团成功  20 组团失败   60 已取消
 

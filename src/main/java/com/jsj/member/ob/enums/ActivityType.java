@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum ActivityType {
+public enum ActivityType implements IEnum {
 
     NORMAL(0, "普通"),
 

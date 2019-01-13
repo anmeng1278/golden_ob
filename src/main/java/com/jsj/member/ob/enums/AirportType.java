@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum AirportType {
+public enum AirportType implements IEnum {
 
     AIRPORT(1, "机场"),
 

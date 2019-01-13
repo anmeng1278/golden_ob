@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum ProductImgType {
+public enum ProductImgType implements IEnum {
 
     //0 封面  1 商品图片
     COVER(0, "封面"),

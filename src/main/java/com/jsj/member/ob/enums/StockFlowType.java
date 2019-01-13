@@ -1,6 +1,8 @@
 package com.jsj.member.ob.enums;
 
-public enum StockFlowType {
+import com.baomidou.mybatisplus.enums.IEnum;
+
+public enum StockFlowType implements IEnum {
 
     BUY(10, "购买成功"),
 

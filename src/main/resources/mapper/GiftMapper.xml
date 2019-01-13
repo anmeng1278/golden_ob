@@ -36,6 +36,7 @@
                     pi.img_path as imgPath,
                     a.product_id as productId,
                     a.product_spec_id as productSpecId,
+                    p.property_type_id as propertyType,
                     a.create_time as drawTime,
                     count(*) as count
                 from _stock as a
@@ -43,6 +44,8 @@
                         on a.gift_stock_id = b.gift_stock_id
                 inner join _gift as g
                         on b.gift_id = g.gift_id
+                inner join _product as p
+                        on a.product_id = p.product_id
                 left join _wechat as w
                     on g.open_id = w.open_id
                 left join _product_img as pi

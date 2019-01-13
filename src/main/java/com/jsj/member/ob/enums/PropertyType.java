@@ -1,9 +1,10 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 import com.jsj.member.ob.utils.SpringContextUtils;
 
-public enum PropertyType {
+public enum PropertyType implements IEnum {
 
     ENTITY(1, "实物"),
 

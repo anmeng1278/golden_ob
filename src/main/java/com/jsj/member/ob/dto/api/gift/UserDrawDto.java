@@ -1,5 +1,6 @@
 package com.jsj.member.ob.dto.api.gift;
 
+import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.enums.StockStatus;
 
 public class UserDrawDto {
@@ -53,6 +54,11 @@ public class UserDrawDto {
      * 领取数量
      */
     private int count;
+
+    /**
+     * 属性类型
+     */
+    private PropertyType propertyType;
 
     public int getGiftId() {
         return giftId;
@@ -132,5 +138,13 @@ public class UserDrawDto {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public PropertyType getPropertyType() {
+        return propertyType;
+    }
+
+    public void setPropertyType(PropertyType propertyType) {
+        this.propertyType = propertyType;
     }
 }
