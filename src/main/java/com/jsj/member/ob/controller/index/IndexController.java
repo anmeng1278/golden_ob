@@ -14,6 +14,7 @@ import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.redis.AccessKey;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.SpringContextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,10 +69,11 @@ public class IndexController extends BaseController {
     @ResponseBody
     public String index(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-
-        String html = this.GetAccessCache(AccessKey.pageIndex);
-        if (!StringUtils.isEmpty(html)) {
-            return html;
+        if (!SpringContextUtils.getActiveProfile().equals("dev")) {
+            String html = this.GetAccessCache(AccessKey.pageIndex);
+            if (!StringUtils.isEmpty(html)) {
+                return html;
+            }
         }
 
         //首页轮播图
@@ -122,9 +124,11 @@ public class IndexController extends BaseController {
     public String exchange(HttpServletRequest request, HttpServletResponse response) {
 
 
-        String html = this.GetAccessCache(AccessKey.pageExchange);
-        if (!StringUtils.isEmpty(html)) {
-            return html;
+        if (!SpringContextUtils.getActiveProfile().equals("dev")) {
+            String html = this.GetAccessCache(AccessKey.pageExchange);
+            if (!StringUtils.isEmpty(html)) {
+                return html;
+            }
         }
 
         ActivityDto exchange = ActivityLogic.GetActivity(ActivityType.EXCHANGE);

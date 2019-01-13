@@ -105,7 +105,7 @@ public class ProductLogic extends BaseLogic {
 
             //原价
             Optional<ProductSpecDto> minOriginalPrice = productSpecDtos.stream().min(Comparator.comparing(ProductSpecDto::getOriginalPrice));
-            productDto.setOriginalPrice(minSalePrice.get().getOriginalPrice());
+            productDto.setOriginalPrice(minOriginalPrice.get().getOriginalPrice());
 
             //库存
             int totalStock = productSpecDtos.stream().mapToInt(x -> x.getStockCount()).sum();

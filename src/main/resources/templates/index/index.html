@@ -134,8 +134,7 @@
                             <dd>
                                 <h2 class="section-dl-title" th:text="${info.productName}"></h2>
                                 <p class="section-dl-tips" th:text="${info.introduce}"></p>
-                                <p th:if="${!#lists.isEmpty(info.productSpecDtos)}" class="section-dl-price">&yen;<em
-                                        th:text="${info.productSpecDtos[0].salePrice}"></em></p>
+                                <p class="section-dl-price">&yen;<em th:text="${info.salePrice}"></em></p>
                             </dd>
                         </dl>
                     </a>
@@ -225,8 +224,7 @@
                             <dd>
                                 <h2 class="section-dl-title" th:text="${info.productName}"></h2>
                                 <p class="section-dl-tips" th:text="${info.introduce}"></p>
-                                <p class="section-dl-price" th:if="${!#lists.isEmpty(info.productSpecDtos)}">&yen;
-                                    <em th:text="${info.productSpecDtos[0].salePrice}"></em></p>
+                                <p class="section-dl-price">&yen;<em th:text="${info.salePrice}"></em></p>
                             </dd>
                         </dl>
                     </a>
