@@ -4,7 +4,7 @@ if (typeof shareConfig == "undefined") {
         desc: "服务覆盖全国100个城市，300万商旅人士的出行首选！",
         link: location.href,
         // imgUrl: "http://img.jsjinfo.cn/3b43f3ee6d6e7309515811cfab50cd68"
-        imgUrl:"http://img.jsjinfo.cn/362ffe641c608b4f2c2ff2caf4f3a985"
+        imgUrl: "http://img.jsjinfo.cn/8a0650e47e146a0b6370969a5b424a16?f=png&p=3&w=500"
     };
 }
 
@@ -32,7 +32,7 @@ if (shareConfig.link) {
 
 shareConfig.desc = shareConfig.desc || "服务覆盖全国100个城市，300万商旅人士的出行首选！";
 shareConfig.title = shareConfig.title || "空铁管家";
-shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/362ffe641c608b4f2c2ff2caf4f3a985";
+shareConfig.imgUrl = shareConfig.imgUrl || "http://img.jsjinfo.cn/8a0650e47e146a0b6370969a5b424a16?f=png&p=3&w=500";
 
 if (shareConfig.link.indexOf(location.host) == -1) {
     shareConfig.link = "https://" + location.host + shareConfig.link;
@@ -53,8 +53,14 @@ wx.ready(function () {
     if (ob.mini) {
 
         shareConfig.title = shareConfig.title.replace("空铁管家", "金色严选");
-        if(shareConfig.desc){
+        if (shareConfig.desc) {
             shareConfig.desc = shareConfig.desc.replace("空铁管家", "金色严选");
+        }
+
+        if (shareConfig.imgUrl.indexOf("8a0650e47e146a0b6370969a5b424a16") == -1) {
+            if (shareConfig.imgUrl.indexOf("?") == -1) {
+                shareConfig.imgUrl = shareConfig.imgUrl + "?f=png&p=3&w=500&h=400";
+            }
         }
 
         wx.miniProgram.postMessage({

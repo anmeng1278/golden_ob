@@ -56,11 +56,11 @@
                         var unPayCount = resp.datas.unPayCount;
                         var cartCount = resp.datas.cartCount;
 
-                        $("span", $("div.divShopping")).html(cartCount);
-                        $("span", $("div.divUnpay")).html(unPayCount);
+                        $("span", $("#divShopping")).html(cartCount);
+                        $("span", $("#divUnpay")).html(unPayCount);
 
                         if (unPayCount > 0) {
-                            $("div.divUnpay").show();
+                            $("#divUnpay").show();
                         }
                     }
                 }
