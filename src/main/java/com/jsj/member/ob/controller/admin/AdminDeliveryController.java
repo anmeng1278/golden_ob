@@ -77,7 +77,7 @@ public class AdminDeliveryController {
                         @RequestParam(value = "status", defaultValue = "-1") Integer status,
                         Model model) {
         EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null");
+        //wrapper.where("delete_time is null");
 
         if (typeId > 0) {
             wrapper.where("type_id={0}", typeId);

@@ -172,8 +172,8 @@ public class OrderLogic extends BaseLogic {
                 sb.deleteCharAt(sb.length() - 1);
             }
             map.put("productName", sb);
-            map.put("title","您有订单在30分钟内未完成支付已被取消");
-            map.put("reason","超时未支付");
+            map.put("title", "您有订单在30分钟内未完成支付已被取消");
+            map.put("reason", "超时未支付");
             TemplateDto temp = TemplateDto.CancelUnPayOrder(o, map);
             orderLogic.wxSender.sendNormal(temp);
         }
@@ -221,8 +221,8 @@ public class OrderLogic extends BaseLogic {
             sb.deleteCharAt(sb.length() - 1);
         }
         map.put("productName", sb);
-        map.put("title","您的订单取消已完成");
-        map.put("reason","手动取消");
+        map.put("title", "您的订单取消已完成");
+        map.put("reason", "手动取消");
         TemplateDto temp = TemplateDto.CancelUnPayOrder(order, map);
         orderLogic.wxSender.sendNormal(temp);
 
@@ -279,17 +279,9 @@ public class OrderLogic extends BaseLogic {
      */
     public static List<UserOrderDto> GetOrders(String openId, OrderFlag orderFlag) {
 
-        List<UserOrderDto> orders = null;
-
-        if (orderFlag == OrderFlag.UNPAIDORDERS) {
-            orders = orderLogic.orderService.getUnPayOrders(openId);
-        }
-
-        if (orderFlag == OrderFlag.ALLORDERS) {
-            orders = orderLogic.orderService.getAllOrders(openId);
-        }
-
+        List<UserOrderDto> orders = orderLogic.orderService.getOrders(openId, orderFlag);
         return orders;
+
     }
 
 

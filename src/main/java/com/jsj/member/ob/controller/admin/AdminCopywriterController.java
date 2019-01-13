@@ -6,8 +6,8 @@ import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.entity.Copywriter;
 import com.jsj.member.ob.entity.Dict;
-import com.jsj.member.ob.enums.CopywriterType;
 import com.jsj.member.ob.enums.DictType;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.service.CopywriterService;
 import com.jsj.member.ob.utils.CCPage;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.List;
 
 @ApiIgnore
@@ -116,6 +115,10 @@ public class AdminCopywriterController {
 
         int beginTimeUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(beginTime, "yyyy-MM-dd HH:mm:ss"));
         int endTimeUnix = DateUtils.getUnixTimeByDate(DateUtils.dateFormat(endTime, "yyyy-MM-dd HH:mm:ss"));
+
+        if(remark.length() > 255){
+            throw new TipException("文案内容不能超过255个字符");
+        }
 
         if(copywriterId > 0){
             //修改

@@ -201,25 +201,27 @@
                                 class="joinm">0</span>分<span class="joins">0</span>秒后失效</p>
                     </div>
                     <div class="order-item-main">
-                        <th:block th:if="${!#lists.isEmpty(info.item.product)}"
-                                  th:each="pro:${info.item.product}">
-                            <a th:href="${ob.Nav('/product?productId='+pro.productId)}">
-                                <dl class="order-item-dl">
-                                    <dt>
-                                        <img th:src="${pro.imgPath}" alt="1" width="100%"/>
-                                    </dt>
-                                    <dd>
-                                        <h2 class="order-dd-name" th:text="${pro.productName}">素园野生素食参谜</h2>
-                                        <p class="order-dd-tips"
-                                           th:text="|规格：${pro.specName}|">
-                                        </p>
-                                        <p class="order-dd-time">
-                                            <span th:text="|数量：${pro.number}|"></span>
-                                            <span th:text="|&yen;${pro.salePrice}|"></span>
-                                        </p>
-                                    </dd>
-                                </dl>
-                            </a>
+                        <th:block th:if="${info.item != null}">
+                            <th:block th:if="${!#lists.isEmpty(info.item.product)}"
+                                      th:each="pro:${info.item.product}">
+                                <a th:href="${ob.Nav('/product?productId='+pro.productId)}">
+                                    <dl class="order-item-dl">
+                                        <dt>
+                                            <img th:src="${pro.imgPath}" alt="1" width="100%"/>
+                                        </dt>
+                                        <dd>
+                                            <h2 class="order-dd-name" th:text="${pro.productName}">素园野生素食参谜</h2>
+                                            <p class="order-dd-tips"
+                                               th:text="|规格：${pro.specName}|">
+                                            </p>
+                                            <p class="order-dd-time">
+                                                <span th:text="|数量：${pro.number}|"></span>
+                                                <span th:text="|&yen;${pro.salePrice}|"></span>
+                                            </p>
+                                        </dd>
+                                    </dl>
+                                </a>
+                            </th:block>
                         </th:block>
                     </div>
                     <div class="order-item-bot">
@@ -239,24 +241,26 @@
                         <span class="order-num" th:text="|订单号:${info.orderId}|"></span>
                         <span class="order-price" th:text="${info.orderStatus.message}"></span>
                     </p>
-                    <th:block th:if="${!#lists.isEmpty(info.item.product)}"
-                              th:each="pro:${info.item.product}">
-                        <a th:href="${ob.Nav('/product?productId='+pro.productId)}">
-                            <dl class="order-item-dl">
-                                <dt>
-                                    <img th:src="${pro.imgPath}" alt="1" width="100%"/>
-                                </dt>
-                                <dd>
-                                    <h2 class="order-dd-name" th:text="${pro.productName}">越甲科技20寸旅行箱</h2>
-                                    <p class="order-dd-tips"
-                                       th:text="|规格：${pro.specName}|"></p>
-                                    <p class="order-dd-time">
-                                        <span th:text="|数量：${pro.number}|"></span>
-                                        <span th:text="|&yen;${pro.salePrice}|"></span>
-                                    </p>
-                                </dd>
-                            </dl>
-                        </a>
+                    <th:block th:if="${info.item != null}">
+                        <th:block th:if="${!#lists.isEmpty(info.item.product)}"
+                                  th:each="pro:${info.item.product}">
+                            <a th:href="${ob.Nav('/product?productId='+pro.productId)}">
+                                <dl class="order-item-dl">
+                                    <dt>
+                                        <img th:src="${pro.imgPath}" alt="1" width="100%"/>
+                                    </dt>
+                                    <dd>
+                                        <h2 class="order-dd-name" th:text="${pro.productName}">越甲科技20寸旅行箱</h2>
+                                        <p class="order-dd-tips"
+                                           th:text="|规格：${pro.specName}|"></p>
+                                        <p class="order-dd-time">
+                                            <span th:text="|数量：${pro.number}|"></span>
+                                            <span th:text="|&yen;${pro.salePrice}|"></span>
+                                        </p>
+                                    </dd>
+                                </dl>
+                            </a>
+                        </th:block>
                     </th:block>
                     <div class="order-item-bot">
                         <p class="order-bot-price">实付款&yen; <span th:text="${info.payAmount}">650</span></p>
@@ -271,24 +275,26 @@
                         <span class="order-num" th:text="|订单号:${info.orderId}|">  </span>
                         <span class="order-price" th:text="${info.orderStatus.message}"></span>
                     </p>
-                    <th:block th:if="${!#lists.isEmpty(info.item.product)}"
-                              th:each="pro:${info.item.product}">
-                        <a th:href="${ob.Nav('/product?productId='+pro.productId)}">
-                            <dl class="order-item-dl">
-                                <dt>
-                                    <img th:src="${pro.imgPath}" alt="1" width="100%"/>
-                                </dt>
-                                <dd>
-                                    <h2 class="order-dd-name" th:text="${pro.productName}">越甲科技20寸旅行箱</h2>
-                                    <p class="order-dd-tips"
-                                       th:text="|规格：${pro.specName}|"></p>
-                                    <p class="order-dd-time">
-                                        <span th:text="|数量：${pro.number}|"></span>
-                                        <span th:text="|&yen;${pro.salePrice}|"></span>
-                                    </p>
-                                </dd>
-                            </dl>
-                        </a>
+                    <th:block th:if="${info.item != null}">
+                        <th:block th:if="${!#lists.isEmpty(info.item.product)}"
+                                  th:each="pro:${info.item.product}">
+                            <a th:href="${ob.Nav('/product?productId='+pro.productId)}">
+                                <dl class="order-item-dl">
+                                    <dt>
+                                        <img th:src="${pro.imgPath}" alt="1" width="100%"/>
+                                    </dt>
+                                    <dd>
+                                        <h2 class="order-dd-name" th:text="${pro.productName}">越甲科技20寸旅行箱</h2>
+                                        <p class="order-dd-tips"
+                                           th:text="|规格：${pro.specName}|"></p>
+                                        <p class="order-dd-time">
+                                            <span th:text="|数量：${pro.number}|"></span>
+                                            <span th:text="|&yen;${pro.salePrice}|"></span>
+                                        </p>
+                                    </dd>
+                                </dl>
+                            </a>
+                        </th:block>
                     </th:block>
                 </div>
             </th:block>

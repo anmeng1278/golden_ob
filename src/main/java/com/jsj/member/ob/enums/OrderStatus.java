@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum OrderStatus {
+public enum OrderStatus implements IEnum {
 
     //订单状态，0：待支付 10：支付成功 20：支付失败 60：取消订单
 

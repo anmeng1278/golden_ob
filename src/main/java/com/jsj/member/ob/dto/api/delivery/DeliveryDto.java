@@ -116,6 +116,12 @@ public class DeliveryDto {
      */
     private List<ProductDto> productDtos;
 
+
+    /**
+     * 删除时间
+     */
+    private Integer deleteTime;
+
     public Integer getDeliveryId() {
         return deliveryId;
     }
@@ -299,5 +305,13 @@ public class DeliveryDto {
 
     public void setIdTypeId(Integer idTypeId) {
         this.idTypeId = idTypeId;
+    }
+
+    public Integer getDeleteTime() {
+        return deleteTime;
+    }
+
+    public void setDeleteTime(Integer deleteTime) {
+        this.deleteTime = deleteTime;
     }
 }

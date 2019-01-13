@@ -53,4 +53,10 @@ public class StockLogicTest {
 
     }
 
+    @Test
+    public void getStocks(){
+        List<StockDto> stockDtos = StockLogic.GetStocks("oeQDZt97SIxQknM3kxdW8AZTRn68");
+        System.out.println(JSON.toJSONString(stockDtos));
+    }
+
 }

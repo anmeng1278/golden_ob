@@ -47,6 +47,25 @@
 
             });
 
+
+            TX.CORE.p({
+                url: "/account/info",
+                success: function (resp) {
+                    if (resp.baseResp.success) {
+
+                        var unPayCount = resp.datas.unPayCount;
+                        var cartCount = resp.datas.cartCount;
+
+                        $("span", $("div.divShopping")).html(cartCount);
+                        $("span", $("div.divUnpay")).html(unPayCount);
+
+                        if (unPayCount > 0) {
+                            $("div.divUnpay").show();
+                        }
+                    }
+                }
+            })
+
         })
     </script>
 
@@ -115,8 +134,7 @@
                             <dd>
                                 <h2 class="section-dl-title" th:text="${info.productName}"></h2>
                                 <p class="section-dl-tips" th:text="${info.introduce}"></p>
-                                <p th:if="${!#lists.isEmpty(info.productSpecDtos)}" class="section-dl-price">&yen;<em
-                                        th:text="${info.productSpecDtos[0].salePrice}"></em></p>
+                                <p class="section-dl-price">&yen;<em th:text="${info.salePrice}"></em></p>
                             </dd>
                         </dl>
                     </a>
@@ -206,8 +224,7 @@
                             <dd>
                                 <h2 class="section-dl-title" th:text="${info.productName}"></h2>
                                 <p class="section-dl-tips" th:text="${info.introduce}"></p>
-                                <p class="section-dl-price" th:if="${!#lists.isEmpty(info.productSpecDtos)}">&yen;
-                                    <em th:text="${info.productSpecDtos[0].salePrice}"></em></p>
+                                <p class="section-dl-price">&yen;<em th:text="${info.salePrice}"></em></p>
                             </dd>
                         </dl>
                     </a>
@@ -226,19 +243,19 @@
     <!--footer-tips end-->
 
     <!--shopping-cart start-->
-    <div class="shopping-cart">
+    <div id="divShopping" class="shopping-cart">
         <a th:href="${ob.Nav('/cart')}">
             <img th:src="${ob.Img('/index/images/shoppingCart.png')}" alt="1" class="shopping-icon"/>
-            <span class="shopping-num" th:text="${count}"></span>
+            <span class="shopping-num">0</span>
         </a>
     </div>
     <!--shopping-cart start-->
 
     <!--shopping-cart start-->
-    <div class="shopping-cart order-list" th:if="${size gt 0}">
+    <div id="divUnpay" class="shopping-cart order-list" style="display: none;">
         <a th:href="${ob.Nav('/order?orderFlag=1')}">
             <img th:src="${ob.Img('/index/images/icon_order_lits.png')}" alt="1" class="shopping-icon"/>
-            <span class="shopping-num" th:text="|待支付${size}|"></span>
+            <span class="shopping-num">待支付0</span>
         </a>
     </div>
     <!--shopping-cart start-->

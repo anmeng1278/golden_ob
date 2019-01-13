@@ -3,6 +3,8 @@ package com.jsj.member.ob.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.jsj.member.ob.dto.api.order.UserOrderDto;
 import com.jsj.member.ob.entity.Order;
+import com.jsj.member.ob.enums.OrderFlag;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,13 +23,7 @@ public interface OrderMapper extends BaseMapper<Order> {
      * @param openId
      * @return
      */
-    List<UserOrderDto> getAllOrders(String openId);
+    List<UserOrderDto> getOrders(@Param("openId")String openId, @Param("orderFlag")OrderFlag orderFlag);
 
-    /**
-     * 获得用户未支付订单
-     * @param openId
-     * @return
-     */
-    List<UserOrderDto> getUnPayOrders(String openId);
 
 }

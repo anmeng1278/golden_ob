@@ -60,6 +60,14 @@
                                     <th:block th:text="${info.airportName}"></th:block>
                                 </div>
                             </th:block>
+
+                            <th:block th:if="${info.deleteTime != null}">
+                                <label class="layui-form-label" style="color: red; font-weight: bold;">删除时间：</label>
+                                <div class="layui-input-inline layui-form-label-col" style="color: red;font-weight: bold;">
+                                    <th:block
+                                            th:text="${dateUtils.formatDateByUnixTime(info.deleteTime, 'yyyy-MM-dd HH:mm:ss')}"></th:block>
+                                </div>
+                            </th:block>
                         </div>
 
                         <table class="layui-table" lay-size="sm" lay-skin="line">

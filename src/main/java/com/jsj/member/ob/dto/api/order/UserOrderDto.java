@@ -1,7 +1,11 @@
 package com.jsj.member.ob.dto.api.order;
 
 import com.jsj.member.ob.enums.OrderStatus;
-import com.jsj.member.ob.utils.XmlToEntityUtils;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.StringReader;
 
 public class UserOrderDto {
 
@@ -11,8 +15,6 @@ public class UserOrderDto {
 
     private Integer orderId;
 
-    private Integer status;
-
     private OrderStatus orderStatus;
 
     private Double payAmount;
@@ -21,7 +23,7 @@ public class UserOrderDto {
 
     private String xml;
 
-    private Item item;
+    private UserOrderProductsDto item;
 
     public String getOpenId() {
         return openId;
@@ -47,16 +49,8 @@ public class UserOrderDto {
         this.orderId = orderId;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public OrderStatus getOrderStatus() {
-        return OrderStatus.valueOf(status);
+        return orderStatus;
     }
 
     public void setOrderStatus(OrderStatus orderStatus) {
@@ -87,12 +81,21 @@ public class UserOrderDto {
         this.payAmount = payAmount;
     }
 
-    public Item getItem() {
-        Item item = (Item) XmlToEntityUtils.ConvertXmlToObject(Item.class, xml);
-        return item;
+    public UserOrderProductsDto getItem() {
+
+        try {
+            StringReader reader = new StringReader(xml);
+            JAXBContext context = JAXBContext.newInstance(UserOrderProductsDto.class);
+            Unmarshaller un = context.createUnmarshaller();
+            UserOrderProductsDto item = (UserOrderProductsDto) un.unmarshal(reader);
+            return item;
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public void setItem(Item item) {
+    public void setItem(UserOrderProductsDto item) {
         this.item = item;
     }
 }
