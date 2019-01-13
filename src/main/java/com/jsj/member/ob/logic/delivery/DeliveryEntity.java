@@ -124,7 +124,7 @@ public class DeliveryEntity extends DeliveryBase {
 
         // WX发送实物使用成功模板
         Map map = TemplateDto.GetProduct(stockDtos);
-        TemplateDto temp = TemplateDto.EntityUseSuccessed(delivery, map,stockDtos);
+        TemplateDto temp = TemplateDto.EntityUseSuccessed(delivery, map, stockDtos);
         wxSender.sendNormal(temp);
 
         return resp;
@@ -173,7 +173,15 @@ public class DeliveryEntity extends DeliveryBase {
                 .where("delivery_id = {0}", delivery.getDeliveryId()));
 
         delivery.setExpressNumber(requ.getExpressNumber());
-        delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
+
+        //配送改成已发货
+        //自提改成已签收
+        if (dto.getDeliveryType().equals(DeliveryType.DISTRIBUTE)) {
+            delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
+        } else {
+            delivery.setStatus(DeliveryStatus.SIGNED.getValue());
+        }
+        delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
         deliveryService.updateById(delivery);
 
         //更新发货状态
