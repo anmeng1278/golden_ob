@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum CouponType {
+public enum CouponType implements IEnum {
 
     UNSET(0, "未设置"),
 

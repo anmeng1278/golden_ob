@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum DictType {
+public enum DictType implements IEnum {
 
 
     PRODUCTTYPE(200, "商品分类"),

@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum TemplateType {
+public enum TemplateType implements IEnum {
 
     SERVICE(0, "客服消息"),
 

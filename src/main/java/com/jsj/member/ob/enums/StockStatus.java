@@ -15,7 +15,9 @@ public enum StockStatus implements IEnum {
 
     USED(20, "已使用"),
 
-    SENT(30,"已发货");
+    SENT(30,"已发货"),
+
+    SIGNED(40, "已签收");
 
     private Integer value;
 
@@ -24,6 +26,35 @@ public enum StockStatus implements IEnum {
     StockStatus(Integer value, String message) {
         this.value = value;
         this.message = message;
+    }
+
+    public String getMessage(PropertyType propertyType) {
+
+        switch (propertyType) {
+            case ENTITY:
+                return this.getMessage();
+            case ACTIVITYCODE: {
+                switch (this) {
+                    case SIGNED:
+                        return "已核销";
+                    default:
+                        return this.getMessage();
+                }
+            }
+            case MONTH:
+            case GOLDEN:
+            case NATION: {
+                switch (this) {
+                    case SENT:
+                    case SIGNED:
+                        return "已开卡";
+                    default:
+                        return this.getMessage();
+                }
+            }
+            default:
+                throw new FatalException("未知的枚举值");
+        }
     }
 
     public Integer getValue() {
@@ -46,6 +77,8 @@ public enum StockStatus implements IEnum {
                 return USED;
             case 30:
                 return SENT;
+            case 40:
+                return SIGNED;
             default:
                 throw new FatalException("未知的枚举值");
         }

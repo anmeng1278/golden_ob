@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum  BannerType {
+public enum  BannerType implements IEnum {
 
     COVER(1, "首页轮播"),
 

@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum ProductType {
+public enum ProductType implements IEnum {
 
     QUALITYTRAVELS(1, "品质出行"),
 

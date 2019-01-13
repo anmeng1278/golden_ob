@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum  WechatType {
+public enum  WechatType implements IEnum {
 
     SOURCE_NORMAL(0, "正常关注"),
 

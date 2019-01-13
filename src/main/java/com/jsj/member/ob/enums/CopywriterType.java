@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum CopywriterType {
+public enum CopywriterType implements IEnum {
 
     GIVINGCOPY(1, "赠送文案");
 

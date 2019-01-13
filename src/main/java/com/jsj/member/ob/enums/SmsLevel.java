@@ -1,9 +1,10 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum SmsLevel {
+public enum SmsLevel implements IEnum {
 
     IMPORTANCE(1, "重要"),
 

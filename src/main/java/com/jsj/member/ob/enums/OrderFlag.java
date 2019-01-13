@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum OrderFlag {
+public enum OrderFlag implements IEnum {
 
     //订单表示，0：所有订单 1：待支付和支付失败的订单
 

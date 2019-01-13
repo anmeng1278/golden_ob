@@ -7,14 +7,17 @@ import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
+import com.jsj.member.ob.entity.Stock;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.PropertyType;
+import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.delivery.DeliveryBase;
 import com.jsj.member.ob.logic.delivery.DeliveryFactory;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
+import com.jsj.member.ob.service.StockService;
 import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.Md5Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +44,9 @@ public class DeliveryLogic extends BaseLogic {
 
     @Autowired
     DeliveryStockService deliveryStockService;
+
+    @Autowired
+    StockService stockService;
 
     //region (public) 获取未发货数 GetUnDeliveryCount
 
@@ -437,9 +443,15 @@ public class DeliveryLogic extends BaseLogic {
                 remark = String.format("使用活动码：%s %s %s", activityCode, requ.getAirportName(), requ.getVipHallName());
             }
             delivery.setRemarks(remark);
-
             deliveryLogic.deliveryService.updateById(delivery);
+
+            //更新活动码核销状态
+            Stock stock = deliveryLogic.stockService.selectById(deliveryStock.getStockId());
+            stock.setStatus(StockStatus.SIGNED.getValue());
+            deliveryLogic.stockService.updateById(stock);
+
         }
+
 
         resp.setRespCd("0000");
         resp.setRespMsg("核销成功");

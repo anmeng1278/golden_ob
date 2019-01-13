@@ -115,7 +115,7 @@
                             <span class="give-dd-name"
                                   th:text="|From:${info.nickName}|">韩梅梅</span>
                                 <span class="give-state-gray"
-                                      th:text="${info.stockStatus.message}">已领取</span>
+                                      th:text="${info.stockStatus.getMessage(info.propertyType)}">已领取</span>
                             </p>
                             <p class="give-dd-tips clear" th:text="|共${info.count}件商品|">共2件商品</p>
                             <p class="give-dd-time"

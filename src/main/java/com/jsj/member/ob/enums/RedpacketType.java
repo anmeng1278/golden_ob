@@ -1,8 +1,9 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum RedpacketType {
+public enum RedpacketType implements IEnum {
 
     COUPONPACKAGE(1, "券类红包");
 

@@ -1,9 +1,10 @@
 package com.jsj.member.ob.enums;
 
+import com.baomidou.mybatisplus.enums.IEnum;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.jsj.member.ob.exception.FatalException;
 
-public enum SecKillStatus {
+public enum SecKillStatus implements IEnum {
 
     UNINIT(0, "商品信息暂未初始化"),
 
