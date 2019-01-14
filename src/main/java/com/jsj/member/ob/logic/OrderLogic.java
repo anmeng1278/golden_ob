@@ -314,6 +314,7 @@ public class OrderLogic extends BaseLogic {
         dto.setPayTime(entity.getPayTime());
         dto.setExpiredTime(entity.getExpiredTime());
         dto.setUpdateTime(entity.getUpdateTime());
+        dto.setCreateTime(entity.getCreateTime());
 
         dto.setOrderUniqueCode(entity.getOrderUniqueCode());
         dto.setSourceType(SourceType.valueOf(entity.getOrderSourceId()));
