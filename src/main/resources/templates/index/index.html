@@ -86,7 +86,7 @@
                 <th:block th:each="banner:${banners}">
                     <div class="swiper-slide">
                         <a th:href="@{${banner.navigateUrl}}">
-                            <img th:src="@{${banner.bannerPath}}" alt="1" width="100%"/>
+                            <img th:src="@{${banner.bannerPath+'?p=4&w=319&h=180'}}" alt="1" width="100%"/>
                         </a>
                     </div>
                 </th:block>
@@ -130,7 +130,7 @@
                     <a th:href="${ob.Nav('/product?productId='+info.productId)}">
                         <dl class="section-con-dl">
                             <dt th:if="${!#lists.isEmpty(info.productImgDtos)}">
-                                <img th:src="${info.productImgDtos[0].imgPath}" alt="1" width="100%"/>
+                                <img th:src="${info.productImgDtos[0].imgPath+'?p=4&w=147&h=180'}" alt="1" width="100%"/>
                             </dt>
                             <dd>
                                 <h2 class="section-dl-title" th:text="${info.productName}"></h2>
@@ -169,7 +169,7 @@
                                 <dl class="section-con-dl">
                                     <th:block th:with="img=${productLogic.GetProductImgDtos(info.productId,2)}">
                                         <dt th:if="${img != null && !#lists.isEmpty(img)}">
-                                            <img th:src="${img[0].imgPath}" alt="1" width="100%"/>
+                                            <img th:src="${img[0].imgPath+'?p=4&w=108&h=180'}" alt="1" width="100%"/>
                                         </dt>
                                     </th:block>
                                     <dd>
@@ -195,7 +195,7 @@
                     <a th:href="${ob.Nav('/product?activityId='+info.activityId+'&activityType=30')}">
                         <dl class="section-con-dl">
                             <dt>
-                                <img th:src="${info.imgPath}" alt="1" width="100%"/>
+                                <img th:src="${info.imgPath+'?p=4&w=147&h=180'}" alt="1" width="100%"/>
                             </dt>
                             <dd>
                                 <h2 class="section-dl-title" th:text="${info.activityName}"></h2>
@@ -220,7 +220,7 @@
                     <a th:href="${ob.Nav('/product?productId='+info.productId)}">
                         <dl class="section-con-dl">
                             <dt th:if="${!#lists.isEmpty(info.productImgDtos)}">
-                                <img th:src="${info.productImgDtos[0].imgPath}" alt="1" width="100%"/>
+                                <img th:src="${info.productImgDtos[0].imgPath+'?p=4&w=147&h=180'}" alt="1" width="100%"/>
                             </dt>
                             <dd>
                                 <h2 class="section-dl-title" th:text="${info.productName}"></h2>
