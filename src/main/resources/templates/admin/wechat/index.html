@@ -30,7 +30,8 @@
                     <th style="width: 5%;">性别</th>
                     <th style="width: 15%;">关注时间</th>
                     <th style="width: 15%;">创建时间</th>
-                    <th style="width: 20%;">操作</th>
+                    <th style="width: 10%;">是否接收微信推送</th>
+                    <th style="width: 10%;">操作</th>
                 </tr>
                 </thead>
                 <tbody id="content">
@@ -64,6 +65,20 @@
                         <td th:text="${enumLogic.GetSexType(info.sex).message}"></td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.subscribeTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${dateUtils.formatDateByUnixTime(info.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td class="ext">
+                            <th:block th:if="${info.ifnotify}">
+                            <button type="button" th:attr="data-id=${info.openId},data-method='ifnotify'"
+                                    class="layui-btn layui-btn-normal layui-btn-xs">
+                                是
+                            </button>
+                        </th:block>
+                            <th:block th:if="!${info.ifnotify}">
+                                <button type="button" th:attr="data-id=${info.openId},data-method='ifnotify'"
+                                        class="layui-btn layui-btn-danger layui-btn-xs">
+                                    否
+                                </button>
+                            </th:block>
+                        </td>
                         <td>
 
                             <button type="button" class="layui-btn layui-btn-xs layui-btn-normal"
@@ -99,6 +114,9 @@
                         layer.close(index);
                         modifyStatus(method, id);
                     });
+                }
+                if (method == "ifnotify") {
+                    modifyStatus(method, id);
                 }
             });
 
@@ -138,5 +156,11 @@
 
     </script>
 </th:block>
-
+<th:block layout:fragment="css">
+    <style type="text/css">
+        .ext button {
+            margin-top: 3px;
+        }
+    </style>
+</th:block>
 </html>
