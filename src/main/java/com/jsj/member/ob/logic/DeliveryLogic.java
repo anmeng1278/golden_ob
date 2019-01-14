@@ -450,6 +450,11 @@ public class DeliveryLogic extends BaseLogic {
             stock.setStatus(StockStatus.SIGNED.getValue());
             deliveryLogic.stockService.updateById(stock);
 
+            //TODO 发送活动码核销成功
+            //用户持活动码进厅，员工验证活动码下单后，调用起方法
+            //机场名称 requ.getAirportName() 贵宾厅名称 requ.getVipHallName()
+            //示例：感谢您使用金色世纪贵宾厅服务，祝你旅途愉快
+            //delivery.getOpenId();
         }
 
 
