@@ -127,6 +127,9 @@ public class DeliveryEntity extends DeliveryBase {
         TemplateDto temp = TemplateDto.EntityUseSuccessed(delivery, map, stockDtos);
         wxSender.sendNormal(temp);
 
+        //TODO 给微信接收者发送待处理发货模板
+        //示例： 用户xxx申请xx商品发货，请及时处理。
+
         return resp;
     }
     //endregion

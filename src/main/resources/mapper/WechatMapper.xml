@@ -20,6 +20,7 @@
         <result column="remarks" property="remarks" />
         <result column="source" property="source" />
         <result column="unsubscribe_time" property="unsubscribeTime" />
+        <result column="ifnotify" property="ifnotify" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="delete_time" property="deleteTime" />
@@ -27,7 +28,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        open_id AS openId, union_id AS unionId, jsjid, official_accounts AS officialAccounts, subscribe, nickname, sex, headimgurl, subscribe_time AS subscribeTime, city, province, country, language, remarks, source, unsubscribe_time AS unsubscribeTime, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        open_id AS openId, union_id AS unionId, jsjid, official_accounts AS officialAccounts, subscribe, nickname, sex, headimgurl, subscribe_time AS subscribeTime, city, province, country, language, remarks, source, unsubscribe_time AS unsubscribeTime, ifnotify, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

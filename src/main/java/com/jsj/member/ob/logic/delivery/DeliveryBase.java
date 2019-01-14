@@ -143,6 +143,9 @@ public abstract class DeliveryBase {
         TemplateDto temp = TemplateDto.OpenCardConfirm(deliveryDto);
         wxSender.sendNormal(temp);
 
+        //TODO 给微信接收者发送待处理开卡模板
+        //示例： 新[月体验卡]开卡申请，请及时处理开卡操作。
+
         return resp;
     }
     //endregion
