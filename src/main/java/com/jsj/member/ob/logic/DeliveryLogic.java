@@ -455,6 +455,7 @@ public class DeliveryLogic extends BaseLogic {
             //机场名称 requ.getAirportName() 贵宾厅名称 requ.getVipHallName()
             //示例：感谢您使用金色世纪贵宾厅服务，祝你旅途愉快
             //delivery.getOpenId();
+
         }
 
 
