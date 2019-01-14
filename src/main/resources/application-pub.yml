@@ -114,6 +114,18 @@ webconfig:
     ## {{remark.DATA}}
     OpenCardSuccess: A7p3NcrvEGlbqS56PRbHTE9qGRz25lGrb1Fpo4bTHDU
 
+    ## {{first.DATA}}
+    ## 账号信息：{{keyword1.DATA}}
+    ##  功能说明：{{keyword2.DATA}}
+    ## {{remark.DATA}}
+    VerifySuccessed: bCvGkb0OemyYxSKqCcemDZQcTId5v2k5z6JVH6AM6QE
+
+    ## {{first.DATA}}
+    ## 订单编号：{{keyword1.DATA}}
+    ## 详情：{{keyword2.DATA}}
+    ## {{remark.DATA}}
+    HandleDelivery: ux3mLytYes-VF2rEpA0ZI1aSATnwbyGxigkvmyxsp5g
+
 
 redis:
   host: 172.16.5.64

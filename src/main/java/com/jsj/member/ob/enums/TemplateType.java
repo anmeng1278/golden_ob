@@ -17,7 +17,11 @@ public enum TemplateType implements IEnum {
 
     CANCELUNPAYORDER(5,"取消待支付订单"),
 
-    OPENCARDSUCCESS(6,"开卡成功");
+    OPENCARDSUCCESS(6,"开卡成功"),
+
+    VERIFYSUCCESSED(7,"活动码核销成功"),
+
+    HANDLEDELIVERY(8,"处理发货");
 
     private Integer value;
 
@@ -52,6 +56,10 @@ public enum TemplateType implements IEnum {
                 return CANCELUNPAYORDER;
             case 6:
                 return OPENCARDSUCCESS;
+            case 7:
+                return VERIFYSUCCESSED;
+            case 8:
+                return HANDLEDELIVERY;
             default:
                 throw new FatalException("未知的枚举值");
         }

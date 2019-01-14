@@ -7,12 +7,14 @@ import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.entity.Stock;
+import com.jsj.member.ob.entity.Wechat;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
+import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
@@ -124,11 +126,21 @@ public class DeliveryEntity extends DeliveryBase {
 
         // WX发送实物使用成功模板
         Map map = TemplateDto.GetProduct(stockDtos);
-        TemplateDto temp = TemplateDto.EntityUseSuccessed(delivery, map, stockDtos);
-        wxSender.sendNormal(temp);
+        TemplateDto temp1 = TemplateDto.EntityUseSuccessed(delivery, map, stockDtos);
+        wxSender.sendNormal(temp1);
 
-        //TODO 给微信接收者发送待处理发货模板
-        //示例： 用户xxx申请xx商品发货，请及时处理。
+        //给微信接收者发送待处理发货模板
+        if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
+            map.put("title","客户已申请配送,请尽快安排发货!\n");
+        }
+        if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
+            map.put("title","客户已申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n");
+        }
+        List<Wechat> wechats = WechatLogic.GetNotifyWechat();
+        for (Wechat wechat : wechats) {
+            TemplateDto temp2 = TemplateDto.HandleDelivery(wechat, map, stockDtos);
+            wxSender.sendNormal(temp2);
+        }
 
         return resp;
     }
