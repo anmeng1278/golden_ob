@@ -26,6 +26,7 @@
             <mvc:exclude-mapping path="/**/fonts/*"/>
             <mvc:exclude-mapping path="/**/*.css"/>
             <mvc:exclude-mapping path="/**/*.js"/>
+            <mvc:exclude-mapping path="/**/*.map"/>
             <mvc:exclude-mapping path="/**/*.png"/>
             <mvc:exclude-mapping path="/**/*.gif"/>
             <mvc:exclude-mapping path="/**/*.jpg"/>
@@ -45,6 +46,7 @@
             <mvc:exclude-mapping path="/**/fonts/*"/>
             <mvc:exclude-mapping path="/**/*.css"/>
             <mvc:exclude-mapping path="/**/*.js"/>
+            <mvc:exclude-mapping path="/**/*.map"/>
             <mvc:exclude-mapping path="/**/*.png"/>
             <mvc:exclude-mapping path="/**/*.gif"/>
             <mvc:exclude-mapping path="/**/*.jpg"/>
@@ -73,6 +75,7 @@
             <mvc:exclude-mapping path="/**/fonts/*"/>
             <mvc:exclude-mapping path="/**/*.css"/>
             <mvc:exclude-mapping path="/**/*.js"/>
+            <mvc:exclude-mapping path="/**/*.map"/>
             <mvc:exclude-mapping path="/**/*.png"/>
             <mvc:exclude-mapping path="/**/*.gif"/>
             <mvc:exclude-mapping path="/**/*.jpg"/>
