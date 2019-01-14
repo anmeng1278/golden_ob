@@ -136,4 +136,14 @@ public class TemplateDtoTest {
         }
     }
 
+    @Test
+    public void deliverySuccessed() {
+        Delivery delivery = deliveryService.selectById(72);
+        List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(73);
+        Map map = TemplateDto.GetProduct(stockDtos);
+        TemplateDto temp = TemplateDto.DeliverySuccessed(delivery,map, stockDtos);
+        wxSender.sendNormal(temp);
+    }
+
+
 }

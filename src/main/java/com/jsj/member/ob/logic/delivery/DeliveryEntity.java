@@ -131,10 +131,10 @@ public class DeliveryEntity extends DeliveryBase {
 
         //给微信接收者发送待处理发货模板
         if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
-            map.put("title","客户已申请配送,请尽快安排发货!\n");
+            map.put("title", "客户已申请配送,请尽快安排发货!\n");
         }
         if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
-            map.put("title","客户已申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n");
+            map.put("title", "客户已申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n");
         }
         List<Wechat> wechats = WechatLogic.GetNotifyWechat();
         for (Wechat wechat : wechats) {
@@ -208,6 +208,12 @@ public class DeliveryEntity extends DeliveryBase {
 
         OpreationDeliveryResp resp = new OpreationDeliveryResp();
         resp.setSuccess(true);
+
+        //发货成功消息模板通知
+        List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(requ.getDeliveryId());
+        Map map = TemplateDto.GetProduct(stockDtos);
+        TemplateDto temp = TemplateDto.DeliverySuccessed(delivery,map, stockDtos);
+        wxSender.sendNormal(temp);
 
         return resp;
     }

@@ -5,7 +5,7 @@ server:
 #spring
 spring:
   profiles:
-    active: pub
+    active: dev
   http:
     multipart:
       max-file-size: 10MB
@@ -163,5 +163,12 @@ webconfig:
     ## 详情：{{keyword2.DATA}}
     ## {{remark.DATA}}
     HandleDelivery: ux3mLytYes-VF2rEpA0ZI1aSATnwbyGxigkvmyxsp5g
+
+    ## {{first.DATA}}
+    ## 订单号：{{keyword1.DATA}}
+    ## 订单明细：{{keyword2.DATA}}
+    ## 联系信息：{{keyword3.DATA}}
+    ## {{remark.DATA}}
+    DeliverySuccessed: mseEH2bb687pv-cFinAiyQfm-8EGuqTbngY7X9iuFVI
 
 

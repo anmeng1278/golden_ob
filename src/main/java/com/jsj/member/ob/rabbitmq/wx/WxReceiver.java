@@ -64,6 +64,8 @@ public class WxReceiver {
                 return this.VerifySuccessedTemplateId;
             case HANDLEDELIVERY:
                 return this.HandleDeliveryTemplateId;
+            case DELIVERYSUCCESSED:
+                return this.DeliverySuccessedTemplateId;
         }
         return "";
     }
@@ -112,11 +114,16 @@ public class WxReceiver {
     private String VerifySuccessedTemplateId;
 
     /**
-     * 活动码核销成功模板
+     * 处理发货提醒模板
      */
     @Value(value = "${webconfig.WxTemplate.HandleDelivery}")
     private String HandleDeliveryTemplateId;
 
+    /**
+     * 活动码核销成功模板
+     */
+    @Value(value = "${webconfig.WxTemplate.DeliverySuccessed}")
+    private String DeliverySuccessedTemplateId;
 
 
 

@@ -126,6 +126,12 @@ webconfig:
     ## {{remark.DATA}}
     HandleDelivery: ux3mLytYes-VF2rEpA0ZI1aSATnwbyGxigkvmyxsp5g
 
+    ## {{first.DATA}}
+    ## 订单号：{{keyword1.DATA}}
+    ## 订单明细：{{keyword2.DATA}}
+    ## 联系信息：{{keyword3.DATA}}
+    ## {{remark.DATA}}
+    DeliverySuccessed: mseEH2bb687pv-cFinAiyQfm-8EGuqTbngY7X9iuFVI
 
 redis:
   host: 172.16.5.64

@@ -464,6 +464,48 @@ public class TemplateDto extends BaseDto {
     }
 
 
+    /**
+     * 实物发货/自提成功模板消息
+     *
+     * @param delivery
+     * @return
+     */
+    public static TemplateDto DeliverySuccessed(Delivery delivery, Map map, List<StockDto> stockDtos) {
+
+         /*{{first.DATA}}
+        订单号：{{keyword1.DATA}}
+        订单明细：{{keyword2.DATA}}
+        联系信息：{{keyword3.DATA}}
+        {{remark.DATA}}*/
+
+        TemplateDto dto = new TemplateDto();
+        dto.setToUser(delivery.getOpenId());
+        dto.setTemplateType(TemplateType.DELIVERYSUCCESSED);
+        if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
+            dto.setFirst("您的订单已成功发货,点击模板查看物流详情!\n");
+        }
+        if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
+            dto.setFirst(String.format("您已在%s自提成功!\n",delivery.getAirportName()));
+        }
+        dto.setFirstColor(gold_color);
+        dto.getData().put("keyword1", new TemplateData(stockDtos.get(0).getOrderId().toString(), color));
+        dto.getData().put("keyword2", new TemplateData(map.get("productName").toString(), color));
+        dto.getData().put("keyword3", new TemplateData(delivery.getContactName()+delivery.getMobile()+"",color));
+        dto.setRemark("\n金色严选祝您生活愉快!");
+        dto.setRemarkColor(gold_color);
+        if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
+            dto.setUrl(String.format("%s%s/delivery/%s", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath(),delivery.getDeliveryId()));
+
+        }
+        if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
+            dto.setUrl(String.format("%s%s/delivery", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
+        }
+
+        return dto;
+    }
+
+
+
     public static Map GetProduct(List<StockDto> stockDtos) {
 
         Map<String, Object> map = new HashMap<>();

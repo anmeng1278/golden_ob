@@ -21,7 +21,9 @@ public enum TemplateType implements IEnum {
 
     VERIFYSUCCESSED(7,"活动码核销成功"),
 
-    HANDLEDELIVERY(8,"处理发货");
+    HANDLEDELIVERY(8,"处理发货"),
+
+    DELIVERYSUCCESSED(9,"发货成功");
 
     private Integer value;
 
@@ -60,6 +62,8 @@ public enum TemplateType implements IEnum {
                 return VERIFYSUCCESSED;
             case 8:
                 return HANDLEDELIVERY;
+            case 9:
+                return DELIVERYSUCCESSED;
             default:
                 throw new FatalException("未知的枚举值");
         }
