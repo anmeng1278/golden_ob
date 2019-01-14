@@ -11,16 +11,16 @@ import java.io.Serializable;
  *   @description : Wechat 微信用户实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2019-01-14
  */
 @TableName("_wechat")
 public class Wechat implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * openid
-     */
+	/**
+	 * openid
+	 */
 	@TableId(value="open_id", type= IdType.INPUT)
 	private String openId;
     /**
@@ -84,6 +84,10 @@ public class Wechat implements Serializable {
      */
 	@TableField("unsubscribe_time")
 	private Integer unsubscribeTime;
+    /**
+     * 是否接收微信推送
+     */
+	private Boolean ifnotify;
     /**
      * 创建时间
      */
@@ -229,6 +233,14 @@ public class Wechat implements Serializable {
 		this.unsubscribeTime = unsubscribeTime;
 	}
 
+	public Boolean getIfnotify() {
+		return ifnotify;
+	}
+
+	public void setIfnotify(Boolean ifnotify) {
+		this.ifnotify = ifnotify;
+	}
+
 	public Integer getCreateTime() {
 		return createTime;
 	}
@@ -273,6 +285,7 @@ public class Wechat implements Serializable {
 			", remarks=" + remarks +
 			", source=" + source +
 			", unsubscribeTime=" + unsubscribeTime +
+			", ifnotify=" + ifnotify +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +
