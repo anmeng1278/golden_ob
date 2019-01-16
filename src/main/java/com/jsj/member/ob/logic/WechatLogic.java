@@ -302,7 +302,7 @@ public class WechatLogic extends BaseLogic {
 
         EntityWrapper<Wechat> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
-        wrapper.where("ifnotify is true");
+        wrapper.where("ifnotify = 1");
         List<Wechat> wechats = wechatLogic.wechatService.selectList(wrapper);
 
         return wechats;
