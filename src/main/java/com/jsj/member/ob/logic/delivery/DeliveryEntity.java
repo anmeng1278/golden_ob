@@ -131,10 +131,10 @@ public class DeliveryEntity extends DeliveryBase {
 
         //给微信接收者发送待处理发货模板
         if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
-            map.put("title",  String.format("客户:%s,手机号:%s客户已申请配送,请尽快安排发货!\n",requ.getContactName(),requ.getMobile()));
+            map.put("title",  String.format("客户已申请配送,请尽快安排发货!\n\n姓名：%s\n手机号：%s",requ.getContactName(),requ.getMobile()));
         }
         if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
-            map.put("title", String.format("客户:%s,手机号:%s已在%s申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n",requ.getContactName(),requ.getMobile(),requ.getAirportName()));
+            map.put("title", String.format("客户已在%s申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n\n姓名：%s\n手机号：%s\n自提时间：%s\n自提点：%s",requ.getAirportName(),requ.getContactName(),requ.getMobile(),delivery.getCreateTime(),delivery.getAirportName()));
         }
         List<Wechat> wechats = WechatLogic.GetNotifyWechat();
         for (Wechat wechat : wechats) {

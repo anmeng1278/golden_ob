@@ -116,11 +116,11 @@ public class TemplateDtoTest {
         Map map = new HashMap();
 
         if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
-            map.put("title", String.format("客户:%s,手机号:%s客户已申请配送,请尽快安排发货!\n", delivery.getContactName(), delivery.getMobile()));
+            map.put("title", String.format("客户已申请配送,请尽快安排发货!\n\n姓名：%s\n手机号：%s", delivery.getContactName(), delivery.getMobile()));
             map.put("productName", "超级大螃蟹");
         }
         if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
-            map.put("title", String.format("客户:%s,手机号:%s已在%s申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n", delivery.getContactName(), delivery.getMobile(), delivery.getAirportName()));
+            map.put("title", String.format("客户已在%s申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n\n姓名：%s\n手机号：%s\n自提时间：%s\n自提点：%s", delivery.getAirportName(),delivery.getContactName(), delivery.getMobile(),delivery.getUpdateTime(),delivery.getAirportName()));
             map.put("productName", "超级大螃蟹");
         }
        /* if(delivery.getPropertyTypeId() == PropertyType.NATION.getValue()){
@@ -131,9 +131,11 @@ public class TemplateDtoTest {
 
         List<Wechat> wechats = WechatLogic.GetNotifyWechat();
         for (Wechat wechat : wechats) {
-            System.out.println(wechat.getOpenId());
+            String openId = wechat.getOpenId();
             TemplateDto temp2 = TemplateDto.HandleDelivery(wechat, map, stockDtos);
             wxSender.sendNormal(temp2);
+            System.out.println(temp2.getToUser());
+            System.out.println(openId);
         }
 
 
@@ -146,12 +148,18 @@ public class TemplateDtoTest {
         List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(73);
         Map map = TemplateDto.GetProduct(stockDtos);
         TemplateDto temp = TemplateDto.DeliverySuccessed(delivery, map, stockDtos);
+
         wxSender.sendNormal(temp);
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
         DeliveryDto deliveryDto = DeliveryLogic.GetDelivery(60);
         TemplateDto dto = TemplateDto.OpenCardSuccess(deliveryDto);
-        wxSender.sendNormal(dto);
+       wxSender.sendNormal(dto);
 
 
 

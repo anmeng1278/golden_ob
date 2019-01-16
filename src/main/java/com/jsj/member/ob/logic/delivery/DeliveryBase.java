@@ -149,7 +149,7 @@ public abstract class DeliveryBase {
 
         // 给微信接收者发送待处理开卡模板
         Map map = new HashMap();
-        map.put("title",String.format("客户:%s,身份证号:%s,手机号:%s已申请开卡,请核对开卡信息!\n",requ.getContactName(),requ.getIdNumber(),requ.getMobile()));
+        map.put("title",String.format("客户已申请开卡,请核对开卡信息!\n\n姓名:%s\n身份证号:%s\n手机号:%s",requ.getContactName(),requ.getIdNumber(),requ.getMobile()));
         map.put("productName",deliveryDto.getProductDtos().get(0).getProductName());
         List<Wechat> wechats = WechatLogic.GetNotifyWechat();
         for (Wechat wechat : wechats) {
