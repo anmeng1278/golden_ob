@@ -202,7 +202,14 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">航班号:</label>
+                <label class="layui-form-label">机场名称:</label>
+                <div class="layui-input-inline layui-form-label-col" style="width: auto">
+                    <th:block th:text="${info.airportName}"></th:block>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">乘坐航班:</label>
                 <div class="layui-input-inline layui-form-label-col" style="width: auto">
                     <th:block th:text="${info.flightNumber}"></th:block>
                 </div>

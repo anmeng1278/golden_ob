@@ -318,7 +318,9 @@ public class AdminWechatController extends BaseController {
         requ.setActivityType(ActivityType.NORMAL);
         requ.getBaseRequ().setOpenId(openId);
         requ.setSourceType(SourceType.AWKTC);
-        requ.setRemarks("手动添加库存,添加人:"+admin.getLoginName());
+        if(!StringUtils.isEmpty(admin.getLoginName())){
+            requ.setRemarks("手动添加库存,添加人:"+admin.getLoginName());
+        }
 
         for (JSONObject jo : jsonObjects) {
 
