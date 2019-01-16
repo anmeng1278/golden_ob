@@ -59,7 +59,13 @@ public class WxReceiver {
             case CANCELUNPAYORDER:
                 return this.CancelUnPayOrderTemplateId;
             case OPENCARDSUCCESS:
-                return  this.OpenCardSuccessTemplateId;
+                return this.OpenCardSuccessTemplateId;
+            case VERIFYSUCCESSED:
+                return this.VerifySuccessedTemplateId;
+            case HANDLEDELIVERY:
+                return this.HandleDeliveryTemplateId;
+            case DELIVERYSUCCESSED:
+                return this.DeliverySuccessedTemplateId;
         }
         return "";
     }
@@ -96,10 +102,29 @@ public class WxReceiver {
     private String CancelUnPayOrderTemplateId;
 
     /**
-     * 取消待支付订单模板
+     * 开卡成功模板
      */
     @Value(value = "${webconfig.WxTemplate.OpenCardSuccess}")
     private String OpenCardSuccessTemplateId;
+
+    /**
+     * 活动码核销成功模板
+     */
+    @Value(value = "${webconfig.WxTemplate.VerifySuccessed}")
+    private String VerifySuccessedTemplateId;
+
+    /**
+     * 处理发货提醒模板
+     */
+    @Value(value = "${webconfig.WxTemplate.HandleDelivery}")
+    private String HandleDeliveryTemplateId;
+
+    /**
+     * 活动码核销成功模板
+     */
+    @Value(value = "${webconfig.WxTemplate.DeliverySuccessed}")
+    private String DeliverySuccessedTemplateId;
+
 
 
 

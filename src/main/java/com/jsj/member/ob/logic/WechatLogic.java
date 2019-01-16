@@ -23,6 +23,7 @@ import weixin.popular.bean.sns.Jscode2sessionResult;
 import weixin.popular.bean.user.User;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Component
 public class WechatLogic extends BaseLogic {
@@ -293,4 +294,17 @@ public class WechatLogic extends BaseLogic {
     }
     //endregion
 
+    /**
+     * 活动可以接受消息推送的用户信息
+     * @return
+     */
+    public static  List<Wechat> GetNotifyWechat(){
+
+        EntityWrapper<Wechat> wrapper = new EntityWrapper<>();
+        wrapper.where("delete_time is null");
+        wrapper.where("ifnotify is true");
+        List<Wechat> wechats = wechatLogic.wechatService.selectList(wrapper);
+
+        return wechats;
+    }
 }

@@ -307,6 +307,8 @@ public class AdminWechatController extends BaseController {
     @ResponseBody
     public RestResponseBo createOrder(HttpServletRequest request) {
 
+        Admin admin = (Admin) request.getSession().getAttribute(Constant.LOGIN_SESSION_ADMIN_KEY);
+
         String openId = request.getParameter("openId");
         String p = request.getParameter("p");
         List<JSONObject> jsonObjects = JSON.parseArray(p, JSONObject.class);
@@ -316,7 +318,7 @@ public class AdminWechatController extends BaseController {
         requ.setActivityType(ActivityType.NORMAL);
         requ.getBaseRequ().setOpenId(openId);
         requ.setSourceType(SourceType.AWKTC);
-        requ.setRemarks("手动添加库存");
+        requ.setRemarks("手动添加库存,添加人:"+admin.getLoginName());
 
         for (JSONObject jo : jsonObjects) {
 
@@ -352,6 +354,33 @@ public class AdminWechatController extends BaseController {
         stockService.updateById(stock);
 
         return RestResponseBo.ok("删除成功");
+    }
+
+
+
+    /**
+     * 修改状态
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/status", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResponseBo status(HttpServletRequest request) {
+
+        String openId = request.getParameter("id");
+        String method = request.getParameter("method");
+
+        Wechat wechat = wechatService.selectById(openId);
+
+        if (method.equals("ifnotify")) {
+            wechat.setIfnotify(!wechat.getIfnotify());
+            wechat.setUpdateTime(DateUtils.getCurrentUnixTime());
+            wechatService.updateById(wechat);
+        }
+
+        return RestResponseBo.ok("操作成功");
+
     }
 
 }

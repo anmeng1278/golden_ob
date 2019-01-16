@@ -2,9 +2,11 @@ package com.jsj.member.ob.rabbitmq.wx;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.jsj.member.ob.dto.api.delivery.DeliveryDto;
+import com.jsj.member.ob.dto.api.delivery.VerifyActivityCodeRequ;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.Order;
+import com.jsj.member.ob.entity.Wechat;
 import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.TemplateType;
 import com.jsj.member.ob.logic.ConfigLogic;
@@ -226,7 +228,7 @@ public class TemplateDto extends BaseDto {
         dto.getData().put("keyword1", new TemplateData(order.getOrderId() + "", color));
         dto.getData().put("keyword2", new TemplateData(map.get("productName").toString(), color));
         dto.getData().put("keyword3", new TemplateData(order.getPayAmount() + "", color));
-        dto.setRemark("\n金色严选祝您生活愉快");
+        dto.setRemark("\n金色严选祝您生活愉快!");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/order", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
 
@@ -253,13 +255,13 @@ public class TemplateDto extends BaseDto {
         TemplateDto dto = new TemplateDto();
         dto.setToUser(order.getOpenId());
         dto.setTemplateType(TemplateType.CANCELUNPAYORDER);
-        dto.setFirst(map.get("title").toString()+"\n");
+        dto.setFirst(map.get("title").toString() + "\n");
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(order.getOrderId() + "", color));
         dto.getData().put("keyword2", new TemplateData(map.get("productName").toString(), color));
         dto.getData().put("keyword3", new TemplateData(order.getPayAmount() + "", color));
         dto.getData().put("keyword4", new TemplateData(map.get("reason").toString(), color));
-        dto.setRemark("\n金色严选祝您生活愉快");
+        dto.setRemark("\n金色严选祝您生活愉快!");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/order", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
 
@@ -290,9 +292,9 @@ public class TemplateDto extends BaseDto {
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(WechatLogic.GetWechat(delivery.getOpenId()).getNickname() + "", color));
         dto.getData().put("keyword2", new TemplateData(consumeDate + "", color));
-        dto.setRemark("\n空铁管家祝您旅途愉快");
+        dto.setRemark("\n空铁管家祝您旅途愉快!");
         dto.setRemarkColor(gold_color);
-        dto.setUrl(String.format("%s%s/stock/qrcode/%s/%s", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath(),delivery.getDeliveryId(), stockDtos.get(0).getStockId()));
+        dto.setUrl(String.format("%s%s/stock/qrcode/%s/%s", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath(), delivery.getDeliveryId(), stockDtos.get(0).getStockId()));
 
         return dto;
     }
@@ -303,7 +305,7 @@ public class TemplateDto extends BaseDto {
      * @param delivery
      * @return
      */
-    public static TemplateDto EntityUseSuccessed(Delivery delivery, Map map,List<StockDto> stockDtos) {
+    public static TemplateDto EntityUseSuccessed(Delivery delivery, Map map, List<StockDto> stockDtos) {
 
 
         /*{{first.DATA}}
@@ -328,7 +330,7 @@ public class TemplateDto extends BaseDto {
         dto.getData().put("keyword1", new TemplateData(orderDate, color));
         dto.getData().put("keyword2", new TemplateData(stockDtos.get(0).getOrderId().toString(), color));
         dto.getData().put("keyword3", new TemplateData(map.get("productName").toString(), color));
-        dto.setRemark("\n金色严选祝您生活愉快！");
+        dto.setRemark("\n金色严选祝您生活愉快!");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/delivery", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
 
@@ -362,7 +364,7 @@ public class TemplateDto extends BaseDto {
         dto.getData().put("keyword1", new TemplateData(delivery.getProductDtos().get(0).getProductName() + "", color));
         dto.getData().put("keyword2", new TemplateData(effectiveDate, color));
         dto.getData().put("keyword3", new TemplateData("依据卡的使用说明", color));
-        dto.setRemark("\n空铁管家祝您旅途愉快");
+        dto.setRemark("\n空铁管家祝您旅途愉快!");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/stock", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
 
@@ -393,7 +395,7 @@ public class TemplateDto extends BaseDto {
         dto.setTemplateType(TemplateType.OPENCARDSUCCESS);
         dto.setFirst(String.format("您的%s已成功开通\n", goldenDto.getPropertyType().getMessage()));
         dto.setFirstColor(gold_color);
-        dto.getData().put("keyword1",new TemplateData("北京金色世纪商旅网络有限公司", color));
+        dto.getData().put("keyword1", new TemplateData("北京金色世纪商旅网络有限公司", color));
         dto.getData().put("keyword2", new TemplateData(openCardDate, color));
         dto.setRemark("\n空铁管家祝您旅途愉快");
         dto.setRemarkColor(gold_color);
@@ -402,6 +404,108 @@ public class TemplateDto extends BaseDto {
         return dto;
     }
 
+
+    /**
+     * 活动码核销成功模板
+     * @param delivery
+     * @param requ
+     * @return
+     */
+    public static TemplateDto VerifySuccessed(Delivery delivery, VerifyActivityCodeRequ requ) {
+        /*
+        {{first.DATA}}
+        账号信息：{{keyword1.DATA}}
+        功能说明：{{keyword2.DATA}}
+        {{remark.DATA}}
+        */
+
+        TemplateDto dto = new TemplateDto();
+        dto.setToUser(delivery.getOpenId());
+        dto.setTemplateType(TemplateType.VERIFYSUCCESSED);
+        dto.setFirst(String.format("您已成功激活在%s%s使用活动码\n", requ.getAirportName(), requ.getVipHallName()));
+        dto.setFirstColor(gold_color);
+        dto.getData().put("keyword1", new TemplateData(delivery.getMobile() + "", color));
+        dto.getData().put("keyword2", new TemplateData("核销活动码", color));
+        dto.setRemark("\n感谢您使用金色世纪贵宾厅服务，祝你旅途愉快!");
+        dto.setRemarkColor(gold_color);
+        dto.setUrl(String.format("%s%s/delivery", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
+
+        return dto;
+
+    }
+
+
+    /**
+     * 开卡发货待处理通知
+     * @param wechat
+     * @param map
+     * @param stockDtos
+     * @return
+     */
+    public static TemplateDto HandleDelivery(Wechat wechat, Map map, List<StockDto> stockDtos) {
+        /*
+        {{first.DATA}}
+        订单编号：{{keyword1.DATA}}
+        详情：{{keyword2.DATA}}
+        {{remark.DATA}}
+        */
+        TemplateDto dto = new TemplateDto();
+        dto.setToUser(wechat.getOpenId());
+        dto.setTemplateType(TemplateType.HANDLEDELIVERY);
+        dto.setFirst(map.get("title").toString());
+        dto.setFirstColor(gold_color);
+        dto.getData().put("keyword1", new TemplateData(stockDtos.get(0).getOrderId().toString(), color));
+        dto.getData().put("keyword2", new TemplateData(map.get("productName").toString(), color));
+        dto.setRemark("\n金色严选祝您生活愉快！");
+        dto.setRemarkColor(gold_color);
+        dto.setUrl(" ");
+        return dto;
+
+    }
+
+
+    /**
+     * 实物发货/自提成功模板消息
+     *
+     * @param delivery
+     * @return
+     */
+    public static TemplateDto DeliverySuccessed(Delivery delivery, Map map, List<StockDto> stockDtos) {
+
+         /*{{first.DATA}}
+        订单号：{{keyword1.DATA}}
+        订单明细：{{keyword2.DATA}}
+        联系信息：{{keyword3.DATA}}
+        {{remark.DATA}}*/
+
+        TemplateDto dto = new TemplateDto();
+        dto.setToUser(delivery.getOpenId());
+        dto.setTemplateType(TemplateType.DELIVERYSUCCESSED);
+        if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
+            dto.setFirst("您的订单已成功发货,点击模板查看物流详情!\n");
+        }
+        if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
+            dto.setFirst(String.format("您已在%s自提成功!\n",delivery.getAirportName()));
+        }
+        dto.setFirstColor(gold_color);
+        dto.getData().put("keyword1", new TemplateData(stockDtos.get(0).getOrderId().toString(), color));
+        dto.getData().put("keyword2", new TemplateData(map.get("productName").toString(), color));
+        dto.getData().put("keyword3", new TemplateData(delivery.getContactName()+delivery.getMobile()+"",color));
+        dto.setRemark("\n金色严选祝您生活愉快!");
+        dto.setRemarkColor(gold_color);
+        if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
+            dto.setUrl(String.format("%s%s/delivery/%s", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath(),delivery.getDeliveryId()));
+
+        }
+        if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
+            dto.setUrl(String.format("%s%s/delivery", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
+        }
+
+        return dto;
+    }
+
+
+
     public static Map GetProduct(List<StockDto> stockDtos) {
 
         Map<String, Object> map = new HashMap<>();
@@ -409,7 +513,7 @@ public class TemplateDto extends BaseDto {
         StringBuilder name = new StringBuilder();
 
         for (StockDto stockDto : stockDtos) {
-            name.append(stockDto.getProductDto().getProductName()+"*"+stockDto.getNumber() + ",");
+            name.append(stockDto.getProductDto().getProductName() + "*" + stockDto.getNumber() + ",");
         }
 
         if (name.length() > 0) {

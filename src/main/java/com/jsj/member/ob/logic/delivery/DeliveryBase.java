@@ -5,12 +5,14 @@ import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.entity.Stock;
+import com.jsj.member.ob.entity.Wechat;
 import com.jsj.member.ob.enums.DeliveryStatus;
 import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
+import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
@@ -20,7 +22,9 @@ import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class DeliveryBase {
 
@@ -143,8 +147,15 @@ public abstract class DeliveryBase {
         TemplateDto temp = TemplateDto.OpenCardConfirm(deliveryDto);
         wxSender.sendNormal(temp);
 
-        //TODO 给微信接收者发送待处理开卡模板
-        //示例： 新[月体验卡]开卡申请，请及时处理开卡操作。
+        // 给微信接收者发送待处理开卡模板
+        Map map = new HashMap();
+        map.put("title","客户已申请开卡,请及时核对处理开卡!\n");
+        map.put("productName",deliveryDto.getProductDtos().get(0).getProductName());
+        List<Wechat> wechats = WechatLogic.GetNotifyWechat();
+        for (Wechat wechat : wechats) {
+            TemplateDto temp2 = TemplateDto.HandleDelivery(wechat, map, stockDtos);
+            wxSender.sendNormal(temp2);
+        }
 
         return resp;
     }

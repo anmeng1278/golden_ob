@@ -88,7 +88,7 @@ public class ExportExcelController {
             row.createCell(10).setCellValue(delivery.getFlightNumber());
             row.createCell(11).setCellValue(delivery.getAirportCode());
             row.createCell(12).setCellValue(delivery.getAirportName());
-            row.createCell(13).setCellValue(delivery.getEffectiveDate());
+            row.createCell(13).setCellValue(DateUtils.formatDateByUnixTime(Long.valueOf(delivery.getEffectiveDate()), "yyyy-MM-dd HH:mm:ss"));
             row.createCell(14).setCellValue(DateUtils.formatDateByUnixTime(Long.valueOf(delivery.getCreateTime()), "yyyy-MM-dd HH:mm:ss"));
             row.createCell(15).setCellValue(PropertyType.valueOf(delivery.getPropertyTypeId()).getMessage());
             row.createCell(16).setCellValue(DeliveryType.valueOf(delivery.getTypeId()).getMessage());
@@ -120,7 +120,7 @@ public class ExportExcelController {
                             HttpServletResponse response) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("订单信息表");
-        String[] headers = {"订单编号", "类型", "用户昵称", "openId", "数量", "金额", "状态", "创建时间", "商品名称", "规格", "数量"};
+        String[] headers = {"订单编号", "类型", "用户昵称", "openId", "商品样数", "金额", "状态", "创建时间", "商品名称", "规格", "数量"};
 
         EntityWrapper<Order> wrapper = new EntityWrapper<>();
 

@@ -15,6 +15,8 @@ import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.delivery.DeliveryBase;
 import com.jsj.member.ob.logic.delivery.DeliveryFactory;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
+import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
 import com.jsj.member.ob.service.StockService;
@@ -47,6 +49,9 @@ public class DeliveryLogic extends BaseLogic {
 
     @Autowired
     StockService stockService;
+
+    @Autowired
+    WxSender wxSender;
 
     //region (public) 获取未发货数 GetUnDeliveryCount
 
@@ -450,14 +455,12 @@ public class DeliveryLogic extends BaseLogic {
             stock.setStatus(StockStatus.SIGNED.getValue());
             deliveryLogic.stockService.updateById(stock);
 
-            //TODO 发送活动码核销成功
-            //用户持活动码进厅，员工验证活动码下单后，调用起方法
-            //机场名称 requ.getAirportName() 贵宾厅名称 requ.getVipHallName()
-            //示例：感谢您使用金色世纪贵宾厅服务，祝你旅途愉快
-            //delivery.getOpenId();
+            // 发送活动码核销成功
+            TemplateDto temp = TemplateDto.VerifySuccessed(delivery,requ);
+            deliveryLogic.wxSender.sendNormal(temp);
+
 
         }
-
 
         resp.setRespCd("0000");
         resp.setRespMsg("核销成功");

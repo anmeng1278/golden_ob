@@ -87,7 +87,7 @@ public class AdminDeliveryController {
         }
         wrapper.where(!StringUtils.isBlank(keys), "(express_number like concat(concat('%',{0}),'%') or mobile like concat(concat('%',{0}),'%') or contact_name like concat(concat('%',{0}),'%') or open_id like concat(concat('%',{0}),'%')  )", keys);
 
-        wrapper.orderBy("create_time desc");
+        wrapper.orderBy("create_time desc,status asc");
 
         Page<Delivery> pageInfo = new Page<>(page, limit);
         Page<Delivery> pp = deliveryService.selectPage(pageInfo, wrapper);

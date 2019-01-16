@@ -54,9 +54,9 @@ public class AdminCopywriterController {
 
         wrapper.where(!StringUtils.isBlank(keys),"remark like contact(concat('%',{0}),'%') )",keys);
 
-        wrapper.orderBy("ifpass desc");
+        wrapper.orderBy("create_time desc");
 
-        Page<Copywriter> pageInfo = new Page<>();
+        Page<Copywriter> pageInfo = new Page<>(page,limit);
         Page<Copywriter> pp = copywriterService.selectPage(pageInfo, wrapper);
 
         List<Dict> copywriterTypes = DictLogic.GetDicts(DictType.COPYWRITER);
