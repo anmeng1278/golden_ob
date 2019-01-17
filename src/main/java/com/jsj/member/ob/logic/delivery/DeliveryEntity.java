@@ -14,6 +14,7 @@ import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
+import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
@@ -78,6 +79,9 @@ public class DeliveryEntity extends DeliveryBase {
                 throw new TipException("请选择省份");
             }
             if (requ.getCityId() <= 0) {
+                throw new TipException("请选择城市");
+            }
+            if (requ.getDistrictId() <= 0) {
                 throw new TipException("请选择地区");
             }
             if (StringUtils.isEmpty(requ.getAddress())) {
@@ -129,14 +133,16 @@ public class DeliveryEntity extends DeliveryBase {
         TemplateDto temp1 = TemplateDto.EntityUseSuccessed(delivery, map, stockDtos);
         wxSender.sendNormal(temp1);
 
-        //TODO 要求省市区+输入的详细地址
-        String address = "";
+
         //给微信接收者发送待处理发货模板
         if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
-            map.put("title",  String.format("客户已申请配送,请尽快安排发货!\n\n客户姓名：%s\n手机号码：%s\n详情地址：%s",requ.getContactName(),requ.getMobile(), address));
+            String address = DictLogic.GetDict(requ.getProvinceId()).getDictName()+DictLogic.GetDict(requ.getCityId()).getDictName()+DictLogic.GetDict(requ.getDistrictId()).getDictName()+requ.getAddress();
+            map.put("title",  String.format("客户已申请配送,请尽快安排发货!\n\n客户姓名：%s\n手机号码：%s\n详细地址：%s",requ.getContactName(),requ.getMobile(), address));
         }
         if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
-            map.put("title", String.format("客户申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n\n客户姓名：%s\n手机号码：%s\n自提时间：%s\n自提网点：%s",requ.getContactName(),requ.getMobile(),delivery.getCreateTime(),delivery.getAirportName()));
+            //自提时间
+            String pickUpDate = DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getCreateTime() + ""), "yyyy-MM-dd hh:mm:ss");
+            map.put("title", String.format("客户已申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n\n客户姓名：%s\n手机号码：%s\n自提时间：%s\n自提网点：%s",requ.getContactName(),requ.getMobile(),pickUpDate,delivery.getAirportName()));
         }
         List<Wechat> wechats = WechatLogic.GetNotifyWechat();
         for (Wechat wechat : wechats) {
