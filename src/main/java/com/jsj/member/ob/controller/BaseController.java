@@ -1,11 +1,13 @@
 package com.jsj.member.ob.controller;
 
 import com.jsj.member.ob.config.Webconfig;
+import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.api.pay.PayDto;
 import com.jsj.member.ob.dto.http.UserSession;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeRequ;
 import com.jsj.member.ob.dto.thirdParty.GetPayTradeResp;
+import com.jsj.member.ob.entity.Admin;
 import com.jsj.member.ob.entity.WechatRelation;
 import com.jsj.member.ob.enums.OrderStatus;
 import com.jsj.member.ob.enums.SourceType;
@@ -15,6 +17,7 @@ import com.jsj.member.ob.redis.AccessKey;
 import com.jsj.member.ob.redis.RedisService;
 import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.SpringContextUtils;
 import com.jsj.member.ob.utils.TupleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +106,28 @@ public abstract class BaseController {
         return (UserSession) wx;
 
     }
+
+
+    /**
+     * 获取管理员信息
+     *
+     * @return
+     */
+    public Admin Admin() {
+
+        if (SpringContextUtils.getActiveProfile().equals("dev")) {
+            Admin admin = new Admin();
+            admin.setAdminId(1);
+            admin.setLoginName("管理员");
+            return admin;
+        }
+
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest request = attr.getRequest();
+
+        return (Admin) request.getSession().getAttribute(Constant.LOGIN_SESSION_ADMIN_KEY);
+    }
+
 
     @Autowired
     protected Webconfig webconfig;

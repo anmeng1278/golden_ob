@@ -80,7 +80,7 @@ public class AdminWechatController extends BaseController {
      */
     @GetMapping(value = {"", "/index"})
     public String index(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                        @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+                        @RequestParam(value = "limit", defaultValue = "20") Integer limit,
                         @RequestParam(value = "keys", defaultValue = "") String keys,
                         Model model
     ) {
@@ -111,7 +111,7 @@ public class AdminWechatController extends BaseController {
     @RequestMapping(value = "/{openId}/stock", method = RequestMethod.GET)
     public String stock(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
-            @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+            @RequestParam(value = "limit", defaultValue = "30") Integer limit,
             @PathVariable("openId") String openId,
             @RequestParam(value = "stockStatus", defaultValue = "-1") Integer stockStatus,
             @RequestParam(value = "stockType", defaultValue = "-1") Integer stockType,
@@ -307,7 +307,7 @@ public class AdminWechatController extends BaseController {
     @ResponseBody
     public RestResponseBo createOrder(HttpServletRequest request) {
 
-        Admin admin = (Admin) request.getSession().getAttribute(Constant.LOGIN_SESSION_ADMIN_KEY);
+        Admin admin = this.Admin();
 
         String openId = request.getParameter("openId");
         String p = request.getParameter("p");
