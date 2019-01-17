@@ -386,23 +386,34 @@ public class AdminProductController {
 
         Product product = productService.selectById(id);
 
-        if (method.equals("ifpass")) {
-            product.setIfpass(!product.getIfpass());
-            productService.updateById(product);
-        }
-
-        if (method.equals("delete")) {
-            product.setDeleteTime(DateUtils.getCurrentUnixTime());
-            productService.updateById(product);
-        }
-
-        if (method.equals("up") || method.equals("down")) {
-            ProductLogic.Sort(id, method.equals("up"));
-        }
-        if (method.equals("top")) {
-            product.setSort(0);
-            product.setUpdateTime(DateUtils.getCurrentUnixTime());
-            productService.updateById(product);
+        switch (method){
+            case "ifpass":{
+                product.setIfpass(!product.getIfpass());
+                productService.updateById(product);
+            }
+            break;
+            case "delete":{
+                product.setDeleteTime(DateUtils.getCurrentUnixTime());
+                productService.updateById(product);
+            }
+            break;
+            case "up":
+            case "down":{
+                ProductLogic.Sort(id, method.equals("up"));
+            }
+            break;
+            case "top":{
+                product.setSort(0);
+                product.setUpdateTime(DateUtils.getCurrentUnixTime());
+                productService.updateById(product);
+            }
+            break;
+            case "bottom":{
+                Integer maxSort = productService.getMaxSort(product.getTypeId());
+                product.setSort(maxSort+1);
+                product.setUpdateTime(DateUtils.getCurrentUnixTime());
+                productService.updateById(product);
+            }
         }
 
         return RestResponseBo.ok("操作成功");

@@ -1,11 +1,9 @@
 package com.jsj.member.ob.dao;
 
-import com.jsj.member.ob.entity.Product;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.jsj.member.ob.entity.Product;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import com.baomidou.mybatisplus.plugins.Page;
-
-import java.util.List;
 
 /**
  *   @description : Product Mapper 接口
@@ -16,4 +14,5 @@ import java.util.List;
 @Repository
 public interface ProductMapper extends BaseMapper<Product> {
 
+   Integer getMaxSort(@Param("typeId") int typeId);
 }

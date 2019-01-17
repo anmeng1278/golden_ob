@@ -469,4 +469,14 @@ public class ProductLogic extends BaseLogic {
 
     }
 
+    public static Integer GetMaxSort(int typeId){
+
+        EntityWrapper<Product> wrapper = new EntityWrapper<>();
+        wrapper.where("type_id = {0}", typeId);
+        wrapper.where("delete_time is null");
+        wrapper.orderBy("sort asc, update_time desc");
+        List<Product> products = productLogic.productService.selectList(wrapper);
+        return 2;
+    }
+
 }

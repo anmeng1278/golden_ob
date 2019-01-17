@@ -75,14 +75,14 @@
                     <th style="width: 5%;">编号</th>
                     <th>商品图片</th>
                     <th>商品名称</th>
-                    <th style="width: 10%;">类型</th>
-                    <th style="width: 8%;">属性</th>
+                    <th style="width: 8%;">类型</th>
+                    <th style="width: 10%;">属性</th>
                     <th style="width: 5%;">售价</th>
                     <th style="width: 5%;">原价</th>
                     <th style="width: 5%;">库存</th>
-                    <th style="width: 15%;">创建时间<br/>更新时间</th>
+                    <th style="width: 12%;">创建时间<br/>更新时间</th>
                     <th style="width: 5%;"></th>
-                    <th style="width: 20%;">操作</th>
+                    <th style="width: 22%;">操作</th>
                 </tr>
                 </thead>
                 <tbody id="content">
@@ -142,6 +142,9 @@
                                 <button th:attr="data-id=${info.productId}" data-method='down'
                                         class="layui-btn layui-btn-normal layui-btn-xs"><i
                                         class="layui-icon">&#xe61a;</i></button>
+
+                                <button th:attr="data-id=${info.productId}" data-method='bottom'
+                                        class="layui-btn layui-btn-normal layui-btn-xs">置尾</button>
                             </th:block>
 
                             <a th:title="|${info.productName} 商品详情|"
@@ -163,7 +166,6 @@
                                 <i class="layui-icon">&#xe640;</i>
                                 删除
                             </button>
-
                         </td>
                     </tr>
                 </th:block>
@@ -194,13 +196,17 @@
                     });
                 }
 
-                if (method == "ifpass") {
+                if (method == "ifpass" || method == "up" || method == "down" || method == "bottom" ) {
                     modifyStatus(method, id);
                 }
 
-                if (method == "up" || method == "down") {
+               /* if (method == "up" || method == "down") {
                     modifyStatus(method, id);
                 }
+
+                if (method == "bottom") {
+                    modifyStatus(method, id);
+                }*/
 
             });
 
@@ -209,8 +215,8 @@
                 if ($(this).index() == 0) {
                     return;
                 }
-                var method="top";
-                var id=$(this).find('button[data-method]').attr("data-id");
+                var method = "top";
+                var id = $(this).find('button[data-method]').attr("data-id");
                 modifyStatus(method, id);
 
             });

@@ -14,5 +14,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements ProductService {
-	
+
+    @Override
+    public Integer getMaxSort(int typeId) {
+        return baseMapper.getMaxSort(typeId);
+    }
 }
