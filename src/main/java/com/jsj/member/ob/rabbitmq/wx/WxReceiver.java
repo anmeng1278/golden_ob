@@ -21,21 +21,24 @@ public class WxReceiver {
     @RabbitListener(queues = WxConfig.WX_NORMAL_QUEUE)
     public void sendMessage(TemplateDto dto, Channel channel, Message message) throws IOException {
 
-        logger.info(JSON.toJSONString(dto));
-
         try {
+
             if (dto.getTemplateType().equals(TemplateType.SERVICE)) {
                 ThirdPartyLogic.SendWxMessage(dto.getToUser(), dto.getRemark());
             } else {
                 String templdateId = this.templateId(dto.getTemplateType());
                 if (org.apache.commons.lang3.StringUtils.isEmpty(templdateId)) {
-                    return;
+                    throw new Exception("消息模板编号不能为空");
                 }
                 dto.setTemplateId(templdateId);
                 ThirdPartyLogic.SendWxTemplate(dto);
+
+                logger.info(String.format("消息推送成功 %s", JSON.toJSONString(dto)));
+
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            logger.info(String.format("消息推送失败 %s %s", JSON.toJSONString(dto), JSON.toJSONString(ex)));
         } finally {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         }
@@ -124,9 +127,6 @@ public class WxReceiver {
      */
     @Value(value = "${webconfig.WxTemplate.DeliverySuccessed}")
     private String DeliverySuccessedTemplateId;
-
-
-
 
 
 }

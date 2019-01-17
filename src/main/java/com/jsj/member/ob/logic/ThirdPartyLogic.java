@@ -419,11 +419,11 @@ public class ThirdPartyLogic extends BaseLogic {
             GetAccessTokenRequ requ = new GetAccessTokenRequ();
             GetAccessTokenResp resp;
 
-            if (SpringContextUtils.getActiveProfile().equals("dev")) {
-                resp = ThirdPartyLogic.GetAccessTokenDev(null);
-            } else {
+            //if (SpringContextUtils.getActiveProfile().equals("dev")) {
+            //    resp = ThirdPartyLogic.GetAccessTokenDev(null);
+            //} else {
                 resp = ThirdPartyLogic.GetAccessToken(requ);
-            }
+            //}
 
             String accessToken = resp.getResponseBody().getAccessToken();
             //accessToken = "15_4CEnte3ggbs9c7ofUjlUaBgn5dtPdRuT_nPV_ATLALAwjKWlUF9h_TXG0JJcc-n_MO_gh3NIwCd7fskxfQg5Ru5xUoMVadhBc5rfTFtOFVpWISIHgUCwzeOEFGaK1-hUy2QK44YMWBQFRBSDBLOfAEARBE";

@@ -129,12 +129,14 @@ public class DeliveryEntity extends DeliveryBase {
         TemplateDto temp1 = TemplateDto.EntityUseSuccessed(delivery, map, stockDtos);
         wxSender.sendNormal(temp1);
 
+        //TODO 要求省市区+输入的详细地址
+        String address = "";
         //给微信接收者发送待处理发货模板
         if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
-            map.put("title",  String.format("客户已申请配送,请尽快安排发货!\n\n姓名：%s\n手机号：%s",requ.getContactName(),requ.getMobile()));
+            map.put("title",  String.format("客户已申请配送,请尽快安排发货!\n\n客户姓名：%s\n手机号码：%s\n详情地址：%s",requ.getContactName(),requ.getMobile(), address));
         }
         if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
-            map.put("title", String.format("客户已在%s申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n\n姓名：%s\n手机号：%s\n自提时间：%s\n自提点：%s",requ.getAirportName(),requ.getContactName(),requ.getMobile(),delivery.getCreateTime(),delivery.getAirportName()));
+            map.put("title", String.format("客户申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n\n客户姓名：%s\n手机号码：%s\n自提时间：%s\n自提网点：%s",requ.getContactName(),requ.getMobile(),delivery.getCreateTime(),delivery.getAirportName()));
         }
         List<Wechat> wechats = WechatLogic.GetNotifyWechat();
         for (Wechat wechat : wechats) {
