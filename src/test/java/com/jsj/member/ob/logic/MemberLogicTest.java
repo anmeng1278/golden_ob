@@ -2,14 +2,19 @@ package com.jsj.member.ob.logic;
 
 import com.alibaba.fastjson.JSON;
 import com.googlecode.protobuf.format.JsonFormat;
+import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.proto.*;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.nio.charset.StandardCharsets;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@SpringBootTest(classes = App.class)
-//@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = App.class)
+@WebAppConfiguration
 public class MemberLogicTest {
 
     @Test
@@ -99,7 +104,7 @@ public class MemberLogicTest {
         StrictChoiceSearchResponseOuterClass.StrictChoiceSearchResponse resp = MemberLogic.StrictChoiceSearch(requ.build());
         System.out.println(resp.toBuilder().toString());
         System.out.println(resp.toString());
-        System.out.println(resp.getCurrentStrictChoice());
+        System.out.println("余额" + resp.getCurrentStrictChoice());
 
 
         System.out.println("***************");
