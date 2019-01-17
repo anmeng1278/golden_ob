@@ -42,5 +42,5 @@
 .shopping-price em{ font-size: 0.44rem; color: #C2191F; font-weight: 700;}
 .purchase-btn,.purchase-show-btn{ width: 40%; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #fff; background: #C2191F; float: left;}
 .purchase-btn-saleout{ background: #D7686B;width: 40%; height: 1.1rem; line-height: 1.1rem; text-align: center; font-size: 0.36rem; color: #fff; float: left;}
-
+.shopping-cart-btn{ background: #D7686B;}
 /*purchase-layer end*/

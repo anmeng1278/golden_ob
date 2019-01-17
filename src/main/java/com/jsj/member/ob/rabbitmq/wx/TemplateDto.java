@@ -426,6 +426,7 @@ public class TemplateDto extends BaseDto {
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(delivery.getMobile() + "", color));
         dto.getData().put("keyword2", new TemplateData("核销活动码", color));
+
         dto.setRemark("\n感谢您使用金色世纪贵宾厅服务，祝你旅途愉快!");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/delivery", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
@@ -436,7 +437,7 @@ public class TemplateDto extends BaseDto {
 
 
     /**
-     * 开卡发货待处理通知
+     * 开卡,发货待处理通知
      * @param wechat
      * @param map
      * @param stockDtos

@@ -148,8 +148,11 @@ public abstract class DeliveryBase {
         wxSender.sendNormal(temp);
 
         // 给微信接收者发送待处理开卡模板
+
+        //生效时间
+        String effectiveDate = DateUtils.formatDateByUnixTime(Long.parseLong(requ.getEffectiveDate() + ""), "yyyy-MM-dd");
         Map map = new HashMap();
-        map.put("title","客户已申请开卡,请及时核对处理开卡!\n");
+        map.put("title",String.format("客户已申请开卡,请核对开卡信息!\n\n客户姓名：%s\n身份证号：%s\n手机号码：%s\n生效时间：%s",requ.getContactName(),requ.getIdNumber(),requ.getMobile(),effectiveDate));
         map.put("productName",deliveryDto.getProductDtos().get(0).getProductName());
         List<Wechat> wechats = WechatLogic.GetNotifyWechat();
         for (Wechat wechat : wechats) {

@@ -10,6 +10,7 @@ import com.jsj.member.ob.entity.Wechat;
 import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.logic.DeliveryLogic;
+import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.service.DeliveryService;
@@ -104,45 +105,64 @@ public class TemplateDtoTest {
         requ.setSign(sign);
         requ.setVipHallName("RLK");
         requ.setAirportName("巴彦淖尔机场");
-        TemplateDto dto = TemplateDto.VerifySuccessed(delivery,requ );
+        TemplateDto dto = TemplateDto.VerifySuccessed(delivery, requ);
         wxSender.sendNormal(dto);
     }
 
     @Test
     public void handleDelivery() {
 
-        Delivery delivery = deliveryService.selectById(49);
+        Delivery delivery = deliveryService.selectById(48);
         List<StockDto> stockDtos = StockLogic.GetStocks(delivery.getOpenId());
 
         Map map = new HashMap();
+
+        //给微信接收者发送待处理发货模板
         if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
-            map.put("title","客户已申请配送,请尽快安排发货!\n");
+            String address = DictLogic.GetDict(delivery.getProvinceId()).getDictName()+DictLogic.GetDict(delivery.getCityId()).getDictName()+DictLogic.GetDict(delivery.getDistrictId()).getDictName()+delivery.getAddress();
+            map.put("title", String.format("客户已申请配送,请尽快安排发货!\n\n客户姓名：%s\n手机号码：%s\n详细地址：%s", delivery.getContactName(), delivery.getMobile(),address));
             map.put("productName", "超级大螃蟹");
         }
-        if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
-            map.put("title","客户已申请自提,请核对自提信息!\n");
+      /*  if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
+            //自提时间
+            String pickUpDate = DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getCreateTime() + ""), "yyyy-MM-dd hh:mm:ss");
+            map.put("title", String.format("客户已申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n\n客户姓名：%s\n手机号码：%s\n自提时间：%s\n自提网点：%s", delivery.getContactName(), delivery.getMobile(), pickUpDate, delivery.getAirportName()));
             map.put("productName", "超级大螃蟹");
-        }
+        }*/
         if(delivery.getPropertyTypeId() == PropertyType.NATION.getValue()){
-            map.put("title","客户已申请开卡,请核对开卡信息!\n");
+
+            //生效时间
+            String effectiveDate = DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getEffectiveDate() + ""), "yyyy-MM-dd");
+            map.put("title",String.format("客户已申请开卡,请核对开卡信息!\n\n客户姓名：%s\n身份证号：%s\n手机号码：%s\n生效时间：%s",delivery.getContactName(),delivery.getIdNumber(),delivery.getMobile(),effectiveDate));
             DeliveryDto deliveryDto = DeliveryLogic.GetDelivery(delivery.getDeliveryId());
             map.put("productName",deliveryDto.getProductDtos().get(0).getProductName());
+
         }
 
         List<Wechat> wechats = WechatLogic.GetNotifyWechat();
         for (Wechat wechat : wechats) {
             TemplateDto temp2 = TemplateDto.HandleDelivery(wechat, map, stockDtos);
             wxSender.sendNormal(temp2);
+            System.out.println(temp2.getToUser());
         }
+
+
     }
 
     @Test
     public void deliverySuccessed() {
+
+        DeliveryDto deliveryDto = DeliveryLogic.GetDelivery(60);
+        TemplateDto dto = TemplateDto.OpenCardSuccess(deliveryDto);
+        wxSender.sendNormal(dto);
+
         Delivery delivery = deliveryService.selectById(72);
         List<StockDto> stockDtos = DeliveryLogic.GetDeliveryStock(73);
         Map map = TemplateDto.GetProduct(stockDtos);
-        TemplateDto temp = TemplateDto.DeliverySuccessed(delivery,map, stockDtos);
+        TemplateDto temp = TemplateDto.DeliverySuccessed(delivery, map, stockDtos);
         wxSender.sendNormal(temp);
+
+
     }
 
 
