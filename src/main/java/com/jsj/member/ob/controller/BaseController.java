@@ -74,6 +74,17 @@ public abstract class BaseController {
     }
 
     /**
+     * 设置缓存
+     *
+     * @param accessKey
+     * @param content
+     * @return
+     */
+    public void SetAccessCache(AccessKey accessKey, String content) {
+        redisService.set(accessKey, accessKey.getPrefix(), content);
+    }
+
+    /**
      * 获取页面缓存
      *
      * @return

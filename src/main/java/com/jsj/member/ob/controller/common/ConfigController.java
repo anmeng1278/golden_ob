@@ -1,11 +1,14 @@
 package com.jsj.member.ob.controller.common;
 
 import com.jsj.member.ob.config.Webconfig;
+import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenRequ;
 import com.jsj.member.ob.dto.thirdParty.GetAccessTokenResp;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
+import com.jsj.member.ob.redis.AccessKey;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.HttpUtils;
 import com.jsj.member.ob.utils.SpringContextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,7 @@ import java.util.UUID;
 @ApiIgnore
 @Controller
 @RequestMapping("${webconfig.virtualPath}/config")
-public class ConfigController {
+public class ConfigController extends BaseController {
 
 
     @Autowired
@@ -71,6 +74,41 @@ public class ConfigController {
 
         return RestResponseBo.ok(hashMap);
 
+    }
+
+    /**
+     * 获取微信js
+     * @param request
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/jweixin")
+    @ResponseBody
+    public String jweixin(HttpServletRequest request) throws IOException {
+
+        String userAgent = request.getHeader("User-Agent");
+        Boolean mini = false;
+        if (!org.apache.commons.lang3.StringUtils.isEmpty(userAgent)) {
+            userAgent = userAgent.toLowerCase();
+            mini = userAgent.indexOf("miniprogram") > -1;
+        }
+
+        String url = "";
+        if (mini) {
+            url = "https://res.wx.qq.com/open/js/jweixin-1.4.0.js";
+        } else {
+            url = "https://res.wx.qq.com/open/js/jweixin-1.0.0.js";
+        }
+
+        AccessKey accessKey = new AccessKey(60 * 60 * 24 * 30, "jWeixin" + mini);
+        String js = this.GetAccessCache(accessKey);
+        if (!StringUtils.isEmpty(js)) {
+            return js;
+        }
+
+        js = HttpUtils.get(url);
+        this.SetAccessCache(accessKey, js);
+        return js;
     }
 }
 

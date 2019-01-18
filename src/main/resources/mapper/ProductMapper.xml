@@ -28,4 +28,7 @@
         product_id AS productId, product_name AS productName, type_id AS typeId, property_type_id AS propertyTypeId, introduce, use_intro AS useIntro, unit, remarks, gift_copywriting AS giftCopywriting, ifpickup, ifpass, ifdistribution, sort, opemployee_id AS opemployeeId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
+    <select id="getMaxSort" resultType="integer" parameterType="integer">
+        select max(sort) as sort from _product where delete_time is null and type_id=#{typeId}
+    </select>
 </mapper>

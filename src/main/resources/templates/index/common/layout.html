@@ -17,13 +17,11 @@
     <script type="text/javascript" th:src="${ob.Url('/index/js/leftTime.min.js', false)}"></script>
     <script type="text/javascript" th:src="${ob.Url('/common/plugins/jslinq.js', false)}"></script>
     <script type="text/javascript" th:src="${ob.Url('/index/js/size.js')}"></script>
-    <script th:if="${!mini}" type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    <!--<script th:if="${mini}" type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>-->
-    <script th:if="${mini}" type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+    <script type="text/javascript" th:src="${ob.Nav('/config/jweixin')}"></script>
     <script type="text/javascript" th:inline="javascript">
         var ob = {};
         ob.virtualPath = [[${virtualPath}]];
-        ob.mini = [[${mini}]];
+        ob.mini =  navigator.userAgent.toLowerCase().indexOf("miniprogram") > -1;
         ob.host = [[${host}]];
         ob.unRefresh = [[${unRefresh}]];
     </script>
