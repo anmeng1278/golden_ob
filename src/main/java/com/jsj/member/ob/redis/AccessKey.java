@@ -2,7 +2,7 @@ package com.jsj.member.ob.redis;
 
 public class AccessKey extends BasePrefix {
 
-    private AccessKey(int expireSeconds, String prefix) {
+    public AccessKey(int expireSeconds, String prefix) {
         super(expireSeconds, prefix);
     }
 
@@ -19,5 +19,6 @@ public class AccessKey extends BasePrefix {
      * 兑换页面缓存
      */
     public static AccessKey pageExchange = new AccessKey(7200, "pageExchange");
+
 
 }
