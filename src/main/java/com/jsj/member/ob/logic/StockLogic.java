@@ -71,7 +71,40 @@ public class StockLogic extends BaseLogic {
     //endregion
 
 
+    //region (public) 根据订单号获取库存信息 GetStocksByOrderId
 
+    /**
+     * 根据订单号获取库存信息
+     * @param orderId
+     * @return
+     */
+    public static List<StockDto> GetStocksByOrderId(int orderId) {
+
+        List<StockDto> stockDtos = new ArrayList<>();
+        Wrapper<Stock> wrapper = new EntityWrapper<>();
+        wrapper.where("order_id = {0} and delete_time is null", orderId);
+
+        List<Stock> stocks = stockLogic.stockService.selectList(wrapper);
+        if (stocks.size() == 0) {
+            return stockDtos;
+        }
+
+        stocks.forEach(entity -> {
+            StockDto stockDto = ToDto(entity);
+            stockDtos.add(stockDto);
+        });
+
+        return stockDtos;
+    }
+    //endregion
+
+    //region (public) 根据赠送编号获取库存列表 GetStocks
+
+    /**
+     * 根据赠送编号获取库存列表
+     * @param giftId
+     * @return
+     */
     public static List<StockDto> GetStocks(int giftId) {
 
         List<StockDto> stockDtos = new ArrayList<>();
@@ -99,6 +132,9 @@ public class StockLogic extends BaseLogic {
         return stockDtos;
 
     }
+    //endregion
+
+    //region (public) 通过所选使用的编号获取库存信息 GetStocks
 
     /**
      * 通过所选使用的编号获取库存信息
@@ -168,6 +204,9 @@ public class StockLogic extends BaseLogic {
         return stockDtos;
 
     }
+    //endregion
+
+    //region (public) 获取库存 GetStocks
 
     /**
      * 获取库存
@@ -244,7 +283,7 @@ public class StockLogic extends BaseLogic {
         }
         return stockDtos;
     }
-
+    //endregion
 
     //region (public) 订单支付成功添加库存 AddOrderStock
 
@@ -370,6 +409,8 @@ public class StockLogic extends BaseLogic {
     }
     //endregion
 
+    //region (public) 获库存取领取信 GetChild
+
     /**
      * 获库存取领取信
      *
@@ -385,6 +426,7 @@ public class StockLogic extends BaseLogic {
         }
         return null;
     }
+    //endregion
 
     //region (public) 获取库存流转 GetStockFlows
 
@@ -448,6 +490,7 @@ public class StockLogic extends BaseLogic {
     }
     //endregion
 
+    //region (public) 获取库存详情 GetStock
 
     /**
      * 获取库存详情
@@ -464,6 +507,9 @@ public class StockLogic extends BaseLogic {
         return stockDto;
 
     }
+    //endregion
+
+    //region (public) 获取库存数 GetStockCount
 
     /**
      * 获取库存数
@@ -483,21 +529,24 @@ public class StockLogic extends BaseLogic {
         return stockLogic.stockService.selectCount(wrapper);
 
     }
+    //endregion
 
+    //region (public) 获得库存中没样商品的数量 GetProductCount
 
     /**
      * 获得库存中没样商品的数量
+     *
      * @param productId
      * @param productSpecId
      * @param stockIds
      * @return
      */
-    public static Integer GetProductCount(String openId,int productId,int productSpecId,List<Integer> stockIds){
+    public static Integer GetProductCount(String openId, int productId, int productSpecId, List<Integer> stockIds) {
 
         EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
         productWrapper.where("product_id={0}", productId);
         productWrapper.where("product_spec_id={0}", productSpecId);
-        if(!StringUtils.isBlank(openId)){
+        if (!StringUtils.isBlank(openId)) {
             productWrapper.where("open_id={0}", openId);
         }
         productWrapper.in("stock_id", stockIds);
@@ -505,6 +554,9 @@ public class StockLogic extends BaseLogic {
 
         return number;
     }
+    //endregion
+
+    //region (public) ToDto 实体转换
 
     /**
      * 实体转换
@@ -555,19 +607,22 @@ public class StockLogic extends BaseLogic {
 
         return stockDto;
     }
+    //endregion
 
+    //region (public) 库存数据去重计算数量 FilterData
 
     /**
      * 库存数据去重计算数量
+     *
      * @param lists
      * @return
      */
-    public static List<StockDto> FilterData(List<StockDto> lists){
+    public static List<StockDto> FilterData(List<StockDto> lists) {
 
         List<Integer> stockIds = lists.stream().map(StockDto::getStockId).collect(Collectors.toList());
 
         lists.forEach(stockDto -> {
-                    Integer count = StockLogic.GetProductCount(stockDto.getOpenId(),stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
+                    Integer count = StockLogic.GetProductCount(stockDto.getOpenId(), stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
                     stockDto.setNumber(count);
                 }
         );
@@ -578,4 +633,5 @@ public class StockLogic extends BaseLogic {
 
         return stockDtos;
     }
+    //endregion
 }

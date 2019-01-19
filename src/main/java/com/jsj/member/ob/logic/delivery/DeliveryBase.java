@@ -152,8 +152,8 @@ public abstract class DeliveryBase {
         //生效时间
         String effectiveDate = DateUtils.formatDateByUnixTime(Long.parseLong(requ.getEffectiveDate() + ""), "yyyy-MM-dd");
         Map map = new HashMap();
-        map.put("title",String.format("客户已申请开卡,请核对开卡信息!\n\n客户姓名：%s\n身份证号：%s\n手机号码：%s\n生效时间：%s",requ.getContactName(),requ.getIdNumber(),requ.getMobile(),effectiveDate));
-        map.put("productName",deliveryDto.getProductDtos().get(0).getProductName());
+        map.put("title", String.format("客户已申请开卡,请核对开卡信息!\n\n客户姓名：%s\n身份证号：%s\n手机号码：%s\n生效时间：%s", requ.getContactName(), requ.getIdNumber(), requ.getMobile(), effectiveDate));
+        map.put("productName", deliveryDto.getProductDtos().get(0).getProductName());
         List<Wechat> wechats = WechatLogic.GetNotifyWechat();
         for (Wechat wechat : wechats) {
             TemplateDto temp2 = TemplateDto.HandleDelivery(wechat, map, stockDtos);
@@ -228,7 +228,6 @@ public abstract class DeliveryBase {
     }
     //endregion
 
-
     //region (public) 发货、开卡、创建活动码 OpreationDelivery
 
     /**
@@ -238,6 +237,22 @@ public abstract class DeliveryBase {
      * @return
      */
     public abstract OpreationDeliveryResp OpreationDelivery(OpreationDeliveryRequ requ);
+    //endregion
+
+    //region (public) 验证使用库存 validateUsed
+
+    /**
+     * 验证使用库存
+     *
+     * @param stockDtos
+     */
+    public void validateUsed(List<StockDto> stockDtos) {
+
+        if (stockDtos == null || stockDtos.isEmpty()) {
+            throw new TipException("使用库存不能为空");
+        }
+
+    }
     //endregion
 
 }

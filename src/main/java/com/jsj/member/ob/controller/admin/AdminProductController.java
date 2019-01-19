@@ -13,6 +13,7 @@ import com.jsj.member.ob.entity.ProductSpec;
 import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.enums.ProductImgType;
 import com.jsj.member.ob.enums.PropertyType;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DictLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.service.ProductImgService;
@@ -163,12 +164,16 @@ public class AdminProductController {
         //商品属性
         int propertyTypeId = Integer.valueOf(request.getParameter("propertyTypeId"));
 
+        //商品属性
         PropertyType propertyType = PropertyType.valueOf(propertyTypeId);
 
         //简介
         String introduce = request.getParameter("introduce");
         //使用说明
         String useIntro = request.getParameter("useIntro");
+        if(StringUtils.isEmpty(useIntro)){
+            throw new TipException("请输入使用说明");
+        }
         //单位
         String unit = request.getParameter("unit");
         //备注

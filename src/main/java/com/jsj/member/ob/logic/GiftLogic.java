@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.gift.*;
+import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
 import com.jsj.member.ob.entity.Gift;
@@ -90,6 +91,11 @@ public class GiftLogic extends BaseLogic {
             int number = dto.getNumber();
             if (number <= 0) {
                 continue;
+            }
+
+            ProductDto productDto = ProductLogic.GetProduct(dto.getProductId());
+            if (productDto.getPropertyType().equals(PropertyType.PLUS)) {
+                throw new TipException("Plus权益不允许赠送");
             }
 
             EntityWrapper<Stock> wrapper = new EntityWrapper<>();
@@ -845,7 +851,7 @@ public class GiftLogic extends BaseLogic {
             if (StringUtils.isEmpty(blessings)) {
                 throw new TipException("请输入赠送祝福语");
             }
-            if(blessings.length() > 255){
+            if (blessings.length() > 255) {
                 throw new TipException("赠送祝福语不能超过255个字符");
             }
 

@@ -1,0 +1,18 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseRequest.proto";
+import "UpgradeService.proto";
+import "EServiceSource.proto";
+
+message AddServiceRequest {
+   optional BaseRequest BaseRequest = 1;
+   optional int32 CustomerId = 2 [default = 0];
+   optional UpgradeService ServiceId = 3 [default = NotSet];
+   optional string CardId = 4;
+   optional int64 OperaTime = 5 [default = 0];
+   optional int32 OperapersonId = 6 [default = 0];
+   optional int64 StartTime = 7 [default = 0];
+   optional int64 EndTime = 8 [default = 0];
+   optional string OrderID = 9;
+   optional EServiceSource OrderSource = 10 [default = ServiceSourceNotSet];
+}

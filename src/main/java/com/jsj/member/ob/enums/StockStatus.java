@@ -52,6 +52,16 @@ public enum StockStatus implements IEnum {
                         return this.getMessage();
                 }
             }
+            case PLUS:
+            {
+                switch (this){
+                    case SENT:
+                    case SIGNED:
+                        return "已开通";
+                    default:
+                        return this.getMessage();
+                }
+            }
             default:
                 throw new FatalException("未知的枚举值");
         }

@@ -82,6 +82,7 @@ $(function () {
 function disabledUseBtn() {
 
     $("a.use-btn").removeClass("disabled-use-btn");
+    $("a.share-btn").removeClass("disabled-use-btn");
 
     var totalNum = 0;
     var propertyTypeIds = [];
@@ -102,10 +103,15 @@ function disabledUseBtn() {
         $("a.use-btn").addClass("disabled-use-btn");
     } else if (propertyTypeIds.length == 1) {
         //活动码、会员卡，选择数量大于1时不允许使用
-        if ($.inArray(propertyTypeIds[0], [2, 3]) > -1 && totalNum > 1) {
+        if ($.inArray(propertyTypeIds[0], [2, 34, 46, 47, 41]) > -1 && totalNum > 1) {
             $("a.use-btn").addClass("disabled-use-btn");
         }
     }
+
+    if ($.inArray(41, propertyTypeIds) > -1) {
+        $("a.share-btn").addClass("disabled-use-btn");
+    }
+
     $("span.selected-num").html(totalNum);
 
 }

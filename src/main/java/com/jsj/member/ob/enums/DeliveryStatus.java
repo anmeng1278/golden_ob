@@ -63,6 +63,16 @@ public enum DeliveryStatus implements IEnum {
                         throw new FatalException("未知的枚举值");
                 }
             }
+            case PLUS:
+                switch (this) {
+                    case UNDELIVERY:
+                    case DELIVERED:
+                        return "未开通";
+                    case SIGNED:
+                        return "已开通";
+                    default:
+                        throw new FatalException("未知的枚举值");
+                }
             default:
                 throw new FatalException("未知的枚举值");
         }

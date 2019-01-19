@@ -241,6 +241,44 @@ public class MemberLogic {
     }
     //endregion
 
+
+    //region (public) 开通Plus权益 CreatePlus
+
+    /**
+     * 开通Plus权益
+     *
+     * @return
+     */
+    public static AddServiceResponseOuterClass.AddServiceResponse CreatePlus( AddServiceRequestOuterClass.AddServiceRequest requ) {
+
+        AddServiceResponseOuterClass.AddServiceResponse resp =  AddServiceResponseOuterClass.AddServiceResponse.getDefaultInstance();
+
+        try {
+
+            String url = memberLogic.webconfig.getMemberApiUrl();
+            ZRequestOuterClass.ZRequest.Builder zRequest = ZRequestOuterClass.ZRequest.newBuilder();
+            zRequest.setMethodName("AddService");
+            zRequest.setZPack(requ.toByteString());
+
+            ZResponseOuterClass.ZResponse.Builder zResponse = HttpUtils.protobuf(zRequest, url);
+            if (zResponse.getIsSuccess()) {
+                resp = AddServiceResponseOuterClass.AddServiceResponse.parseFrom(zResponse.getZPack());
+            } else {
+                throw new Exception(zResponse.getExceptionMessage());
+            }
+            memberLogic.logger.info(String.format("%s %s %s", url, JsonFormat.printToString(requ), JsonFormat.printToString(resp)));
+
+        } catch (Exception ex) {
+            memberLogic.logger.error(String.format("会员组接口失败：%s %s", JsonFormat.printToString(requ), JSON.toJSONString(ex)));
+            ex.printStackTrace();
+        }
+        return resp;
+
+    }
+    //endregion
+
+
+
     //region (public) 严选资产余额 StrictChoiceSearch
 
     /**

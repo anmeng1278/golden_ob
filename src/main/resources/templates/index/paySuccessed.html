@@ -11,6 +11,8 @@
         //分享到发红包页面
         var shareUrl = [[${shareUrl}]];
         var shareTitle = "送给您一个拼手气红包";
+        var propertyTypeId = [[${propertyTypeId}]];
+        var p =  [[${p}]];
 
         shareConfig = {
             title: shareTitle,
@@ -24,10 +26,41 @@
             $("a.share-btn").click(function () {
                 ob.share();
             });
+
+
+            $("#btnValidateUsed").click(function () {
+
+                if (!p || !propertyTypeId) {
+                    return;
+                }
+
+                var json = encodeURI(JSON.stringify(p));
+                //使用前验证
+                TX.CORE.p({
+                    url: "/stock/validateUsed",
+                    data: {
+                        p: json,
+                        propertyTypeId: propertyTypeId
+                    },
+                    success: function (resp) {
+                        if (resp.baseResp.success) {
+                            location.href = resp.baseResp.url;
+                        } else {
+                            TX.MSG.msg(resp.baseResp.message, {icon: 2}, function () {
+                                if (resp.baseResp.url) {
+                                    location.href = resp.baseResp.url;
+                                } else {
+                                    location.href = location.href;
+                                }
+                            });
+                        }
+                    }
+                })
+            });
+
         });
 
     </script>
-
 
 
 </th:block>
@@ -41,6 +74,8 @@
 
     <div class="pay-success">
         <span class="pay-success-title">支付成功 商品已放入库存</span>
+        <a href="javascript:;" th:if="${createPlus}" class="look-stock-btn" id="btnValidateUsed"
+           style="margin-bottom: 10px;">立即开通</a>
         <a th:href="${ob.Nav('/stock')}" class="look-stock-btn">查看库存</a>
         <div class="share-hongbao">
             <a href="javascript:void(0);" class="share-btn">分享给好友</a>

@@ -43,12 +43,14 @@ public class OrderSeckill extends OrderBase {
                             OrderProductService orderProductService,
                             ActivityService activityService,
                             ActivityOrderService activityOrderService,
+                            ProductService productService,
                             WxSender wxSender
     ) {
         super.orderService = orderService;
         super.orderProductService = orderProductService;
         super.activityService = activityService;
         super.activityOrderService = activityOrderService;
+        super.productService = productService;
         super.wxSender = wxSender;
     }
 

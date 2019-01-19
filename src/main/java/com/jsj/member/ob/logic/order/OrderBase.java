@@ -9,9 +9,11 @@ import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.proto.*;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
+import com.jsj.member.ob.entity.Product;
 import com.jsj.member.ob.entity.Stock;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.OrderStatus;
+import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.MemberLogic;
@@ -19,10 +21,7 @@ import com.jsj.member.ob.logic.RedpacketLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
-import com.jsj.member.ob.service.ActivityOrderService;
-import com.jsj.member.ob.service.ActivityService;
-import com.jsj.member.ob.service.OrderProductService;
-import com.jsj.member.ob.service.OrderService;
+import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,6 +44,7 @@ public abstract class OrderBase {
     OrderProductService orderProductService;
     ActivityService activityService;
     ActivityOrderService activityOrderService;
+    ProductService productService;
 
     @Autowired
     WxSender wxSender;
@@ -53,6 +53,11 @@ public abstract class OrderBase {
      * 是否允许使用代金券
      */
     private boolean canUseCoupon;
+
+    /**
+     * 是否允许创建plus订单
+     */
+    private boolean canCreatePlus;
 
     public OrderBase(ActivityType ot) {
         this.activityType = ot;
@@ -170,6 +175,18 @@ public abstract class OrderBase {
             throw new TipException(String.format("当前订单类型不允许使用优惠券，订单类型：%s", this.activityType.getMessage()));
         }
 
+        //验证购买条件
+        requ.getOrderProductDtos().forEach(o -> {
+            Product product = productService.selectById(o.getProductId());
+            if (product.getPropertyTypeId().equals(PropertyType.PLUS.getValue())) {
+                if (!this.isCanCreatePlus()) {
+                    throw new TipException("暂不允许购买Plus券");
+                }
+                if (requ.getBaseRequ().getJsjId() <= 0) {
+                    throw new TipException("不符合购买Plus券条件");
+                }
+            }
+        });
 
     }
 
@@ -242,5 +259,14 @@ public abstract class OrderBase {
 
         return 0;
 
+    }
+
+
+    public boolean isCanCreatePlus() {
+        return canCreatePlus;
+    }
+
+    public void setCanCreatePlus(boolean canCreatePlus) {
+        this.canCreatePlus = canCreatePlus;
     }
 }

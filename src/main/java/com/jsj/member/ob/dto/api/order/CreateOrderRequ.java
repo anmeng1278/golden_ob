@@ -127,4 +127,5 @@ public class CreateOrderRequ {
     public void setSourceType(SourceType sourceType) {
         this.sourceType = sourceType;
     }
+
 }
