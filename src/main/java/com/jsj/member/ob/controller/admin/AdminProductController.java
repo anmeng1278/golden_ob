@@ -419,6 +419,7 @@ public class AdminProductController {
                 product.setUpdateTime(DateUtils.getCurrentUnixTime());
                 productService.updateById(product);
             }
+            break;
         }
 
         return RestResponseBo.ok("操作成功");
