@@ -1,0 +1,51 @@
+package com.jsj.member.ob.dto.proto;
+
+import "Servers.proto";
+
+message CustomerInfoNew {
+   optional int32 CustomerID = 1 [default = 0];
+   optional string CustomerName = 2;
+   optional string CustomerClass = 3;
+   optional string CustomerRegiestTime = 4;
+   optional string CardID = 5;
+   optional int32 CardTypeID = 6 [default = 0];
+   optional string CardTypeName = 7;
+   optional string CardInvalidDate = 8;
+   optional double Dividend = 9 [default = 0];
+   optional double CustPoint = 10 [default = 0];
+   optional double CustVoucher = 11 [default = 0];
+   optional double CustTravelFundNum = 12 [default = 0];
+   optional string Contactmeans = 13;
+   optional string Certificate = 14;
+   optional string CertificateType = 15;
+   optional int32 CustomerSex = 16 [default = 0];
+   optional string CustomerBirth = 17;
+   optional string GuaranteeNo = 18;
+   optional int32 CustType = 19 [default = 0];
+   optional string CustomerAvatar = 20;
+   optional string CustEmail = 21;
+   optional string CustomerQRCode = 22;
+   optional string EnterLowestPoint = 23;
+   optional string EnterLowestVoucher = 24;
+   optional string EnterLowestMoney = 25;
+   optional int32 CertificateTypeID = 26 [default = 0];
+   optional bool IsCustomerPrice = 27 [default = false];
+   optional bool IsHasInsurance = 28 [default = false];
+   optional string RenewNoActiceCard = 29;
+   optional string Token = 30;
+   optional int32 DeducTibleDetailsNum = 31 [default = 0];
+   optional double DepositNum = 32 [default = 0];
+   optional int32 UserMealNum = 33 [default = 0];
+   optional int32 IsBigCustomer = 34 [default = 0];
+   optional int32 StarType = 35 [default = 0];
+   optional int32 EnterNum = 36 [default = 0];
+   optional int32 CheckeInNum = 37 [default = 0];
+   optional double LockDeposit = 38 [default = 0];
+   optional int32 ReNewNonexecutionNum = 39 [default = 0];
+   repeated Servers ServerList = 40;
+   optional string CardTypeShortName = 41;
+   optional int32 ConstructionVoucher = 42 [default = 0];
+   optional bool IsHasVIPManager = 43 [default = false];
+   optional string VIPOtherName = 44;
+   optional double StrictChoiceNum = 45 [default = 0];
+}

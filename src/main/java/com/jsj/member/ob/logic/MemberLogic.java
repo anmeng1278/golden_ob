@@ -249,9 +249,9 @@ public class MemberLogic {
      *
      * @return
      */
-    public static AddServiceResponseOuterClass.AddServiceResponse CreatePlus( AddServiceRequestOuterClass.AddServiceRequest requ) {
+    public static AddServiceResponseOuterClass.AddServiceResponse CreatePlus(AddServiceRequestOuterClass.AddServiceRequest requ) {
 
-        AddServiceResponseOuterClass.AddServiceResponse resp =  AddServiceResponseOuterClass.AddServiceResponse.getDefaultInstance();
+        AddServiceResponseOuterClass.AddServiceResponse resp = AddServiceResponseOuterClass.AddServiceResponse.getDefaultInstance();
 
         try {
 
@@ -278,6 +278,40 @@ public class MemberLogic {
     //endregion
 
 
+    //region (public) 查询会员信息 CustomerInformation
+
+    /**
+     * 查询会员信息
+     *
+     * @return
+     */
+    public static CustomerInformationResponseOuterClass.CustomerInformationResponse CustomerInformation(CustomerInformationRequestOuterClass.CustomerInformationRequest requ) {
+
+        CustomerInformationResponseOuterClass.CustomerInformationResponse resp = CustomerInformationResponseOuterClass.CustomerInformationResponse.getDefaultInstance();
+
+        try {
+
+            String url = memberLogic.webconfig.getMemberApiUrl();
+            ZRequestOuterClass.ZRequest.Builder zRequest = ZRequestOuterClass.ZRequest.newBuilder();
+            zRequest.setMethodName("GetCustomerInfo");
+            zRequest.setZPack(requ.toByteString());
+
+            ZResponseOuterClass.ZResponse.Builder zResponse = HttpUtils.protobuf(zRequest, url);
+            if (zResponse.getIsSuccess()) {
+                resp = CustomerInformationResponseOuterClass.CustomerInformationResponse.parseFrom(zResponse.getZPack());
+            } else {
+                throw new Exception(zResponse.getExceptionMessage());
+            }
+            memberLogic.logger.info(String.format("%s %s %s", url, JsonFormat.printToString(requ), JsonFormat.printToString(resp)));
+
+        } catch (Exception ex) {
+            memberLogic.logger.error(String.format("会员组接口失败：%s %s", JsonFormat.printToString(requ), JSON.toJSONString(ex)));
+            ex.printStackTrace();
+        }
+        return resp;
+
+    }
+    //endregion
 
     //region (public) 严选资产余额 StrictChoiceSearch
 

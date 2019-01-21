@@ -13,6 +13,9 @@ import com.jsj.member.ob.dto.api.gift.CreateGiftResp;
 import com.jsj.member.ob.dto.api.gift.GiftProductDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.stock.UseProductDto;
+import com.jsj.member.ob.dto.proto.CustomerInfoNewOuterClass;
+import com.jsj.member.ob.dto.proto.CustomerInformationRequestOuterClass;
+import com.jsj.member.ob.dto.proto.CustomerInformationResponseOuterClass;
 import com.jsj.member.ob.entity.Banner;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.enums.*;
@@ -534,6 +537,36 @@ public class StockController extends BaseController {
     @GetMapping(value = {"/use4"})
     public String stockUse4(HttpServletRequest request) {
 
+        //查询会员信息
+        CustomerInformationRequestOuterClass.CustomerInformationRequest.Builder requ = CustomerInformationRequestOuterClass.CustomerInformationRequest.newBuilder();
+        requ.setJSJID(this.User().getJsjId() + "");
+
+        CustomerInformationResponseOuterClass.CustomerInformationResponse resp = MemberLogic.CustomerInformation(requ.build());
+        if (!resp.getBaseResponse().getIsSuccess()) {
+            //没有查询到会员信息
+            this.Redirect("/stock", false);
+        }
+
+        if (resp.getListCount() == 0) {
+            //没有查询到会员信息
+            this.Redirect("/stock", false);
+        }
+
+        CustomerInfoNewOuterClass.CustomerInfoNew userInfo = resp.getList(0);
+
+        String cardId = userInfo.getCardID();
+        String cardTypeIdName = userInfo.getCardTypeName();
+        String mobile = userInfo.getContactmeans();
+        String cardInvalidDate = userInfo.getCardInvalidDate();
+        String customerName = userInfo.getCustomerName();
+
+        if (StringUtils.isEmpty(mobile)) {
+            mobile = "15210000000";
+        }
+        if (StringUtils.isEmpty(customerName)) {
+            customerName = "未填写";
+        }
+
         String openId = this.OpenId();
         //获取缓存数据
         String p = redisService.get(StockKey.token, openId, String.class);
@@ -542,7 +575,14 @@ public class StockController extends BaseController {
         }
         try {
             List<StockDto> stockDtos = JSON.parseArray(p, StockDto.class);
+
             request.setAttribute("stockDtos", stockDtos);
+            request.setAttribute("cardId", cardId);
+            request.setAttribute("cardTypeIdName", cardTypeIdName);
+            request.setAttribute("mobile", mobile);
+            request.setAttribute("cardInvalidDate", cardInvalidDate);
+            request.setAttribute("customerName", customerName);
+
         } catch (TipException ex) {
             logger.error(JSON.toJSONString(ex));
             this.Redirect("/stock", false);

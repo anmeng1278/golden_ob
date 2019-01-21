@@ -1,0 +1,10 @@
+package com.jsj.member.ob.dto.proto;
+
+enum BigCustomerBusinessType {
+   BigCustFlight = 0;
+   BigCustHotel = 1;
+   BigCustTrain = 2;
+   BigCustShuttleBus = 3;
+   BigCustGateTicket = 4;
+   BigCustInternationalFlight = 5;
+}
