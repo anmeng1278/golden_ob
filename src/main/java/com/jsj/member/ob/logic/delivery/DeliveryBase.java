@@ -143,12 +143,14 @@ public abstract class DeliveryBase {
         resp.setDeliveryId(delivery.getDeliveryId());
 
         // WX发送开卡确认中模板
+        Map card = new HashMap();
+        card.put("title","正在为您开卡，请您耐心等待!\n");
+        card.put("effectiveDate",DateUtils.formatDateByUnixTime(Long.parseLong(requ.getEffectiveDate() + ""), "yyyy-MM-dd"));
         DeliveryDto deliveryDto = DeliveryLogic.GetDelivery(delivery.getDeliveryId());
-        TemplateDto temp = TemplateDto.OpenCardConfirm(deliveryDto);
+        TemplateDto temp = TemplateDto.OpenCardConfirm(deliveryDto,card);
         wxSender.sendNormal(temp);
 
         // 给微信接收者发送待处理开卡模板
-
         //生效时间
         String effectiveDate = DateUtils.formatDateByUnixTime(Long.parseLong(requ.getEffectiveDate() + ""), "yyyy-MM-dd");
         Map map = new HashMap();
