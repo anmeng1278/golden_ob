@@ -1,0 +1,13 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseRequest.proto";
+import "BigCustomerBusinessType.proto";
+import "CompanyType.proto";
+
+message CustomerInformationRequest {
+   optional BaseRequest BaseRequest = 1;
+   optional string JSJID = 2;
+   optional int32 Type = 3 [default = 0];
+   optional BigCustomerBusinessType BusinessType = 4 [default = BigCustFlight];
+   optional CompanyType CompanyType = 5 [default = UnKnow];
+}

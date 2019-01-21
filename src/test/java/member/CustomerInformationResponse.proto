@@ -1,0 +1,9 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseResponse.proto";
+import "CustomerInfoNew.proto";
+
+message CustomerInformationResponse {
+   optional BaseResponse BaseResponse = 1;
+   repeated CustomerInfoNew list = 2;
+}
