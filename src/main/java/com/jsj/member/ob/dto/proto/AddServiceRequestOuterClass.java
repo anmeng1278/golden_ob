@@ -41,7 +41,7 @@ public final class AddServiceRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.UpgradeService ServiceId = 3 [default = NotSet];</code>
      */
-    com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService getServiceId();
+    UpgradeServiceOuterClass.UpgradeService getServiceId();
 
     /**
      * <code>optional string CardId = 4;</code>
@@ -188,7 +188,7 @@ public final class AddServiceRequestOuterClass {
             }
             case 24: {
               int rawValue = input.readEnum();
-              com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService value = com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService.valueOf(rawValue);
+              UpgradeServiceOuterClass.UpgradeService value = UpgradeServiceOuterClass.UpgradeService.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(3, rawValue);
               } else {
@@ -317,7 +317,7 @@ public final class AddServiceRequestOuterClass {
     }
 
     public static final int SERVICEID_FIELD_NUMBER = 3;
-    private com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService serviceId_;
+    private UpgradeServiceOuterClass.UpgradeService serviceId_;
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.UpgradeService ServiceId = 3 [default = NotSet];</code>
      */
@@ -327,7 +327,7 @@ public final class AddServiceRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.UpgradeService ServiceId = 3 [default = NotSet];</code>
      */
-    public com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService getServiceId() {
+    public UpgradeServiceOuterClass.UpgradeService getServiceId() {
       return serviceId_;
     }
 
@@ -493,7 +493,7 @@ public final class AddServiceRequestOuterClass {
     private void initFields() {
       baseRequest_ = BaseRequestOuterClass.BaseRequest.getDefaultInstance();
       customerId_ = 0;
-      serviceId_ = com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService.NotSet;
+      serviceId_ = UpgradeServiceOuterClass.UpgradeService.NotSet;
       cardId_ = "";
       operaTime_ = 0L;
       operapersonId_ = 0;
@@ -720,7 +720,7 @@ public final class AddServiceRequestOuterClass {
         bitField0_ = (bitField0_ & ~0x00000001);
         customerId_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
-        serviceId_ = com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService.NotSet;
+        serviceId_ = UpgradeServiceOuterClass.UpgradeService.NotSet;
         bitField0_ = (bitField0_ & ~0x00000004);
         cardId_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -1033,7 +1033,7 @@ public final class AddServiceRequestOuterClass {
         return this;
       }
 
-      private com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService serviceId_ = com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService.NotSet;
+      private UpgradeServiceOuterClass.UpgradeService serviceId_ = UpgradeServiceOuterClass.UpgradeService.NotSet;
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.UpgradeService ServiceId = 3 [default = NotSet];</code>
        */
@@ -1043,13 +1043,13 @@ public final class AddServiceRequestOuterClass {
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.UpgradeService ServiceId = 3 [default = NotSet];</code>
        */
-      public com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService getServiceId() {
+      public UpgradeServiceOuterClass.UpgradeService getServiceId() {
         return serviceId_;
       }
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.UpgradeService ServiceId = 3 [default = NotSet];</code>
        */
-      public Builder setServiceId(com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService value) {
+      public Builder setServiceId(UpgradeServiceOuterClass.UpgradeService value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1063,7 +1063,7 @@ public final class AddServiceRequestOuterClass {
        */
       public Builder clearServiceId() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        serviceId_ = com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.UpgradeService.NotSet;
+        serviceId_ = UpgradeServiceOuterClass.UpgradeService.NotSet;
         onChanged();
         return this;
       }
@@ -1434,7 +1434,7 @@ public final class AddServiceRequestOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           BaseRequestOuterClass.getDescriptor(),
-          com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.getDescriptor(),
+          UpgradeServiceOuterClass.getDescriptor(),
           EServiceSourceOuterClass.getDescriptor(),
         }, assigner);
     internal_static_com_jsj_member_ob_dto_proto_AddServiceRequest_descriptor =
@@ -1444,7 +1444,7 @@ public final class AddServiceRequestOuterClass {
         internal_static_com_jsj_member_ob_dto_proto_AddServiceRequest_descriptor,
         new String[] { "BaseRequest", "CustomerId", "ServiceId", "CardId", "OperaTime", "OperapersonId", "StartTime", "EndTime", "OrderID", "OrderSource", });
     BaseRequestOuterClass.getDescriptor();
-    com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass.getDescriptor();
+    UpgradeServiceOuterClass.getDescriptor();
     EServiceSourceOuterClass.getDescriptor();
   }
 

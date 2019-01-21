@@ -1,0 +1,8 @@
+package com.jsj.member.ob.dto.proto;
+
+
+enum CompanyType {
+   UnKnow = 0;
+   Golden = 1;
+   HappyTravel = 2;
+}

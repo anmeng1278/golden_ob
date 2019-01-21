@@ -65,25 +65,33 @@
             <div class="gold-card">
                 <h2 class="gold-card-title">开通Plus权益</h2>
                 <div class="gold-card-item">
-                    <span class="gold-card-lable">会员编号</span>
+                    <span class="gold-card-lable">联系方式</span>
                     <p class="gold-card-rt">
-                        <input type="tel" readonly="readonly" id="jsjid" name="jsjid" th:value="${wx.jsjId}" class="gold-card-input"/>
+                        <input type="tel" readonly="readonly" th:value="${mobile}" class="gold-card-input"/>
                     </p>
                 </div>
                 <div class="gold-card-item">
-                    <span class="gold-card-lable">真实姓名</span>
+                    <span class="gold-card-lable">会员卡号</span>
                     <p class="gold-card-rt">
-                        <input type="text" id="contactName" name="contactName" placeholder="填写真实姓名" value=""
-                               class="gold-card-input"/>
+                        <input type="text"  readonly="readonly" th:value="${cardId}" class="gold-card-input"/>
                     </p>
                 </div>
                 <div class="gold-card-item">
-                    <span class="gold-card-lable">手机号码</span>
+                    <span class="gold-card-lable">卡类型</span>
                     <p class="gold-card-rt">
-                        <input type="tel" id="mobile" name="mobile" placeholder="填写手机号码" value=""
-                               class="gold-card-input"/>
+                        <input type="text"  readonly="readonly" th:value="${cardTypeIdName}" class="gold-card-input"/>
                     </p>
                 </div>
+                <div class="gold-card-item">
+                    <span class="gold-card-lable">卡有效期</span>
+                    <p class="gold-card-rt">
+                        <input type="text"  readonly="readonly" th:value="${cardInvalidDate}" class="gold-card-input"/>
+                    </p>
+                </div>
+
+                <input type="hidden"   name="mobile"  th:value="${mobile}" class="gold-card-input"/>
+                <input type="hidden"   name="contactName" th:value="${customerName}" class="gold-card-input"/>
+
             </div>
         </form>
     </div>

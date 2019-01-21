@@ -117,7 +117,7 @@ public class DeliveryPlus extends DeliveryBase {
         resp.setStockId(stockDtos.get(0).getStockId());
 
         //TODO WX发送权益开通成功模板
-        //您的plus权益已开通成功，即刻生效。
+        //        //您的plus权益已开通成功，即刻生效。
 
         return resp;
     }
