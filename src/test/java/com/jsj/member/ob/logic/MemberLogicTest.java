@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.googlecode.protobuf.format.JsonFormat;
 import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.proto.*;
+import com.jsj.member.ob.utils.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,6 +51,22 @@ public class MemberLogicTest {
 
     @Test
     public void strictChoiceUnLock() {
+    }
+
+    @Test
+    public void createPlus(){
+
+        AddServiceRequestOuterClass.AddServiceRequest.Builder requ = AddServiceRequestOuterClass.AddServiceRequest.newBuilder();
+
+        requ.setCustomerId(20613248);
+        requ.setOperapersonId(1);
+        requ.setOperaTime(DateUtils.getCurrentUnixTime());
+        requ.setServiceId(UpgradeServiceOuterClass.UpgradeService.Plus500);
+
+        AddServiceResponseOuterClass.AddServiceResponse resp = MemberLogic.CreatePlus(requ.build());
+        System.out.println(resp);
+        System.out.println(resp.getMessage());
+
     }
 
     @Test

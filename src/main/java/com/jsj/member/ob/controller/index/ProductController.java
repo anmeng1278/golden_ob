@@ -569,6 +569,7 @@ public class ProductController extends BaseController {
         requ.setActivityType(ActivityType.NORMAL);
         requ.setWechatCouponId(wechatCouponId);
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setJsjId(this.User().getJsjId());
 
         for (JSONObject jo : jsonObjects) {
 
@@ -607,6 +608,7 @@ public class ProductController extends BaseController {
         CreateOrderRequ requ = new CreateOrderRequ();
         requ.setActivityType(ActivityType.COMBINATION);
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setJsjId(this.User().getJsjId());
         requ.setActivityId(activityId);
         requ.setNumber(num);
 

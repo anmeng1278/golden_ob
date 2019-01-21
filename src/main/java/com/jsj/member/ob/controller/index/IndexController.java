@@ -57,6 +57,8 @@ public class IndexController extends BaseController {
 
         return "index/index";
     }
+
+
     //region (public) 首页 index
 
     /**
@@ -114,6 +116,8 @@ public class IndexController extends BaseController {
     }
     //endregion
 
+    //region (public) 兑换专区
+
     /**
      * 兑换专区
      *
@@ -146,6 +150,10 @@ public class IndexController extends BaseController {
 
     }
 
+    //endregion
+
+
+    //region (public) 账户余额
 
     /**
      * 账户余额
@@ -163,6 +171,9 @@ public class IndexController extends BaseController {
         return RestResponseBo.ok(map);
 
     }
+    //endregion
+
+    //region (public) 账户基本信息
 
     /**
      * 账户基本信息
@@ -186,5 +197,6 @@ public class IndexController extends BaseController {
 
         return RestResponseBo.ok(map);
     }
+    //endregion
 
 }

@@ -35,6 +35,7 @@ public class OrderExchange extends OrderBase {
     public OrderExchange() {
         super(ActivityType.EXCHANGE);
         super.setCanUseCoupon(false);
+        super.setCanCreatePlus(true);
     }
 
 
@@ -43,12 +44,14 @@ public class OrderExchange extends OrderBase {
                             OrderProductService orderProductService,
                             ActivityService activityService,
                             ActivityOrderService activityOrderService,
+                            ProductService productService,
                             WxSender wxSender
     ) {
         super.orderService = orderService;
         super.orderProductService = orderProductService;
         super.activityService = activityService;
         super.activityOrderService = activityOrderService;
+        super.productService = productService;
         super.wxSender = wxSender;
     }
 

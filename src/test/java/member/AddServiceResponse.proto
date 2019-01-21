@@ -1,0 +1,9 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseResponse.proto";
+
+message AddServiceResponse {
+   optional BaseResponse BaseResponse = 1;
+   optional bool ResultFlag = 2 [default = false];
+   optional string message = 3;
+}

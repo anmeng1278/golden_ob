@@ -22,6 +22,10 @@
             //微信送好友
             $(document).on("click", "a.share-btn", function () {
 
+                if ($(this).hasClass("disabled-use-btn")) {
+                    return;
+                }
+
                 TX.CORE.p({
                     url: "/stock/createGift",
                     data: $("#form1").serialize(),

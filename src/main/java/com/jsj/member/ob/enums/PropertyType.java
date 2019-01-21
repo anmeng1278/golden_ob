@@ -14,7 +14,9 @@ public enum PropertyType implements IEnum {
 
     GOLDEN(46, "商旅管家逸站通卡"),
 
-    NATION(47, "商旅管家全国通卡");
+    NATION(47, "商旅管家全国通卡"),
+
+    PLUS(41, "Plus会员");
 
     private Integer value;
 
@@ -45,6 +47,8 @@ public enum PropertyType implements IEnum {
                 return GOLDEN;
             case 47:
                 return NATION;
+            case 41:
+                return PLUS;
 
             default:
                 throw new FatalException("未知的枚举值");

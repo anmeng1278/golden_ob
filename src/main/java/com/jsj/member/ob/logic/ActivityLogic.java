@@ -261,6 +261,8 @@ public class ActivityLogic extends BaseLogic {
             entityWrapper.where("product_spec_id={0}", productSpecId);
         }
 
+        entityWrapper.orderBy("sort asc, update_time desc");
+
         List<ActivityProductDto> activityProductDtos = new ArrayList<>();
         List<ActivityProduct> activityProducts = activityLogic.activityProductService.selectList(entityWrapper);
 

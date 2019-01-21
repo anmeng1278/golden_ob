@@ -3,6 +3,7 @@ package com.jsj.member.ob.logic.delivery;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.delivery.*;
+import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.thirdParty.CreateGoldenCardRequ;
 import com.jsj.member.ob.dto.thirdParty.CreateGoldenCardResp;
 import com.jsj.member.ob.entity.Delivery;
@@ -157,6 +158,24 @@ public class DeliveryMonth extends DeliveryBase {
 
     }
 
+    //endregion
+
+    //region (public) 验证使用参数 validateUsed
+
+    /**
+     * 验证使用参数
+     * @param stockDtos
+     */
+    @Override
+    public void validateUsed(List<StockDto> stockDtos) {
+        super.validateUsed(stockDtos);
+        if (stockDtos.size() > 1) {
+            throw new TipException("只能开通一张会员卡");
+        }
+        if (!stockDtos.get(0).getProductDto().getPropertyType().equals(this.getPropertyType())) {
+            throw new TipException("参数错误");
+        }
+    }
     //endregion
 
 }

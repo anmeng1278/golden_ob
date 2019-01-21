@@ -15,10 +15,7 @@ import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
-import com.jsj.member.ob.service.ActivityOrderService;
-import com.jsj.member.ob.service.ActivityService;
-import com.jsj.member.ob.service.OrderProductService;
-import com.jsj.member.ob.service.OrderService;
+import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +42,14 @@ public class OrderCombination extends OrderBase {
                             OrderProductService orderProductService,
                             ActivityService activityService,
                             ActivityOrderService activityOrderService,
+                            ProductService productService,
                             WxSender wxSender
     ) {
         super.orderService = orderService;
         super.orderProductService = orderProductService;
         super.activityService = activityService;
         super.activityOrderService = activityOrderService;
+        super.productService = productService;
         super.wxSender = wxSender;
     }
 

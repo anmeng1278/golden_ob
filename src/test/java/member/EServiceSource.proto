@@ -1,0 +1,13 @@
+package com.jsj.member.ob.dto.proto;
+
+enum EServiceSource {
+   ServiceSourceNotSet = 0;
+   PayCard = 1;
+   RenewCard = 2;
+   Flight = 3;
+   Hotel = 4;
+   Train = 5;
+   ShuttleBus = 6;
+   Activity = 7;
+   StrictChoice2 = 8;
+}

@@ -382,6 +382,10 @@ public class DeliveryLogic extends BaseLogic {
                 wrapper.in("status", status);
             }
             break;
+            case PLUS:{
+                wrapper.where("status = {0}", DeliveryStatus.UNDELIVERY.getValue());
+            }
+            break;
         }
         wrapper.where("property_type_id = {0}", propertyType.getValue());
 

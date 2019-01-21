@@ -9,7 +9,7 @@
 
     <!--<script th:src="${ob.Url('/index/js/mSelect/js/iscroll.js')}" type="text/javascript" charset="utf-8"></script>-->
     <!--<script th:src="${ob.Url('/index/js/mSelect/js/jquery.mobile_date_ui.js')}" type="text/javascript"-->
-            <!--charset="utf-8"></script>-->
+    <!--charset="utf-8"></script>-->
     <!--<script th:src="${ob.Url('/index/js/GoldCard.js')}" type="text/javascript" charset="utf-8"></script>-->
 
     <script th:src="${ob.Url('/index/js/CityList.js')}" type="text/javascript" charset="utf-8"></script>
@@ -63,7 +63,13 @@
                 </th:block>
             </th:block>
             <div class="gold-card">
-                <h2 class="gold-card-title">开通会员卡</h2>
+                <h2 class="gold-card-title">开通Plus权益</h2>
+                <div class="gold-card-item">
+                    <span class="gold-card-lable">会员编号</span>
+                    <p class="gold-card-rt">
+                        <input type="tel" readonly="readonly" id="jsjid" name="jsjid" th:value="${wx.jsjId}" class="gold-card-input"/>
+                    </p>
+                </div>
                 <div class="gold-card-item">
                     <span class="gold-card-lable">真实姓名</span>
                     <p class="gold-card-rt">
@@ -75,21 +81,6 @@
                     <span class="gold-card-lable">手机号码</span>
                     <p class="gold-card-rt">
                         <input type="tel" id="mobile" name="mobile" placeholder="填写手机号码" value=""
-                               class="gold-card-input"/>
-                    </p>
-                </div>
-                <div class="gold-card-item">
-                    <span class="gold-card-lable lable-id">身份证 ></span>
-                    <p class="gold-card-rt">
-                        <input type="number" id="idNumber" name="idNumber" placeholder="填写证件号码" value=""
-                               class="gold-card-input"/>
-                    </p>
-                </div>
-                <div class="gold-card-item">
-                    <span class="gold-card-lable">生效日期</span>
-                    <p class="gold-card-rt">
-                        <input type="text" id="birthdate" name="effectiveDate" placeholder="选择生效日期" value=""
-                               data-options="{'type':'YYYY-MM-DD','beginYear':2019,'endYear':2024}"
                                class="gold-card-input"/>
                     </p>
                 </div>

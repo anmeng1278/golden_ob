@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.delivery.*;
 import com.jsj.member.ob.dto.api.stock.StockDto;
-import com.jsj.member.ob.dto.thirdParty.GetActivityCodesResp;
+import com.jsj.member.ob.dto.api.wechat.WechatDto;
+import com.jsj.member.ob.dto.proto.AddServiceRequestOuterClass;
+import com.jsj.member.ob.dto.proto.AddServiceResponseOuterClass;
+import com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.entity.Stock;
@@ -14,8 +17,8 @@ import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.enums.StockStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
-import com.jsj.member.ob.logic.ThirdPartyLogic;
-import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
+import com.jsj.member.ob.logic.MemberLogic;
+import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
@@ -31,10 +34,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Component
-public class DeliveryActivity extends DeliveryBase {
-
-    public DeliveryActivity() {
-        super(PropertyType.ACTIVITYCODE);
+public class DeliveryPlus extends DeliveryBase {
+    public DeliveryPlus() {
+        super(PropertyType.PLUS);
     }
 
     @Autowired
@@ -63,17 +65,17 @@ public class DeliveryActivity extends DeliveryBase {
         if (requ.getStockDtos().isEmpty()) {
             throw new TipException("使用库存不能为空");
         }
-        if (requ.getStockDtos().size() > 1) {
-            throw new TipException("次卡只能使用一个");
-        }
         if (StringUtils.isEmpty(requ.getContactName())) {
-            throw new TipException("真实姓名不能为空");
+            throw new TipException("联系人不能为空");
         }
         if (!com.jsj.member.ob.utils.StringUtils.isMobile(requ.getMobile())) {
-            throw new TipException("手机号码格式错误");
+            throw new TipException("联系手机格式错误");
         }
-        if (StringUtils.isEmpty(requ.getAirportCode())) {
-            throw new TipException("请选择使用机场");
+        if (requ.getStockDtos().size() > 1) {
+            throw new TipException("Plus只能使用一个");
+        }
+        if (requ.getBaseRequ().getJsjId() <= 0) {
+            throw new TipException("必须是会员才能开通");
         }
 
         String openId = requ.getBaseRequ().getOpenId();
@@ -81,7 +83,7 @@ public class DeliveryActivity extends DeliveryBase {
         //判断是否存在未使用的活动码
         DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(openId);
         if (unDeliveryDto != null) {
-            throw new TipException("您还有未使用的次卡");
+            throw new TipException("您还有未使用的Plus权益");
         }
 
         //获取库存
@@ -89,20 +91,15 @@ public class DeliveryActivity extends DeliveryBase {
 
         Delivery delivery = new Delivery();
 
+        delivery.setContactName(requ.getContactName());
+        delivery.setMobile(Long.parseLong(requ.getMobile()));
         delivery.setStatus(DeliveryStatus.UNDELIVERY.getValue());
         delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
-        delivery.setContactName(requ.getContactName());
 
-        delivery.setMobile(Long.parseLong(requ.getMobile()));
         delivery.setCreateTime(DateUtils.getCurrentUnixTime());
         delivery.setOpenId(requ.getBaseRequ().getOpenId());
-        delivery.setFlightNumber(requ.getFlightNumber());
-
         delivery.setPropertyTypeId(this.getPropertyType().getValue());
-        delivery.setRemarks(requ.getRemarks());
         delivery.setTypeId(DeliveryType.PICKUP.getValue());
-        delivery.setAirportCode(requ.getAirportCode());
-        delivery.setAirportName(requ.getAirportName());
 
         this.deliveryService.insert(delivery);
 
@@ -119,9 +116,8 @@ public class DeliveryActivity extends DeliveryBase {
         resp.setDeliveryId(delivery.getDeliveryId());
         resp.setStockId(stockDtos.get(0).getStockId());
 
-        // WX发送活动码使用成功模板
-        TemplateDto temp = TemplateDto.QrcodeUseSuccessed(delivery, stockDtos);
-        wxSender.sendNormal(temp);
+        //TODO WX发送权益开通成功模板
+        //您的plus权益已开通成功，即刻生效。
 
         return resp;
     }
@@ -138,17 +134,13 @@ public class DeliveryActivity extends DeliveryBase {
     @Override
     public TwoTuple<String, String> GetUsedNavigate(String openId) {
 
-        //判断是否存在未使用的活动码
+        //判断是否存在未开通的权益
         DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(openId);
         if (unDeliveryDto != null) {
-            List<DeliveryStock> deliveryStocks = DeliveryLogic.GetDeliveryStocks(unDeliveryDto.getDeliveryId());
-            if (!deliveryStocks.isEmpty()) {
-                String url = String.format("/stock/qrcode/%d/%d", deliveryStocks.get(0).getDeliveryId(), deliveryStocks.get(0).getStockId());
-                return TupleUtils.tuple("您还有未使用的次卡", url);
-            }
+            return TupleUtils.tuple("您的权益正在确认中，不能重复开通……", "");
         }
 
-        return TupleUtils.tuple("", "/stock/use2");
+        return TupleUtils.tuple("", "/stock/use4");
     }
 
     //endregion
@@ -165,9 +157,10 @@ public class DeliveryActivity extends DeliveryBase {
     public OpreationDeliveryResp OpreationDelivery(OpreationDeliveryRequ requ) {
 
         DeliveryDto dto = DeliveryLogic.GetDelivery(requ.getDeliveryId());
+        WechatDto wechatDto = WechatLogic.GetWechat(dto.getOpenId());
 
         if (!dto.getDeliveryStatus().equals(DeliveryStatus.UNDELIVERY)) {
-            throw new TipException(String.format("活动码状态为：%s，不允许操作",
+            throw new TipException(String.format("权益状态为：%s，不允许操作",
                     dto.getDeliveryStatus().getMessage(this.getPropertyType())));
         }
 
@@ -177,39 +170,42 @@ public class DeliveryActivity extends DeliveryBase {
 
         String remark = delivery.getRemarks();
 
-
         //更新发货状态
         for (DeliveryStock ds : deliveryStocks) {
 
-            //获取验证码
-            GetActivityCodesResp resp = ThirdPartyLogic.GetActivityCodes(null);
-            if (resp.getBaseResponse().isSuccess()) {
-                ds.setActivityCode(resp.getActivityCodes().get(0));
+            AddServiceRequestOuterClass.AddServiceRequest.Builder createRequ = AddServiceRequestOuterClass.AddServiceRequest.newBuilder();
+
+            createRequ.setCustomerId(wechatDto.getJsjid());
+            createRequ.setOperapersonId(1);
+            createRequ.setOperaTime(DateUtils.getCurrentUnixTime());
+            createRequ.setServiceId(UpgradeServiceOuterClass.UpgradeService.Plus500);
+
+            AddServiceResponseOuterClass.AddServiceResponse resp = MemberLogic.CreatePlus(createRequ.build());
+
+            if (resp.getBaseResponse().getIsSuccess()) {
+
+                if (!resp.getResultFlag()) {
+                    throw new TipException(resp.getMessage());
+                }
                 //获取成功
                 if (remark != null) {
-                    remark += String.format("获取成功：%s", this.getPropertyType().getMessage());
+                    remark += String.format("开通成功：%s", this.getPropertyType().getMessage());
                 } else {
-                    remark = String.format("获取成功：%s", this.getPropertyType().getMessage());
+                    remark = String.format("开通成功：%s", this.getPropertyType().getMessage());
                 }
             } else {
-                ds.setActivityCode("JSYX");
-                //获取失败
-                if (remark != null) {
-                    remark += String.format("获取失败：%s", resp.getBaseResponse().getErrorMessage());
-                } else {
-                    remark = String.format("获取失败：%s", resp.getBaseResponse().getErrorMessage());
-                }
+                throw new TipException(resp.getBaseResponse().getErrorMessage());
             }
             this.deliveryStockService.updateById(ds);
 
             Stock stock = stockService.selectById(ds.getStockId());
-            stock.setStatus(StockStatus.SENT.getValue());
+            stock.setStatus(StockStatus.SIGNED.getValue());
             stockService.updateById(stock);
         }
 
-        //更新状态为已获取
+        //更新状态为开通成功
         delivery.setRemarks(remark);
-        delivery.setStatus(DeliveryStatus.DELIVERED.getValue());
+        delivery.setStatus(DeliveryStatus.SIGNED.getValue());
         this.deliveryService.updateById(delivery);
 
         OpreationDeliveryResp resp = new OpreationDeliveryResp();
@@ -221,23 +217,22 @@ public class DeliveryActivity extends DeliveryBase {
 
     //endregion
 
+
     //region (public) 验证使用参数 validateUsed
 
     /**
      * 验证使用参数
-     *
      * @param stockDtos
      */
     @Override
     public void validateUsed(List<StockDto> stockDtos) {
         super.validateUsed(stockDtos);
         if (stockDtos.size() > 1) {
-            throw new TipException("只能使用一个活动码");
+            throw new TipException("只能开通一个Plus权益");
         }
         if (!stockDtos.get(0).getProductDto().getPropertyType().equals(this.getPropertyType())) {
             throw new TipException("参数错误");
         }
     }
     //endregion
-
 }

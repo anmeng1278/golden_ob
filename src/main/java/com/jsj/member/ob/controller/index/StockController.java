@@ -187,6 +187,9 @@ public class StockController extends BaseController {
         List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
         List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, false);
 
+        //验证使用库存
+        deliveryBase.validateUsed(stockDtos);
+
         //添加缓存
         redisService.set(StockKey.token, openId, stockDtos);
 
@@ -300,6 +303,7 @@ public class StockController extends BaseController {
         CreateDeliveryRequ requ = new CreateDeliveryRequ();
 
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setJsjId(this.User().getJsjId());
         requ.setAddress(address);
         requ.setCityId(cityId);
         requ.setContactName(contactName);
@@ -404,6 +408,7 @@ public class StockController extends BaseController {
         CreateDeliveryRequ requ = new CreateDeliveryRequ();
 
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setJsjId(this.User().getJsjId());
         requ.setContactName(contactName);
         requ.setMobile(mobile);
         requ.setPropertyType(PropertyType.ACTIVITYCODE);
@@ -496,6 +501,7 @@ public class StockController extends BaseController {
         CreateDeliveryRequ requ = new CreateDeliveryRequ();
 
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setJsjId(this.User().getJsjId());
         requ.setContactName(contactName);
         requ.setMobile(mobile);
         requ.setPropertyType(stockDtos.get(0).getProductDto().getPropertyType());
@@ -516,6 +522,88 @@ public class StockController extends BaseController {
     }
     //endregion
 
+
+    //region (public) 开通plus权益 stockUse4
+
+    /**
+     * 开通plus权益
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping(value = {"/use4"})
+    public String stockUse4(HttpServletRequest request) {
+
+        String openId = this.OpenId();
+        //获取缓存数据
+        String p = redisService.get(StockKey.token, openId, String.class);
+        if (StringUtils.isEmpty(p)) {
+            this.Redirect("/stock", false);
+        }
+        try {
+            List<StockDto> stockDtos = JSON.parseArray(p, StockDto.class);
+            request.setAttribute("stockDtos", stockDtos);
+        } catch (TipException ex) {
+            logger.error(JSON.toJSONString(ex));
+            this.Redirect("/stock", false);
+        }
+
+        return "index/stockUse4";
+    }
+    //endregion
+
+    //region (public) 开通plus权益 saveStockUse4
+
+    /**
+     * 开通plus权益
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping(value = {"/use4"})
+    @ResponseBody
+    @Transactional(Constant.DBTRANSACTIONAL)
+    public RestResponseBo saveStockUse4(HttpServletRequest request) {
+
+
+        String openId = this.OpenId();
+        //获取缓存数据
+        String p = redisService.get(StockKey.token, openId, String.class);
+        if (StringUtils.isEmpty(p)) {
+            return RestResponseBo.fail("参数错误");
+        }
+
+        List<StockDto> stockDtos = JSON.parseArray(p, StockDto.class);
+        if (stockDtos.isEmpty()) {
+            return RestResponseBo.fail("参数错误");
+        }
+        if (!stockDtos.get(0).getProductDto().getPropertyType().equals(PropertyType.PLUS)) {
+            return RestResponseBo.fail("参数错误");
+        }
+
+        CreateDeliveryRequ requ = new CreateDeliveryRequ();
+
+        String contactName = request.getParameter("contactName");
+        String mobile = request.getParameter("mobile");
+
+        requ.getBaseRequ().setJsjId(this.User().getJsjId());
+        requ.getBaseRequ().setOpenId(openId);
+        requ.setPropertyType(stockDtos.get(0).getProductDto().getPropertyType());
+        requ.setContactName(contactName);
+        requ.setMobile(mobile);
+
+        requ.setStockDtos(stockDtos);
+
+        //开通权益方法
+        CreateDeliveryResp resp = DeliveryLogic.CreateDelivery(requ);
+
+        //清空缓存
+        redisService.delete(StockKey.token, openId);
+
+        return RestResponseBo.ok("操作成功", this.Url("/delivery"), resp);
+
+    }
+    //endregion
 
     //region (public) 当前活动码 qrCode
 

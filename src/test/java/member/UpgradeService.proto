@@ -1,0 +1,9 @@
+package com.jsj.member.ob.dto.proto;
+
+enum UpgradeService {
+   NotSet = 0;
+   Upgread698 = 35;
+   Upgrade998 = 36;
+   Plus500 = 41;
+   StrictChoice_UpgradeService= 42;
+}
