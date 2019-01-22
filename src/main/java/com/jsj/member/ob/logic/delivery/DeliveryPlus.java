@@ -19,6 +19,7 @@ import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.MemberLogic;
 import com.jsj.member.ob.logic.WechatLogic;
+import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.DeliveryService;
 import com.jsj.member.ob.service.DeliveryStockService;
@@ -31,7 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class DeliveryPlus extends DeliveryBase {
@@ -116,9 +119,13 @@ public class DeliveryPlus extends DeliveryBase {
         resp.setDeliveryId(delivery.getDeliveryId());
         resp.setStockId(stockDtos.get(0).getStockId());
 
-        //TODO WX发送权益开通成功模板
-        //        //您的plus权益已开通成功，即刻生效。
-
+        //WX发送权益开通成功模板
+        Map map = new HashMap();
+        map.put("title","您的plus权益已开通成功，即刻生效!");
+        map.put("effectiveDate",DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getCreateTime() + ""), "yyyy-MM-dd"));
+        DeliveryDto deliveryDto = DeliveryLogic.ToDto(delivery);
+        TemplateDto temp = TemplateDto.OpenCardConfirm(deliveryDto,map);
+        wxSender.sendNormal(temp);
         return resp;
     }
     //endregion

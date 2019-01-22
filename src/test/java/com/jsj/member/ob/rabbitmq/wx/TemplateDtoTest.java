@@ -83,7 +83,13 @@ public class TemplateDtoTest {
     @Test
     public void openCardConfirm() {
         DeliveryDto deliveryDto = DeliveryLogic.GetDelivery(60);
-        TemplateDto dto = TemplateDto.OpenCardConfirm(deliveryDto);
+        Map map = new HashMap();
+        map.put("title","您的plus权益已开通成功，即刻生效!\n");
+        map.put("effectiveDate",DateUtils.formatDateByUnixTime(Long.parseLong(deliveryDto.getCreateTime() + ""), "yyyy-MM-dd"));
+/*
+        map.put("title","正在为您开卡，请您耐心等待!\n");
+        map.put("effectiveDate",DateUtils.formatDateByUnixTime(Long.parseLong(deliveryDto.getEffectiveDate() + ""), "yyyy-MM-dd"));*/
+        TemplateDto dto = TemplateDto.OpenCardConfirm(deliveryDto,map);
         wxSender.sendNormal(dto);
     }
 

@@ -343,7 +343,7 @@ public class TemplateDto extends BaseDto {
      * @param delivery
      * @return
      */
-    public static TemplateDto OpenCardConfirm(DeliveryDto delivery) {
+    public static TemplateDto OpenCardConfirm(DeliveryDto delivery,Map map) {
 
         /*
            {{first.DATA}}
@@ -353,17 +353,14 @@ public class TemplateDto extends BaseDto {
             {{remark.DATA}}
         */
 
-        //生效时间
-        String effectiveDate = DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getEffectiveDate() + ""), "yyyy-MM-dd");
-
         TemplateDto dto = new TemplateDto();
         dto.setToUser(delivery.getOpenId());
         dto.setTemplateType(TemplateType.OPENCARDCONFIRM);
-        dto.setFirst("正在为您开卡，请您耐心等待\n");
+        dto.setFirst(map.get("title").toString());
         dto.setFirstColor(gold_color);
         dto.getData().put("keyword1", new TemplateData(delivery.getProductDtos().get(0).getProductName() + "", color));
-        dto.getData().put("keyword2", new TemplateData(effectiveDate, color));
-        dto.getData().put("keyword3", new TemplateData("依据卡的使用说明", color));
+        dto.getData().put("keyword2", new TemplateData(map.get("effectiveDate").toString(), color));
+        dto.getData().put("keyword3", new TemplateData("依据使用说明", color));
         dto.setRemark("\n空铁管家祝您旅途愉快!");
         dto.setRemarkColor(gold_color);
         dto.setUrl(String.format("%s%s/stock", ConfigLogic.GetWebConfig().getHost(), ConfigLogic.GetWebConfig().getVirtualPath()));
