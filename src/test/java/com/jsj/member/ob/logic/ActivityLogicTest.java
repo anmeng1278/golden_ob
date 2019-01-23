@@ -1,10 +1,12 @@
 package com.jsj.member.ob.logic;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.entity.Activity;
 import com.jsj.member.ob.enums.SecKillStatus;
 import com.jsj.member.ob.enums.SourceType;
+import com.jsj.member.ob.service.ActivityService;
 import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.ThreadPoolUtils;
 import org.junit.Test;
@@ -153,6 +155,16 @@ public class ActivityLogicTest {
         SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, 3, 4, "10001", SourceType.AWKTC);
         System.out.println(secKillStatus.getMessage());
 
+    }
+
+    @Autowired
+    ActivityService activityService;
+
+    @Test
+    public void selCount(){
+
+        int i = activityService.selectCount(new EntityWrapper<Activity>().where("activity_id = -1"));
+        System.out.println(i);
     }
 }
 

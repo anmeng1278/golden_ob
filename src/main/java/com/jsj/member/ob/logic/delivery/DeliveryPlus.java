@@ -103,6 +103,7 @@ public class DeliveryPlus extends DeliveryBase {
         delivery.setOpenId(requ.getBaseRequ().getOpenId());
         delivery.setPropertyTypeId(this.getPropertyType().getValue());
         delivery.setTypeId(DeliveryType.PICKUP.getValue());
+        delivery.setEffectiveDate(DateUtils.getCurrentUnixTime());
 
         this.deliveryService.insert(delivery);
 

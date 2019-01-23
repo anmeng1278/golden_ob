@@ -520,7 +520,7 @@ public class StockController extends BaseController {
         //清空缓存
         redisService.delete(StockKey.token, openId);
 
-        return RestResponseBo.ok("操作成功", this.Url("/delivery"), resp);
+        return RestResponseBo.ok("开通成功", this.Url("/delivery"), resp);
 
     }
     //endregion
@@ -640,7 +640,7 @@ public class StockController extends BaseController {
         //清空缓存
         redisService.delete(StockKey.token, openId);
 
-        return RestResponseBo.ok("操作成功", this.Url("/delivery"), resp);
+        return RestResponseBo.ok("开通成功", this.Url("/delivery"), resp);
 
     }
     //endregion
