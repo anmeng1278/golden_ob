@@ -122,7 +122,7 @@ public class DeliveryPlus extends DeliveryBase {
 
         //WX发送权益开通成功模板
         Map map = new HashMap();
-        map.put("title","您的plus权益已开通成功，即刻生效!");
+        map.put("title","您的plus权益已开通成功，即刻生效!\n");
         map.put("effectiveDate",DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getCreateTime() + ""), "yyyy-MM-dd"));
         DeliveryDto deliveryDto = DeliveryLogic.ToDto(delivery);
         TemplateDto temp = TemplateDto.OpenCardConfirm(deliveryDto,map);
