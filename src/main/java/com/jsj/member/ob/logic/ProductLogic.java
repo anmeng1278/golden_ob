@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -101,11 +102,15 @@ public class ProductLogic extends BaseLogic {
 
             //售价
             Optional<ProductSpecDto> minSalePrice = productSpecDtos.stream().min(Comparator.comparing(ProductSpecDto::getSalePrice));
-            productDto.setSalePrice(minSalePrice.get().getSalePrice());
+
+            double salePrice = new BigDecimal(minSalePrice.get().getSalePrice()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            productDto.setSalePrice(salePrice);
 
             //原价
             Optional<ProductSpecDto> minOriginalPrice = productSpecDtos.stream().min(Comparator.comparing(ProductSpecDto::getOriginalPrice));
-            productDto.setOriginalPrice(minOriginalPrice.get().getOriginalPrice());
+
+            double originalPrice = new BigDecimal(minOriginalPrice.get().getOriginalPrice()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            productDto.setOriginalPrice(originalPrice);
 
             //库存
             int totalStock = productSpecDtos.stream().mapToInt(x -> x.getStockCount()).sum();
