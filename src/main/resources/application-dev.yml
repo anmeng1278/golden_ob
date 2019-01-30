@@ -27,7 +27,7 @@ spring:
     publisher-confirms: true
     publisher-returns: true
   redis:
-    host: 172.16.5.64
+    host: 172.16.5.114
     timeout: 10000
     port: 6379
 
@@ -59,7 +59,7 @@ webconfig:
   memberApiUrl: http://memberapi.jsjit.cn/hosts/Jmember.aspx
 
 redis:
-  host: 172.16.5.64
+  host: 172.16.5.114
   port: 6379
   timeout: 10000
   pool-max-total: 1000
