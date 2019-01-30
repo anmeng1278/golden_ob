@@ -8,21 +8,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @create 2018-11-21
  * @desc 微信用户基本信息
  */
-public class MiniWechatDto {
-    /**
-     * 微信openID，解密后的数据
-     */
-    private String openId;
-
-    /**
-     * 微信unionID，解密后的数据
-     */
-    private String unionId;
-
-    /**
-     * 解密后的一些敏感数据
-     */
-    private WxWatermark watermark;
+public class MiniUserInfo {
 
     /**
      * 用户昵称
@@ -61,40 +47,6 @@ public class MiniWechatDto {
      * en 英文 zh_CN 简体中文 zh_TW 繁体中文
      */
     private String language;
-
-    /**
-     * 手机号区号
-     */
-    private String countryCode;
-
-    /**
-     * 电话号码
-     */
-    private String phone;
-
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-
-    public String getUnionId() {
-        return unionId;
-    }
-
-    public void setUnionId(String unionId) {
-        this.unionId = unionId;
-    }
-
-    public WxWatermark getWatermark() {
-        return watermark;
-    }
-
-    public void setWatermark(WxWatermark watermark) {
-        this.watermark = watermark;
-    }
 
     public String getNickName() {
         return nickName;
@@ -150,21 +102,5 @@ public class MiniWechatDto {
 
     public void setLanguage(String language) {
         this.language = language;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 }

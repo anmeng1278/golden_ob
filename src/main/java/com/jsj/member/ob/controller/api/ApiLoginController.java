@@ -1,16 +1,12 @@
 package com.jsj.member.ob.controller.api;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.Request;
 import com.jsj.member.ob.dto.api.Response;
-import com.jsj.member.ob.dto.mini.MiniUserDecodeRequ;
-import com.jsj.member.ob.dto.mini.MiniUserDecodeResp;
-import com.jsj.member.ob.dto.mini.MiniWechatDto;
-import com.jsj.member.ob.exception.TipException;
+import com.jsj.member.ob.dto.mini.MiniUserInfo;
+import com.jsj.member.ob.dto.mini.RegisterRequ;
+import com.jsj.member.ob.dto.mini.RegisterResp;
 import com.jsj.member.ob.logic.WechatLogic;
-import com.jsj.member.ob.utils.SecurityUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.validation.annotation.Validated;
@@ -27,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 public class ApiLoginController {
 
 
-    //region (public) 解析用户信息 userDecode
+    //region (public) 微信小程序数据初始化 register
 
     /**
      * 解析用户信息
@@ -36,49 +32,35 @@ public class ApiLoginController {
      * @return
      * @throws Exception
      */
-    @ApiOperation(value = "微信小程序用户信息解析")
-    @RequestMapping(value = "/userDecode", method = RequestMethod.POST)
-    public Response<MiniUserDecodeResp> userDecode(@ApiParam(value = "请求实体", required = true) @RequestBody @Validated Request<MiniUserDecodeRequ> requ, HttpServletRequest request) throws Exception {
+    @ApiOperation(value = "微信小程序数据初始化，用户授权后调用")
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public Response<RegisterResp> register(@ApiParam(value = "请求实体", required = true) @RequestBody @Validated Request<RegisterRequ> requ, HttpServletRequest request) throws Exception {
 
-        MiniUserDecodeResp resp = new MiniUserDecodeResp();
+        RegisterResp resp = new RegisterResp();
+        MiniUserInfo userInfo = JSON.parseObject(requ.getRequestBody().getRawData(), MiniUserInfo.class);
 
-        Object attribute = request.getSession().getAttribute(Constant.wxapp_session_key);
-        if (attribute == null) {
-            throw new TipException("缓存已失效，请重新授权登录", 1404);
+        //数据插入数据库
+        User user = new User();
+
+        user.setNickname(userInfo.getNickName());
+        user.setOpenid(requ.getRequestBody().getOpenId());
+        user.setCity(userInfo.getCity());
+        user.setCountry(userInfo.getCountry());
+        user.setHeadimgurl(userInfo.getAvatarUrl());
+
+        user.setLanguage(userInfo.getLanguage());
+        user.setProvince(userInfo.getProvince());
+        user.setSex(userInfo.getGender());
+
+        WechatLogic.Init(user);
+
+        if (requ.getRequestBody().getJsjId() > 0) {
+            WechatLogic.BindJSJId(requ.getRequestBody().getOpenId(), requ.getRequestBody().getJsjId());
         }
 
-        JSONObject jsonObject = (JSONObject) attribute;
-        String session_key = jsonObject.getString("sessionKey");
+        resp.setOpenId(requ.getRequestBody().getOpenId());
+        return Response.ok(resp);
 
-        byte[] encrypData = org.apache.commons.codec.binary.Base64.decodeBase64(requ.getRequestBody().getEncryptedData());
-        byte[] ivData = org.apache.commons.codec.binary.Base64.decodeBase64(requ.getRequestBody().getIv());
-        byte[] sessionKey = org.apache.commons.codec.binary.Base64.decodeBase64(session_key);
-
-        String str = SecurityUtils.decrypt2(sessionKey, ivData, encrypData);
-        MiniWechatDto userInfo = JSON.parseObject(str, MiniWechatDto.class);
-
-        if (userInfo != null) {
-            //数据插入数据库
-
-            User user = new User();
-
-            user.setNickname(userInfo.getNickName());
-            user.setOpenid(userInfo.getOpenId());
-            user.setCity(userInfo.getCity());
-            user.setCountry(userInfo.getCountry());
-            user.setHeadimgurl(userInfo.getAvatarUrl());
-
-            user.setLanguage(userInfo.getLanguage());
-            user.setProvince(userInfo.getProvince());
-            user.setSex(userInfo.getGender());
-            user.setUnionid(userInfo.getUnionId());
-
-            WechatLogic.Init(user);
-
-            return Response.ok(resp);
-        }
-
-        throw new TipException("解析失败");
 
     }
     //endregion
