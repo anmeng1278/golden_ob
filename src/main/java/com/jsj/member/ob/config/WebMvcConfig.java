@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
@@ -26,8 +27,22 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         }
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
 
+        registry.addResourceHandler(String.format("%s/swagger/**", webconfig.getVirtualPath())).addResourceLocations("classpath:/META-INF/resources/");
+
         super.addResourceHandlers(registry);
 
         //registry.addResourceHandler("**/static/**").addResourceLocations("classpath:/static/");
     }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addRedirectViewController(String.format("%s/swagger/v2/api-docs", webconfig.getVirtualPath()), "/v2/api-docs");
+        registry.addRedirectViewController(String.format("%s/swagger/swagger-resources/configuration/ui", webconfig.getVirtualPath()), "/swagger-resources/configuration/ui");
+        registry.addRedirectViewController(String.format("%s/swagger/swagger-resources/configuration/security", webconfig.getVirtualPath()), "/swagger-resources/configuration/security");
+        registry.addRedirectViewController(String.format("%s/swagger/swagger-resources", webconfig.getVirtualPath()), "/swagger-resources");
+        //registry.addRedirectViewController("/ot", "/ot/swagger-ui.html");
+        //registry.addRedirectViewController("/ot/", "/ot/swagger-ui.html");
+    }
+
+
 }
