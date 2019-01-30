@@ -57,6 +57,11 @@
             <mvc:exclude-mapping path="/**/*.jsp"/>
             <mvc:exclude-mapping path="/**/*.html"/>
             <mvc:exclude-mapping path="/error"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/swagger/**"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/v2/api-docs"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/swagger-resources/**"></mvc:exclude-mapping>
+
+
             <mvc:exclude-mapping path="/admin/**"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/imgUpload3"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/dict"></mvc:exclude-mapping>
