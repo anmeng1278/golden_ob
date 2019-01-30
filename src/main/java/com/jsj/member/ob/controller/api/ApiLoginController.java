@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("${webconfig.virtualPath}/mini")
-public class MiniController {
+public class ApiLoginController {
 
     /**
      * 小程序Jscode换取openId

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -29,6 +30,7 @@ import java.util.Optional;
 /**
  * 支付回调控制器
  */
+@ApiIgnore
 @Controller
 @RequestMapping("${webconfig.virtualPath}/pay")
 public class PayController extends BaseController {
