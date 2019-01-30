@@ -6,6 +6,11 @@ import org.springframework.stereotype.Component;
 public class Constant {
 
     /**
+     * 微信小程序的session_key键
+     */
+    public static final String wxapp_session_key = "WXAPP_SESSION_KEY";
+
+    /**
      * 管理员登录session
      */
     public static String LOGIN_SESSION_ADMIN_KEY = "login_admin";

@@ -5,6 +5,8 @@ package com.jsj.member.ob.exception;
  */
 public class TipException extends RuntimeException {
 
+    public int code;
+
     public TipException() {
     }
 
@@ -20,4 +22,16 @@ public class TipException extends RuntimeException {
         super(cause);
     }
 
+    public TipException(String message, int code) {
+        super(message);
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
 }
