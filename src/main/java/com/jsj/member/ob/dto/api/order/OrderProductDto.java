@@ -1,6 +1,7 @@
 package com.jsj.member.ob.dto.api.order;
 
 import com.jsj.member.ob.dto.api.product.ProductDto;
+import io.swagger.annotations.ApiModelProperty;
 
 public class OrderProductDto {
 
@@ -22,6 +23,7 @@ public class OrderProductDto {
     /**
      * 商品信息
      */
+    @ApiModelProperty(hidden = true)
     private ProductDto productDto;
 
     public ProductDto getProductDto() {

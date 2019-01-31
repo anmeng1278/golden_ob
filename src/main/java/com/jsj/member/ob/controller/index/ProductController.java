@@ -353,7 +353,7 @@ public class ProductController extends BaseController {
         OrderBase orderBase = OrderFactory.GetInstance(activityType);
 
         CreateOrderRequ requ = this.createOrderRequ(request, activityType);
-        CreateOrderResp resp = orderBase.CalculateOrder(requ);
+              CreateOrderResp resp = orderBase.CalculateOrder(requ);
 
         return RestResponseBo.ok(resp);
     }
