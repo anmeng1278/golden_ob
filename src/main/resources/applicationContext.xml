@@ -61,7 +61,7 @@
             <mvc:exclude-mapping path="/**/v2/api-docs"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/**/swagger-resources/**"></mvc:exclude-mapping>
 
-
+            <mvc:exclude-mapping path="/excel/**"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/admin/**"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/imgUpload3"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/dict"></mvc:exclude-mapping>
@@ -90,6 +90,7 @@
             <mvc:exclude-mapping path="/**/*.ico"/>
             <mvc:exclude-mapping path="/**/*.jsp"/>
             <mvc:exclude-mapping path="/admin/login"/>
+            <mvc:exclude-mapping path="/excel/**"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/error"></mvc:exclude-mapping>
             <bean class="com.jsj.member.ob.interceptor.AdminInterceptor"></bean>
         </mvc:interceptor>
