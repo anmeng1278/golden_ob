@@ -57,22 +57,24 @@
                             <tbody>
                             <th:block th:each="info : ${infos.list}">
                                 <th:block th:with="pro=${couponLogic.GetCoupon(info.couponId)}">
-                                    <td>
-                                        <input type="checkbox" lay-ignore style="width:20px;height:20px;"
-                                               th:value="${pro.couponId}"
-                                               name="coupon">
-                                    </td>
-                                    <td th:text="${pro.couponName}"></td>
-                                    <td th:text="${pro.amount}"></td>
-                                    <td>
-                                        <th:block
-                                                th:text="${enumLogic.GetCouponType(pro.couponType).message}"></th:block>
-                                    </td>
-                                    <td>
-                                        <th:block
-                                                th:text="${enumLogic.GetCouponUseRange(pro.couponUseRange).message}"></th:block>
-                                    </td>
-                                    <td th:text="${pro.validDays}"></td>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" lay-ignore style="width:20px;height:20px;"
+                                                   th:value="${pro.couponId}"
+                                                   name="coupon">
+                                        </td>
+                                        <td th:text="${pro.couponName}"></td>
+                                        <td th:text="${pro.amount}"></td>
+                                        <td>
+                                            <th:block
+                                                    th:text="${enumLogic.GetCouponType(pro.couponType).message}"></th:block>
+                                        </td>
+                                        <td>
+                                            <th:block
+                                                    th:text="${enumLogic.GetCouponUseRange(pro.couponUseRange).message}"></th:block>
+                                        </td>
+                                        <td th:text="${pro.validDays}"></td>
+                                    </tr>
                                 </th:block>
                             </th:block>
                             </tbody>

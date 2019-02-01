@@ -16,6 +16,7 @@ import com.jsj.member.ob.enums.GiftShareType;
 import com.jsj.member.ob.enums.GiftStatus;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.*;
+import com.jsj.member.ob.tuple.TwoTuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -51,8 +52,17 @@ public class ShareController extends BaseController {
         String openId = this.OpenId();
 
         //领取
-        OrderRedpacketCouponDto couponDto = RedpacketLogic.DistributeRedpacket(openId, orderDto.getOrderId());
+        TwoTuple<OrderRedpacketCouponDto, Boolean> twoTuple = RedpacketLogic.DistributeRedpacket(openId, orderDto.getOrderId());
+
+        OrderRedpacketCouponDto couponDto = null;
+        boolean isRepeatDraw = false;
+        if (twoTuple != null) {
+            couponDto = twoTuple.first;
+            isRepeatDraw = twoTuple.second;
+        }
+
         request.setAttribute("couponDto", couponDto);
+        request.setAttribute("isRepeatDraw", isRepeatDraw);
 
         //查看领取记录
         List<OrderRedpacketCouponDto> redpacketCoupons = RedpacketLogic.GetOrderRedpacketDtos(orderDto.getOrderId(), true);
