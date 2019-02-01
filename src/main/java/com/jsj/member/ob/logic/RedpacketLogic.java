@@ -17,7 +17,9 @@ import com.jsj.member.ob.service.OrderRedpacketCouponService;
 import com.jsj.member.ob.service.RedpacketCouponService;
 import com.jsj.member.ob.service.RedpacketService;
 import com.jsj.member.ob.service.WechatCouponService;
+import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.TupleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -196,7 +198,7 @@ public class RedpacketLogic extends BaseLogic {
      * @param orderId
      * @return
      */
-    public static OrderRedpacketCouponDto DistributeRedpacket(String openId, int orderId) {
+    public static TwoTuple<OrderRedpacketCouponDto, Boolean> DistributeRedpacket(String openId, int orderId) {
 
         if (orderId <= 0) {
             throw new TipException("参数不合法，订单ID不能为空");
@@ -217,7 +219,7 @@ public class RedpacketLogic extends BaseLogic {
         //已领取
         if (distributeRedpacketed != null) {
             Integer orderRedpacketCouponId = distributeRedpacketed.getOrderRedpacketCouponId();
-            return RedpacketLogic.GetOrderRedpacketCouponDto(orderRedpacketCouponId);
+            return TupleUtils.tuple(RedpacketLogic.GetOrderRedpacketCouponDto(orderRedpacketCouponId), true);
         }
 
         //获得待领取记录
@@ -256,7 +258,7 @@ public class RedpacketLogic extends BaseLogic {
 
         redpacketLogic.orderRedpacketCouponService.updateById(orderRedpacketCoupon);
 
-        return RedpacketLogic.GetOrderRedpacketCouponDto(orderRedpacketCoupon.getOrderRedpacketCouponId());
+        return TupleUtils.tuple(RedpacketLogic.GetOrderRedpacketCouponDto(orderRedpacketCoupon.getOrderRedpacketCouponId()), false);
 
     }
 

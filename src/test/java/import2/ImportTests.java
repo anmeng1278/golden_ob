@@ -98,7 +98,6 @@ public class ImportTests {
             OrderBase orderBase = OrderFactory.GetInstance(orderId);
             orderBase.PaySuccessed(orderId, notifyModel);
 
-            break;
         }
 
     }
@@ -130,21 +129,26 @@ public class ImportTests {
                 return TupleUtils.tuple(13, 25);
             case 3:
                 return TupleUtils.tuple(15, 28);
+            case 118:
+                return TupleUtils.tuple(34, 54);
+            case 150:
+                return TupleUtils.tuple(17, 31);
+
 
             default:
-                throw new TipException("没有找到配置");
+                throw new TipException(String.format("没有找到配置：%d", productId));
         }
 
         //1	金色逸站通用券	5,6
         //114	花下秀洗护套装	2,22
         //116	怀山堂即食山药	3,44
-        //118	素园辽参 大隐
+        //118	素园辽参 大隐 34,54
         //119	越甲科技20寸旅行箱	14,26
         //130	素园辽参 往来	7,19
         //131	素园辽参 问策	8,23
         //140	素园辽参 参迷	10,12
         //141	怀山堂山药粉(360g)	1,17
-        //150	商旅管家·逸站通卡
+        //150	商旅管家·逸站通卡  17, 31
         //151	商旅管家·全国通卡	9,11
         //170	暖妈山茶油（450mlx2）	11,20
         //2	超级空客·月体验	13,25

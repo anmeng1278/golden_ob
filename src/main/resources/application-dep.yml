@@ -34,7 +34,6 @@ spring:
     publisher-returns: true
   redis:
     host: zen_yalow
-    timeout: 10000
     port: 6379
     password: JSB@#$%2345
 

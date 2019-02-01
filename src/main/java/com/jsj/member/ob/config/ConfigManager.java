@@ -1,8 +1,9 @@
 package com.jsj.member.ob.config;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baidu.ueditor.define.ActionMap;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -121,13 +122,13 @@ public final class ConfigManager {
             case ActionMap.LIST_IMAGE:
                 conf.put("allowFiles", this.getArray("imageManagerAllowFiles"));
                 conf.put("dir", this.jsonConfig.getString("imageManagerListPath"));
-                conf.put("count", this.jsonConfig.getInt("imageManagerListSize"));
+                conf.put("count", this.jsonConfig.getIntValue("imageManagerListSize"));
                 break;
 
             case ActionMap.LIST_FILE:
                 conf.put("allowFiles", this.getArray("fileManagerAllowFiles"));
                 conf.put("dir", this.jsonConfig.getString("fileManagerListPath"));
-                conf.put("count", this.jsonConfig.getInt("fileManagerListSize"));
+                conf.put("count", this.jsonConfig.getIntValue("fileManagerListSize"));
                 break;
 
         }
@@ -152,7 +153,7 @@ public final class ConfigManager {
         String configContent = this.readFile(this.getConfigPath());
 
         try {
-            JSONObject jsonConfig = new JSONObject(configContent);
+            JSONObject jsonConfig = JSON.parseObject(configContent);
             this.jsonConfig = jsonConfig;
         } catch (Exception e) {
             this.jsonConfig = null;
@@ -174,9 +175,9 @@ public final class ConfigManager {
     private String[] getArray(String key) {
 
         JSONArray jsonArray = this.jsonConfig.getJSONArray(key);
-        String[] result = new String[jsonArray.length()];
+        String[] result = new String[jsonArray.size()];
 
-        for (int i = 0, len = jsonArray.length(); i < len; i++) {
+        for (int i = 0, len = jsonArray.size(); i < len; i++) {
             result[i] = jsonArray.getString(i);
         }
 

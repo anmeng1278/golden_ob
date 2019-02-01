@@ -120,7 +120,7 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                     return false;
                 }
 
-                User wxUser = SnsAPI.userinfo(snsToken.getAccess_token(), snsToken.getOpenid(), "UTF8", 1);
+                User wxUser = SnsAPI.userinfo(snsToken.getAccess_token(), snsToken.getOpenid(), "UTF8", 0);
                 if (!StringUtils.isEmpty(wxUser.getErrcode())) {
                     response.getWriter().write(wxUser.getErrmsg());
                     return false;
