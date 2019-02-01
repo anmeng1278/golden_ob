@@ -62,7 +62,7 @@ public class ApiProductController {
                 stockCount = Math.min(productDtos.get(0).getStockCount(), productSpecDto.getStockCount());
                 resp.setProduct(productDto);
                 resp.setActivity(activity);
-                resp.setActivityProducts(productDtos);
+                resp.setStockCount(stockCount);
                 break;
             case COMBINATION:
                 ActivityDto comActivity = ActivityLogic.GetActivity(requ.getRequestBody().getActivityId());
