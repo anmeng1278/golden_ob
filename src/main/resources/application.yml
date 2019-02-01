@@ -110,7 +110,7 @@ webconfig:
   host:
 
   ##二维码查看网址
-  qrcodeUrl: http://mobile.qq.com/qrcode?url=%s&width=300&height=300
+  qrcodeUrl: http://qr.liantu.com/api.php?text=%s&w=300&h=300
 
   WxTemplate:
 
