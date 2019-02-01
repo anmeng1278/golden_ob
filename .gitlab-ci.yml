@@ -21,6 +21,26 @@ build_ob:
     - echo "发布成功"
 
 
+build_ob:
+  stage: build
+  tags:
+    - build
+  only:
+    - dev.v2
+  script:
+    - echo "开始编译"
+    - echo $PWD
+    - mvn clean package -DskipTests
+
+    - echo "开始发布"
+    - pname="memberob"
+    - if [ $(docker ps -a -q -f "name=test-$pname" | wc -l) -eq 1 ] ;
+    -   then docker stop $(docker ps -a -q -f "name=test-$pname") && docker rm $(docker ps -a -q -f "name=test-$pname") ;
+    - fi
+    - docker run -d -v "$PWD/target/":/usr/src/myapp -e TZ="Asia/Shanghai" -p 8090:80 --name "test-$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --webconfig.runJob=true --spring.profiles.active=pub -Duser.timezone=Asia/Jerusalem
+    - echo "发布成功"
+
+
 build_deploy:
   stage: build
   tags:
