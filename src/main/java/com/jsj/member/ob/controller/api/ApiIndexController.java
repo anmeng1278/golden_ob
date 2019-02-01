@@ -69,6 +69,15 @@ public class ApiIndexController {
         List<ActivityDto> setSales = ActivityLogic.GetActivityByType(ActivityType.COMBINATION);
         resp.setSetSales(setSales);
 
+        //兑换专区商品
+        ActivityDto exchange = ActivityLogic.GetActivity(ActivityType.EXCHANGE);
+        List<ActivityProductDto> exchangeProducts = new ArrayList<>();
+        if (exchange != null) {
+            exchangeProducts = ActivityLogic.GetActivityProductDtos(exchange.getActivityId());
+        }
+        resp.setExchangeProducts(exchangeProducts);
+
+
         return Response.ok(resp);
 
     }

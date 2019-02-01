@@ -30,6 +30,9 @@ public class IndexResp {
     @ApiModelProperty(value = "组合优惠")
     List<ActivityDto> setSales;
 
+    @ApiModelProperty(value = "兑换专区商品")
+    List<ActivityProductDto> exchangeProducts;
+
 
     public List<Banner> getBanners() {
         return banners;
@@ -77,5 +80,13 @@ public class IndexResp {
 
     public void setSetSales(List<ActivityDto> setSales) {
         this.setSales = setSales;
+    }
+
+    public List<ActivityProductDto> getExchangeProducts() {
+        return exchangeProducts;
+    }
+
+    public void setExchangeProducts(List<ActivityProductDto> exchangeProducts) {
+        this.exchangeProducts = exchangeProducts;
     }
 }
