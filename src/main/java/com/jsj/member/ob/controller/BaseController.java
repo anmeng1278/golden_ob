@@ -25,8 +25,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.thymeleaf.spring4.context.SpringWebContext;
-import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,8 +62,11 @@ public abstract class BaseController {
             AccessKey accessKey,
             String templateName
     ) {
-        SpringWebContext ctx = new SpringWebContext(request, response,
-                request.getServletContext(), request.getLocale(), null, applicationContext);
+
+        WebContext ctx = new WebContext(request, response, request.getServletContext(), request.getLocale(), null);
+
+        //SpringWebContext ctx = new SpringWebContext(request, response,
+        //        request.getServletContext(), request.getLocale(), null, applicationContext);
         String html = thymeleafViewResolver.getTemplateEngine().process(templateName, ctx);
 
         if (!StringUtils.isBlank(html)) {

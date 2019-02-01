@@ -13,6 +13,14 @@ public class RegisterRequ {
     @ApiModelProperty(value = "小程序授权后的原始数据", required = true)
     private String rawData;
 
+    @NotBlank(message = "小程序授权后的原始数据")
+    @ApiModelProperty(value = "小程序授权后的原始数据", required = true)
+    private String encryptedData;
+
+    @NotBlank(message = "小程序授权后的原始数据")
+    @ApiModelProperty(value = "小程序授权后的原始数据", required = true)
+    private String iv;
+
     @ApiModelProperty(value = "会员编号，可选")
     private int jsjId;
 
@@ -38,5 +46,21 @@ public class RegisterRequ {
 
     public void setJsjId(int jsjId) {
         this.jsjId = jsjId;
+    }
+
+    public String getEncryptedData() {
+        return encryptedData;
+    }
+
+    public void setEncryptedData(String encryptedData) {
+        this.encryptedData = encryptedData;
+    }
+
+    public String getIv() {
+        return iv;
+    }
+
+    public void setIv(String iv) {
+        this.iv = iv;
     }
 }
