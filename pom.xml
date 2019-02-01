@@ -227,11 +227,7 @@
             <version>2.5.0</version>
         </dependency>
 
-        <!--UEditor依赖的jar包 -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
@@ -281,10 +277,13 @@
             <version>2.8.24</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-redis</artifactId>
+            <version>1.4.7.RELEASE</version>
         </dependency>
+
 
         <dependency>
             <groupId>com.googlecode.protobuf-java-format</groupId>
