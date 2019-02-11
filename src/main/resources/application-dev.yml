@@ -42,7 +42,7 @@ webconfig:
   appSecrect: 455c2d8d53c8cd37cca073e579fac95f
 
   ## 虚拟目录
-  virtualPath: "/ot"
+  virtualPath: ""
 
   ## 严选活动码生成地址
   activityUrl: http://172.16.6.134/awk/Third/ThirdApi/API2Partner.aspx
