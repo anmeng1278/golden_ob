@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.Stock">
         <id column="stock_id" property="stockId" />
         <result column="open_id" property="openId" />
+        <result column="union_id" property="unionId" />
         <result column="product_id" property="productId" />
         <result column="product_spec_id" property="productSpecId" />
         <result column="order_id" property="orderId" />
@@ -21,7 +22,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        stock_id AS stockId, open_id AS openId, product_id AS productId, product_spec_id AS productSpecId, order_id AS orderId, order_product_id AS orderProductId, type_id AS typeId, gift_stock_id AS giftStockId, parent_stock_id AS parentStockId, status, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        stock_id AS stockId, open_id AS openId, union_id AS unionId, product_id AS productId, product_spec_id AS productSpecId, order_id AS orderId, order_product_id AS orderProductId, type_id AS typeId, gift_stock_id AS giftStockId, parent_stock_id AS parentStockId, status, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

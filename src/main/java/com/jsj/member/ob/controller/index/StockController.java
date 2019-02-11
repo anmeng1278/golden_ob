@@ -66,17 +66,18 @@ public class StockController extends BaseController {
     public String index(HttpServletRequest request) {
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
 
         //库存列表
-        List<StockDto> stockDtos = StockLogic.GetStocks(openId);
+        List<StockDto> stockDtos = StockLogic.GetStocks(openId, unionId);
         request.setAttribute("stockDtos", stockDtos);
 
         //分享失败的礼包
-        int unShareCount = GiftLogic.GetGiveCount(openId, GiftStatus.UNSHARE);
+        int unShareCount = GiftLogic.GetGiveCount(unionId, GiftStatus.UNSHARE);
         request.setAttribute("unShareCount", unShareCount);
 
         //存在未使用的活动码
-        DeliveryDto unDeliveryDto = DeliveryFactory.GetInstance(PropertyType.ACTIVITYCODE).GetUnDeliveryDto(openId);
+        DeliveryDto unDeliveryDto = DeliveryFactory.GetInstance(PropertyType.ACTIVITYCODE).GetUnDeliveryDto(unionId);
         List<DeliveryStock> unUsedActivityCodes = new ArrayList<>();
 
         if (unDeliveryDto != null) {
@@ -176,19 +177,20 @@ public class StockController extends BaseController {
 
         PropertyType propertyType = PropertyType.valueOf(Integer.valueOf(propertyTypeId));
         String openId = this.OpenId();
+        String unionId = this.UnionId();
 
         //根据商品属性创建实例
         DeliveryBase deliveryBase = DeliveryFactory.GetInstance(propertyType);
 
         //验证并获取下一步链接
-        TwoTuple<String, String> usedNavigate = deliveryBase.GetUsedNavigate(openId);
+        TwoTuple<String, String> usedNavigate = deliveryBase.GetUsedNavigate(unionId);
 
         if (!StringUtils.isEmpty(usedNavigate.first)) {
             return RestResponseBo.fail(usedNavigate.first, null, this.Url(usedNavigate.second));
         }
 
         List<UseProductDto> useProductDtos = JSON.parseArray(p, UseProductDto.class);
-        List<StockDto> stockDtos = StockLogic.GetStocks(openId, useProductDtos, false);
+        List<StockDto> stockDtos = StockLogic.GetStocks(openId, unionId, useProductDtos, false);
 
         //验证使用库存
         deliveryBase.validateUsed(stockDtos);

@@ -112,17 +112,17 @@ public class OrderLogic extends BaseLogic {
     /**
      * 获取订单数
      *
-     * @param opendId
+     * @param unionId
      * @return
      */
-    public static Integer GetOrderCount(String opendId) {
+    public static Integer GetOrderCount(String unionId) {
 
-        if (StringUtils.isBlank(opendId)) {
+        if (StringUtils.isBlank(unionId)) {
             return 0;
         }
 
         EntityWrapper<Order> wrapper = new EntityWrapper<>();
-        wrapper.where("open_id={0}", opendId);
+        wrapper.where("union_id={0}", unionId);
 
         return orderLogic.orderService.selectCount(wrapper);
 
@@ -261,28 +261,30 @@ public class OrderLogic extends BaseLogic {
     /**
      * 获得用户的所有订单
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    public static List<UserOrderDto> GetOrders(String openId) {
-        return OrderLogic.GetOrders(openId, OrderFlag.ALLORDERS);
+    public static List<UserOrderDto> GetOrders(String unionId) {
+        return OrderLogic.GetOrders(unionId, OrderFlag.ALLORDERS);
     }
     //endregion
+
 
     //region (public) 获得用户所有订单或所有待支付订单 GetOrders
 
     /**
      * 获得用户所有订单或所有待支付订单
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    public static List<UserOrderDto> GetOrders(String openId, OrderFlag orderFlag) {
+    public static List<UserOrderDto> GetOrders(String unionId, OrderFlag orderFlag) {
 
-        List<UserOrderDto> orders = orderLogic.orderService.getOrders(openId, orderFlag);
+        List<UserOrderDto> orders = orderLogic.orderService.getOrders(unionId, orderFlag);
         return orders;
 
     }
+    //endregion
 
 
     //region (public) 实体转换 ToDto
@@ -298,6 +300,7 @@ public class OrderLogic extends BaseLogic {
         OrderDto dto = new OrderDto();
 
         dto.setOpenId(entity.getOpenId());
+        dto.setUnionId(entity.getUnionId());
         dto.setOrderId(entity.getOrderId());
         dto.setRemarks(entity.getRemarks());
         dto.setAmount(entity.getAmount());

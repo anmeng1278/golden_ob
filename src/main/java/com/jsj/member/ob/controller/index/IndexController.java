@@ -186,9 +186,11 @@ public class IndexController extends BaseController {
 
         //用户购物车的商品数量
         String openId = this.OpenId();
-        int cartCount = CartLogic.GetCartProductCount(openId);
+        String unionId = this.UnionId();
+
+        int cartCount = CartLogic.GetCartProductCount(openId, unionId);
         //用户未支付订单数
-        int unPayCount = OrderLogic.GetOrders(openId, OrderFlag.UNPAIDORDERS).size();
+        int unPayCount = OrderLogic.GetOrders(unionId, OrderFlag.UNPAIDORDERS).size();
 
         Map<String, Object> map = new HashMap<>();
         map.put("cartCount", cartCount);

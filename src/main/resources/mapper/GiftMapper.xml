@@ -4,22 +4,23 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.Gift">
-        <id column="gift_id" property="giftId"/>
-        <result column="gift_unique_code" property="giftUniqueCode"/>
-        <result column="open_id" property="openId"/>
-        <result column="blessings" property="blessings"/>
-        <result column="status" property="status"/>
-        <result column="remarks" property="remarks"/>
-        <result column="share_type" property="shareType"/>
-        <result column="expired_time" property="expiredTime"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
-        <result column="delete_time" property="deleteTime"/>
+        <id column="gift_id" property="giftId" />
+        <result column="gift_unique_code" property="giftUniqueCode" />
+        <result column="open_id" property="openId" />
+        <result column="union_id" property="unionId" />
+        <result column="blessings" property="blessings" />
+        <result column="status" property="status" />
+        <result column="remarks" property="remarks" />
+        <result column="share_type" property="shareType" />
+        <result column="expired_time" property="expiredTime" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="delete_time" property="deleteTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        gift_id AS giftId, gift_unique_code AS giftUniqueCode, open_id AS openId, blessings, status, remarks, share_type AS shareType, expired_time AS expiredTime, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        gift_id AS giftId, gift_unique_code AS giftUniqueCode, open_id AS openId, union_id AS unionId, blessings, status, remarks, share_type AS shareType, expired_time AS expiredTime, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 
@@ -50,7 +51,7 @@
                     on g.open_id = w.open_id
                 left join _product_img as pi
                     on ( a.product_id = pi.product_id and pi.type_id = 0)
-                where a.open_id = #{openId} and a.type_id = 2
+                where a.union_id = #{unionId} and a.type_id = 2
                 group by g.gift_id
 
                 order by a.status asc,a.create_time desc
@@ -84,7 +85,7 @@
             left join _wechat as w
                 on c.open_id = w.open_id
 
-        where a.open_id =  #{openId}
+        where a.union_id =  #{unionId}
         group by a.gift_id
         order by a.status asc, a.create_time desc
         ]]>

@@ -11,28 +11,56 @@ import java.util.List;
 public class ProductDetailResp {
 
     @ApiModelProperty(value = "商品信息")
-    private ProductDto product;
+    private ProductDto productDto;
 
     @ApiModelProperty(value = "商品可用优惠券")
-    private  List<WechatCouponDto> coupons;
+    private List<WechatCouponDto> wechatCouponDtos;
 
     @ApiModelProperty(value = "剩余库存")
     private Integer stockCount;
 
-
     @ApiModelProperty(value = "活动信息")
-    private ActivityDto activity;
+    private ActivityDto activityDto;
 
     @ApiModelProperty(value = "活动中的商品")
-    private List<ActivityProductDto> activityProducts;
+    private List<ActivityProductDto> activityProductDtos;
+
+    @ApiModelProperty(value = "售价")
+    private double salePrice;
+
+    @ApiModelProperty(value = "图片地址")
+    private String imgUrl;
+
+    @ApiModelProperty(value = "图片地址")
+    private int flag;
+
+    @ApiModelProperty(value = "活动编号")
+    private int activityId;
+
+    @ApiModelProperty(value = "商品编号")
+    private int productId;
+
+    @ApiModelProperty(value = "规格编号")
+    private int productSpecId;
+
+    @ApiModelProperty(value = "账户余额")
+    private double balance;
 
 
-    public List<WechatCouponDto> getCoupons() {
-        return coupons;
+    public ProductDto getProductDto() {
+        return productDto;
     }
 
-    public void setCoupons(List<WechatCouponDto> coupons) {
-        this.coupons = coupons;
+    public void setProductDto(ProductDto productDto) {
+        this.productDto = productDto;
+    }
+
+    public List<WechatCouponDto> getWechatCouponDtos() {
+        return wechatCouponDtos;
+    }
+
+    public void setWechatCouponDtos(List<WechatCouponDto> wechatCouponDtos) {
+        this.wechatCouponDtos = wechatCouponDtos;
     }
 
     public Integer getStockCount() {
@@ -43,28 +71,75 @@ public class ProductDetailResp {
         this.stockCount = stockCount;
     }
 
-
-    public ActivityDto getActivity() {
-        return activity;
+    public ActivityDto getActivityDto() {
+        return activityDto;
     }
 
-    public void setActivity(ActivityDto activity) {
-        this.activity = activity;
+    public void setActivityDto(ActivityDto activityDto) {
+        this.activityDto = activityDto;
     }
 
-    public List<ActivityProductDto> getActivityProducts() {
-        return activityProducts;
+    public List<ActivityProductDto> getActivityProductDtos() {
+        return activityProductDtos;
     }
 
-    public void setActivityProducts(List<ActivityProductDto> activityProducts) {
-        this.activityProducts = activityProducts;
+    public void setActivityProductDtos(List<ActivityProductDto> activityProductDtos) {
+        this.activityProductDtos = activityProductDtos;
     }
 
-    public ProductDto getProduct() {
-        return product;
+    public double getSalePrice() {
+        return salePrice;
     }
 
-    public void setProduct(ProductDto product) {
-        this.product = product;
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
+    public int getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(int activityId) {
+        this.activityId = activityId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public int getProductSpecId() {
+        return productSpecId;
+    }
+
+    public void setProductSpecId(int productSpecId) {
+        this.productSpecId = productSpecId;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 }

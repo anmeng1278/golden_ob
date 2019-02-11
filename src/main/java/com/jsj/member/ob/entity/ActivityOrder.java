@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : ActivityOrder 活动订单表,暂时团单使用实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2019-02-11
  */
 @TableName("_activity_order")
 public class ActivityOrder implements Serializable {
@@ -34,6 +34,8 @@ public class ActivityOrder implements Serializable {
      */
 	@TableField("open_id")
 	private String openId;
+	@TableField("union_id")
+	private String unionId;
     /**
      * 过期时间
      */
@@ -88,6 +90,14 @@ public class ActivityOrder implements Serializable {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	public Integer getExpireTime() {
@@ -153,6 +163,7 @@ public class ActivityOrder implements Serializable {
 			", activityOrderId=" + activityOrderId +
 			", activityId=" + activityId +
 			", openId=" + openId +
+			", unionId=" + unionId +
 			", expireTime=" + expireTime +
 			", parentActivityOrderId=" + parentActivityOrderId +
 			", status=" + status +

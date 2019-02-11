@@ -20,10 +20,10 @@ public interface GiftMapper extends BaseMapper<Gift> {
 
     /**
      * 获取用户领取记录
-     * @param openId
+     * @param unionId
      * @return
      */
-    List<UserDrawDto> getUserDraws(String openId);
+    List<UserDrawDto> getUserDraws(String unionId);
 
 
     /**

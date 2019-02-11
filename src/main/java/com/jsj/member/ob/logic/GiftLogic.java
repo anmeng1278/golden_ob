@@ -684,11 +684,11 @@ public class GiftLogic extends BaseLogic {
     /**
      * 获得用户赠送列表
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    public static List<UserGiftDto> GetGives(String openId) {
-        return giftLogic.giftService.getUserGifts(openId);
+    public static List<UserGiftDto> GetGives(String unionId) {
+        return giftLogic.giftService.getUserGifts(unionId);
     }
     //endregion
 
@@ -729,14 +729,14 @@ public class GiftLogic extends BaseLogic {
     /**
      * 获取用户赠送数量
      *
-     * @param openId
+     * @param unionId
      * @param giftStatus
      * @return
      */
-    public static int GetGiveCount(String openId, GiftStatus giftStatus) {
+    public static int GetGiveCount(String unionId, GiftStatus giftStatus) {
 
         EntityWrapper<Gift> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null and open_id={0}", openId);
+        wrapper.where("delete_time is null and union_id={0}", unionId);
         if (giftStatus != null) {
             wrapper.where("status = {0}", giftStatus.getValue());
         }
@@ -750,16 +750,16 @@ public class GiftLogic extends BaseLogic {
     /**
      * 获得用户领取列表
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    public static List<UserDrawDto> GetReceived(String openId) {
+    public static List<UserDrawDto> GetReceived(String unionId) {
 
-        if (StringUtils.isBlank(openId)) {
-            throw new TipException("参数不合法，用户openId为空");
+        if (StringUtils.isBlank(unionId)) {
+            throw new TipException("参数不合法，用户unionId为空");
         }
 
-        List<UserDrawDto> userDraws = giftLogic.giftService.getUserDraws(openId);
+        List<UserDrawDto> userDraws = giftLogic.giftService.getUserDraws(unionId);
         return userDraws;
         ////用户领取的库存
         //List<StockDto> stockDtos = StockLogic.GetStocks(openId, StockType.GIFT, null);

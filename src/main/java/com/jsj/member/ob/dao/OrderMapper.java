@@ -20,10 +20,10 @@ public interface OrderMapper extends BaseMapper<Order> {
 
     /**
      * 获得用户所有订单
-     * @param openId
+     * @param unionId
      * @return
      */
-    List<UserOrderDto> getOrders(@Param("openId")String openId, @Param("orderFlag")OrderFlag orderFlag);
+    List<UserOrderDto> getOrders(@Param("unionId")String unionId, @Param("orderFlag")OrderFlag orderFlag);
 
 
 }

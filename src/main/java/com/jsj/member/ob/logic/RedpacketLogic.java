@@ -53,6 +53,8 @@ public class RedpacketLogic extends BaseLogic {
     WechatCouponService wechatCouponService;
 
 
+    //region (public) 获取礼包信息 GetRedpacket
+
     /**
      * 获取礼包信息
      *
@@ -83,6 +85,9 @@ public class RedpacketLogic extends BaseLogic {
         return dto;
 
     }
+    //endregion
+
+    //region (public) 礼包优惠券信息 GetRedpacketCoupon
 
     /**
      * 礼包优惠券信息
@@ -129,7 +134,9 @@ public class RedpacketLogic extends BaseLogic {
         return redpacketCouponDtos;
 
     }
+    //endregion
 
+    //region (public) 给订单创建一个礼包 CreateOrderRedpacket
 
     /**
      * 给订单创建一个礼包
@@ -189,16 +196,19 @@ public class RedpacketLogic extends BaseLogic {
             }
         }
     }
+    //endregion
 
+    //region (public) 发送礼包 DistributeRedpacket
 
     /**
      * 发送礼包
      *
      * @param openId
+     * @param unionId
      * @param orderId
      * @return
      */
-    public static TwoTuple<OrderRedpacketCouponDto, Boolean> DistributeRedpacket(String openId, int orderId) {
+    public static TwoTuple<OrderRedpacketCouponDto, Boolean> DistributeRedpacket(String openId, String unionId, int orderId) {
 
         if (orderId <= 0) {
             throw new TipException("参数不合法，订单ID不能为空");
@@ -208,10 +218,13 @@ public class RedpacketLogic extends BaseLogic {
             throw new TipException("参数不合法，用户openId为空");
         }
 
+        if (StringUtils.isBlank(unionId)) {
+            throw new TipException("参数不合法，用户unionId为空");
+        }
 
         //每个人只能领取一次
         EntityWrapper<OrderRedpacketCoupon> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where("open_id={0} and order_id={1}", openId, orderId);
+        entityWrapper.where("union_id={0} and order_id={1}", unionId, orderId);
         entityWrapper.where("ifreceived = 1 and delete_time is null ");
 
         OrderRedpacketCoupon distributeRedpacketed = redpacketLogic.orderRedpacketCouponService.selectOne(entityWrapper);
@@ -241,6 +254,7 @@ public class RedpacketLogic extends BaseLogic {
 
         //把获得的信息插入到_wechat_coupon并设置_order_redpacket_coupon已领取，领取人openId，领取时间
         wechatCoupon.setOpenId(openId);
+        wechatCoupon.setUnionId(unionId);
         wechatCoupon.setOrderRedpacketCouponId(orderRedpacketCoupon.getOrderRedpacketCouponId());
         wechatCoupon.setCouponId(orderRedpacketCoupon.getCouponId());
         wechatCoupon.setExpiredTime((couponDto.getValidDays()) * 60 * 60 * 24 + DateUtils.getCurrentUnixTime());
@@ -254,6 +268,7 @@ public class RedpacketLogic extends BaseLogic {
 
         orderRedpacketCoupon.setIfreceived(true);
         orderRedpacketCoupon.setOpenId(openId);
+        orderRedpacketCoupon.setUnionId(unionId);
         orderRedpacketCoupon.setReceivedTime(DateUtils.getCurrentUnixTime());
 
         redpacketLogic.orderRedpacketCouponService.updateById(orderRedpacketCoupon);
@@ -261,6 +276,9 @@ public class RedpacketLogic extends BaseLogic {
         return TupleUtils.tuple(RedpacketLogic.GetOrderRedpacketCouponDto(orderRedpacketCoupon.getOrderRedpacketCouponId()), false);
 
     }
+    //endregion
+
+    //region (public) 获取领取详情 GetOrderRedpacketCouponDto
 
     /**
      * 获取领取详情
@@ -294,6 +312,9 @@ public class RedpacketLogic extends BaseLogic {
         return dto;
 
     }
+    //endregion
+
+    //region (public) 获得订单红包 GetOrderRedpackets
 
     /**
      * 获得订单红包
@@ -324,6 +345,9 @@ public class RedpacketLogic extends BaseLogic {
         return orderRedpacketCoupons;
 
     }
+    //endregion
+
+    //region (public) 获得订单红包 GetOrderRedpacketDtos
 
     /**
      * 获得订单红包
@@ -344,6 +368,9 @@ public class RedpacketLogic extends BaseLogic {
 
         return dtos;
     }
+    //endregion
+
+    //region (public) 更新红包排序 Sort
 
     /**
      * 更新红包排序
@@ -404,4 +431,5 @@ public class RedpacketLogic extends BaseLogic {
 
 
     }
+    //endregion
 }

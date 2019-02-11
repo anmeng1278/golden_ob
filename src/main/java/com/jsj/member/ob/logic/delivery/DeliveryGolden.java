@@ -63,13 +63,13 @@ public class DeliveryGolden extends DeliveryBase {
     /**
      * 获取使用链接
      *
-     * @param openId
+     * @param unionId
      * @return
      */
     @Override
-    public TwoTuple<String, String> GetUsedNavigate(String openId) {
+    public TwoTuple<String, String> GetUsedNavigate(String unionId) {
 
-        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(openId);
+        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(unionId);
         if (unDeliveryDto != null) {
             return TupleUtils.tuple("您的开卡正在确认中，不能重复开卡……", "");
         }

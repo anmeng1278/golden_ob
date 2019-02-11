@@ -107,6 +107,15 @@ public abstract class BaseController {
     }
 
     /**
+     * 登录用户OpenId
+     *
+     * @return
+     */
+    public String UnionId() {
+        return this.User().getUnionid();
+    }
+
+    /**
      * 登录用户
      *
      * @return

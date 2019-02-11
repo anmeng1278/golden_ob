@@ -43,8 +43,8 @@ public class OrderController extends BaseController {
             orderFlag = OrderFlag.valueOf(Integer.parseInt(request.getParameter("orderFlag")));
         }
 
-        String openId = this.OpenId();
-        List<UserOrderDto> orderDtos = OrderLogic.GetOrders(openId, orderFlag);
+        String unionId = this.UnionId();
+        List<UserOrderDto> orderDtos = OrderLogic.GetOrders(unionId, orderFlag);
 
         request.setAttribute("orderDtos", orderDtos);
         request.setAttribute("orderFlag", orderFlag);
@@ -56,6 +56,7 @@ public class OrderController extends BaseController {
 
     /**
      * 取消订单
+     *
      * @param request
      * @return
      */
@@ -74,6 +75,7 @@ public class OrderController extends BaseController {
 
     /**
      * 创建支付请求
+     *
      * @param request
      * @return
      * @throws Exception
@@ -83,7 +85,7 @@ public class OrderController extends BaseController {
     public RestResponseBo createPay(HttpServletRequest request) throws Exception {
 
         int orderId = Integer.parseInt(request.getParameter("orderId"));
-        TwoTuple<GetPayTradeResp, SourceType> twoTuple = this.createPay(request,orderId);
+        TwoTuple<GetPayTradeResp, SourceType> twoTuple = this.createPay(request, orderId);
 
         OrderDto orderDto = OrderLogic.GetOrder(orderId);
         HashMap<String, Object> data = new HashMap<>();

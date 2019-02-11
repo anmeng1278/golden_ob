@@ -82,9 +82,10 @@ public class DeliveryPlus extends DeliveryBase {
         }
 
         String openId = requ.getBaseRequ().getOpenId();
+        String unionId = requ.getBaseRequ().getUnionId();
 
         //判断是否存在未使用的活动码
-        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(openId);
+        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(unionId);
         if (unDeliveryDto != null) {
             throw new TipException("您还有未使用的Plus权益");
         }
@@ -98,9 +99,10 @@ public class DeliveryPlus extends DeliveryBase {
         delivery.setMobile(Long.parseLong(requ.getMobile()));
         delivery.setStatus(DeliveryStatus.UNDELIVERY.getValue());
         delivery.setUpdateTime(DateUtils.getCurrentUnixTime());
-
         delivery.setCreateTime(DateUtils.getCurrentUnixTime());
-        delivery.setOpenId(requ.getBaseRequ().getOpenId());
+
+        delivery.setOpenId(openId);
+        delivery.setUnionId(unionId);
         delivery.setPropertyTypeId(this.getPropertyType().getValue());
         delivery.setTypeId(DeliveryType.PICKUP.getValue());
         delivery.setEffectiveDate(DateUtils.getCurrentUnixTime());
@@ -122,10 +124,10 @@ public class DeliveryPlus extends DeliveryBase {
 
         //WX发送权益开通成功模板
         Map map = new HashMap();
-        map.put("title","您的plus权益已开通成功，即刻生效!\n");
-        map.put("effectiveDate",DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getCreateTime() + ""), "yyyy-MM-dd"));
+        map.put("title", "您的plus权益已开通成功，即刻生效!\n");
+        map.put("effectiveDate", DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getCreateTime() + ""), "yyyy-MM-dd"));
         DeliveryDto deliveryDto = DeliveryLogic.ToDto(delivery);
-        TemplateDto temp = TemplateDto.OpenCardConfirm(deliveryDto,map);
+        TemplateDto temp = TemplateDto.OpenCardConfirm(deliveryDto, map);
         wxSender.sendNormal(temp);
         return resp;
     }
@@ -136,14 +138,14 @@ public class DeliveryPlus extends DeliveryBase {
     /**
      * 获取使用链接
      *
-     * @param openId
+     * @param unionId
      * @return
      */
     @Override
-    public TwoTuple<String, String> GetUsedNavigate(String openId) {
+    public TwoTuple<String, String> GetUsedNavigate(String unionId) {
 
         //判断是否存在未开通的权益
-        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(openId);
+        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(unionId);
         if (unDeliveryDto != null) {
             return TupleUtils.tuple("您的权益正在确认中，不能重复开通……", "");
         }
@@ -230,6 +232,7 @@ public class DeliveryPlus extends DeliveryBase {
 
     /**
      * 验证使用参数
+     *
      * @param stockDtos
      */
     @Override

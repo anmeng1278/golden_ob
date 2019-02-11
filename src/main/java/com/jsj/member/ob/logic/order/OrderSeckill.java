@@ -79,6 +79,9 @@ public class OrderSeckill extends OrderBase {
         if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
             throw new TipException("用户编号不能为空");
         }
+        if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getUnionId())) {
+            throw new TipException("用户编号不能为空");
+        }
         if (requ.getActivityId() == 0) {
             throw new TipException("活动编号不能为空");
         }
@@ -126,6 +129,7 @@ public class OrderSeckill extends OrderBase {
         Order order = new Order();
 
         order.setOpenId(requ.getBaseRequ().getOpenId());
+        order.setUnionId(requ.getBaseRequ().getUnionId());
         order.setTypeId(this.getActivityType().getValue());
         order.setRemarks(requ.getRemarks());
         order.setActivityId(activityDto.getActivityId());

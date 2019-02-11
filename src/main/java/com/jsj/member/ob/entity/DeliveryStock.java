@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : DeliveryStock 提货库存表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2019-02-11
  */
 @TableName("_delivery_stock")
 public class DeliveryStock implements Serializable {

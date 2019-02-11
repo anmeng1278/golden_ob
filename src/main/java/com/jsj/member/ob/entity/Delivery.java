@@ -1,17 +1,18 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Delivery 提货表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-28
+ *   @since 2019-02-11
  */
 @TableName("_delivery")
 public class Delivery implements Serializable {
@@ -28,6 +29,8 @@ public class Delivery implements Serializable {
      */
 	@TableField("open_id")
 	private String openId;
+	@TableField("union_id")
+	private String unionId;
     /**
      * 快递号
      */
@@ -137,6 +140,14 @@ public class Delivery implements Serializable {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	public String getExpressNumber() {
@@ -305,6 +316,7 @@ public class Delivery implements Serializable {
 		return "Delivery{" +
 			", deliveryId=" + deliveryId +
 			", openId=" + openId +
+			", unionId=" + unionId +
 			", expressNumber=" + expressNumber +
 			", status=" + status +
 			", typeId=" + typeId +

@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : OrderRedpacketCoupon 订单礼包代金券表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2019-02-11
  */
 @TableName("_order_redpacket_coupon")
 public class OrderRedpacketCoupon implements Serializable {
@@ -50,6 +50,8 @@ public class OrderRedpacketCoupon implements Serializable {
      */
 	@TableField("open_id")
 	private String openId;
+	@TableField("union_id")
+	private String unionId;
     /**
      * 是否领取
      */
@@ -132,6 +134,14 @@ public class OrderRedpacketCoupon implements Serializable {
 		this.openId = openId;
 	}
 
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
+	}
+
 	public Boolean getIfreceived() {
 		return ifreceived;
 	}
@@ -183,6 +193,7 @@ public class OrderRedpacketCoupon implements Serializable {
 			", typeId=" + typeId +
 			", amount=" + amount +
 			", openId=" + openId +
+			", unionId=" + unionId +
 			", ifreceived=" + ifreceived +
 			", receivedTime=" + receivedTime +
 			", createTime=" + createTime +

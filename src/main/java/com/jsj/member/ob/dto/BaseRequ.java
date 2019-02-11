@@ -12,6 +12,11 @@ public class BaseRequ {
      */
     private String openId;
 
+    /**
+     * 公众号UnionID
+     */
+    private String unionId;
+
 
     /**
      * 会员编号
@@ -41,5 +46,13 @@ public class BaseRequ {
 
     public void setJsjId(int jsjId) {
         this.jsjId = jsjId;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
     }
 }

@@ -162,6 +162,7 @@ public class WechatLogic extends BaseLogic {
 
             wechat.setSubscribeTime(user.getSubscribe_time());
             wechat.setUpdateTime(DateUtils.getCurrentUnixTime());
+            wechat.setUnionId(user.getUnionid());
 
             wechatLogic.wechatService.updateById(wechat);
 
@@ -294,6 +295,8 @@ public class WechatLogic extends BaseLogic {
     }
     //endregion
 
+    //region (public) 活动可以接受消息推送的用户信息 GetNotifyWechat
+
     /**
      * 活动可以接受消息推送的用户信息
      * @return
@@ -307,4 +310,6 @@ public class WechatLogic extends BaseLogic {
 
         return wechats;
     }
+    //endregion
+
 }

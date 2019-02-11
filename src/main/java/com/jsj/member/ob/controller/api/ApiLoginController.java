@@ -1,20 +1,23 @@
 package com.jsj.member.ob.controller.api;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.Request;
 import com.jsj.member.ob.dto.api.Response;
-import com.jsj.member.ob.dto.mini.MiniUserInfo;
 import com.jsj.member.ob.dto.mini.RegisterRequ;
 import com.jsj.member.ob.dto.mini.RegisterResp;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.WechatLogic;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import weixin.popular.bean.user.User;
+import weixin.popular.bean.wxa.WxaDUserInfo;
+import weixin.popular.util.WxaUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("${webconfig.virtualPath}/mini")
 public class ApiLoginController {
 
+
+    private final Logger logger = LoggerFactory.getLogger(ApiLoginController.class);
 
     //region (public) 微信小程序数据初始化 register
 
@@ -37,28 +42,48 @@ public class ApiLoginController {
     public Response<RegisterResp> register(@ApiParam(value = "请求实体", required = true) @RequestBody @Validated Request<RegisterRequ> requ, HttpServletRequest request) throws Exception {
 
         RegisterResp resp = new RegisterResp();
-        MiniUserInfo userInfo = JSON.parseObject(requ.getRequestBody().getRawData(), MiniUserInfo.class);
+        //MiniUserInfo userInfo = JSON.parseObject(requ.getRequestBody().getRawData(), MiniUserInfo.class);
+
+        Object attribute = request.getSession().getAttribute(Constant.wxapp_session_key);
+
+        if (attribute == null) {
+            throw new TipException("登录信息丢失，请重新登录");
+        }
+        JSONObject jsonObject = (JSONObject) attribute;
+
+        String sessionKey = jsonObject.getString("sessionKey");
+        logger.info("获取登录数据：{}", JSON.toJSONString(attribute));
+
+        logger.info("{} {} {}", sessionKey, requ.getRequestBody().getEncryptedData(), requ.getRequestBody().getIv());
+
+        WxaDUserInfo wxaDUserInfo = WxaUtil.decryptUserInfo(sessionKey, requ.getRequestBody().getEncryptedData(), requ.getRequestBody().getIv());
+        if (wxaDUserInfo == null) {
+            throw new TipException("解密用户信息失败，请重试");
+        }
 
         //数据插入数据库
         User user = new User();
 
-        user.setNickname(userInfo.getNickName());
-        user.setOpenid(requ.getRequestBody().getOpenId());
-        user.setCity(userInfo.getCity());
-        user.setCountry(userInfo.getCountry());
-        user.setHeadimgurl(userInfo.getAvatarUrl());
+        user.setUnionid(wxaDUserInfo.getUnionId());
+        user.setNickname(wxaDUserInfo.getNickName());
+        user.setOpenid(wxaDUserInfo.getOpenId());
+        user.setCity(wxaDUserInfo.getCity());
+        user.setCountry(wxaDUserInfo.getCountry());
+        user.setHeadimgurl(wxaDUserInfo.getAvatarUrl());
 
-        user.setLanguage(userInfo.getLanguage());
-        user.setProvince(userInfo.getProvince());
-        user.setSex(userInfo.getGender());
+        user.setLanguage(wxaDUserInfo.getLanguage());
+        user.setProvince(wxaDUserInfo.getProvince());
+        user.setSex(Integer.parseInt(wxaDUserInfo.getGender()));
 
         WechatLogic.Init(user);
 
         if (requ.getRequestBody().getJsjId() > 0) {
-            WechatLogic.BindJSJId(requ.getRequestBody().getOpenId(), requ.getRequestBody().getJsjId());
+            WechatLogic.BindJSJId(wxaDUserInfo.getOpenId(), requ.getRequestBody().getJsjId());
         }
 
-        resp.setOpenId(requ.getRequestBody().getOpenId());
+        resp.setOpenId(wxaDUserInfo.getOpenId());
+        resp.setUnionId(wxaDUserInfo.getUnionId());
+
         return Response.ok(resp);
 
 

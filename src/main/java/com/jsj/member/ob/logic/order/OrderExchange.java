@@ -80,6 +80,9 @@ public class OrderExchange extends OrderBase {
         if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
             throw new TipException("用户编号不能为空");
         }
+        if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getUnionId())) {
+            throw new TipException("用户编号不能为空");
+        }
 
         if (requ.getBaseRequ().getJsjId() <= 0) {
             throw new TipException("只有会员才能参与兑换活动");
@@ -131,6 +134,7 @@ public class OrderExchange extends OrderBase {
         Order order = new Order();
 
         order.setOpenId(requ.getBaseRequ().getOpenId());
+        order.setUnionId(requ.getBaseRequ().getUnionId());
         order.setTypeId(this.getActivityType().getValue());
         order.setRemarks(requ.getRemarks());
         order.setActivityId(activityDto.getActivityId());

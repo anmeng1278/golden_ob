@@ -18,9 +18,9 @@ public interface OrderService extends IService<Order> {
     /**
      * 获得用户所有订单
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    List<UserOrderDto> getOrders(String openId, OrderFlag orderFlag);
+    List<UserOrderDto> getOrders(String unionId, OrderFlag orderFlag);
 
 }

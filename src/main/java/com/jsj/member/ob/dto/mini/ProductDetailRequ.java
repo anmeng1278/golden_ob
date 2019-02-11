@@ -4,11 +4,11 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class ProductDetailRequ {
 
-    @ApiModelProperty(value = "会员编号，可为空")
+    @ApiModelProperty(value = "会员编号，必填", required = true)
     private int jsjId;
 
-    @ApiModelProperty(value = "openId，必填", required = true)
-    private String openId;
+    @ApiModelProperty(value = "unionId，必填", required = true)
+    private String unionId;
 
     @ApiModelProperty(value = "活动编号，活动商品详情必填")
     private int activityId;
@@ -30,12 +30,12 @@ public class ProductDetailRequ {
         this.jsjId = jsjId;
     }
 
-    public String getOpenId() {
-        return openId;
+    public String getUnionId() {
+        return unionId;
     }
 
-    public void setOpenId(String openId) {
-        this.openId = openId;
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
     }
 
     public int getActivityId() {

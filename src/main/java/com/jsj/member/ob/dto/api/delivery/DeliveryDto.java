@@ -19,6 +19,11 @@ public class DeliveryDto {
      * 公众号open_id
      */
     private String openId;
+
+    /**
+     * 公众号union_id
+     */
+    private String unionId;
     /**
      * 快递号
      */
@@ -313,5 +318,13 @@ public class DeliveryDto {
 
     public void setDeleteTime(Integer deleteTime) {
         this.deleteTime = deleteTime;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
     }
 }

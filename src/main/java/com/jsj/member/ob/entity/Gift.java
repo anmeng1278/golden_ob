@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Gift 赠送表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2019-02-11
  */
 @TableName("_gift")
 public class Gift implements Serializable {
@@ -34,6 +34,8 @@ public class Gift implements Serializable {
      */
 	@TableField("open_id")
 	private String openId;
+	@TableField("union_id")
+	private String unionId;
     /**
      * 祝福语
      */
@@ -95,6 +97,14 @@ public class Gift implements Serializable {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	public String getBlessings() {
@@ -168,6 +178,7 @@ public class Gift implements Serializable {
 			", giftId=" + giftId +
 			", giftUniqueCode=" + giftUniqueCode +
 			", openId=" + openId +
+			", unionId=" + unionId +
 			", blessings=" + blessings +
 			", status=" + status +
 			", remarks=" + remarks +

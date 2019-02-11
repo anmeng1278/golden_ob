@@ -1,17 +1,18 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Order 订单表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2019-01-05
+ *   @since 2019-02-11
  */
 @TableName("_order")
 public class Order implements Serializable {
@@ -33,6 +34,8 @@ public class Order implements Serializable {
      */
 	@TableField("open_id")
 	private String openId;
+	@TableField("union_id")
+	private String unionId;
     /**
      * 订单金额
      */
@@ -136,6 +139,14 @@ public class Order implements Serializable {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	public Double getAmount() {
@@ -281,6 +292,7 @@ public class Order implements Serializable {
 			", orderId=" + orderId +
 			", orderUniqueCode=" + orderUniqueCode +
 			", openId=" + openId +
+			", unionId=" + unionId +
 			", amount=" + amount +
 			", payAmount=" + payAmount +
 			", status=" + status +

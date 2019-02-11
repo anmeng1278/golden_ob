@@ -7,6 +7,7 @@
         <id column="activity_order_id" property="activityOrderId" />
         <result column="activity_id" property="activityId" />
         <result column="open_id" property="openId" />
+        <result column="union_id" property="unionId" />
         <result column="expire_time" property="expireTime" />
         <result column="parent_activity_order_id" property="parentActivityOrderId" />
         <result column="status" property="status" />
@@ -18,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        activity_order_id AS activityOrderId, activity_id AS activityId, open_id AS openId, expire_time AS expireTime, parent_activity_order_id AS parentActivityOrderId, status, remarks, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        activity_order_id AS activityOrderId, activity_id AS activityId, open_id AS openId, union_id AS unionId, expire_time AS expireTime, parent_activity_order_id AS parentActivityOrderId, status, remarks, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

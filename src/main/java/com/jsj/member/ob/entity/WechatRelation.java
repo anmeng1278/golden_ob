@@ -1,17 +1,18 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : WechatRelation 实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2019-01-04
+ *   @since 2019-02-11
  */
 @TableName("_wechat_relation")
 public class WechatRelation implements Serializable {
@@ -25,7 +26,7 @@ public class WechatRelation implements Serializable {
 	@TableField("relation_open_id")
 	private String relationOpenId;
     /**
-     * 1 空铁小程序 2 金色世纪小程序 3金色世纪公众号
+     * 1 空铁小程序 2 金色世纪小程序 3金色世纪公众号 4.金色严选
      */
 	@TableField("type_id")
 	private Integer typeId;

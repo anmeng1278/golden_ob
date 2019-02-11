@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Cart 购物车实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2019-02-11
  */
 @TableName("_cart")
 public class Cart implements Serializable {
@@ -29,6 +29,8 @@ public class Cart implements Serializable {
      */
 	@TableField("open_id")
 	private String openId;
+	@TableField("union_id")
+	private String unionId;
     /**
      * 创建时间
      */
@@ -62,6 +64,14 @@ public class Cart implements Serializable {
 		this.openId = openId;
 	}
 
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
+	}
+
 	public Integer getCreateTime() {
 		return createTime;
 	}
@@ -92,6 +102,7 @@ public class Cart implements Serializable {
 		return "Cart{" +
 			", cartId=" + cartId +
 			", openId=" + openId +
+			", unionId=" + unionId +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +

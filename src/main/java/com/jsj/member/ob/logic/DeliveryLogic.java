@@ -228,6 +228,7 @@ public class DeliveryLogic extends BaseLogic {
         dto.setEffectiveDate(delivery.getEffectiveDate());
 
         dto.setOpenId(delivery.getOpenId());
+        dto.setUnionId(delivery.getUnionId());
         dto.setExpressNumber(delivery.getExpressNumber());
         dto.setMobile(delivery.getMobile());
         dto.setDeliveryStatus(DeliveryStatus.valueOf(delivery.getStatus()));
@@ -351,14 +352,14 @@ public class DeliveryLogic extends BaseLogic {
     /**
      * 获取未发货信息
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    public static DeliveryDto GetUnDeliveryDto(String openId, PropertyType propertyType) {
+    public static DeliveryDto GetUnDeliveryDto(String unionId, PropertyType propertyType) {
 
         Wrapper<Delivery> wrapper = new EntityWrapper<>();
 
-        wrapper.where("open_id = {0}", openId);
+        wrapper.where("union_id = {0}", unionId);
         wrapper.where("delete_time is null");
 
         //活动码 0/10 不允许
@@ -382,7 +383,7 @@ public class DeliveryLogic extends BaseLogic {
                 wrapper.in("status", status);
             }
             break;
-            case PLUS:{
+            case PLUS: {
                 wrapper.where("status = {0}", DeliveryStatus.UNDELIVERY.getValue());
             }
             break;
@@ -460,7 +461,7 @@ public class DeliveryLogic extends BaseLogic {
             deliveryLogic.stockService.updateById(stock);
 
             // 发送活动码核销成功
-            TemplateDto temp = TemplateDto.VerifySuccessed(delivery,requ);
+            TemplateDto temp = TemplateDto.VerifySuccessed(delivery, requ);
             deliveryLogic.wxSender.sendNormal(temp);
 
 

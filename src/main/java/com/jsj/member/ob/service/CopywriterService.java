@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.service.IService;
  *   @description : Copywriter 服务接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2019-02-11
  */
 public interface CopywriterService extends IService<Copywriter> {
 	

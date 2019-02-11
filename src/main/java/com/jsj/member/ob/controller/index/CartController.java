@@ -28,9 +28,10 @@ public class CartController extends BaseController {
     @GetMapping("")
     public String index(HttpServletRequest request) {
 
+        String unionId = this.UnionId();
         String openId = this.OpenId();
 
-        List<CartProductDto> cartProductDtos = CartLogic.GetCartProducts(openId);
+        List<CartProductDto> cartProductDtos = CartLogic.GetCartProducts(openId, unionId);
 
         request.setAttribute("cartProductDtos", cartProductDtos);
 
@@ -48,6 +49,8 @@ public class CartController extends BaseController {
     public RestResponseBo updateCart(HttpServletRequest request) {
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
+
         if (StringUtils.isEmpty(request.getParameter("p"))) {
             return RestResponseBo.fail("参数错误");
         }
@@ -58,7 +61,7 @@ public class CartController extends BaseController {
             int num = jo.getIntValue("num");
             int specId = jo.getInteger("specId");
             int productId = jo.getIntValue("productId");
-            CartLogic.AddUpdateCartProduct(openId, productId, specId, num, "update");
+            CartLogic.AddUpdateCartProduct(openId, unionId, productId, specId, num, "update");
         }
 
         return RestResponseBo.ok("操作成功");
