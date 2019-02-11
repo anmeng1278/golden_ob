@@ -52,7 +52,7 @@ webconfig:
   appSecrect: a8eb3f7e02ed7cb761220cb4363ff2b6
 
   #虚拟目录
-  virtualPath: "/ot"
+  virtualPath: ""
   #域名
   host: "https://h5.ktgj.com"
 
