@@ -52,6 +52,8 @@ public class ProductLogic extends BaseLogic {
     @Autowired
     ActivityProductService activityProductService;
 
+    //region (public) 获取商品信息 GetProduct
+
     /**
      * 获取商品信息
      *
@@ -62,6 +64,9 @@ public class ProductLogic extends BaseLogic {
         Product entity = productLogic.productService.selectById(productId);
         return ProductLogic.ToDto(entity);
     }
+    //endregion
+
+    //region (public) 实体转换 ToDto
 
     /**
      * 实体转换
@@ -121,7 +126,9 @@ public class ProductLogic extends BaseLogic {
         return productDto;
 
     }
+    //endregion
 
+    //region (public) 获取商品规格 GetProductSpec
 
     /**
      * 获取商品规格
@@ -172,6 +179,9 @@ public class ProductLogic extends BaseLogic {
         return productSpecDto;
 
     }
+    //endregion
+
+    //region (public) 获取商品规格 GetProductSpecDtos
 
     /**
      * 获取商品规格
@@ -214,16 +224,9 @@ public class ProductLogic extends BaseLogic {
         return productSpecDtos;
 
     }
+    //endregion
 
-    /**
-     * 获取商品图片
-     *
-     * @param productId
-     * @return
-     */
-   /* public static List<ProductImgDto> GetProductImgDtos(int productId) {
-        return productLogic.GetProductImgDtos(productId, null);
-    }*/
+    //region (public) 获取商品首图和详情图 GetProductImgDtos
 
     /**
      * 获取商品首图和详情图
@@ -261,7 +264,9 @@ public class ProductLogic extends BaseLogic {
 
         return productImgDtos;
     }
+    //endregion
 
+    //region (public) 获取商品图片 GetProductImgDtos
 
     /**
      * 获取商品图片
@@ -296,7 +301,7 @@ public class ProductLogic extends BaseLogic {
 
         return productImgDtos;
     }
-
+    //endregion
 
     //region (public) 削减商品规格库存 ReductionProductSpecStock
 
@@ -355,6 +360,8 @@ public class ProductLogic extends BaseLogic {
     }
     //endregion
 
+    //region (public) 获取已售罄商品 GetSellOutCount
+
     /**
      * 获取已售罄商品
      *
@@ -370,6 +377,9 @@ public class ProductLogic extends BaseLogic {
         return productLogic.productService.selectCount(wrapper);
 
     }
+    //endregion
+
+    //region (public) 获取未审核的商品 GetUnPassProduct
 
     /**
      * 获取未审核的商品
@@ -384,6 +394,9 @@ public class ProductLogic extends BaseLogic {
         return productLogic.productService.selectCount(productWrapper);
 
     }
+    //endregion
+
+    //region (public) 更新商品排序 Sort
 
     /**
      * 更新商品排序
@@ -445,7 +458,9 @@ public class ProductLogic extends BaseLogic {
 
 
     }
+    //endregion
 
+    //region (public) 根据类型获取商品 GetProductDtos
 
     /**
      * 根据类型获取商品
@@ -473,15 +488,6 @@ public class ProductLogic extends BaseLogic {
         return productDtos;
 
     }
-
-    public static Integer GetMaxSort(int typeId){
-
-        EntityWrapper<Product> wrapper = new EntityWrapper<>();
-        wrapper.where("type_id = {0}", typeId);
-        wrapper.where("delete_time is null");
-        wrapper.orderBy("sort asc, update_time desc");
-        List<Product> products = productLogic.productService.selectList(wrapper);
-        return 2;
-    }
+    //endregion
 
 }

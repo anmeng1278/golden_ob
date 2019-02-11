@@ -118,6 +118,7 @@ public class OrderGroupon extends OrderBase {
             Order order = new Order();
 
             order.setOpenId(to.getOpenId());
+            order.setUnionId(to.getUnionId());
             order.setTypeId(this.getActivityType().getValue());
             order.setRemarks(requ.getRemarks());
             order.setActivityId(activityDto.getActivityId());

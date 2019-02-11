@@ -49,10 +49,12 @@ public class ShareController extends BaseController {
             HttpServletRequest request) {
 
         OrderDto orderDto = OrderLogic.GetOrder(obs);
+
         String openId = this.OpenId();
+        String unionId = this.UnionId();
 
         //领取
-        TwoTuple<OrderRedpacketCouponDto, Boolean> twoTuple = RedpacketLogic.DistributeRedpacket(openId, orderDto.getOrderId());
+        TwoTuple<OrderRedpacketCouponDto, Boolean> twoTuple = RedpacketLogic.DistributeRedpacket(openId, unionId, orderDto.getOrderId());
 
         OrderRedpacketCouponDto couponDto = null;
         boolean isRepeatDraw = false;

@@ -15,6 +15,7 @@ import com.jsj.member.ob.enums.BannerType;
 import com.jsj.member.ob.enums.OrderFlag;
 import com.jsj.member.ob.enums.ProductType;
 import com.jsj.member.ob.logic.*;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +34,14 @@ public class ApiIndexController {
 
     //region (public) 首页 index
 
+    /**
+     * 首页
+     *
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "首页")
     @PostMapping(value = {"/index"})
-    @ResponseBody
     public Response<IndexResp> index(@ApiParam(value = "请求实体", required = true)
                                      @RequestBody
                                      @Validated Request<IndexRequ> request) {
@@ -91,8 +98,8 @@ public class ApiIndexController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "兑换专区")
     @PostMapping(value = {"/exchange"})
-    @ResponseBody
     public Response<ExchangeResp> exchange(@ApiParam(value = "请求实体", required = true)
                                            @RequestBody
                                            @Validated Request<ExchangeRequ> request) {
@@ -110,11 +117,12 @@ public class ApiIndexController {
         resp.setExchangeProducts(exchangeProducts);
 
         String openId = request.getRequestBody().getOpenId();
+        String unionId = request.getRequestBody().getUnionId();
 
         //购物车商品数
-        int cartCount = CartLogic.GetCartProductCount(openId);
+        int cartCount = CartLogic.GetCartProductCount(openId, unionId);
         //用户未支付订单数
-        int unPayCount = OrderLogic.GetOrders(openId, OrderFlag.UNPAIDORDERS).size();
+        int unPayCount = OrderLogic.GetOrders(unionId, OrderFlag.UNPAIDORDERS).size();
         //账户余额
         double balance = MemberLogic.StrictChoiceSearch(request.getRequestBody().getJsjId());
 
@@ -127,8 +135,6 @@ public class ApiIndexController {
     }
 
     //endregion
-
-
 
 
 }

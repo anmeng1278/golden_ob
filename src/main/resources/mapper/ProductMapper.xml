@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jsj.member.ob.dao.ProductMapper">
 
+
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.Product">
         <id column="product_id" property="productId" />

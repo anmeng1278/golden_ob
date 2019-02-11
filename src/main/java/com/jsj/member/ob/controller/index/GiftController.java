@@ -43,14 +43,14 @@ public class GiftController extends BaseController {
     @GetMapping("")
     public String index(HttpServletRequest request) {
 
-        String openId = this.OpenId();
+        String unionId = this.UnionId();
 
         //用户所有赠送的
-        List<UserGiftDto> giftDtos = GiftLogic.GetGives(openId);
+        List<UserGiftDto> giftDtos = GiftLogic.GetGives(unionId);
         request.setAttribute("giftDtos", giftDtos);
 
         //用户所有领取的
-        List<UserDrawDto> drawDtos = GiftLogic.GetReceived(openId);
+        List<UserDrawDto> drawDtos = GiftLogic.GetReceived(unionId);
         request.setAttribute("drawDtos", drawDtos);
 
         return "index/gift";

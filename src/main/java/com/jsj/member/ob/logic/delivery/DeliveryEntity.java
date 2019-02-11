@@ -94,6 +94,8 @@ public class DeliveryEntity extends DeliveryBase {
                 throw new TipException("请选择自提网点");
             }
         }
+        String openId = requ.getBaseRequ().getOpenId();
+        String unionId = requ.getBaseRequ().getUnionId();
 
         //获取库存
         List<StockDto> stockDtos = requ.getStockDtos();
@@ -110,7 +112,8 @@ public class DeliveryEntity extends DeliveryBase {
         delivery.setMobile(Long.parseLong(requ.getMobile()));
         delivery.setProvinceId(requ.getProvinceId());
         delivery.setCreateTime(DateUtils.getCurrentUnixTime());
-        delivery.setOpenId(requ.getBaseRequ().getOpenId());
+        delivery.setOpenId(openId);
+        delivery.setUnionId(unionId);
 
         delivery.setPropertyTypeId(this.getPropertyType().getValue());
         delivery.setRemarks(requ.getRemarks());
@@ -159,11 +162,11 @@ public class DeliveryEntity extends DeliveryBase {
     /**
      * 获取使用链接
      *
-     * @param openId
+     * @param unionId
      * @return
      */
     @Override
-    public TwoTuple<String, String> GetUsedNavigate(String openId) {
+    public TwoTuple<String, String> GetUsedNavigate(String unionId) {
         return TupleUtils.tuple("", "/stock/use1");
     }
 

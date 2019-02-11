@@ -293,7 +293,7 @@ public class CouponLogic extends BaseLogic {
      * 获得商品的可用优惠券
      *
      * @param productId
-     * @param openId
+     * @param unionId
      * @return select * from _wechat_coupon as a
      * where
      * a.`status` = 0 and
@@ -305,13 +305,13 @@ public class CouponLogic extends BaseLogic {
      * exists( select * from _coupon_product as cp where cp.coupon_id = a.coupon_id and cp.product_id = 7 )
      * )
      */
-    public static List<WechatCouponDto> GetWechatCoupons(int productId, String openId) {
+    public static List<WechatCouponDto> GetWechatCoupons(int productId, String unionId) {
 
         List<WechatCouponDto> dtos = new ArrayList<>();
 
         Wrapper wrapper = new EntityWrapper<WechatCoupon>();
         wrapper.where("_wechat_coupon.status = 0");
-        wrapper.where("_wechat_coupon.open_id = {0}", openId);
+        wrapper.where("_wechat_coupon.union_id = {0}", unionId);
         wrapper.where("_wechat_coupon.delete_time is null");
         wrapper.where("_wechat_coupon.expired_time >= UNIX_TIMESTAMP()");
         wrapper.where("( (select b.user_range from _coupon as b where b.coupon_id = _wechat_coupon.coupon_id ) = {0} or\n" +

@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.service.IService;
  *   @description : WechatRelation 服务接口
  *   ---------------------------------
  * 	 @author cc
- *   @since 2019-01-04
+ *   @since 2019-02-11
  */
 public interface WechatRelationService extends IService<WechatRelation> {
 	

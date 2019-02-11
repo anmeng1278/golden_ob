@@ -36,7 +36,7 @@ public class CartLogicTest {
 
     @Test
     public void  saveAndUpdate(){
-        CartLogic.AddUpdateCartProduct("3",2,4,1, "add");;
+        CartLogic.AddUpdateCartProduct("3", "",2,4,1, "add");;
     }
 
     @Test
@@ -59,7 +59,7 @@ public class CartLogicTest {
 
         requ.setBaseRequ(baseRequ);
 
-        CartLogic.GetCartProducts("111");
+        CartLogic.GetCartProducts("111", "");
 
     }
 

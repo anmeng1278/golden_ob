@@ -310,6 +310,7 @@ public class AdminWechatController extends BaseController {
         Admin admin = this.Admin();
 
         String openId = request.getParameter("openId");
+        String unionId = request.getParameter("unionId");
         String p = request.getParameter("p");
         List<JSONObject> jsonObjects = JSON.parseArray(p, JSONObject.class);
 
@@ -317,6 +318,7 @@ public class AdminWechatController extends BaseController {
         CreateOrderRequ requ = new CreateOrderRequ();
         requ.setActivityType(ActivityType.NORMAL);
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setUnionId(unionId);
         requ.setSourceType(SourceType.AWKTC);
         if(!StringUtils.isEmpty(admin.getLoginName())){
             requ.setRemarks("手动添加库存,添加人:"+admin.getLoginName());

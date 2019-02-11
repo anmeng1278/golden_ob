@@ -48,6 +48,10 @@ public class MiniUserInfo {
      */
     private String language;
 
+    private String openId;
+
+    private String unionId;
+
     public String getNickName() {
         return nickName;
     }
@@ -102,5 +106,21 @@ public class MiniUserInfo {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
     }
 }

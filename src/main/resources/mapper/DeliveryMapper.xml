@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.jsj.member.ob.entity.Delivery">
         <id column="delivery_id" property="deliveryId" />
         <result column="open_id" property="openId" />
+        <result column="union_id" property="unionId" />
         <result column="express_number" property="expressNumber" />
         <result column="status" property="status" />
         <result column="type_id" property="typeId" />
@@ -30,7 +31,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        delivery_id AS deliveryId, open_id AS openId, express_number AS expressNumber, status, type_id AS typeId, property_type_id AS propertyTypeId, contact_name AS contactName, mobile, id_number AS idNumber, id_type_id AS idTypeId, flight_number AS flightNumber, airport_code AS airportCode, airport_name AS airportName, address, effective_date AS effectiveDate, remarks, province_id AS provinceId, city_id AS cityId, district_id AS districtId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        delivery_id AS deliveryId, open_id AS openId, union_id AS unionId, express_number AS expressNumber, status, type_id AS typeId, property_type_id AS propertyTypeId, contact_name AS contactName, mobile, id_number AS idNumber, id_type_id AS idTypeId, flight_number AS flightNumber, airport_code AS airportCode, airport_name AS airportName, address, effective_date AS effectiveDate, remarks, province_id AS provinceId, city_id AS cityId, district_id AS districtId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

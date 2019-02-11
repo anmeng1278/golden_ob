@@ -50,17 +50,18 @@ public class CartLogic extends BaseLogic {
     ProductService productService;
 
 
+    //region (public) 清空购物车 DeleteCart
     /**
      * 清空购物车
      *
-     * @param openId
+     * @param unionId
      */
-    public static void DeleteCart(String openId) {
-        if (StringUtils.isBlank(openId)) {
-            throw new TipException("参数不合法,用户openId为空");
+    public static void DeleteCart(String unionId) {
+        if (StringUtils.isBlank(unionId)) {
+            throw new TipException("参数不合法,用户unionId为空");
         }
         //获取用户的购物车
-        Cart cart = CartLogic.GetCart(openId);
+        Cart cart = CartLogic.GetCart(unionId);
 
         if (cart != null) {
             //修改购物车deleteTime，清空购物车
@@ -68,7 +69,9 @@ public class CartLogic extends BaseLogic {
             cartLogic.cartService.updateById(cart);
         }
     }
+    //endregion
 
+    //region (public) 删除购物车中的某件商品 DeleteCartProduct
 
     /**
      * 删除购物车中的某件商品
@@ -81,19 +84,26 @@ public class CartLogic extends BaseLogic {
         }
         cartLogic.cartProductService.deleteById(cartProductId);
     }
+    //endregion
 
+    //region (public) 给用户创建购物车 CreateCart
 
     /**
      * 给用户创建购物车
      *
+     * @param unionId
      * @param openId
      */
-    public static Cart CreateCart(String openId) {
+    public static Cart CreateCart(String openId, String unionId) {
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
+        if (StringUtils.isBlank(unionId)) {
+            throw new TipException("参数不合法，用户unionId为空");
+        }
 
         Cart cart = new Cart();
+        cart.setUnionId(unionId);
         cart.setOpenId(openId);
         cart.setCreateTime(DateUtils.getCurrentUnixTime());
         cart.setUpdateTime(DateUtils.getCurrentUnixTime());
@@ -101,20 +111,27 @@ public class CartLogic extends BaseLogic {
 
         return cart;
     }
+    //endregion
+
+    //region (public) 添加或修改购物车 AddUpdateCartProduct
 
     /**
      * 添加或修改购物车
      *
      * @param openId
+     * @param unionId
      * @param productId
      * @param number
      * @param method    添加方式 add为累加  update为更新
      * @return
      */
-    public static void AddUpdateCartProduct(String openId, int productId, int productSpecId, int number, String method) {
+    public static void AddUpdateCartProduct(String openId, String unionId, int productId, int productSpecId, int number, String method) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
+        }
+        if (StringUtils.isBlank(unionId)) {
+            throw new TipException("参数不合法，用户unionId为空");
         }
         if (productId <= 0) {
             throw new TipException("参数不合法，商品ID不能为空");
@@ -127,12 +144,12 @@ public class CartLogic extends BaseLogic {
         }
 
         EntityWrapper<Cart> cartWrapper = new EntityWrapper<>();
-        cartWrapper.where("open_id={0} and delete_time is null", openId);
+        cartWrapper.where("union_id={0} and delete_time is null", unionId);
 
         //判断当前用户是否有购物车，没有则创建购物车
         Cart cart = cartLogic.cartService.selectOne(cartWrapper);
         if (cart == null) {
-            cart = CartLogic.CreateCart(openId);
+            cart = CartLogic.CreateCart(openId, unionId);
         }
 
         //查询购物车中的商品信息
@@ -173,38 +190,46 @@ public class CartLogic extends BaseLogic {
         }
 
     }
+    //endregion
+
+    //region (public) 获取用户的购物车 GetCart
 
     /**
      * 获取用户的购物车
      *
      * @param
      */
-    public static Cart GetCart(String openId) {
-        if (StringUtils.isBlank(openId)) {
-            throw new TipException("参数不合法，用户openId为空");
+    public static Cart GetCart(String unionId) {
+        if (StringUtils.isBlank(unionId)) {
+            throw new TipException("参数不合法，用户unionId为空");
         }
         EntityWrapper<Cart> wrapper = new EntityWrapper<>();
-        wrapper.where("open_id={0} and delete_time is null", openId);
+        wrapper.where("union_id={0} and delete_time is null", unionId);
         Cart cart = cartLogic.cartService.selectOne(wrapper);
         return cart;
     }
+    //endregion
 
+    //region (public) 获取用户购物车中商品列表 GetCartProducts
 
     /**
      * 获取用户购物车中商品列表
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    public static List<CartProductDto> GetCartProducts(String openId) {
+    public static List<CartProductDto> GetCartProducts(String openId, String unionId) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
+        if (StringUtils.isBlank(unionId)) {
+            throw new TipException("参数不合法，用户unionId为空");
+        }
 
         List<CartProductDto> cartProductDtos = new ArrayList<>();
 
-        Cart cart = CartLogic.GetCart(openId);
+        Cart cart = CartLogic.GetCart(unionId);
         if (cart == null) {
             return cartProductDtos;
         }
@@ -232,20 +257,25 @@ public class CartLogic extends BaseLogic {
 
         return cartProductDtos;
     }
+    //endregion
+
+    //region (public) 获得用户购物车中商品数量 GetCartProductCount
 
     /**
      * 获得用户购物车中商品数量
      *
      * @param openId
+     * @param unionId
      * @return
      */
-    public static int GetCartProductCount(String openId) {
+    public static int GetCartProductCount(String openId, String unionId) {
         int amount = 0;
-        List<CartProductDto> cartProducts = CartLogic.GetCartProducts(openId);
+        List<CartProductDto> cartProducts = CartLogic.GetCartProducts(openId, unionId);
         for (CartProductDto cartProduct : cartProducts) {
             amount += cartProduct.getNumber();
         }
         return amount;
     }
+    //endregion
 
 }

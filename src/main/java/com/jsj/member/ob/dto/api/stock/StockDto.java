@@ -22,6 +22,11 @@ public class StockDto {
     private String openId;
 
     /**
+     * 用户unionId
+     */
+    private String unionId;
+
+    /**
      * 商品id
      */
     private Integer productId;
@@ -207,5 +212,13 @@ public class StockDto {
 
     public void setProductDto(ProductDto productDto) {
         this.productDto = productDto;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
     }
 }

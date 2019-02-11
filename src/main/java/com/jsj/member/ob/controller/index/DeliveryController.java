@@ -41,6 +41,7 @@ public class DeliveryController extends BaseController {
     public String index(HttpServletRequest request) {
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
 
         List<DeliveryDto> deliveryDtos = DeliveryLogic.GetDelivery(openId);
         for (DeliveryDto deliveryDto : deliveryDtos) {
@@ -48,7 +49,7 @@ public class DeliveryController extends BaseController {
             List<Integer> stockIds = deliveryDto.getStockDtos().stream().map(StockDto::getStockId).collect(Collectors.toList());
 
             deliveryDto.getStockDtos().forEach(stockDto -> {
-                        Integer count = StockLogic.GetProductCount(openId,stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
+                        Integer count = StockLogic.GetProductCount(unionId,stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
                         stockDto.setNumber(count);
                     }
             );

@@ -11,7 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Airport 休息厅实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2019-02-11
  */
 @TableName("_airport")
 public class Airport implements Serializable {

@@ -1,17 +1,18 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : Product 商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-28
+ *   @since 2019-02-11
  */
 @TableName("_product")
 public class Product implements Serializable {
@@ -38,7 +39,6 @@ public class Product implements Serializable {
      */
 	@TableField("property_type_id")
 	private Integer propertyTypeId;
-
     /**
      * 简介
      */

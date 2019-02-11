@@ -65,7 +65,7 @@ public class TemplateDtoTest {
     @Test
     public void qrcodeUseSuccessed() {
         Delivery delivery = deliveryService.selectById(60);
-        List<StockDto> stockDtos = StockLogic.GetStocks(delivery.getOpenId());
+        List<StockDto> stockDtos = StockLogic.GetStocks(delivery.getOpenId(), delivery.getUnionId());
         TemplateDto dto = TemplateDto.QrcodeUseSuccessed(delivery, stockDtos);
         wxSender.sendNormal(dto);
     }
@@ -73,7 +73,7 @@ public class TemplateDtoTest {
     @Test
     public void entityUseSuccessed() {
         Delivery delivery = deliveryService.selectById(60);
-        List<StockDto> stockDtos = StockLogic.GetStocks(delivery.getOpenId());
+        List<StockDto> stockDtos = StockLogic.GetStocks(delivery.getOpenId(), delivery.getUnionId());
         Map map = new HashMap();
         map.put("productName", "超级大螃蟹");
         TemplateDto dto = TemplateDto.EntityUseSuccessed(delivery, map, stockDtos);
@@ -84,12 +84,12 @@ public class TemplateDtoTest {
     public void openCardConfirm() {
         DeliveryDto deliveryDto = DeliveryLogic.GetDelivery(60);
         Map map = new HashMap();
-        map.put("title","您的plus权益已开通成功，即刻生效!\n");
-        map.put("effectiveDate",DateUtils.formatDateByUnixTime(Long.parseLong(deliveryDto.getCreateTime() + ""), "yyyy-MM-dd"));
+        map.put("title", "您的plus权益已开通成功，即刻生效!\n");
+        map.put("effectiveDate", DateUtils.formatDateByUnixTime(Long.parseLong(deliveryDto.getCreateTime() + ""), "yyyy-MM-dd"));
 /*
         map.put("title","正在为您开卡，请您耐心等待!\n");
         map.put("effectiveDate",DateUtils.formatDateByUnixTime(Long.parseLong(deliveryDto.getEffectiveDate() + ""), "yyyy-MM-dd"));*/
-        TemplateDto dto = TemplateDto.OpenCardConfirm(deliveryDto,map);
+        TemplateDto dto = TemplateDto.OpenCardConfirm(deliveryDto, map);
         wxSender.sendNormal(dto);
     }
 
@@ -119,14 +119,14 @@ public class TemplateDtoTest {
     public void handleDelivery() {
 
         Delivery delivery = deliveryService.selectById(48);
-        List<StockDto> stockDtos = StockLogic.GetStocks(delivery.getOpenId());
+        List<StockDto> stockDtos = StockLogic.GetStocks(delivery.getOpenId(), delivery.getUnionId());
 
         Map map = new HashMap();
 
         //给微信接收者发送待处理发货模板
         if (delivery.getTypeId() == DeliveryType.DISTRIBUTE.getValue()) {
-            String address = DictLogic.GetDict(delivery.getProvinceId()).getDictName()+DictLogic.GetDict(delivery.getCityId()).getDictName()+DictLogic.GetDict(delivery.getDistrictId()).getDictName()+delivery.getAddress();
-            map.put("title", String.format("客户已申请配送,请尽快安排发货!\n\n客户姓名：%s\n手机号码：%s\n详细地址：%s", delivery.getContactName(), delivery.getMobile(),address));
+            String address = DictLogic.GetDict(delivery.getProvinceId()).getDictName() + DictLogic.GetDict(delivery.getCityId()).getDictName() + DictLogic.GetDict(delivery.getDistrictId()).getDictName() + delivery.getAddress();
+            map.put("title", String.format("客户已申请配送,请尽快安排发货!\n\n客户姓名：%s\n手机号码：%s\n详细地址：%s", delivery.getContactName(), delivery.getMobile(), address));
             map.put("productName", "超级大螃蟹");
         }
       /*  if (delivery.getTypeId() == DeliveryType.PICKUP.getValue()) {
@@ -135,13 +135,13 @@ public class TemplateDtoTest {
             map.put("title", String.format("客户已申请自提，请核对并确认客户自提网点及时间，尽快安排相关对接工作!\n\n客户姓名：%s\n手机号码：%s\n自提时间：%s\n自提网点：%s", delivery.getContactName(), delivery.getMobile(), pickUpDate, delivery.getAirportName()));
             map.put("productName", "超级大螃蟹");
         }*/
-        if(delivery.getPropertyTypeId() == PropertyType.NATION.getValue()){
+        if (delivery.getPropertyTypeId() == PropertyType.NATION.getValue()) {
 
             //生效时间
             String effectiveDate = DateUtils.formatDateByUnixTime(Long.parseLong(delivery.getEffectiveDate() + ""), "yyyy-MM-dd");
-            map.put("title",String.format("客户已申请开卡,请核对开卡信息!\n\n客户姓名：%s\n身份证号：%s\n手机号码：%s\n生效时间：%s",delivery.getContactName(),delivery.getIdNumber(),delivery.getMobile(),effectiveDate));
+            map.put("title", String.format("客户已申请开卡,请核对开卡信息!\n\n客户姓名：%s\n身份证号：%s\n手机号码：%s\n生效时间：%s", delivery.getContactName(), delivery.getIdNumber(), delivery.getMobile(), effectiveDate));
             DeliveryDto deliveryDto = DeliveryLogic.GetDelivery(delivery.getDeliveryId());
-            map.put("productName",deliveryDto.getProductDtos().get(0).getProductName());
+            map.put("productName", deliveryDto.getProductDtos().get(0).getProductName());
 
         }
 

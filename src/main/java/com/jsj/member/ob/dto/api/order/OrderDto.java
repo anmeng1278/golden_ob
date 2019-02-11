@@ -17,6 +17,11 @@ public class OrderDto {
     private String openId;
 
     /**
+     * 公众号 union_id
+     */
+    private String unionId;
+
+    /**
      * 订单金额
      */
     private Double amount;
@@ -269,5 +274,13 @@ public class OrderDto {
 
     public void setSourceType(SourceType sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
     }
 }

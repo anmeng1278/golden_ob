@@ -77,9 +77,10 @@ public class DeliveryActivity extends DeliveryBase {
         }
 
         String openId = requ.getBaseRequ().getOpenId();
+        String unionId = requ.getBaseRequ().getUnionId();
 
         //判断是否存在未使用的活动码
-        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(openId);
+        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(unionId);
         if (unDeliveryDto != null) {
             throw new TipException("您还有未使用的次卡");
         }
@@ -95,7 +96,8 @@ public class DeliveryActivity extends DeliveryBase {
 
         delivery.setMobile(Long.parseLong(requ.getMobile()));
         delivery.setCreateTime(DateUtils.getCurrentUnixTime());
-        delivery.setOpenId(requ.getBaseRequ().getOpenId());
+        delivery.setOpenId(openId);
+        delivery.setUnionId(unionId);
         delivery.setFlightNumber(requ.getFlightNumber());
 
         delivery.setPropertyTypeId(this.getPropertyType().getValue());
@@ -132,14 +134,14 @@ public class DeliveryActivity extends DeliveryBase {
     /**
      * 获取使用链接
      *
-     * @param openId
+     * @param unionId
      * @return
      */
     @Override
-    public TwoTuple<String, String> GetUsedNavigate(String openId) {
+    public TwoTuple<String, String> GetUsedNavigate(String unionId) {
 
         //判断是否存在未使用的活动码
-        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(openId);
+        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(unionId);
         if (unDeliveryDto != null) {
             List<DeliveryStock> deliveryStocks = DeliveryLogic.GetDeliveryStocks(unDeliveryDto.getDeliveryId());
             if (!deliveryStocks.isEmpty()) {

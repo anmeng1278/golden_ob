@@ -60,11 +60,12 @@ public class StockLogic extends BaseLogic {
      * 获取用户库存
      *
      * @param openId
+     * @param unionId
      * @return
      */
-    public static List<StockDto> GetStocks(String openId) {
+    public static List<StockDto> GetStocks(String openId, String unionId) {
 
-        List<StockDto> stockDtos = StockLogic.GetStocks(openId, null, StockStatus.UNUSE);
+        List<StockDto> stockDtos = StockLogic.GetStocks(openId, unionId, null, StockStatus.UNUSE);
         return stockDtos;
 
     }
@@ -75,6 +76,7 @@ public class StockLogic extends BaseLogic {
 
     /**
      * 根据订单号获取库存信息
+     *
      * @param orderId
      * @return
      */
@@ -102,6 +104,7 @@ public class StockLogic extends BaseLogic {
 
     /**
      * 根据赠送编号获取库存列表
+     *
      * @param giftId
      * @return
      */
@@ -140,10 +143,11 @@ public class StockLogic extends BaseLogic {
      * 通过所选使用的编号获取库存信息
      *
      * @param openId
+     * @param unionId
      * @param useProductDtos
      * @return
      */
-    public static List<StockDto> GetStocks(String openId, List<UseProductDto> useProductDtos, boolean isShowGroup) {
+    public static List<StockDto> GetStocks(String openId, String unionId, List<UseProductDto> useProductDtos, boolean isShowGroup) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
@@ -158,7 +162,7 @@ public class StockLogic extends BaseLogic {
         List<Integer> productSpecIds = useProductDtos.stream().map(st -> st.getsId()).collect(Collectors.toList());
 
         EntityWrapper<Stock> wrapper = new EntityWrapper<>();
-        wrapper.where("open_id={0} and delete_time is null", openId);
+        wrapper.where("union_id={0} and delete_time is null", unionId);
         wrapper.where("status={0}", StockStatus.UNUSE.getValue());
         wrapper.in("product_spec_id", productSpecIds);
         wrapper.orderBy("create_time desc");
@@ -211,21 +215,25 @@ public class StockLogic extends BaseLogic {
     /**
      * 获取库存
      *
-     * @param openId
+     * @param unionId
      * @param stockType
      * @param stockStatus
      * @return
      */
-    public static List<StockDto> GetStocks(String openId, StockType stockType, StockStatus stockStatus) {
+    public static List<StockDto> GetStocks(String openId, String unionId, StockType stockType, StockStatus stockStatus) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
         }
 
+        if (StringUtils.isBlank(unionId)) {
+            throw new TipException("参数不合法，用户unionId为空");
+        }
+
         List<StockDto> stockDtos = new ArrayList<>();
 
         EntityWrapper<Stock> stockWrapper = new EntityWrapper<>();
-        stockWrapper.where("open_id={0} and delete_time is null", openId);
+        stockWrapper.where("union_id={0} and delete_time is null", unionId);
 
         if (stockStatus != null) {
             stockWrapper.where("status={0}", stockStatus.getValue());
@@ -517,14 +525,17 @@ public class StockLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static Integer GetStockCount(String openId) {
+    public static Integer GetStockCount(String openId, String unionId) {
 
         if (StringUtils.isBlank(openId)) {
             return 0;
         }
+        if (StringUtils.isBlank(unionId)) {
+            return 0;
+        }
 
         EntityWrapper<Stock> wrapper = new EntityWrapper<>();
-        wrapper.where("open_id={0}", openId);
+        wrapper.where("union_id={0}", unionId);
 
         return stockLogic.stockService.selectCount(wrapper);
 
@@ -541,13 +552,13 @@ public class StockLogic extends BaseLogic {
      * @param stockIds
      * @return
      */
-    public static Integer GetProductCount(String openId, int productId, int productSpecId, List<Integer> stockIds) {
+    public static Integer GetProductCount(String unionId, int productId, int productSpecId, List<Integer> stockIds) {
 
         EntityWrapper<Stock> productWrapper = new EntityWrapper<>();
         productWrapper.where("product_id={0}", productId);
         productWrapper.where("product_spec_id={0}", productSpecId);
-        if (!StringUtils.isBlank(openId)) {
-            productWrapper.where("open_id={0}", openId);
+        if (!StringUtils.isBlank(unionId)) {
+            productWrapper.where("union_id={0}", unionId);
         }
         productWrapper.in("stock_id", stockIds);
         int number = stockLogic.stockService.selectCount(productWrapper);
@@ -570,6 +581,7 @@ public class StockLogic extends BaseLogic {
 
         stockDto.setNumber(1);
         stockDto.setOpenId(stock.getOpenId());
+        stockDto.setUnionId(stock.getUnionId());
         stockDto.setOrderId(stock.getOrderId());
         stockDto.setProductId(stock.getProductId());
 
@@ -622,7 +634,7 @@ public class StockLogic extends BaseLogic {
         List<Integer> stockIds = lists.stream().map(StockDto::getStockId).collect(Collectors.toList());
 
         lists.forEach(stockDto -> {
-                    Integer count = StockLogic.GetProductCount(stockDto.getOpenId(), stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
+                    Integer count = StockLogic.GetProductCount(stockDto.getUnionId(), stockDto.getProductId(), stockDto.getProductSpecId(), stockIds);
                     stockDto.setNumber(count);
                 }
         );

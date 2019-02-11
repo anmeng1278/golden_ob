@@ -107,9 +107,11 @@ public abstract class DeliveryBase {
         }
 
         String openId = requ.getBaseRequ().getOpenId();
+        String unionId = requ.getBaseRequ().getUnionId();
+
 
         //验证是否有未完成的开卡信息
-        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(openId);
+        DeliveryDto unDeliveryDto = this.GetUnDeliveryDto(unionId);
         if (unDeliveryDto != null) {
             throw new TipException("您的开卡正在确认中，不能重复开卡……");
         }
@@ -128,7 +130,8 @@ public abstract class DeliveryBase {
 
         delivery.setMobile(Long.parseLong(requ.getMobile()));
         delivery.setCreateTime(DateUtils.getCurrentUnixTime());
-        delivery.setOpenId(requ.getBaseRequ().getOpenId());
+        delivery.setOpenId(openId);
+        delivery.setUnionId(unionId);
 
         delivery.setPropertyTypeId(this.getPropertyType().getValue());
         delivery.setRemarks(requ.getRemarks());
@@ -171,13 +174,13 @@ public abstract class DeliveryBase {
     /**
      * 验证是否有未完成的开卡信息
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    public DeliveryDto GetUnDeliveryDto(String openId) {
+    public DeliveryDto GetUnDeliveryDto(String unionId) {
 
         //验证是否有未完成的开卡信息
-        DeliveryDto dto = DeliveryLogic.GetUnDeliveryDto(openId, this.propertyType);
+        DeliveryDto dto = DeliveryLogic.GetUnDeliveryDto(unionId, this.propertyType);
         return dto;
 
     }
@@ -188,10 +191,10 @@ public abstract class DeliveryBase {
     /**
      * 获取使用链接
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    public abstract TwoTuple<String, String> GetUsedNavigate(String openId);
+    public abstract TwoTuple<String, String> GetUsedNavigate(String unionId);
     //#endregion
 
     //region (protected) 使用库存 UseStocks

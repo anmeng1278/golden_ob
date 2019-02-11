@@ -49,7 +49,7 @@
                             <button type="button" th:title="|${info.nickname} 订单列表|"
                                     th:attr="data-tab-href=@{'/admin/order?keys='+${info.openId}}"
                                     class="layui-btn layui-btn-xs layui-btn-normal"
-                                    th:text="|订单：${orderLogic.GetOrderCount(info.openId)}|"
+                                    th:text="|订单：${orderLogic.GetOrderCount(info.unionId)}|"
                                     style="float: left;margin-bottom: 5px;">
                                 <i class="layui-icon">&#xe63c;</i>
                             </button>
@@ -57,7 +57,7 @@
                             <button type="button" th:title="|${info.nickname} 库存列表|"
                                     th:attr="data-tab-href=@{'/admin/wechat/'+${info.openId}+'/stock'}"
                                     class="layui-btn layui-btn-xs layui-btn-normal"
-                                    th:text="|库存：${stockLogic.GetStockCount(info.openId)}|" style="float: left;">
+                                    th:text="|库存：${stockLogic.GetStockCount(info.openId, info.unionId)}|" style="float: left;">
                                 <i class="layui-icon">&#xe610;</i>
                                 库存
                             </button>

@@ -19,16 +19,16 @@ public interface GiftService extends IService<Gift> {
     /**
      * 获取用户领取记录
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    List<UserDrawDto> getUserDraws(String openId);
+    List<UserDrawDto> getUserDraws(String unionId);
 
     /**
      * 获取用户赠送记录
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    List<UserGiftDto> getUserGifts(String openId);
+    List<UserGiftDto> getUserGifts(String unionId);
 }

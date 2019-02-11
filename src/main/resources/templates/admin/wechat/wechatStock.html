@@ -226,9 +226,10 @@
                 return;
             }
             var openId = [[${wechat.openId}]];
+            var unionId = [[${wechat.unionId}]];
 
             TX.CORE.p({
-                data: {p: JSON.stringify(datas), openId: openId},
+                data: {p: JSON.stringify(datas), openId: openId, unionId: unionId},
                 url: "/admin/wechat/createOrder",
                 success: function (resp) {
                     if (resp.baseResp.success) {

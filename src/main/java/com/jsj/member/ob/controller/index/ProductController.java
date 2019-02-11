@@ -91,8 +91,8 @@ public class ProductController extends BaseController {
 
         int productId = Integer.parseInt(request.getParameter("productId"));
 
-        //用户OpenId
-        String openId = this.OpenId();
+        //用户unionId
+        String unionId = this.UnionId();
 
         //商品详情
         ProductDto info = ProductLogic.GetProduct(productId);
@@ -110,7 +110,7 @@ public class ProductController extends BaseController {
         request.setAttribute("salePrice", salePrice);
 
         //商品可用代金券
-        List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, openId);
+        List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, unionId);
         request.setAttribute("coupons", coupons);
 
         if (info.getProductImgDtos() != null && info.getProductImgDtos().size() > 0) {
@@ -314,6 +314,7 @@ public class ProductController extends BaseController {
     public RestResponseBo addCart(HttpServletRequest request) {
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
 
         int productId = Integer.parseInt(request.getParameter("productId"));
         int num = Integer.parseInt(request.getParameter("num"));
@@ -324,7 +325,7 @@ public class ProductController extends BaseController {
             method = request.getParameter("method");
         }
 
-        CartLogic.AddUpdateCartProduct(openId, productId, productSpecId, num, method);
+        CartLogic.AddUpdateCartProduct(openId, unionId, productId, productSpecId, num, method);
 
         return RestResponseBo.ok("添加购物车成功");
     }
@@ -353,7 +354,7 @@ public class ProductController extends BaseController {
         OrderBase orderBase = OrderFactory.GetInstance(activityType);
 
         CreateOrderRequ requ = this.createOrderRequ(request, activityType);
-              CreateOrderResp resp = orderBase.CalculateOrder(requ);
+        CreateOrderResp resp = orderBase.CalculateOrder(requ);
 
         return RestResponseBo.ok(resp);
     }
@@ -410,6 +411,7 @@ public class ProductController extends BaseController {
                 for (OrderProductDto op : requ.getOrderProductDtos()) {
                     //删除购物车购买商品
                     CartLogic.AddUpdateCartProduct(this.OpenId(),
+                            this.UnionId(),
                             op.getProductId(),
                             op.getProductSpecId(),
                             0,
@@ -557,6 +559,8 @@ public class ProductController extends BaseController {
     private CreateOrderRequ createNormalOrderRequest(HttpServletRequest request) {
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
+
         String p = request.getParameter("p");
         List<JSONObject> jsonObjects = JSON.parseArray(p, JSONObject.class);
 
@@ -569,6 +573,7 @@ public class ProductController extends BaseController {
         requ.setActivityType(ActivityType.NORMAL);
         requ.setWechatCouponId(wechatCouponId);
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setUnionId(unionId);
         requ.getBaseRequ().setJsjId(this.User().getJsjId());
 
         for (JSONObject jo : jsonObjects) {
@@ -601,6 +606,7 @@ public class ProductController extends BaseController {
     private CreateOrderRequ createCombOrderRequest(HttpServletRequest request) {
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
 
         int num = Integer.parseInt(request.getParameter("num"));
         int activityId = Integer.parseInt(request.getParameter("activityId"));
@@ -608,6 +614,7 @@ public class ProductController extends BaseController {
         CreateOrderRequ requ = new CreateOrderRequ();
         requ.setActivityType(ActivityType.COMBINATION);
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setUnionId(unionId);
         requ.getBaseRequ().setJsjId(this.User().getJsjId());
         requ.setActivityId(activityId);
         requ.setNumber(num);
@@ -637,6 +644,8 @@ public class ProductController extends BaseController {
         int activityId = Integer.parseInt(request.getParameter("activityId"));
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
+
         String p = request.getParameter("p");
         List<JSONObject> jsonObjects = JSON.parseArray(p, JSONObject.class);
 
@@ -648,6 +657,7 @@ public class ProductController extends BaseController {
 
         requ.setActivityType(ActivityType.EXCHANGE);
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setUnionId(unionId);
         requ.setActivityId(activityId);
         requ.getBaseRequ().setJsjId(this.User().getJsjId());
         requ.setNumber(jsonObjects.get(0).getIntValue("num"));

@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *   @description : Stock 用户库存表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2018-12-21
+ *   @since 2019-02-11
  */
 @TableName("_stock")
 public class Stock implements Serializable {
@@ -29,6 +29,8 @@ public class Stock implements Serializable {
      */
 	@TableField("open_id")
 	private String openId;
+	@TableField("union_id")
+	private String unionId;
     /**
      * 商品编号
      */
@@ -99,6 +101,14 @@ public class Stock implements Serializable {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	public Integer getProductId() {
@@ -195,6 +205,7 @@ public class Stock implements Serializable {
 		return "Stock{" +
 			", stockId=" + stockId +
 			", openId=" + openId +
+			", unionId=" + unionId +
 			", productId=" + productId +
 			", productSpecId=" + productSpecId +
 			", orderId=" + orderId +
