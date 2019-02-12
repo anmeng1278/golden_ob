@@ -1,6 +1,7 @@
 package com.jsj.member.ob.logic.delivery;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.delivery.*;
 import com.jsj.member.ob.dto.api.stock.StockDto;
@@ -29,9 +30,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DeliveryActivity extends DeliveryBase {
+
+    @Autowired
+    Webconfig webconfig;
 
     public DeliveryActivity() {
         super(PropertyType.ACTIVITYCODE);
@@ -120,6 +125,20 @@ public class DeliveryActivity extends DeliveryBase {
         CreateDeliveryResp resp = new CreateDeliveryResp();
         resp.setDeliveryId(delivery.getDeliveryId());
         resp.setStockId(stockDtos.get(0).getStockId());
+
+
+        List<DeliveryStock> deliveryStocks = DeliveryLogic.GetDeliveryStocks(resp.getDeliveryId());
+        if (deliveryStocks.isEmpty()) {
+            throw new TipException("没有找到库存信息");
+        }
+
+        Optional<DeliveryStock> deliveryStock = deliveryStocks.stream().filter(ds -> ds.getStockId().equals(resp.getStockId())).findFirst();
+        if (!deliveryStock.isPresent()) {
+            throw new TipException("没有找到库存信息");
+        }
+
+        String imgUrl = String.format(webconfig.getQrcodeUrl(), deliveryStock.get().getActivityCode());
+        resp.setImgUrl(imgUrl);
 
         // WX发送活动码使用成功模板
         TemplateDto temp = TemplateDto.QrcodeUseSuccessed(delivery, stockDtos);

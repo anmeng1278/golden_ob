@@ -115,6 +115,7 @@ public class DeliveryPlus extends DeliveryBase {
         //生成活动码
         OpreationDeliveryRequ opreationDeliveryRequ = new OpreationDeliveryRequ();
         opreationDeliveryRequ.setDeliveryId(delivery.getDeliveryId());
+        opreationDeliveryRequ.setJsjId(requ.getBaseRequ().getJsjId());
 
         this.OpreationDelivery(opreationDeliveryRequ);
 
@@ -167,11 +168,15 @@ public class DeliveryPlus extends DeliveryBase {
     public OpreationDeliveryResp OpreationDelivery(OpreationDeliveryRequ requ) {
 
         DeliveryDto dto = DeliveryLogic.GetDelivery(requ.getDeliveryId());
-        WechatDto wechatDto = WechatLogic.GetWechat(dto.getOpenId());
 
         if (!dto.getDeliveryStatus().equals(DeliveryStatus.UNDELIVERY)) {
             throw new TipException(String.format("权益状态为：%s，不允许操作",
                     dto.getDeliveryStatus().getMessage(this.getPropertyType())));
+        }
+
+        if (requ.getJsjId() <= 0) {
+            WechatDto wechatDto = WechatLogic.GetWechat(dto.getOpenId());
+            requ.setJsjId(wechatDto.getJsjid());
         }
 
         Delivery delivery = deliveryService.selectById(dto.getDeliveryId());
@@ -185,7 +190,7 @@ public class DeliveryPlus extends DeliveryBase {
 
             AddServiceRequestOuterClass.AddServiceRequest.Builder createRequ = AddServiceRequestOuterClass.AddServiceRequest.newBuilder();
 
-            createRequ.setCustomerId(wechatDto.getJsjid());
+            createRequ.setCustomerId(requ.getJsjId());
             createRequ.setOperapersonId(1);
             createRequ.setOperaTime(DateUtils.getCurrentUnixTime());
             createRequ.setServiceId(UpgradeServiceOuterClass.UpgradeService.Plus500);

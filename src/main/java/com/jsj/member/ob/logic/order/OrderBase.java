@@ -117,6 +117,7 @@ public abstract class OrderBase {
 
                 Stock st = new Stock();
 
+                st.setUnionId(order.getUnionId());
                 st.setOpenId(order.getOpenId());
                 st.setProductId(op.getProductId());
                 st.setProductSpecId(op.getProductSpecId());

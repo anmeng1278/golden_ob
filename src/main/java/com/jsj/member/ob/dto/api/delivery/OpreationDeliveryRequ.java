@@ -15,6 +15,11 @@ public class OpreationDeliveryRequ {
      */
     private String expressNumber;
 
+    /**
+     * 会员编号
+     */
+    private int jsjId;
+
     public int getDeliveryId() {
         return deliveryId;
     }
@@ -29,5 +34,13 @@ public class OpreationDeliveryRequ {
 
     public void setExpressNumber(String expressNumber) {
         this.expressNumber = expressNumber;
+    }
+
+    public int getJsjId() {
+        return jsjId;
+    }
+
+    public void setJsjId(int jsjId) {
+        this.jsjId = jsjId;
     }
 }

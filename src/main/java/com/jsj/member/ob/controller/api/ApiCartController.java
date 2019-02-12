@@ -52,7 +52,9 @@ public class ApiCartController extends BaseController {
      */
     @ApiOperation(value = "更新购物车")
     @RequestMapping(value = "/updateCart", method = RequestMethod.POST)
-    public Response<UpdateCartResp> updateCart(@ApiParam(value = "请求实体", required = true) @RequestBody @Validated Request<UpdateCartRequ> requ) {
+    public Response<UpdateCartResp> updateCart(@ApiParam(value = "请求实体", required = true)
+                                               @RequestBody
+                                               @Validated Request<UpdateCartRequ> requ) {
 
         UpdateCartResp resp = new UpdateCartResp();
 

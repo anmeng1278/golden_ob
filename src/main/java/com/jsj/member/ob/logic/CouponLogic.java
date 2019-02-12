@@ -166,6 +166,9 @@ public class CouponLogic extends BaseLogic {
         coupon.setRemarks(entity.getRemarks());
 
         coupon.setValidDays(entity.getValidDays());
+        coupon.setCreateTime(entity.getCreateTime());
+        coupon.setUpdateTime(entity.getUpdateTime());
+        coupon.setDeleteTime(entity.getDeleteTime());
 
         return coupon;
     }
@@ -242,6 +245,10 @@ public class CouponLogic extends BaseLogic {
         wechatCouponDto.setOpenId(entity.getOpenId());
         wechatCouponDto.setCouponStatus(CouponStatus.valueOf(entity.getStatus()));
         wechatCouponDto.setWechatCouponId(entity.getWechatCouponId());
+
+        wechatCouponDto.setCreateTime(entity.getCreateTime());
+        wechatCouponDto.setUpdateTime(entity.getUpdateTime());
+        wechatCouponDto.setDeleteTime(entity.getDeleteTime());
 
         return wechatCouponDto;
     }
@@ -338,15 +345,15 @@ public class CouponLogic extends BaseLogic {
 
     /**
      * 获取用户优惠券列表
-     * @param openId
+     * @param unionId
      * @return
      */
-    public static List<WechatCouponDto> GetWechatCoupons(String openId){
+    public static List<WechatCouponDto> GetWechatCoupons(String unionId){
 
         List<WechatCouponDto> dtos = new ArrayList<>();
 
         EntityWrapper<WechatCoupon> wrapper = new EntityWrapper<>();
-        wrapper.where("open_id={0}",openId);
+        wrapper.where("union_id={0}",unionId);
         wrapper.where("delete_time is null ");
         wrapper.orderBy("status asc");
 
