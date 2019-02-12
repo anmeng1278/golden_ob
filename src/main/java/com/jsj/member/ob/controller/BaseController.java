@@ -312,16 +312,21 @@ public abstract class BaseController {
     }
 
 
-    public PayDto GetPayDto(SourceType sourceType) {
+    public PayDto GetPayDto(SourceType sourceType, String openId) {
 
         PayDto payDto = new PayDto();
 
+        if (StringUtils.isBlank(openId)) {
+            throw new TipException("参数不合法，用户openId为空");
+        }
+
         //初始化默认值
-        payDto.setOpenId(this.OpenId());
+        payDto.setOpenId(openId);
 
         switch (sourceType) {
             case AWKTC:
-                payDto.setOpenId(this.OpenId());
+            case AWKMINI:
+                payDto.setOpenId(openId);
                 break;
             default:
                 WechatRelation wechatRelation = WechatLogic.GetWechatRelation(this.OpenId(), sourceType);
@@ -337,6 +342,11 @@ public abstract class BaseController {
 
         return payDto;
 
+    }
+
+
+    public PayDto GetPayDto(SourceType sourceType) {
+        return this.GetPayDto(sourceType, this.OpenId());
     }
 
     //endregion

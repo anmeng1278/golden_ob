@@ -1,5 +1,7 @@
 package com.jsj.member.ob.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,12 @@ import javax.servlet.ServletContext;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    }
 
     @Bean
     public Docket api(ServletContext servletContext) {

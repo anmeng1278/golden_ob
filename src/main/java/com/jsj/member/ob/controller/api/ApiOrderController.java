@@ -100,7 +100,7 @@ public class ApiOrderController extends BaseController {
         CreatePayResp resp = new CreatePayResp();
 
         int orderId = requ.getRequestBody().getOrderId();
-        TwoTuple<GetPayTradeResp, SourceType> twoTuple = this.createPay(orderId);
+        TwoTuple<GetPayTradeResp, SourceType> twoTuple = this.createPay(orderId, requ.getRequestBody().getOpenId());
 
         OrderDto orderDto = OrderLogic.GetOrder(orderId);
 
@@ -123,12 +123,12 @@ public class ApiOrderController extends BaseController {
      * @param orderId
      * @return
      */
-    public TwoTuple<GetPayTradeResp, SourceType> createPay(int orderId) {
+    public TwoTuple<GetPayTradeResp, SourceType> createPay(int orderId, String openId) {
 
         OrderDto orderDto = OrderLogic.GetOrder(orderId);
         //PayDto payDto = this.GetPayDto(orderDto.getSourceType());
 
-        PayDto payDto = this.GetPayDto(SourceType.AWKMINI);
+        PayDto payDto = this.GetPayDto(SourceType.AWKMINI, openId);
 
         //if (!orderDto.getOpenId().equals(payDto.getOpenId())) {
         //    throw new TipException("非操作人订单不允许支付");
