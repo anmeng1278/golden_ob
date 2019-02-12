@@ -264,6 +264,7 @@ public class StockLogic extends BaseLogic {
             ProductSpecDto dto = ProductLogic.GetProductSpec(stock.getProductSpecId());
             stockDto.setProductSpecDto(dto);
             stockDto.setOpenId(openId);
+            stockDto.setUnionId(stock.getUnionId());
             stockDto.setOrderId(stock.getOrderId());
             stockDto.setProductId(stock.getProductId());
             stockDto.setStockId(stock.getStockId());

@@ -26,9 +26,9 @@ public class CouponController extends BaseController {
     @GetMapping("")
     public String index(HttpServletRequest request) {
 
-        String openId = this.OpenId();
+        String unionId = this.UnionId();
 
-        List<WechatCouponDto> wechatCouponDtos = CouponLogic.GetWechatCoupons(openId);
+        List<WechatCouponDto> wechatCouponDtos = CouponLogic.GetWechatCoupons(unionId);
         request.setAttribute("wechatCouponDtos",wechatCouponDtos);
 
         return "index/coupon";

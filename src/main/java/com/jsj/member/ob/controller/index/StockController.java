@@ -115,6 +115,7 @@ public class StockController extends BaseController {
         String[] productSpecIds = request.getParameterValues("productSpecId");
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
 
         CreateGiftRequ requ = new CreateGiftRequ();
         List<GiftProductDto> giftProductDtos = new ArrayList<>();
@@ -146,6 +147,7 @@ public class StockController extends BaseController {
         requ.setGiftShareType(GiftShareType.GROUP);
         requ.setBlessings("");
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setUnionId(unionId);
 
         CreateGiftResp resp = GiftLogic.CreateGift(requ);
         String shareUrl = this.Url(String.format("/share/gift/%s/confirm", resp.getGiftUniqueCode()));

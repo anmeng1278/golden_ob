@@ -6,6 +6,8 @@ public class CreateDeliveryResp {
 
     private int stockId;
 
+    private String imgUrl;
+
     public int getDeliveryId() {
         return deliveryId;
     }
@@ -20,5 +22,13 @@ public class CreateDeliveryResp {
 
     public void setStockId(int stockId) {
         this.stockId = stockId;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 }

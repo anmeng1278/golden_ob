@@ -103,17 +103,17 @@ public class DeliveryLogic extends BaseLogic {
     /**
      * 获取我的配送记录
      *
-     * @param openId
+     * @param unionId
      * @return
      */
-    public static List<DeliveryDto> GetDelivery(String openId) {
+    public static List<DeliveryDto> GetDelivery(String unionId) {
 
-        if (StringUtils.isBlank(openId)) {
-            throw new TipException("参数不合法，用户openId为空");
+        if (StringUtils.isBlank(unionId)) {
+            throw new TipException("参数不合法，用户unionId为空");
         }
 
         EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null and open_Id={0}", openId);
+        wrapper.where("delete_time is null and union_id={0}", unionId);
         wrapper.orderBy("create_time desc");
         List<Delivery> deliveries = deliveryLogic.deliveryService.selectList(wrapper);
 
@@ -121,7 +121,6 @@ public class DeliveryLogic extends BaseLogic {
         for (Delivery delivery : deliveries) {
 
             DeliveryDto dto = DeliveryLogic.ToDto(delivery);
-
             deliveryDtos.add(dto);
 
         }
@@ -157,6 +156,10 @@ public class DeliveryLogic extends BaseLogic {
      * @return
      */
     public static void UpdateDeliveryStatus(int deliveryId, String method) {
+
+        if (deliveryId <= 0) {
+            throw new TipException("配送编号不能为空");
+        }
 
         Delivery delivery = deliveryLogic.deliveryService.selectById(deliveryId);
 

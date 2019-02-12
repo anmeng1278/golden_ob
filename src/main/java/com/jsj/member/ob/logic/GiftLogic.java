@@ -70,6 +70,9 @@ public class GiftLogic extends BaseLogic {
         if (StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
             throw new TipException("用户编号不能为空");
         }
+        if (StringUtils.isBlank(requ.getBaseRequ().getUnionId())) {
+            throw new TipException("用户编号不能为空");
+        }
         if (requ.getGiftProductDtos() == null || requ.getGiftProductDtos().isEmpty()) {
             throw new TipException("请选择赠送的商品");
         }
@@ -82,6 +85,7 @@ public class GiftLogic extends BaseLogic {
 
         //用户编号
         String openId = requ.getBaseRequ().getOpenId();
+        String unionId = requ.getBaseRequ().getUnionId();
 
         //库存编号
         List<Stock> stocks = new ArrayList<>();
@@ -125,6 +129,7 @@ public class GiftLogic extends BaseLogic {
 
         gift.setBlessings(requ.getBlessings());
         gift.setOpenId(openId);
+        gift.setUnionId(unionId);
         gift.setRemarks(requ.getRemarks());
         gift.setShareType(requ.getGiftShareType().getValue());
         gift.setStatus(GiftStatus.UNSHARE.getValue());
