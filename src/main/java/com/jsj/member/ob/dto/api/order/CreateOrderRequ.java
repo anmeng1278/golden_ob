@@ -4,7 +4,6 @@ import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.SourceType;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ public class CreateOrderRequ {
     /**
      * 购买商品
      */
-    @NotBlank(message = "购买商品")
     @ApiModelProperty(value = "购买商品", required = true)
     private List<OrderProductDto> orderProductDtos;
 
@@ -48,8 +46,7 @@ public class CreateOrderRequ {
     /**
      * 购买份数
      */
-    @NotBlank(message = "购买商品")
-    @ApiModelProperty(value = "购买商品", required = true)
+    @ApiModelProperty(value = "购买数量", required = true)
     private int number;
 
     /**

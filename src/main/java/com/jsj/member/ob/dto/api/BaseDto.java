@@ -1,5 +1,7 @@
 package com.jsj.member.ob.dto.api;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public abstract class BaseDto {
 
     /**
@@ -9,10 +11,12 @@ public abstract class BaseDto {
     /**
      * 更新时间
      */
+    @ApiModelProperty(hidden = true)
     private Integer updateTime;
     /**
      * 删除时间
      */
+    @ApiModelProperty(hidden = true)
     private Integer deleteTime;
 
 

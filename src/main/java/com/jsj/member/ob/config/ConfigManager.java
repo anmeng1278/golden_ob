@@ -12,6 +12,7 @@ import java.util.Map;
 
 public final class ConfigManager {
 
+
     private final String rootPath;
     private final String originalPath;
     private final String contextPath;

@@ -48,10 +48,6 @@ public class ApiProductController {
     public Response<ProductDetailResp> productDetail(@ApiParam(value = "请求实体", required = true)
                                                      @RequestBody @Validated Request<ProductDetailRequ> requ) {
 
-        if (requ.getRequestBody().getJsjId() <= 0) {
-            throw new TipException("会员编号不能为空");
-        }
-
         ActivityType activityType = ActivityType.valueOf(requ.getRequestBody().getActivityType());
 
         switch (activityType) {
@@ -320,6 +316,28 @@ public class ApiProductController {
     @ApiOperation(value = "创建订单")
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
     public Response<CreateOrderResp> createOrder(@ApiParam(value = "请求实体", required = true)
+                                                 @RequestBody @Validated Request<CreateOrderRequ> requ) throws Exception {
+
+        OrderBase orderBase = OrderFactory.GetInstance(requ.getRequestBody().getActivityType());
+        CreateOrderResp resp = orderBase.CreateOrder(requ.getRequestBody());
+
+        return Response.ok(resp);
+
+    }
+    //endregion
+
+
+    //region (public) 订单订单价格 calculateOrder
+
+    /**
+     * 订单订单价格
+     *
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "订单订单价格")
+    @RequestMapping(value = "/calculateOrder", method = RequestMethod.POST)
+    public Response<CreateOrderResp> calculateOrder(@ApiParam(value = "请求实体", required = true)
                                                  @RequestBody @Validated Request<CreateOrderRequ> requ) throws Exception {
 
         OrderBase orderBase = OrderFactory.GetInstance(requ.getRequestBody().getActivityType());

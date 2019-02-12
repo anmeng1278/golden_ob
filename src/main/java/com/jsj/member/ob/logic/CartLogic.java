@@ -250,6 +250,9 @@ public class CartLogic extends BaseLogic {
             dto.setOpenId(openId);
             dto.setProductSpecId(cartProduct.getProductSpecId());
             dto.setProductId(cartProduct.getProductId());
+            dto.setCreateTime(cartProduct.getCreateTime());
+            dto.setUpdateTime(cartProduct.getUpdateTime());
+            dto.setDeleteTime(cartProduct.getDeleteTime());
 
             cartProductDtos.add(dto);
         }
