@@ -575,8 +575,11 @@ public class GiftLogic extends BaseLogic {
      */
     public static GiftDto ToDto(Gift entity) {
 
-        GiftDto dto = new GiftDto();
+        if (entity == null) {
+            return null;
+        }
 
+        GiftDto dto = new GiftDto();
         WechatDto wechatDto = WechatLogic.GetWechat(entity.getOpenId());
 
         dto.setBlessings(entity.getBlessings());
@@ -614,6 +617,10 @@ public class GiftLogic extends BaseLogic {
 
         Gift entity = giftLogic.giftService.selectOne(wrapper);
         GiftDto dto = ToDto(entity);
+
+        if (dto == null) {
+            return dto;
+        }
 
         //赠送的库存信息
         List<StockDto> stockDtos = StockLogic.GetStocks(entity.getGiftId());

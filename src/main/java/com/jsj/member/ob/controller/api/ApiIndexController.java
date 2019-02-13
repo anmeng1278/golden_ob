@@ -17,10 +17,11 @@ import com.jsj.member.ob.enums.ProductType;
 import com.jsj.member.ob.logic.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +29,6 @@ import java.util.List;
 @RestController
 @RequestMapping("${webconfig.virtualPath}/mini")
 public class ApiIndexController {
-
-    private final Logger logger = LoggerFactory.getLogger(ApiIndexController.class);
-
 
     //region (public) 首页 index
 
