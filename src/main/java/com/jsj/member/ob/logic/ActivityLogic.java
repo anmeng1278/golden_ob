@@ -577,7 +577,7 @@ public class ActivityLogic extends BaseLogic {
      * @param openId
      * @return
      */
-    public static SecKillStatus RedisKill(int activityId, int productId, int productSpecId, String openId, SourceType sourceType) {
+    public static SecKillStatus RedisKill(int activityId, int productId, int productSpecId, String openId, String unionId, SourceType sourceType) {
 
         ProductKey productKey = new ProductKey(0, String.format("%d_%d_%d", activityId, productId, productSpecId));
         Jedis jedis = null;
@@ -638,6 +638,7 @@ public class ActivityLogic extends BaseLogic {
             SecKillDto dto = new SecKillDto();
             dto.setActivityId(activityId);
             dto.setOpenId(openId);
+            dto.setUnionId(unionId);
             dto.setProductId(productId);
             dto.setProductSpecId(productSpecId);
             dto.setSourceType(sourceType);

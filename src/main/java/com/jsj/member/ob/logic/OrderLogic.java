@@ -374,19 +374,19 @@ public class OrderLogic extends BaseLogic {
      * 获取秒杀活动成功后的秒杀订单
      *
      * @param activityId
-     * @param openId
+     * @param unionId
      * @param activityType
      * @param createTime
      * @return
      */
-    public static OrderDto GetOrder(int activityId, String openId, ActivityType activityType, int createTime) {
+    public static OrderDto GetOrder(int activityId, String unionId, ActivityType activityType, int createTime) {
 
         Wrapper<Order> wrapper = new EntityWrapper<>();
 
         wrapper.where("activity_id = {0}", activityId);
         wrapper.where("type_id = {0}", activityType.getValue());
         wrapper.where("create_time >= {0}", createTime);
-        wrapper.where("open_id = {0}", openId);
+        wrapper.where("union_id = {0}", unionId);
 
         wrapper.orderBy("create_time desc");
 

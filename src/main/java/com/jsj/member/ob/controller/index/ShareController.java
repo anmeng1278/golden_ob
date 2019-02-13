@@ -204,12 +204,14 @@ public class ShareController extends BaseController {
 
         //判断会员本人是否允许领取
         String openId = this.OpenId();
+        String unionId = this.UnionId();
+
         if (!GiftLogic.userSelfCanDraw(giftDto, openId)) {
             this.Redirect(String.format("/share/gift/%s", obs));
         }
 
         //判断当前操作人是否已领取
-        if (GiftLogic.userIsDraw(giftDto.getGiftId(), openId)) {
+        if (GiftLogic.userIsDraw(giftDto.getGiftId(), unionId)) {
             this.Redirect(String.format("/share/gift/%s", obs));
         }
 

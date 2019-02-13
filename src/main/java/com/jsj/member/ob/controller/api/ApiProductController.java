@@ -6,14 +6,18 @@ import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
+import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.mini.ProductDetailRequ;
 import com.jsj.member.ob.dto.mini.ProductDetailResp;
 import com.jsj.member.ob.enums.ActivityType;
+import com.jsj.member.ob.enums.SecKillStatus;
+import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.MemberLogic;
+import com.jsj.member.ob.logic.OrderLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
@@ -315,14 +319,94 @@ public class ApiProductController {
     public Response<CreateOrderResp> createOrder(@ApiParam(value = "请求实体", required = true)
                                                  @RequestBody @Validated Request<CreateOrderRequ> requ) throws Exception {
 
-        OrderBase orderBase = OrderFactory.GetInstance(requ.getRequestBody().getActivityType());
-        CreateOrderResp resp = orderBase.CreateOrder(requ.getRequestBody());
+
+        ActivityType activityType = requ.getRequestBody().getActivityType();
+
+        //创建订单响应实体8
+        CreateOrderResp resp;
+
+        //创建秒杀订单
+        if (activityType == ActivityType.SECKILL) {
+            resp = this.createSecKillorder(requ.getRequestBody());
+            if (!resp.isSuccess()) {
+                throw new TipException(resp.getMessage());
+            }
+        } else {
+            OrderBase orderBase = OrderFactory.GetInstance(requ.getRequestBody().getActivityType());
+            resp = orderBase.CreateOrder(requ.getRequestBody());
+        }
 
         return Response.ok(resp);
 
     }
     //endregion
 
+    //region (private) 创建秒杀订单 createSecKillorder
+
+    /**
+     * 创建秒杀订单
+     *
+     * @param requ
+     * @return
+     */
+    private CreateOrderResp createSecKillorder(CreateOrderRequ requ) {
+
+        CreateOrderResp resp = new CreateOrderResp();
+
+        if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().isEmpty()) {
+            throw new TipException("请选择秒杀商品");
+        }
+
+        if (requ.getOrderProductDtos().size() != 1) {
+            throw new TipException("秒杀商品只能购买一个");
+        }
+
+        int activityId = requ.getActivityId();
+        int productId = requ.getOrderProductDtos().get(0).getProductId();
+        int productSpecId = requ.getOrderProductDtos().get(0).getProductSpecId();
+
+        String openId = requ.getBaseRequ().getOpenId();
+        String unionId = requ.getBaseRequ().getUnionId();
+
+        int createTime = DateUtils.getCurrentUnixTime();
+        SecKillStatus secKillStatus = ActivityLogic.RedisKill(activityId, productId, productSpecId, openId, unionId, SourceType.AWKMINI);
+
+        if (secKillStatus.equals(SecKillStatus.SUCCESS)) {
+            //秒杀成功
+            resp.setSuccess(true);
+
+            int times = 0;
+            while (times < 5) {
+                OrderDto orderDto = OrderLogic.GetOrder(activityId, unionId, ActivityType.SECKILL, createTime);
+                if (orderDto != null) {
+                    resp.setOrderUniqueCode(orderDto.getOrderUniqueCode());
+                    resp.setCouponAmount(0);
+                    resp.setAmount(orderDto.getPayAmount());
+                    resp.setOriginalAmount(orderDto.getPayAmount());
+                    resp.setOrderId(orderDto.getOrderId());
+                    resp.setExpiredTime(orderDto.getExpiredTime());
+                    break;
+                }
+
+                times++;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return resp;
+
+        } else {
+            resp.setSuccess(false);
+            resp.setMessage(secKillStatus.getMessage());
+        }
+
+        return resp;
+
+    }
+    //endregion
 
     //region (public) 订单订单价格 calculateOrder
 

@@ -483,7 +483,7 @@ public class ProductController extends BaseController {
         int productSpecId = jsonObjects.get(0).getInteger("productSpecId");
 
         int createTime = DateUtils.getCurrentUnixTime();
-        SecKillStatus secKillStatus = ActivityLogic.RedisKill(activityId, productId, productSpecId, this.OpenId(), this.GetSourceType(request));
+        SecKillStatus secKillStatus = ActivityLogic.RedisKill(activityId, productId, productSpecId, this.OpenId(), this.UnionId(), this.GetSourceType(request));
 
         if (secKillStatus.equals(SecKillStatus.SUCCESS)) {
             //秒杀成功
@@ -491,7 +491,7 @@ public class ProductController extends BaseController {
 
             int times = 0;
             while (times < 5) {
-                OrderDto orderDto = OrderLogic.GetOrder(activityId, this.OpenId(), ActivityType.SECKILL, createTime);
+                OrderDto orderDto = OrderLogic.GetOrder(activityId, this.UnionId(), ActivityType.SECKILL, createTime);
                 if (orderDto != null) {
                     resp.setOrderUniqueCode(orderDto.getOrderUniqueCode());
                     resp.setCouponAmount(0);
