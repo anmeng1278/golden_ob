@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -110,7 +111,11 @@ public class ProductController extends BaseController {
         request.setAttribute("salePrice", salePrice);
 
         //商品可用代金券
-        List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, unionId);
+
+        List<Integer> productIds = new ArrayList<>();
+        productIds.add(productId);
+
+        List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productIds, unionId);
         request.setAttribute("coupons", coupons);
 
         if (info.getProductImgDtos() != null && info.getProductImgDtos().size() > 0) {

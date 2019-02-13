@@ -43,6 +43,7 @@ public class CreateOrderRequ {
      */
     private int activityId;
 
+
     /**
      * 购买份数
      */

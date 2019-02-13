@@ -2,7 +2,6 @@ package com.jsj.member.ob.dto.mini;
 
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
-import com.jsj.member.ob.dto.api.coupon.WechatCouponDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,9 +11,6 @@ public class ProductDetailResp {
 
     @ApiModelProperty(value = "商品信息")
     private ProductDto productDto;
-
-    @ApiModelProperty(value = "商品可用优惠券")
-    private List<WechatCouponDto> wechatCouponDtos;
 
     @ApiModelProperty(value = "剩余库存")
     private Integer stockCount;
@@ -53,14 +49,6 @@ public class ProductDetailResp {
 
     public void setProductDto(ProductDto productDto) {
         this.productDto = productDto;
-    }
-
-    public List<WechatCouponDto> getWechatCouponDtos() {
-        return wechatCouponDtos;
-    }
-
-    public void setWechatCouponDtos(List<WechatCouponDto> wechatCouponDtos) {
-        this.wechatCouponDtos = wechatCouponDtos;
     }
 
     public Integer getStockCount() {

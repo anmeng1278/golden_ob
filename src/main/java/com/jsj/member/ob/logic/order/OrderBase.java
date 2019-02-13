@@ -22,7 +22,9 @@ import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.rabbitmq.wx.TemplateDto;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.*;
+import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
+import com.jsj.member.ob.utils.TupleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -227,6 +229,30 @@ public abstract class OrderBase {
      *
      * @param jsjId
      * @param orderAmount
+     * @return
+     */
+    public TwoTuple<Double, Double> Exchange(int jsjId, double orderAmount) {
+
+        if (jsjId <= 0) {
+            throw new TipException("没有绑定会员，不允许兑换商品。");
+        }
+
+        double balance = MemberLogic.StrictChoiceSearch(jsjId);
+        if (orderAmount > balance) {
+
+            double payAmount = orderAmount - balance;
+            double giftAmount = balance;
+
+            return TupleUtils.tuple(payAmount, giftAmount);
+        }
+        return TupleUtils.tuple(0d, orderAmount);
+    }
+
+    /**
+     * 商品兑换
+     *
+     * @param jsjId
+     * @param orderAmount
      * @param order
      * @param productName
      * @return
@@ -270,4 +296,6 @@ public abstract class OrderBase {
     public void setCanCreatePlus(boolean canCreatePlus) {
         this.canCreatePlus = canCreatePlus;
     }
+
+
 }

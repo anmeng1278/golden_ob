@@ -1,9 +1,10 @@
 package com.jsj.member.ob.dao;
 
-import com.jsj.member.ob.entity.WechatCoupon;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.jsj.member.ob.dto.api.coupon.WechatCouponDto;
+import com.jsj.member.ob.entity.WechatCoupon;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import com.baomidou.mybatisplus.plugins.Page;
 
 import java.util.List;
 
@@ -15,5 +16,13 @@ import java.util.List;
  */
 @Repository
 public interface WechatCouponMapper extends BaseMapper<WechatCoupon> {
+
+
+    /**
+     * 获取可用优惠券列表
+     * @param unionId
+     * @return
+     */
+    List<WechatCouponDto> getWechatCoupons(@Param("unionId")String unionId);
 
 }
