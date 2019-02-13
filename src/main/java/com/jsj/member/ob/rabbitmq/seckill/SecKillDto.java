@@ -12,6 +12,11 @@ public class SecKillDto extends BaseDto {
     private String openId;
 
     /**
+     * 用户unionId
+     */
+    private String unionId;
+
+    /**
      * 活动编号
      */
     private Integer activityId;
@@ -69,5 +74,13 @@ public class SecKillDto extends BaseDto {
 
     public void setSourceType(SourceType sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
     }
 }

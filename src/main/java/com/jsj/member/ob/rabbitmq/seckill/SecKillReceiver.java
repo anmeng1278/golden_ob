@@ -46,6 +46,7 @@ public class SecKillReceiver {
             requ.setActivityType(ActivityType.SECKILL);
             requ.setActivityId(dto.getActivityId());
             requ.getBaseRequ().setOpenId(dto.getOpenId());
+            requ.getBaseRequ().setUnionId(dto.getUnionId());
 
             OrderProductDto orderProductDto = new OrderProductDto();
             orderProductDto.setProductSpecId(dto.getProductSpecId());

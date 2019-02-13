@@ -84,7 +84,7 @@ public class ActivityLogicTest {
             String userId = userIds.get(i);
 
             Future future = ThreadPoolUtils.submit(() -> {
-                SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, 3, 4, userId, SourceType.AWKTC);
+                SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, 3, 4, userId, userId, SourceType.AWKTC);
 
                 if (secKillStatus == SecKillStatus.REPEAT) {
                     userIds1.add(userId);
@@ -152,7 +152,7 @@ public class ActivityLogicTest {
         //activity.setStockCount(3);
         //ActivityLogic.Sync2Redis(activity);
 
-        SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, 3, 4, "10001", SourceType.AWKTC);
+        SecKillStatus secKillStatus = ActivityLogic.RedisKill(1, 3, 4, "10001", "10001", SourceType.AWKTC);
         System.out.println(secKillStatus.getMessage());
 
     }
@@ -161,7 +161,7 @@ public class ActivityLogicTest {
     ActivityService activityService;
 
     @Test
-    public void selCount(){
+    public void selCount() {
 
         int i = activityService.selectCount(new EntityWrapper<Activity>().where("activity_id = -1"));
         System.out.println(i);

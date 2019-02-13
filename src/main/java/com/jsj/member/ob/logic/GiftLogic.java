@@ -104,7 +104,7 @@ public class GiftLogic extends BaseLogic {
 
             EntityWrapper<Stock> wrapper = new EntityWrapper<>();
 
-            wrapper.where("open_id={0}", openId);
+            wrapper.where("union_id={0}", unionId);
             wrapper.where("status={0}", StockStatus.UNUSE.getValue());
             wrapper.where("product_id={0} and product_spec_id={1}", dto.getProductId(), dto.getProductSpecId());
             wrapper.orderBy("create_time asc");
@@ -225,6 +225,7 @@ public class GiftLogic extends BaseLogic {
 
         //当前领取人
         String openId = requ.getBaseRequ().getOpenId();
+        String unionId = requ.getBaseRequ().getUnionId();
 
         GiftDto gift = GiftLogic.GetGift(requ.getGiftUniqueCode());
         int giftId = gift.getGiftId();
@@ -253,7 +254,7 @@ public class GiftLogic extends BaseLogic {
         }
 
         //重复领取判断
-        if (userIsDraw(giftId, openId)) {
+        if (userIsDraw(giftId, unionId)) {
             throw new TipException("礼物只能领取一次！");
         }
 
@@ -704,37 +705,6 @@ public class GiftLogic extends BaseLogic {
     }
     //endregion
 
-    //region (public) 获得用户赠送列表 GetGives
-
-    /**
-     * 获得用户赠送列表
-     *
-     * @param openId
-     * @param giftStatus
-     * @return
-     */
-    public static List<GiftDto> GetGives(String openId, GiftStatus giftStatus) {
-
-        EntityWrapper<Gift> wrapper = new EntityWrapper<>();
-        wrapper.where("delete_time is null and open_id={0}", openId);
-
-        if (giftStatus != null) {
-            wrapper.where("status = {0}", giftStatus.getValue());
-        }
-        wrapper.orderBy("status asc,create_time desc");
-        List<Gift> gifts = giftLogic.giftService.selectList(wrapper);
-
-        List<GiftDto> giftDtos = new ArrayList<>();
-        for (Gift gift : gifts) {
-            GiftDto giftDto = GiftLogic.ToDto(gift);
-            List<StockDto> stockDtos = GiftLogic.GetGiftStocks(gift.getGiftId());
-            giftDto.setStockDtos(stockDtos);
-            giftDtos.add(giftDto);
-        }
-        return giftDtos;
-
-    }
-    //endregion
 
     //region (public) 获取用户赠送数量 GetGiveCount
 
@@ -815,10 +785,10 @@ public class GiftLogic extends BaseLogic {
     /**
      * 获得用户在这个礼包中的领取详情
      *
-     * @param openId
+     * @param unionId
      * @param giftId
      */
-    public static List<StockDto> GetGiftRecevied(String openId, int giftId) {
+    public static List<StockDto> GetGiftRecevied(String unionId, int giftId) {
 
         List<StockDto> giveStocks = GiftLogic.GetGiftStocks(giftId);
 
@@ -827,8 +797,8 @@ public class GiftLogic extends BaseLogic {
 
             EntityWrapper<Stock> wrapper = new EntityWrapper<>();
 
-            if (!StringUtils.isBlank(openId)) {
-                wrapper.where("open_id={0}", openId);
+            if (!StringUtils.isBlank(unionId)) {
+                wrapper.where("union_id={0}", unionId);
             }
             wrapper.where("parent_stock_id={0}", giveStock.getStockId());
             wrapper.orderBy("create_time desc");
@@ -931,13 +901,13 @@ public class GiftLogic extends BaseLogic {
      * 判断用户是否已领取
      *
      * @param giftId
-     * @param openId
+     * @param unionId
      * @return
      */
-    public static boolean userIsDraw(int giftId, String openId) {
+    public static boolean userIsDraw(int giftId, String unionId) {
 
         EntityWrapper<Stock> stockWrapper = new EntityWrapper<>();
-        stockWrapper.where("open_id={0}", openId);
+        stockWrapper.where("union_id={0}", unionId);
         stockWrapper.where("exists( select * from _gift_stock as gs where gs.gift_stock_id = _stock.gift_stock_id and gs.gift_id = {0} )", giftId);
 
         int receivedTimes = giftLogic.stockService.selectCount(stockWrapper);
