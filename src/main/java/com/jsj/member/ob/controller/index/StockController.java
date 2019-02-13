@@ -264,6 +264,7 @@ public class StockController extends BaseController {
     public RestResponseBo saveStockUse1(HttpServletRequest request) {
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
         //获取缓存数据
         String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
@@ -310,6 +311,7 @@ public class StockController extends BaseController {
         CreateDeliveryRequ requ = new CreateDeliveryRequ();
 
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setUnionId(unionId);
         requ.getBaseRequ().setJsjId(this.User().getJsjId());
         requ.setAddress(address);
         requ.setCityId(cityId);
@@ -391,6 +393,7 @@ public class StockController extends BaseController {
     public RestResponseBo saveStockUse2(HttpServletRequest request) {
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
         //获取缓存数据
         String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
@@ -415,6 +418,7 @@ public class StockController extends BaseController {
         CreateDeliveryRequ requ = new CreateDeliveryRequ();
 
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setUnionId(unionId);
         requ.getBaseRequ().setJsjId(this.User().getJsjId());
         requ.setContactName(contactName);
         requ.setMobile(mobile);
@@ -480,6 +484,7 @@ public class StockController extends BaseController {
 
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
         //获取缓存数据
         String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
@@ -508,6 +513,7 @@ public class StockController extends BaseController {
         CreateDeliveryRequ requ = new CreateDeliveryRequ();
 
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setUnionId(unionId);
         requ.getBaseRequ().setJsjId(this.User().getJsjId());
         requ.setContactName(contactName);
         requ.setMobile(mobile);
@@ -611,6 +617,7 @@ public class StockController extends BaseController {
 
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
         //获取缓存数据
         String p = redisService.get(StockKey.token, openId, String.class);
         if (StringUtils.isEmpty(p)) {
@@ -632,6 +639,7 @@ public class StockController extends BaseController {
 
         requ.getBaseRequ().setJsjId(this.User().getJsjId());
         requ.getBaseRequ().setOpenId(openId);
+        requ.getBaseRequ().setUnionId(unionId);
         requ.setPropertyType(stockDtos.get(0).getProductDto().getPropertyType());
         requ.setContactName(contactName);
         requ.setMobile(mobile);
