@@ -4,6 +4,7 @@ import com.jsj.member.ob.App;
 import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.dto.api.cart.CartProductDto;
 import com.jsj.member.ob.dto.api.cart.GetCartProductsRequ;
+import com.jsj.member.ob.enums.ActivityType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,12 +36,14 @@ public class CartLogicTest {
     }
 
     @Test
-    public void  saveAndUpdate(){
-        CartLogic.AddUpdateCartProduct("3", "",2,4,1, "add");;
+    public void saveAndUpdate() {
+        CartLogic.AddUpdateCartProduct("3", "", 2, 4, 1, "add", 0, ActivityType.NORMAL);
+        ;
     }
 
     @Test
-    public void getCartProduct(){
+    public void getCartProduct() {
+
         GetCartProductsRequ requ = new GetCartProductsRequ();
         BaseRequ baseRequ = new BaseRequ();
         baseRequ.setOpenId("111");

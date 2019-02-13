@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : OrderProduct 订单商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2019-02-11
+ *   @since 2019-02-13
  */
 @TableName("_order_product")
 public class OrderProduct implements Serializable {
@@ -40,6 +39,16 @@ public class OrderProduct implements Serializable {
      * 商品数
      */
 	private Integer number;
+    /**
+     * 优惠券使用金额
+     */
+	@TableField("coupon_price")
+	private Double couponPrice;
+    /**
+     * 权益使用金额
+     */
+	@TableField("equity_price")
+	private Double equityPrice;
     /**
      * 创建时间
      */
@@ -97,6 +106,22 @@ public class OrderProduct implements Serializable {
 		this.number = number;
 	}
 
+	public Double getCouponPrice() {
+		return couponPrice;
+	}
+
+	public void setCouponPrice(Double couponPrice) {
+		this.couponPrice = couponPrice;
+	}
+
+	public Double getEquityPrice() {
+		return equityPrice;
+	}
+
+	public void setEquityPrice(Double equityPrice) {
+		this.equityPrice = equityPrice;
+	}
+
 	public Integer getCreateTime() {
 		return createTime;
 	}
@@ -130,6 +155,8 @@ public class OrderProduct implements Serializable {
 			", productId=" + productId +
 			", productSpecId=" + productSpecId +
 			", number=" + number +
+			", couponPrice=" + couponPrice +
+			", equityPrice=" + equityPrice +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +
 			", deleteTime=" + deleteTime +

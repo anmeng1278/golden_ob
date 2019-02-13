@@ -9,6 +9,8 @@
         <result column="product_id" property="productId" />
         <result column="product_spec_id" property="productSpecId" />
         <result column="number" property="number" />
+        <result column="coupon_price" property="couponPrice" />
+        <result column="equity_price" property="equityPrice" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="delete_time" property="deleteTime" />
@@ -16,7 +18,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        order_product_id AS orderProductId, order_id AS orderId, product_id AS productId, product_spec_id AS productSpecId, number, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
+        order_product_id AS orderProductId, order_id AS orderId, product_id AS productId, product_spec_id AS productSpecId, number, coupon_price AS couponPrice, equity_price AS equityPrice, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
 </mapper>

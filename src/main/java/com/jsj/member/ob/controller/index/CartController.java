@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.RestResponseBo;
 import com.jsj.member.ob.dto.api.cart.CartProductDto;
+import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.logic.CartLogic;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -61,7 +62,7 @@ public class CartController extends BaseController {
             int num = jo.getIntValue("num");
             int specId = jo.getInteger("specId");
             int productId = jo.getIntValue("productId");
-            CartLogic.AddUpdateCartProduct(openId, unionId, productId, specId, num, "update");
+            CartLogic.AddUpdateCartProduct(openId, unionId, productId, specId, num, "update", 0, ActivityType.NORMAL);
         }
 
         return RestResponseBo.ok("操作成功");

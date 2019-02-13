@@ -1,5 +1,6 @@
 package com.jsj.member.ob.dto.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 
 public abstract class BaseDto {
@@ -7,15 +8,18 @@ public abstract class BaseDto {
     /**
      * 创建时间
      */
+
     private Integer createTime;
     /**
      * 更新时间
      */
+    @JsonIgnore
     @ApiModelProperty(hidden = true)
     private Integer updateTime;
     /**
      * 删除时间
      */
+    @JsonIgnore
     @ApiModelProperty(hidden = true)
     private Integer deleteTime;
 

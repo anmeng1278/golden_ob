@@ -48,9 +48,10 @@ public class ApiProductController {
     public Response<ProductDetailResp> productDetail(@ApiParam(value = "请求实体", required = true)
                                                      @RequestBody @Validated Request<ProductDetailRequ> requ) {
 
-        ActivityType activityType = ActivityType.valueOf(requ.getRequestBody().getActivityType());
+        ActivityType activityType = requ.getRequestBody().getActivityType();
 
         switch (activityType) {
+
             case NORMAL:
                 return Response.ok(this.normalProduct(requ.getRequestBody()));
 
@@ -338,7 +339,7 @@ public class ApiProductController {
     @ApiOperation(value = "订单订单价格")
     @RequestMapping(value = "/calculateOrder", method = RequestMethod.POST)
     public Response<CreateOrderResp> calculateOrder(@ApiParam(value = "请求实体", required = true)
-                                                 @RequestBody @Validated Request<CreateOrderRequ> requ) throws Exception {
+                                                    @RequestBody @Validated Request<CreateOrderRequ> requ) throws Exception {
 
         OrderBase orderBase = OrderFactory.GetInstance(requ.getRequestBody().getActivityType());
         CreateOrderResp resp = orderBase.CalculateOrder(requ.getRequestBody());
