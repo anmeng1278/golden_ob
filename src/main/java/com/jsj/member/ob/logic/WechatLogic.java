@@ -299,9 +299,10 @@ public class WechatLogic extends BaseLogic {
 
     /**
      * 活动可以接受消息推送的用户信息
+     *
      * @return
      */
-    public static  List<Wechat> GetNotifyWechat(){
+    public static List<Wechat> GetNotifyWechat() {
 
         EntityWrapper<Wechat> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
