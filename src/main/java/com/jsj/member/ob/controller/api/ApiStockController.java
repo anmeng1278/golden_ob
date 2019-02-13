@@ -31,8 +31,6 @@ import com.jsj.member.ob.tuple.TwoTuple;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -48,7 +46,6 @@ import java.util.List;
 @RequestMapping("${webconfig.virtualPath}/mini")
 public class ApiStockController extends BaseController {
 
-    private final Logger logger = LoggerFactory.getLogger(ApiStockController.class);
 
     @Autowired
     RedisService redisService;

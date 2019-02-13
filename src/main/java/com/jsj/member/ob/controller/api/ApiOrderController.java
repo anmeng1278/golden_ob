@@ -40,7 +40,9 @@ public class ApiOrderController extends BaseController {
      */
     @ApiOperation(value = "订单列表")
     @RequestMapping(value = "/orders", method = RequestMethod.POST)
-    public Response<OrdersResp> orders(@ApiParam(value = "请求实体", required = true) @RequestBody @Validated Request<OrdersRequ> requ) {
+    public Response<OrdersResp> orders(@ApiParam(value = "请求实体", required = true)
+                                       @RequestBody
+                                       @Validated Request<OrdersRequ> requ) {
 
         OrdersResp resp = new OrdersResp();
 

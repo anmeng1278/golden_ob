@@ -297,6 +297,10 @@ public class OrderLogic extends BaseLogic {
      */
     public static OrderDto ToDto(Order entity) {
 
+        if (entity == null) {
+            return null;
+        }
+
         OrderDto dto = new OrderDto();
 
         dto.setOpenId(entity.getOpenId());
