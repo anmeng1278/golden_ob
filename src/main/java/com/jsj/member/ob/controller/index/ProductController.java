@@ -325,7 +325,7 @@ public class ProductController extends BaseController {
             method = request.getParameter("method");
         }
 
-        CartLogic.AddUpdateCartProduct(openId, unionId, productId, productSpecId, num, method);
+        CartLogic.AddUpdateCartProduct(openId, unionId, productId, productSpecId, num, method, 0, ActivityType.NORMAL);
 
         return RestResponseBo.ok("添加购物车成功");
     }
@@ -415,7 +415,10 @@ public class ProductController extends BaseController {
                             op.getProductId(),
                             op.getProductSpecId(),
                             0,
-                            "update");
+                            "update",
+                            0,
+                            ActivityType.NORMAL
+                    );
                 }
             }
         }

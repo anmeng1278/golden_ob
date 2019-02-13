@@ -2,6 +2,7 @@ package com.jsj.member.ob.dto.api.cart;
 
 import com.jsj.member.ob.dto.api.BaseDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
+import com.jsj.member.ob.enums.ActivityType;
 
 public class CartProductDto extends BaseDto {
 
@@ -35,6 +36,16 @@ public class CartProductDto extends BaseDto {
      * 商品数量
      */
     private Integer number;
+
+    /**
+     * 活动编号
+     */
+    private int activityId;
+
+    /**
+     * 活动类型
+     */
+    private ActivityType activityType;
 
     /**
      * 商品信息
@@ -95,5 +106,21 @@ public class CartProductDto extends BaseDto {
 
     public void setProductDto(ProductDto productDto) {
         this.productDto = productDto;
+    }
+
+    public int getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(int activityId) {
+        this.activityId = activityId;
+    }
+
+    public ActivityType getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(ActivityType activityType) {
+        this.activityType = activityType;
     }
 }

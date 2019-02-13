@@ -1,5 +1,6 @@
 package com.jsj.member.ob.dto.mini;
 
+import com.jsj.member.ob.enums.ActivityType;
 import io.swagger.annotations.ApiModelProperty;
 
 public class ProductDetailRequ {
@@ -20,7 +21,7 @@ public class ProductDetailRequ {
     private int productSpecId;
 
     @ApiModelProperty(value = "活动类型，0:普通，20:秒杀，30:组合，40:会员权益兑换")
-    private int activityType;
+    private ActivityType activityType;
 
     public int getJsjId() {
         return jsjId;
@@ -62,11 +63,12 @@ public class ProductDetailRequ {
         this.productSpecId = productSpecId;
     }
 
-    public int getActivityType() {
+
+    public ActivityType getActivityType() {
         return activityType;
     }
 
-    public void setActivityType(int activityType) {
+    public void setActivityType(ActivityType activityType) {
         this.activityType = activityType;
     }
 }

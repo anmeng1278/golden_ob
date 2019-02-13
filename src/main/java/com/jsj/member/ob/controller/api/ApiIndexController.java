@@ -5,15 +5,13 @@ import com.jsj.member.ob.dto.api.Response;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
-import com.jsj.member.ob.dto.mini.ExchangeRequ;
-import com.jsj.member.ob.dto.mini.ExchangeResp;
-import com.jsj.member.ob.dto.mini.IndexRequ;
-import com.jsj.member.ob.dto.mini.IndexResp;
+import com.jsj.member.ob.dto.mini.*;
 import com.jsj.member.ob.entity.Banner;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.BannerType;
 import com.jsj.member.ob.enums.OrderFlag;
 import com.jsj.member.ob.enums.ProductType;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -88,7 +86,7 @@ public class ApiIndexController {
     }
     //endregion
 
-    //region (public) 兑换专区
+    //region (public) 兑换专区 exchange
 
     /**
      * 兑换专区
@@ -121,17 +119,42 @@ public class ApiIndexController {
         int cartCount = CartLogic.GetCartProductCount(openId, unionId);
         //用户未支付订单数
         int unPayCount = OrderLogic.GetOrders(unionId, OrderFlag.UNPAIDORDERS).size();
-        //账户余额
-        double balance = MemberLogic.StrictChoiceSearch(request.getRequestBody().getJsjId());
 
         resp.setCartCount(cartCount);
         resp.setUnPayCount(unPayCount);
-        resp.setBalance(balance);
 
         return Response.ok(resp);
 
     }
 
+    //endregion
+
+    //region (public) 会员资产 asset
+
+    /**
+     * 会员资产
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "会员资产")
+    @PostMapping(value = {"/asset"})
+    public Response<AssetResp> asset(@ApiParam(value = "会员资产", required = true)
+                                        @RequestBody
+                                        @Validated Request<AssetRequ> request) {
+
+        AssetResp resp = new AssetResp();
+
+        if (request.getRequestBody().getJsjId() <= 0) {
+            throw new TipException("会员编号不能为空");
+        }
+
+        //账户余额
+        double balance = MemberLogic.StrictChoiceSearch(request.getRequestBody().getJsjId());
+        resp.setGiftBalance(balance);
+
+        return Response.ok(resp);
+
+    }
     //endregion
 
 

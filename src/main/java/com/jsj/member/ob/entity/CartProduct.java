@@ -1,18 +1,17 @@
 package com.jsj.member.ob.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *   @description : CartProduct 购物车商品表实体类
  *   ---------------------------------
  * 	 @author cc
- *   @since 2019-02-11
+ *   @since 2019-02-13
  */
 @TableName("_cart_product")
 public class CartProduct implements Serializable {
@@ -39,6 +38,16 @@ public class CartProduct implements Serializable {
      */
 	@TableField("product_spec_id")
 	private Integer productSpecId;
+    /**
+     * 活动编号
+     */
+	@TableField("activity_id")
+	private Integer activityId;
+    /**
+     * 活动类型编号
+     */
+	@TableField("activity_type_id")
+	private Integer activityTypeId;
     /**
      * 数量
      */
@@ -92,6 +101,22 @@ public class CartProduct implements Serializable {
 		this.productSpecId = productSpecId;
 	}
 
+	public Integer getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(Integer activityId) {
+		this.activityId = activityId;
+	}
+
+	public Integer getActivityTypeId() {
+		return activityTypeId;
+	}
+
+	public void setActivityTypeId(Integer activityTypeId) {
+		this.activityTypeId = activityTypeId;
+	}
+
 	public Integer getNumber() {
 		return number;
 	}
@@ -132,6 +157,8 @@ public class CartProduct implements Serializable {
 			", cartId=" + cartId +
 			", productId=" + productId +
 			", productSpecId=" + productSpecId +
+			", activityId=" + activityId +
+			", activityTypeId=" + activityTypeId +
 			", number=" + number +
 			", createTime=" + createTime +
 			", updateTime=" + updateTime +

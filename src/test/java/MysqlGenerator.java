@@ -134,9 +134,12 @@ public class MysqlGenerator {
                             }
                         })
                         .setDriverName("com.mysql.jdbc.Driver")
-                        .setUsername("zhangning")
-                        .setPassword("zhangning123")
-                        .setUrl("jdbc:mysql://172.16.5.102:3306/golden_ob?characterEncoding=utf8")
+                        //.setUsername("zhangning")
+                        //.setPassword("zhangning123")
+                        //.setUrl("jdbc:mysql://172.16.5.102:3306/golden_ob?characterEncoding=utf8")
+                        .setUsername("golden")
+                        .setPassword("golden_2019_$%&")
+                        .setUrl("jdbc:mysql://172.16.3.76:3306/test_golden_ob?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true")
         ).setStrategy(
                 // 策略配置
                 new StrategyConfig()

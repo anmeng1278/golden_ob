@@ -30,22 +30,11 @@ public class ExchangeResp {
         this.exchange = exchange;
     }
 
-    @ApiModelProperty(value = "会员帐户余额")
-    private double balance;
-
     @ApiModelProperty(value = "购物车数")
     private int cartCount;
 
     @ApiModelProperty(value = "用户未支付订单数")
     private int unPayCount;
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
 
     public int getCartCount() {
         return cartCount;

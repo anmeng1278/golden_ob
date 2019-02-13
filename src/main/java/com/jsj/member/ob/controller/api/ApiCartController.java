@@ -66,7 +66,15 @@ public class ApiCartController extends BaseController {
         }
 
         for (CartProductDto jo : requ.getRequestBody().getCartProductDtos()) {
-            CartLogic.AddUpdateCartProduct(openId, unionId, jo.getProductId(), jo.getProductSpecId(), jo.getNumber(), "update");
+            CartLogic.AddUpdateCartProduct(openId,
+                    unionId,
+                    jo.getProductId(),
+                    jo.getProductSpecId(),
+                    jo.getNumber(),
+                    "update",
+                    jo.getActivityId(),
+                    jo.getActivityType()
+            );
         }
 
         return Response.ok(resp);

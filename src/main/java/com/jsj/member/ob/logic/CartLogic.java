@@ -6,6 +6,7 @@ import com.jsj.member.ob.dto.api.cart.CartProductDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Cart;
 import com.jsj.member.ob.entity.CartProduct;
+import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.service.CartProductService;
 import com.jsj.member.ob.service.CartService;
@@ -51,6 +52,7 @@ public class CartLogic extends BaseLogic {
 
 
     //region (public) 清空购物车 DeleteCart
+
     /**
      * 清空购物车
      *
@@ -121,11 +123,22 @@ public class CartLogic extends BaseLogic {
      * @param openId
      * @param unionId
      * @param productId
+     * @param productSpecId
      * @param number
-     * @param method    添加方式 add为累加  update为更新
+     * @param method        添加方式 add为累加  update为更新
+     * @param activityId    活动编号
+     * @param activityType  活动类型
      * @return
      */
-    public static void AddUpdateCartProduct(String openId, String unionId, int productId, int productSpecId, int number, String method) {
+    public static void AddUpdateCartProduct(String openId,
+                                            String unionId,
+                                            int productId,
+                                            int productSpecId,
+                                            int number,
+                                            String method,
+                                            int activityId,
+                                            ActivityType activityType
+    ) {
 
         if (StringUtils.isBlank(openId)) {
             throw new TipException("参数不合法，用户openId为空");
@@ -164,19 +177,25 @@ public class CartLogic extends BaseLogic {
         if (number == 0) {
             cartLogic.cartProductService.delete(queryWrapper);
         } else {
+
             CartProduct cartProduct = cartLogic.cartProductService.selectOne(queryWrapper);
             //如果购物车中没有此商品，添加此商品
             if (cartProduct == null) {
 
                 cartProduct = new CartProduct();
+
                 cartProduct.setCartId(cart.getCartId());
                 cartProduct.setProductId(productId);
                 cartProduct.setProductSpecId(productSpecId);
                 cartProduct.setNumber(number);
                 cartProduct.setCreateTime(DateUtils.getCurrentUnixTime());
+
                 cartProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
+                cartProduct.setActivityId(activityId);
+                cartProduct.setActivityTypeId(activityType.getValue());
 
                 cartLogic.cartProductService.insert(cartProduct);
+
             } else {   //含有此商品，修改商品数量
                 if (method == "add") {
                     cartProduct.setNumber(cartProduct.getNumber() + number);
@@ -241,7 +260,9 @@ public class CartLogic extends BaseLogic {
         for (CartProduct cartProduct : cartProducts) {
 
             CartProductDto dto = new CartProductDto();
+
             ProductDto productDto = ProductLogic.GetProduct(cartProduct.getProductId());
+
             dto.setProductDto(productDto);
             dto.setCartId(cartProduct.getCartId());
             dto.setNumber(cartProduct.getNumber());
@@ -253,6 +274,9 @@ public class CartLogic extends BaseLogic {
             dto.setCreateTime(cartProduct.getCreateTime());
             dto.setUpdateTime(cartProduct.getUpdateTime());
             dto.setDeleteTime(cartProduct.getDeleteTime());
+
+            dto.setActivityId(cartProduct.getActivityId());
+            dto.setActivityType(ActivityType.valueOf(cartProduct.getActivityTypeId()));
 
             cartProductDtos.add(dto);
         }
