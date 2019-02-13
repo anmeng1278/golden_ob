@@ -1,7 +1,6 @@
 package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jsj.member.ob.dto.api.coupon.*;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.entity.Coupon;
@@ -21,7 +20,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CouponLogic extends BaseLogic {
@@ -299,7 +300,7 @@ public class CouponLogic extends BaseLogic {
     /**
      * 获得商品的可用优惠券
      *
-     * @param productId
+     * @param productIds
      * @param unionId
      * @return select * from _wechat_coupon as a
      * where
@@ -312,48 +313,57 @@ public class CouponLogic extends BaseLogic {
      * exists( select * from _coupon_product as cp where cp.coupon_id = a.coupon_id and cp.product_id = 7 )
      * )
      */
-    public static List<WechatCouponDto> GetWechatCoupons(int productId, String unionId) {
+    public static List<WechatCouponDto> GetWechatCoupons(List<Integer> productIds, String unionId) {
 
-        List<WechatCouponDto> dtos = new ArrayList<>();
+        List<WechatCouponDto> wechatCoupons = couponLogic.wechatCouponService.getWechatCoupons(unionId);
+        List<WechatCouponDto> results = new ArrayList<>();
 
-        Wrapper wrapper = new EntityWrapper<WechatCoupon>();
-        wrapper.where("_wechat_coupon.status = 0");
-        wrapper.where("_wechat_coupon.union_id = {0}", unionId);
-        wrapper.where("_wechat_coupon.delete_time is null");
-        wrapper.where("_wechat_coupon.expired_time >= UNIX_TIMESTAMP()");
-        wrapper.where("( (select b.user_range from _coupon as b where b.coupon_id = _wechat_coupon.coupon_id ) = {0} or\n" +
-                        "exists( select * from _coupon_product as cp where cp.coupon_id = _wechat_coupon.coupon_id and cp.product_id = {1} ) )",
-                CouponUseRange.ALL.getValue(), productId);
+        for (WechatCouponDto wechatCouponDto : wechatCoupons) {
 
-        wrapper.orderBy("_wechat_coupon.expired_time asc");
-
-        List<WechatCoupon> coupons = couponLogic.wechatCouponService.selectList(wrapper);
-        coupons.forEach(entity -> {
-
-            Integer couponId = entity.getCouponId();
+            Integer couponId = wechatCouponDto.getCouponId();
             CouponDto dto = CouponLogic.GetCoupon(couponId);
 
-            WechatCouponDto wechatCouponDto = CouponLogic.ToWechatCouponDto(entity);
             wechatCouponDto.setCouponDto(dto);
 
-            dtos.add(wechatCouponDto);
+            if (wechatCouponDto.getUseRange().equals(CouponUseRange.ALL)) {
+                results.add(wechatCouponDto);
+            } else {
+                if (org.apache.commons.lang3.StringUtils.isEmpty(wechatCouponDto.getProductIds())) {
+                    continue;
+                }
+                String[] split = wechatCouponDto.getProductIds().split(",");
+                boolean has = true;
+                for (int productId : productIds) {
+                    Optional<String> first = Arrays.stream(split).filter(x -> x.equals(productId + "")).findFirst();
+                    if (!first.isPresent()) {
+                        has = false;
+                        break;
+                    }
+                }
+                if (has) {
+                    results.add(wechatCouponDto);
+                }
 
-        });
-        return dtos;
+            }
+        }
+
+        return results;
+
     }
     //endregion
 
     /**
      * 获取用户优惠券列表
+     *
      * @param unionId
      * @return
      */
-    public static List<WechatCouponDto> GetWechatCoupons(String unionId){
+    public static List<WechatCouponDto> GetWechatCoupons(String unionId) {
 
         List<WechatCouponDto> dtos = new ArrayList<>();
 
         EntityWrapper<WechatCoupon> wrapper = new EntityWrapper<>();
-        wrapper.where("union_id={0}",unionId);
+        wrapper.where("union_id={0}", unionId);
         wrapper.where("delete_time is null ");
         wrapper.orderBy("status asc");
 

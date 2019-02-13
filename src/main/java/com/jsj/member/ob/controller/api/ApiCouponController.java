@@ -39,7 +39,12 @@ public class ApiCouponController extends BaseController {
 
         CouponsResp resp = new CouponsResp();
 
-        List<WechatCouponDto> wechatCouponDtos = CouponLogic.GetWechatCoupons(requ.getRequestBody().getUnionId());
+        List<WechatCouponDto> wechatCouponDtos;
+        if (requ.getRequestBody().getProductIds() == null || requ.getRequestBody().getProductIds().isEmpty()) {
+            wechatCouponDtos = CouponLogic.GetWechatCoupons(requ.getRequestBody().getUnionId());
+        } else {
+            wechatCouponDtos = CouponLogic.GetWechatCoupons(requ.getRequestBody().getProductIds(), requ.getRequestBody().getUnionId());
+        }
         resp.setWechatCouponDtos(wechatCouponDtos);
 
         return Response.ok(resp);

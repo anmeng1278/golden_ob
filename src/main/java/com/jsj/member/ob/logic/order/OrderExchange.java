@@ -16,6 +16,7 @@ import com.jsj.member.ob.logic.ActivityLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.*;
+import com.jsj.member.ob.tuple.TwoTuple;
 import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 秒杀单
@@ -77,11 +79,14 @@ public class OrderExchange extends OrderBase {
         super.validateCreateRequ(requ);
 
         //参数校验
+        if (requ.getBaseRequ().getJsjId() <= 0) {
+            throw new TipException("参数不合法，用户jsjId为空");
+        }
         if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
-            throw new TipException("用户编号不能为空");
+            throw new TipException("参数不合法，用户openId为空");
         }
         if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getUnionId())) {
-            throw new TipException("用户编号不能为空");
+            throw new TipException("参数不合法，用户unionId为空");
         }
 
         if (requ.getBaseRequ().getJsjId() <= 0) {
@@ -95,21 +100,12 @@ public class OrderExchange extends OrderBase {
         if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().isEmpty()) {
             throw new TipException("兑换商品不能为空");
         }
-        if (requ.getOrderProductDtos().size() != 1) {
-            throw new TipException("只能兑换一个商品");
-        }
-        if (requ.getNumber() <= 0) {
-            requ.setNumber(1);
-        }
-
-        //所选商品
-        OrderProductDto chooseOrderProduct = requ.getOrderProductDtos().get(0);
 
         //活动
         ActivityDto activityDto = ActivityLogic.GetActivity(requ.getActivityId());
 
         //活动商品
-        List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(requ.getActivityId(), chooseOrderProduct.getProductSpecId());
+        List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(requ.getActivityId());
 
         if (activityProductDtos.isEmpty()) {
             throw new TipException(String.format("没有发现活动商品，请稍后重试。活动编号：%d", activityDto.getActivityId()));
@@ -153,46 +149,50 @@ public class OrderExchange extends OrderBase {
         //用于削减库存
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
 
-        //购买份数
-        int number = requ.getNumber();
-
         //订单金额
         double orderAmount = 0d;
 
         String productName = "";
 
-        for (ActivityProductDto apd : activityProductDtos) {
+        for (OrderProductDto op : requ.getOrderProductDtos()) {
 
-            if (apd.getStockCount() < number) {
-                throw new TipException("商品售罄啦");
+            Optional<ActivityProductDto> first = activityProductDtos.stream().filter(ap -> ap.getProductId().equals(op.getProductId()) &&
+                    ap.getProductSpecId().equals(op.getProductSpecId())).findFirst();
+
+            if (!first.isPresent()) {
+                throw new TipException(String.format("商品不在兑换活动中，商品编号：%d，活动编号：%d", op.getProductId(), requ.getActivityId()));
+            }
+
+            if (first.get().getStockCount() < op.getNumber()) {
+                throw new TipException(String.format("商品\"%s\"库存不足，当前库存：%d", first.get().getProductDto().getProductName(), first.get().getStockCount()));
             }
 
             //用于创建商品订单
             OrderProduct orderProduct = new OrderProduct();
 
-            orderProduct.setNumber(number);
-            orderProduct.setProductSpecId(apd.getProductSpecId());
+            orderProduct.setNumber(op.getNumber());
+            orderProduct.setProductSpecId(op.getProductSpecId());
             orderProduct.setCreateTime(DateUtils.getCurrentUnixTime());
             orderProduct.setUpdateTime(DateUtils.getCurrentUnixTime());
 
-            orderProduct.setProductId(apd.getProductId());
+            orderProduct.setProductId(op.getProductId());
             orderProducts.add(orderProduct);
 
             //用于削减库存
             OrderProductDto orderProductDto = new OrderProductDto();
-            orderProductDto.setProductId(apd.getProductId());
-            orderProductDto.setProductSpecId(apd.getProductSpecId());
-            orderProductDto.setNumber(number);
+            orderProductDto.setProductId(op.getProductId());
+            orderProductDto.setProductSpecId(op.getProductSpecId());
+            orderProductDto.setNumber(op.getNumber());
 
             orderProductDtos.add(orderProductDto);
 
             //获取商品规格
-            ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(apd.getProductSpecId());
+            ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(op.getProductSpecId());
 
-            orderAmount += productSpecDto.getSalePrice() * number;
+            orderAmount += productSpecDto.getSalePrice() * op.getNumber();
 
             //削减活动商品库存
-            ActivityLogic.ReductionActivityProductStock(apd.getActivityId(), apd.getProductId(), apd.getProductSpecId(), number);
+            ActivityLogic.ReductionActivityProductStock(requ.getActivityId(), op.getProductId(), op.getProductSpecId(), op.getNumber());
 
             productName += productSpecDto.getProductDto().getProductName() + " ";
         }
@@ -243,18 +243,62 @@ public class OrderExchange extends OrderBase {
         //通用验证
         super.validateCreateRequ(requ);
 
+        //会员编号
+        int jsjId = requ.getBaseRequ().getJsjId();
+
         //参数校验
+        if (jsjId <= 0) {
+            throw new TipException("参数不合法，用户jsjId为空");
+        }
         if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
-            throw new TipException("用户编号不能为空");
+            throw new TipException("参数不合法，用户openId为空");
+        }
+        if (org.apache.commons.lang3.StringUtils.isBlank(requ.getBaseRequ().getUnionId())) {
+            throw new TipException("参数不合法，用户unionId为空");
         }
         if (requ.getOrderProductDtos() == null || requ.getOrderProductDtos().size() == 0) {
             throw new TipException("购买商品不能为空");
+        }
+        //活动
+        ActivityDto activityDto = ActivityLogic.GetActivity(requ.getActivityId());
+
+        //活动商品
+        List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(requ.getActivityId());
+
+        if (activityProductDtos.isEmpty()) {
+            throw new TipException(String.format("没有发现活动商品，请稍后重试。活动编号：%d", activityDto.getActivityId()));
+        }
+
+        if (activityDto.getDeleteTime() != null) {
+            throw new TipException("活动结束啦");
+        }
+        if (activityDto.getBeginTime() > DateUtils.getCurrentUnixTime()) {
+            throw new TipException("活动未开始");
+        }
+        if (activityDto.getEndTime() < DateUtils.getCurrentUnixTime()) {
+            throw new TipException("活动结束啦");
+        }
+
+        if (activityDto.getActivityType() != this.getActivityType()) {
+            throw new TipException("当前活动非兑换活动");
         }
 
         //订单应支付金额
         double orderAmount = 0d;
 
         for (OrderProductDto op : requ.getOrderProductDtos()) {
+
+            Optional<ActivityProductDto> first = activityProductDtos.stream().filter(ap -> ap.getProductId().equals(op.getProductId()) &&
+                    ap.getProductSpecId().equals(op.getProductSpecId())).findFirst();
+
+            if (!first.isPresent()) {
+                throw new TipException(String.format("商品不在兑换活动中，商品编号：%d，活动编号：%d", op.getProductId(), requ.getActivityId()));
+            }
+
+            if (first.get().getStockCount() < op.getNumber()) {
+                throw new TipException(String.format("商品\"%s\"库存不足，当前库存：%d", first.get().getProductDto().getProductName(), first.get().getStockCount()));
+            }
+
             //获取商品规格
             ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(op.getProductSpecId());
             //获取规格金额
@@ -265,9 +309,14 @@ public class OrderExchange extends OrderBase {
         orderAmount = new BigDecimal(orderAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
         CreateOrderResp resp = new CreateOrderResp();
+        TwoTuple<Double, Double> twoTuple = super.Exchange(jsjId, orderAmount);
 
-        resp.setAmount(orderAmount);
+        double payAmount = twoTuple.first;
+        double giftAmount = twoTuple.second;
+
+        resp.setAmount(payAmount);
         resp.setCouponAmount(0d);
+        resp.setGiftAmount(giftAmount);
         resp.setOriginalAmount(orderAmount);
         resp.setSuccess(true);
 

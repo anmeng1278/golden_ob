@@ -23,4 +23,39 @@
         wechat_coupon_id AS wechatCouponId, order_redpacket_coupon_id AS orderRedpacketCouponId, open_id AS openId, union_id AS unionId, coupon_id AS couponId, expired_time AS expiredTime, status, amount, type_id AS typeId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
+
+    <!-- 获取可用优惠券列表 -->
+    <select id="getWechatCoupons" resultType="com.jsj.member.ob.dto.api.coupon.WechatCouponDto">
+
+        <![CDATA[
+        select
+            w.wechat_coupon_id AS wechatCouponId,
+            w.order_redpacket_coupon_id AS orderRedpacketCouponId,
+            w.open_id AS openId,
+            w.union_id AS unionId,
+            w.coupon_id AS couponId,
+            w.expired_time AS expiredTime,
+            w.status as couponStatus,
+            w.amount,
+            w.type_id AS couponType,
+            w.create_time AS createTime,
+            w.update_time AS updateTime,
+            w.delete_time AS deleteTime,
+            GROUP_CONCAT(product_id) as productIds,
+            c.user_range as useRange
+        from _wechat_coupon as w
+            inner join _coupon as c
+                on w.coupon_id = c.coupon_id
+            left join _coupon_product as cp
+                on c.coupon_id = cp.coupon_id
+        where
+                w.STATUS = 0
+                AND w.union_id = #{unionId}
+                AND w.delete_time IS NULL
+                AND w.expired_time >= UNIX_TIMESTAMP()
+        group by w.wechat_coupon_id
+        order by w.create_time desc
+     ]]>
+    </select>
+
 </mapper>

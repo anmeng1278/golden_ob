@@ -3,6 +3,7 @@ package com.jsj.member.ob.dto.api.coupon;
 import com.jsj.member.ob.dto.api.BaseDto;
 import com.jsj.member.ob.enums.CouponStatus;
 import com.jsj.member.ob.enums.CouponType;
+import com.jsj.member.ob.enums.CouponUseRange;
 
 public class WechatCouponDto extends BaseDto {
 
@@ -30,6 +31,17 @@ public class WechatCouponDto extends BaseDto {
      * 券的金额, 单位元
      */
     private double amount;
+
+    /**
+     * 适用商品编号
+     */
+    private String productIds;
+
+    /**
+     * 适用范围
+     */
+    private CouponUseRange useRange;
+
     /**
      * 类型 1直减券  2折扣券 (值为2时折扣使用amount字段)
      */
@@ -99,5 +111,21 @@ public class WechatCouponDto extends BaseDto {
 
     public void setCouponType(CouponType couponType) {
         this.couponType = couponType;
+    }
+
+    public String getProductIds() {
+        return productIds;
+    }
+
+    public void setProductIds(String productIds) {
+        this.productIds = productIds;
+    }
+
+    public CouponUseRange getUseRange() {
+        return useRange;
+    }
+
+    public void setUseRange(CouponUseRange useRange) {
+        this.useRange = useRange;
     }
 }

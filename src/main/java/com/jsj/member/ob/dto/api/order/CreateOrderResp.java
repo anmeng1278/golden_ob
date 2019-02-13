@@ -34,6 +34,11 @@ public class CreateOrderResp {
     private double couponAmount;
 
     /**
+     * 礼品券使用金额
+     */
+    private double giftAmount;
+
+    /**
      * 原金额
      */
     private double originalAmount;
@@ -106,5 +111,13 @@ public class CreateOrderResp {
 
     public void setOrderUniqueCode(String orderUniqueCode) {
         this.orderUniqueCode = orderUniqueCode;
+    }
+
+    public double getGiftAmount() {
+        return giftAmount;
+    }
+
+    public void setGiftAmount(double giftAmount) {
+        this.giftAmount = giftAmount;
     }
 }

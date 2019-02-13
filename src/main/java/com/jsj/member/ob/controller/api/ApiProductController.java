@@ -4,7 +4,6 @@ import com.jsj.member.ob.dto.api.Request;
 import com.jsj.member.ob.dto.api.Response;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
-import com.jsj.member.ob.dto.api.coupon.WechatCouponDto;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.product.ProductDto;
@@ -14,7 +13,6 @@ import com.jsj.member.ob.dto.mini.ProductDetailResp;
 import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.ActivityLogic;
-import com.jsj.member.ob.logic.CouponLogic;
 import com.jsj.member.ob.logic.MemberLogic;
 import com.jsj.member.ob.logic.ProductLogic;
 import com.jsj.member.ob.logic.order.OrderBase;
@@ -28,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -103,10 +102,8 @@ public class ApiProductController {
             stockCount = info.getProductSpecDtos().stream().mapToInt(ProductSpecDto::getStockCount).sum();
         }
 
-        String unionId = requ.getUnionId();
-
-        //商品可用代金券
-        List<WechatCouponDto> coupons = CouponLogic.GetWechatCoupons(productId, unionId);
+        List<Integer> productIds = new ArrayList<>();
+        productIds.add(productId);
 
         if (info.getProductImgDtos() != null && info.getProductImgDtos().size() > 0) {
             String imgUrl = info.getProductImgDtos().get(0).getImgPath();
@@ -114,7 +111,6 @@ public class ApiProductController {
         }
         resp.setStockCount(stockCount);
         resp.setProductDto(info);
-        resp.setWechatCouponDtos(coupons);
         resp.setSalePrice(salePrice);
 
         return resp;
