@@ -450,5 +450,72 @@ public class MemberLogic {
     }
     //endregion
 
+
+    //region (public) 获取会员资产 GetCustAsset
+
+    /**
+     * 获取会员资产
+     *
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    public static JSONObject GetCustAsset(Map<String, Object> map) throws Exception {
+
+        String url = memberLogic.webconfig.getMemberApiUrl2();
+        return MemberLogic.GetJMember(url, map, "GetCustAsset");
+
+    }
+    //endregion
+
+
+    /**
+     * Plus使用明细
+     *
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    public static JSONObject GetPlusDetail(Map<String, Object> map) throws Exception {
+
+        String url = memberLogic.webconfig.getMemberApiUrl();
+        return MemberLogic.GetJMember(url, map, "GetPlusDetail");
+
+    }
+
+    /**
+     * 请求会员组接口
+     *
+     * @param url
+     * @param map
+     * @param method
+     * @return
+     * @throws Exception
+     */
+    private static JSONObject GetJMember(String url, Map<String, Object> map, String method) throws Exception {
+
+        String json = HttpUtils.json(url,
+                JSON.toJSONString(map),
+                method, "4D7D8DEB-5212-4758-808A-32D60F01D689");
+
+        if (!StringUtils.isEmpty(json)) {
+            JSONObject jsonObject = JSON.parseObject(json);
+            JSONObject baseResponse = jsonObject.getJSONObject("BaseResponse");
+            if(baseResponse == null){
+                baseResponse = jsonObject.getJSONObject("baseresponse");
+            }
+            if (!baseResponse.getBoolean("IsSuccess")) {
+                String errorMsg = baseResponse.getString("ErrorMessage");
+                throw new TipException(errorMsg);
+            } else {
+                return jsonObject;
+            }
+        } else {
+            throw new Exception("返回信息为空");
+        }
+
+
+    }
+
 }
 

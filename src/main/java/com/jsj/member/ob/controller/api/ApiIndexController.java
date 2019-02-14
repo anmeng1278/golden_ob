@@ -172,7 +172,7 @@ public class ApiIndexController {
      */
     @ApiOperation(value = "礼品券使用明细")
     @PostMapping(value = {"/strictChoiceDetail"})
-    public Response<JSONObject> strictChoiceDetail(@ApiParam(value = "会员资产", required = true)
+    public Response<JSONObject> strictChoiceDetail(@ApiParam(value = "礼品券使用明细", required = true)
                                                    @RequestBody
                                                    @Validated Request<Map<String, Object>> requ) throws Exception {
 
@@ -187,4 +187,44 @@ public class ApiIndexController {
     //endregion
 
 
+    //region (public) 会员资产(全部) getCustAsset
+
+    /**
+     * 会员资产(全部)
+     *
+     * @param requ
+     * @return
+     */
+    @ApiOperation(value = "会员资产(全部)")
+    @PostMapping(value = {"/assets"})
+    public Response<JSONObject> getCustAsset(@ApiParam(value = "会员资产(全部)", required = true)
+                                             @RequestBody
+                                             @Validated Request<Map<String, Object>> requ) throws Exception {
+
+        JSONObject jsonObject = MemberLogic.GetCustAsset(requ.getRequestBody());
+        return Response.ok(jsonObject);
+
+    }
+    //endregion
+
+
+    //region (public) plus券使用明细 plusDetail
+
+    /**
+     * plus券使用明细
+     *
+     * @param requ
+     * @return
+     */
+    @ApiOperation(value = "plus券使用明细")
+    @PostMapping(value = {"/plusDetail"})
+    public Response<JSONObject> plusDetail(@ApiParam(value = "plus券使用明细", required = true)
+                                           @RequestBody
+                                           @Validated Request<Map<String, Object>> requ) throws Exception {
+
+        JSONObject jsonObject = MemberLogic.GetPlusDetail(requ.getRequestBody());
+        return Response.ok(jsonObject);
+
+    }
+    //endregion
 }

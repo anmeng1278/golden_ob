@@ -1,5 +1,6 @@
 package com.jsj.member.ob.config;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -238,6 +239,13 @@ public class Webconfig {
 
     public String getMemberApiUrl() {
         return memberApiUrl;
+    }
+
+    public String getMemberApiUrl2() {
+        if (!StringUtils.isEmpty(this.memberApiUrl)) {
+            return this.memberApiUrl.toLowerCase().replace("jmember", "member");
+        }
+        return "";
     }
 
     public void setMemberApiUrl(String memberApiUrl) {
