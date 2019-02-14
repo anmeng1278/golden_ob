@@ -1,0 +1,9 @@
+package com.jsj.member.ob.dto.proto;
+
+
+message StrictChoices {
+   optional string StradeName = 1;
+   optional string OperaTime = 2;
+   optional double LastStriceChoiceNum = 3 [default = 0];
+   optional double OperaStrictChoice = 4 [default = 0];
+}

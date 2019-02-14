@@ -1,5 +1,7 @@
 package com.jsj.member.ob.controller.api;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.jsj.member.ob.dto.api.Request;
 import com.jsj.member.ob.dto.api.Response;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("${webconfig.virtualPath}/mini")
@@ -133,14 +136,15 @@ public class ApiIndexController {
 
     /**
      * 会员资产
+     *
      * @param request
      * @return
      */
     @ApiOperation(value = "会员资产")
     @PostMapping(value = {"/asset"})
     public Response<AssetResp> asset(@ApiParam(value = "会员资产", required = true)
-                                        @RequestBody
-                                        @Validated Request<AssetRequ> request) {
+                                     @RequestBody
+                                     @Validated Request<AssetRequ> request) {
 
         AssetResp resp = new AssetResp();
 
@@ -153,6 +157,31 @@ public class ApiIndexController {
         resp.setGiftBalance(balance);
 
         return Response.ok(resp);
+
+    }
+    //endregion
+
+
+    //region (public) 礼品券使用明细 strictChoiceDetail
+
+    /**
+     * 礼品券使用明细
+     *
+     * @param requ
+     * @return
+     */
+    @ApiOperation(value = "礼品券使用明细")
+    @PostMapping(value = {"/strictChoiceDetail"})
+    public Response<JSONObject> strictChoiceDetail(@ApiParam(value = "会员资产", required = true)
+                                                   @RequestBody
+                                                   @Validated Request<Map<String, Object>> requ) throws Exception {
+
+        JSONArray objects = MemberLogic.StrictChoiceDetail(requ.getRequestBody());
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("strictChoices", objects);
+
+        return Response.ok(jsonObject);
 
     }
     //endregion

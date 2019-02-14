@@ -55,7 +55,7 @@ public final class CustomerInformationRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.BigCustomerBusinessType BusinessType = 4 [default = BigCustFlight];</code>
      */
-    com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType getBusinessType();
+    BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType getBusinessType();
 
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.CompanyType CompanyType = 5 [default = UnKnow];</code>
@@ -64,7 +64,7 @@ public final class CustomerInformationRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.CompanyType CompanyType = 5 [default = UnKnow];</code>
      */
-    com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType getCompanyType();
+    CompanyTypeOuterClass.CompanyType getCompanyType();
   }
   /**
    * Protobuf type {@code com.jsj.member.ob.dto.proto.CustomerInformationRequest}
@@ -144,7 +144,7 @@ public final class CustomerInformationRequestOuterClass {
             }
             case 32: {
               int rawValue = input.readEnum();
-              com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType value = com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType.valueOf(rawValue);
+              BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType value = BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(4, rawValue);
               } else {
@@ -155,7 +155,7 @@ public final class CustomerInformationRequestOuterClass {
             }
             case 40: {
               int rawValue = input.readEnum();
-              com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType value = com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType.valueOf(rawValue);
+              CompanyTypeOuterClass.CompanyType value = CompanyTypeOuterClass.CompanyType.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(5, rawValue);
               } else {
@@ -283,7 +283,7 @@ public final class CustomerInformationRequestOuterClass {
     }
 
     public static final int BUSINESSTYPE_FIELD_NUMBER = 4;
-    private com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType businessType_;
+    private BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType businessType_;
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.BigCustomerBusinessType BusinessType = 4 [default = BigCustFlight];</code>
      */
@@ -293,12 +293,12 @@ public final class CustomerInformationRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.BigCustomerBusinessType BusinessType = 4 [default = BigCustFlight];</code>
      */
-    public com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType getBusinessType() {
+    public BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType getBusinessType() {
       return businessType_;
     }
 
     public static final int COMPANYTYPE_FIELD_NUMBER = 5;
-    private com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType companyType_;
+    private CompanyTypeOuterClass.CompanyType companyType_;
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.CompanyType CompanyType = 5 [default = UnKnow];</code>
      */
@@ -308,7 +308,7 @@ public final class CustomerInformationRequestOuterClass {
     /**
      * <code>optional .com.jsj.member.ob.dto.proto.CompanyType CompanyType = 5 [default = UnKnow];</code>
      */
-    public com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType getCompanyType() {
+    public CompanyTypeOuterClass.CompanyType getCompanyType() {
       return companyType_;
     }
 
@@ -316,8 +316,8 @@ public final class CustomerInformationRequestOuterClass {
       baseRequest_ = BaseRequestOuterClass.BaseRequest.getDefaultInstance();
       jSJID_ = "";
       type_ = 0;
-      businessType_ = com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType.BigCustFlight;
-      companyType_ = com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType.UnKnow;
+      businessType_ = BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType.BigCustFlight;
+      companyType_ = CompanyTypeOuterClass.CompanyType.UnKnow;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -504,9 +504,9 @@ public final class CustomerInformationRequestOuterClass {
         bitField0_ = (bitField0_ & ~0x00000002);
         type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000004);
-        businessType_ = com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType.BigCustFlight;
+        businessType_ = BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType.BigCustFlight;
         bitField0_ = (bitField0_ & ~0x00000008);
-        companyType_ = com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType.UnKnow;
+        companyType_ = CompanyTypeOuterClass.CompanyType.UnKnow;
         bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
@@ -844,7 +844,7 @@ public final class CustomerInformationRequestOuterClass {
         return this;
       }
 
-      private com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType businessType_ = com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType.BigCustFlight;
+      private BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType businessType_ = BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType.BigCustFlight;
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.BigCustomerBusinessType BusinessType = 4 [default = BigCustFlight];</code>
        */
@@ -854,13 +854,13 @@ public final class CustomerInformationRequestOuterClass {
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.BigCustomerBusinessType BusinessType = 4 [default = BigCustFlight];</code>
        */
-      public com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType getBusinessType() {
+      public BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType getBusinessType() {
         return businessType_;
       }
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.BigCustomerBusinessType BusinessType = 4 [default = BigCustFlight];</code>
        */
-      public Builder setBusinessType(com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType value) {
+      public Builder setBusinessType(BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -874,12 +874,12 @@ public final class CustomerInformationRequestOuterClass {
        */
       public Builder clearBusinessType() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        businessType_ = com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType.BigCustFlight;
+        businessType_ = BigCustomerBusinessTypeOuterClass.BigCustomerBusinessType.BigCustFlight;
         onChanged();
         return this;
       }
 
-      private com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType companyType_ = com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType.UnKnow;
+      private CompanyTypeOuterClass.CompanyType companyType_ = CompanyTypeOuterClass.CompanyType.UnKnow;
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.CompanyType CompanyType = 5 [default = UnKnow];</code>
        */
@@ -889,13 +889,13 @@ public final class CustomerInformationRequestOuterClass {
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.CompanyType CompanyType = 5 [default = UnKnow];</code>
        */
-      public com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType getCompanyType() {
+      public CompanyTypeOuterClass.CompanyType getCompanyType() {
         return companyType_;
       }
       /**
        * <code>optional .com.jsj.member.ob.dto.proto.CompanyType CompanyType = 5 [default = UnKnow];</code>
        */
-      public Builder setCompanyType(com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType value) {
+      public Builder setCompanyType(CompanyTypeOuterClass.CompanyType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -909,7 +909,7 @@ public final class CustomerInformationRequestOuterClass {
        */
       public Builder clearCompanyType() {
         bitField0_ = (bitField0_ & ~0x00000010);
-        companyType_ = com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.CompanyType.UnKnow;
+        companyType_ = CompanyTypeOuterClass.CompanyType.UnKnow;
         onChanged();
         return this;
       }
@@ -963,8 +963,8 @@ public final class CustomerInformationRequestOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           BaseRequestOuterClass.getDescriptor(),
-          com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.getDescriptor(),
-          com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.getDescriptor(),
+          BigCustomerBusinessTypeOuterClass.getDescriptor(),
+          CompanyTypeOuterClass.getDescriptor(),
         }, assigner);
     internal_static_com_jsj_member_ob_dto_proto_CustomerInformationRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -973,8 +973,8 @@ public final class CustomerInformationRequestOuterClass {
         internal_static_com_jsj_member_ob_dto_proto_CustomerInformationRequest_descriptor,
         new String[] { "BaseRequest", "JSJID", "Type", "BusinessType", "CompanyType", });
     BaseRequestOuterClass.getDescriptor();
-    com.jsj.member.ob.dto.proto.BigCustomerBusinessTypeOuterClass.getDescriptor();
-    com.jsj.member.ob.dto.proto.CompanyTypeOuterClass.getDescriptor();
+    BigCustomerBusinessTypeOuterClass.getDescriptor();
+    CompanyTypeOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)
