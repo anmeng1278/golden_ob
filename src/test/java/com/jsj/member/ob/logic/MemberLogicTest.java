@@ -229,4 +229,26 @@ public class MemberLogicTest {
 
 
     }
+
+    @Test
+    public void getCustAsset() throws Exception {
+
+        JSONObject js = new JSONObject();
+        js.put("JSJID", 20613259);
+
+        JSONObject jsonObject = MemberLogic.GetCustAsset(js);
+        System.out.println(JSON.toJSONString(jsonObject));
+
+    }
+
+    @Test
+    public void getPlusDetail() throws Exception {
+
+        JSONObject js = new JSONObject();
+        js.put("JSJID", 20613259);
+
+        JSONObject jsonObject = MemberLogic.GetPlusDetail(js);
+        System.out.println(JSON.toJSONString(jsonObject));
+
+    }
 }
