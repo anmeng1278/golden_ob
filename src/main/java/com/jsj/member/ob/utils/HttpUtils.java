@@ -1,5 +1,7 @@
 package com.jsj.member.ob.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.proto.ZRequestOuterClass;
 import com.jsj.member.ob.dto.proto.ZResponseOuterClass;
@@ -110,6 +112,81 @@ public class HttpUtils {
 
         return result;
 
+    }
+
+
+    /**
+     * 发送json请求
+     *
+     * @param url
+     * @param json
+     * @param methodName
+     * @return
+     */
+    public static String json(String url, String json, String methodName, String signKey) {
+        BufferedReader reader = null;
+        try {
+
+            int timestamp = DateUtils.getCurrentUnixTime();
+            JSONObject jsonBody = JSON.parseObject(json);
+
+            HashMap<String, Object> jRequest = new HashMap<>();
+            jRequest.put("Json", jsonBody);
+            jRequest.put("MethodName", methodName);
+            jRequest.put("Timestamp", timestamp);
+
+            String sign = String.format("%s%s%d%s",
+                    JSON.toJSONString(jsonBody),
+                    methodName,
+                    timestamp,
+                    signKey
+            );
+            sign = Md5Utils.MD5(sign);
+            jRequest.put("Sign", sign);
+
+
+            URL uri = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) uri.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            connection.setUseCaches(false);
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            String body = JSON.toJSONString(jRequest);
+
+            byte[] writeBytes = body.getBytes();
+            connection.setRequestProperty("Content-Length", String.valueOf(writeBytes.length));
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(body.getBytes());
+            outputStream.flush();
+            outputStream.close();
+
+            if (connection.getResponseCode() == 200) {
+                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String responseStr = reader.readLine();
+                reader.close();
+
+                JSONObject jsonObject = JSON.parseObject(responseStr);
+                if (!jsonObject.getBoolean("IsSuccess")) {
+                    throw new Exception(jsonObject.getString("ExceptionMessage"));
+                }
+
+                return jsonObject.getString("Json");
+
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return "";
     }
 
     /**

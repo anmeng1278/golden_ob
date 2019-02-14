@@ -461,12 +461,12 @@ public final class CustomerInfoNewOuterClass {
     /**
      * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
      */
-    java.util.List<com.jsj.member.ob.dto.proto.ServersOuterClass.Servers>
+    java.util.List<ServersOuterClass.Servers>
         getServerListList();
     /**
      * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
      */
-    com.jsj.member.ob.dto.proto.ServersOuterClass.Servers getServerList(int index);
+    ServersOuterClass.Servers getServerList(int index);
     /**
      * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
      */
@@ -474,12 +474,12 @@ public final class CustomerInfoNewOuterClass {
     /**
      * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
      */
-    java.util.List<? extends com.jsj.member.ob.dto.proto.ServersOuterClass.ServersOrBuilder>
+    java.util.List<? extends ServersOuterClass.ServersOrBuilder>
         getServerListOrBuilderList();
     /**
      * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
      */
-    com.jsj.member.ob.dto.proto.ServersOuterClass.ServersOrBuilder getServerListOrBuilder(
+    ServersOuterClass.ServersOrBuilder getServerListOrBuilder(
             int index);
 
     /**
@@ -806,10 +806,10 @@ public final class CustomerInfoNewOuterClass {
             }
             case 322: {
               if (!((mutable_bitField1_ & 0x00000080) == 0x00000080)) {
-                serverList_ = new java.util.ArrayList<com.jsj.member.ob.dto.proto.ServersOuterClass.Servers>();
+                serverList_ = new java.util.ArrayList<ServersOuterClass.Servers>();
                 mutable_bitField1_ |= 0x00000080;
               }
-              serverList_.add(input.readMessage(com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.PARSER, extensionRegistry));
+              serverList_.add(input.readMessage(ServersOuterClass.Servers.PARSER, extensionRegistry));
               break;
             }
             case 330: {
@@ -1982,17 +1982,17 @@ public final class CustomerInfoNewOuterClass {
     }
 
     public static final int SERVERLIST_FIELD_NUMBER = 40;
-    private java.util.List<com.jsj.member.ob.dto.proto.ServersOuterClass.Servers> serverList_;
+    private java.util.List<ServersOuterClass.Servers> serverList_;
     /**
      * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
      */
-    public java.util.List<com.jsj.member.ob.dto.proto.ServersOuterClass.Servers> getServerListList() {
+    public java.util.List<ServersOuterClass.Servers> getServerListList() {
       return serverList_;
     }
     /**
      * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
      */
-    public java.util.List<? extends com.jsj.member.ob.dto.proto.ServersOuterClass.ServersOrBuilder>
+    public java.util.List<? extends ServersOuterClass.ServersOrBuilder>
         getServerListOrBuilderList() {
       return serverList_;
     }
@@ -2005,13 +2005,13 @@ public final class CustomerInfoNewOuterClass {
     /**
      * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
      */
-    public com.jsj.member.ob.dto.proto.ServersOuterClass.Servers getServerList(int index) {
+    public ServersOuterClass.Servers getServerList(int index) {
       return serverList_.get(index);
     }
     /**
      * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
      */
-    public com.jsj.member.ob.dto.proto.ServersOuterClass.ServersOrBuilder getServerListOrBuilder(
+    public ServersOuterClass.ServersOrBuilder getServerListOrBuilder(
         int index) {
       return serverList_.get(index);
     }
@@ -5285,22 +5285,22 @@ public final class CustomerInfoNewOuterClass {
         return this;
       }
 
-      private java.util.List<com.jsj.member.ob.dto.proto.ServersOuterClass.Servers> serverList_ =
+      private java.util.List<ServersOuterClass.Servers> serverList_ =
         java.util.Collections.emptyList();
       private void ensureServerListIsMutable() {
         if (!((bitField1_ & 0x00000080) == 0x00000080)) {
-          serverList_ = new java.util.ArrayList<com.jsj.member.ob.dto.proto.ServersOuterClass.Servers>(serverList_);
+          serverList_ = new java.util.ArrayList<ServersOuterClass.Servers>(serverList_);
           bitField1_ |= 0x00000080;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          com.jsj.member.ob.dto.proto.ServersOuterClass.Servers, com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.Builder, com.jsj.member.ob.dto.proto.ServersOuterClass.ServersOrBuilder> serverListBuilder_;
+          ServersOuterClass.Servers, ServersOuterClass.Servers.Builder, ServersOuterClass.ServersOrBuilder> serverListBuilder_;
 
       /**
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
-      public java.util.List<com.jsj.member.ob.dto.proto.ServersOuterClass.Servers> getServerListList() {
+      public java.util.List<ServersOuterClass.Servers> getServerListList() {
         if (serverListBuilder_ == null) {
           return java.util.Collections.unmodifiableList(serverList_);
         } else {
@@ -5320,7 +5320,7 @@ public final class CustomerInfoNewOuterClass {
       /**
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
-      public com.jsj.member.ob.dto.proto.ServersOuterClass.Servers getServerList(int index) {
+      public ServersOuterClass.Servers getServerList(int index) {
         if (serverListBuilder_ == null) {
           return serverList_.get(index);
         } else {
@@ -5331,7 +5331,7 @@ public final class CustomerInfoNewOuterClass {
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
       public Builder setServerList(
-          int index, com.jsj.member.ob.dto.proto.ServersOuterClass.Servers value) {
+          int index, ServersOuterClass.Servers value) {
         if (serverListBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -5348,7 +5348,7 @@ public final class CustomerInfoNewOuterClass {
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
       public Builder setServerList(
-          int index, com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.Builder builderForValue) {
+          int index, ServersOuterClass.Servers.Builder builderForValue) {
         if (serverListBuilder_ == null) {
           ensureServerListIsMutable();
           serverList_.set(index, builderForValue.build());
@@ -5361,7 +5361,7 @@ public final class CustomerInfoNewOuterClass {
       /**
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
-      public Builder addServerList(com.jsj.member.ob.dto.proto.ServersOuterClass.Servers value) {
+      public Builder addServerList(ServersOuterClass.Servers value) {
         if (serverListBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -5378,7 +5378,7 @@ public final class CustomerInfoNewOuterClass {
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
       public Builder addServerList(
-          int index, com.jsj.member.ob.dto.proto.ServersOuterClass.Servers value) {
+          int index, ServersOuterClass.Servers value) {
         if (serverListBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -5395,7 +5395,7 @@ public final class CustomerInfoNewOuterClass {
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
       public Builder addServerList(
-          com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.Builder builderForValue) {
+          ServersOuterClass.Servers.Builder builderForValue) {
         if (serverListBuilder_ == null) {
           ensureServerListIsMutable();
           serverList_.add(builderForValue.build());
@@ -5409,7 +5409,7 @@ public final class CustomerInfoNewOuterClass {
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
       public Builder addServerList(
-          int index, com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.Builder builderForValue) {
+          int index, ServersOuterClass.Servers.Builder builderForValue) {
         if (serverListBuilder_ == null) {
           ensureServerListIsMutable();
           serverList_.add(index, builderForValue.build());
@@ -5423,7 +5423,7 @@ public final class CustomerInfoNewOuterClass {
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
       public Builder addAllServerList(
-          Iterable<? extends com.jsj.member.ob.dto.proto.ServersOuterClass.Servers> values) {
+          Iterable<? extends ServersOuterClass.Servers> values) {
         if (serverListBuilder_ == null) {
           ensureServerListIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -5463,14 +5463,14 @@ public final class CustomerInfoNewOuterClass {
       /**
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
-      public com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.Builder getServerListBuilder(
+      public ServersOuterClass.Servers.Builder getServerListBuilder(
           int index) {
         return getServerListFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
-      public com.jsj.member.ob.dto.proto.ServersOuterClass.ServersOrBuilder getServerListOrBuilder(
+      public ServersOuterClass.ServersOrBuilder getServerListOrBuilder(
           int index) {
         if (serverListBuilder_ == null) {
           return serverList_.get(index);  } else {
@@ -5480,7 +5480,7 @@ public final class CustomerInfoNewOuterClass {
       /**
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
-      public java.util.List<? extends com.jsj.member.ob.dto.proto.ServersOuterClass.ServersOrBuilder>
+      public java.util.List<? extends ServersOuterClass.ServersOrBuilder>
            getServerListOrBuilderList() {
         if (serverListBuilder_ != null) {
           return serverListBuilder_.getMessageOrBuilderList();
@@ -5491,31 +5491,31 @@ public final class CustomerInfoNewOuterClass {
       /**
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
-      public com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.Builder addServerListBuilder() {
+      public ServersOuterClass.Servers.Builder addServerListBuilder() {
         return getServerListFieldBuilder().addBuilder(
-            com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.getDefaultInstance());
+            ServersOuterClass.Servers.getDefaultInstance());
       }
       /**
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
-      public com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.Builder addServerListBuilder(
+      public ServersOuterClass.Servers.Builder addServerListBuilder(
           int index) {
         return getServerListFieldBuilder().addBuilder(
-            index, com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.getDefaultInstance());
+            index, ServersOuterClass.Servers.getDefaultInstance());
       }
       /**
        * <code>repeated .com.jsj.member.ob.dto.proto.Servers ServerList = 40;</code>
        */
-      public java.util.List<com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.Builder>
+      public java.util.List<ServersOuterClass.Servers.Builder>
            getServerListBuilderList() {
         return getServerListFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          com.jsj.member.ob.dto.proto.ServersOuterClass.Servers, com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.Builder, com.jsj.member.ob.dto.proto.ServersOuterClass.ServersOrBuilder>
+          ServersOuterClass.Servers, ServersOuterClass.Servers.Builder, ServersOuterClass.ServersOrBuilder>
           getServerListFieldBuilder() {
         if (serverListBuilder_ == null) {
           serverListBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              com.jsj.member.ob.dto.proto.ServersOuterClass.Servers, com.jsj.member.ob.dto.proto.ServersOuterClass.Servers.Builder, com.jsj.member.ob.dto.proto.ServersOuterClass.ServersOrBuilder>(
+              ServersOuterClass.Servers, ServersOuterClass.Servers.Builder, ServersOuterClass.ServersOrBuilder>(
                   serverList_,
                   ((bitField1_ & 0x00000080) == 0x00000080),
                   getParentForChildren(),
@@ -5841,7 +5841,7 @@ public final class CustomerInfoNewOuterClass {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.jsj.member.ob.dto.proto.ServersOuterClass.getDescriptor(),
+          ServersOuterClass.getDescriptor(),
         }, assigner);
     internal_static_com_jsj_member_ob_dto_proto_CustomerInfoNew_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -5849,7 +5849,7 @@ public final class CustomerInfoNewOuterClass {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_jsj_member_ob_dto_proto_CustomerInfoNew_descriptor,
         new String[] { "CustomerID", "CustomerName", "CustomerClass", "CustomerRegiestTime", "CardID", "CardTypeID", "CardTypeName", "CardInvalidDate", "Dividend", "CustPoint", "CustVoucher", "CustTravelFundNum", "Contactmeans", "Certificate", "CertificateType", "CustomerSex", "CustomerBirth", "GuaranteeNo", "CustType", "CustomerAvatar", "CustEmail", "CustomerQRCode", "EnterLowestPoint", "EnterLowestVoucher", "EnterLowestMoney", "CertificateTypeID", "IsCustomerPrice", "IsHasInsurance", "RenewNoActiceCard", "Token", "DeducTibleDetailsNum", "DepositNum", "UserMealNum", "IsBigCustomer", "StarType", "EnterNum", "CheckeInNum", "LockDeposit", "ReNewNonexecutionNum", "ServerList", "CardTypeShortName", "ConstructionVoucher", "IsHasVIPManager", "VIPOtherName", "StrictChoiceNum", });
-    com.jsj.member.ob.dto.proto.ServersOuterClass.getDescriptor();
+    ServersOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

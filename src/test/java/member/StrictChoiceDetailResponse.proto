@@ -1,0 +1,9 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseResponse.proto";
+import "StrictChoices.proto";
+
+message StrictChoiceDetailResponse {
+   optional BaseResponse BaseResponse = 1;
+   repeated StrictChoices StrictChoiceList = 2;
+}

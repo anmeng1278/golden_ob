@@ -1,0 +1,8 @@
+package com.jsj.member.ob.dto.proto;
+
+import "BaseRequest.proto";
+
+message StrictChoiceDetailRequest {
+   optional BaseRequest BaseRequest = 1;
+   optional int32 JSJID = 2 [default = 0];
+}

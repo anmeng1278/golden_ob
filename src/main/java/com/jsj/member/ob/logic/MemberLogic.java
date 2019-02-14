@@ -1,16 +1,21 @@
 package com.jsj.member.ob.logic;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.googlecode.protobuf.format.JsonFormat;
 import com.jsj.member.ob.config.Webconfig;
 import com.jsj.member.ob.dto.proto.*;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.utils.HttpUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Map;
 
 /**
  * 会员组接口
@@ -371,6 +376,76 @@ public class MemberLogic {
             ex.printStackTrace();
         }
         return resp;
+
+    }
+    //endregion
+
+
+    //region (public) 获取礼品券使用明细 StrictChoiceDetail
+
+    /**
+     * 获取礼品券使用明细
+     *
+     * @return
+     */
+    public static StrictChoiceDetailResponseOuterClass.StrictChoiceDetailResponse StrictChoiceDetail(StrictChoiceDetailRequestOuterClass.StrictChoiceDetailRequest requ) {
+
+        StrictChoiceDetailResponseOuterClass.StrictChoiceDetailResponse resp = StrictChoiceDetailResponseOuterClass.StrictChoiceDetailResponse.getDefaultInstance();
+
+        try {
+
+            String url = memberLogic.webconfig.getMemberApiUrl();
+            ZRequestOuterClass.ZRequest.Builder zRequest = ZRequestOuterClass.ZRequest.newBuilder();
+            zRequest.setMethodName("GetStrictChoiceDetail");
+            zRequest.setZPack(requ.toByteString());
+
+            ZResponseOuterClass.ZResponse.Builder zResponse = HttpUtils.protobuf(zRequest, url);
+            if (zResponse.getIsSuccess()) {
+                resp = StrictChoiceDetailResponseOuterClass.StrictChoiceDetailResponse.parseFrom(zResponse.getZPack());
+            } else {
+                throw new Exception(zResponse.getExceptionMessage());
+            }
+            memberLogic.logger.info(String.format("%s %s %s", url, JsonFormat.printToString(requ), JsonFormat.printToString(resp)));
+
+        } catch (Exception ex) {
+            memberLogic.logger.error(String.format("会员组接口失败：%s %s", JsonFormat.printToString(requ), JSON.toJSONString(ex)));
+            ex.printStackTrace();
+        }
+        return resp;
+
+    }
+    //endregion
+
+
+    //region (public) 获取礼品券使用明细 StrictChoiceDetail
+
+    /**
+     * 获取礼品券使用明细
+     *
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    public static JSONArray StrictChoiceDetail(Map<String, Object> map) throws Exception {
+
+        String url = memberLogic.webconfig.getMemberApiUrl();
+        String json = HttpUtils.json(url,
+                JSON.toJSONString(map),
+                "GetStrictChoiceDetail", "4D7D8DEB-5212-4758-808A-32D60F01D689");
+
+        if (!StringUtils.isEmpty(json)) {
+            JSONObject jsonObject = JSON.parseObject(json);
+            JSONObject baseResponse = jsonObject.getJSONObject("BaseResponse");
+            if (!baseResponse.getBoolean("IsSuccess")) {
+                String errorMsg = baseResponse.getString("ErrorMessage");
+                throw new TipException(errorMsg);
+            } else {
+                return jsonObject.getJSONArray("StrictChoiceList");
+            }
+        } else {
+            throw new Exception("返回信息为空");
+        }
+
 
     }
     //endregion
