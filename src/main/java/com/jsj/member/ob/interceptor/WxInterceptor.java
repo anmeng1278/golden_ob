@@ -8,6 +8,7 @@ import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.logic.ThirdPartyLogic;
 import com.jsj.member.ob.logic.WechatLogic;
 import com.jsj.member.ob.utils.EncryptUtils;
+import com.jsj.member.ob.utils.SpringContextUtils;
 import jodd.util.URLDecoder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -78,19 +79,20 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        //if (SpringContextUtils.getActiveProfile().equals("dev")) {
-        //
-        //    UserSession wxUser = new UserSession();
-        //
-        //    wxUser.setOpenid("oeQDZt-rcgi9QhWm6F7o2mV3dSYY");
-        //    wxUser.setNickname("测试账户");
-        //    wxUser.setSubscribe(1);
-        //    wxUser.setJsjId(20612968);
-        //    wxUser.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epDoc6nkBKtPSZrP762lGiaTok7VtabocBcp0q0OUC1mmNq99ozG9GiaMib4DiauaI9w6u5w26CTgdeVg/132");
-        //
-        //    request.getSession().setAttribute("wx", wxUser);
-        //
-        //}
+        if (SpringContextUtils.getActiveProfile().equals("dev")) {
+
+            UserSession wxUser = new UserSession();
+
+            wxUser.setOpenid("oG5Z_4lNK1O6Ptp79Pk7TtGFdpUQ");
+            wxUser.setUnionid("oGCG8t12LPzYVZkQnaiUBCK-gvpg");
+            wxUser.setNickname("测试账户");
+            wxUser.setSubscribe(1);
+            wxUser.setJsjId(20613248);
+            wxUser.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epDoc6nkBKtPSZrP762lGiaTok7VtabocBcp0q0OUC1mmNq99ozG9GiaMib4DiauaI9w6u5w26CTgdeVg/132");
+
+            request.getSession().setAttribute("wx", wxUser);
+
+        }
 
         //获取会员编号
         int jsjId = this.parseJsjId(request);
