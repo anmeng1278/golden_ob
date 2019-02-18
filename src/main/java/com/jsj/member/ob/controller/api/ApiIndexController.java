@@ -6,13 +6,11 @@ import com.jsj.member.ob.dto.api.Request;
 import com.jsj.member.ob.dto.api.Response;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
+import com.jsj.member.ob.dto.api.airport.JsAirportDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.mini.*;
 import com.jsj.member.ob.entity.Banner;
-import com.jsj.member.ob.enums.ActivityType;
-import com.jsj.member.ob.enums.BannerType;
-import com.jsj.member.ob.enums.OrderFlag;
-import com.jsj.member.ob.enums.ProductType;
+import com.jsj.member.ob.enums.*;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.*;
 import io.swagger.annotations.ApiOperation;
@@ -227,4 +225,34 @@ public class ApiIndexController {
 
     }
     //endregion
+
+
+    //region (public) 机场高铁列表 plusDetail
+
+    /**
+     * 机场高铁列表
+     * @param requ
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "机场高铁列表")
+    @PostMapping(value = {"/airports"})
+    public Response<AirportResp> airports(@ApiParam(value = "机场高铁列表", required = true)
+                                            @RequestBody
+                                            @Validated Request<AirportRequ> requ) throws Exception {
+
+        AirportResp resp = new AirportResp();
+
+        //机场贵宾厅
+        List<JsAirportDto> airports = AirportLogic.GetAirportDtos(AirportType.AIRPORT);
+        List<JsAirportDto> trains = AirportLogic.GetAirportDtos(AirportType.TRAIN);
+
+        resp.setAirports(airports);
+        resp.setTrains(trains);
+
+        return Response.ok(resp);
+
+    }
+    //endregion
+
 }
