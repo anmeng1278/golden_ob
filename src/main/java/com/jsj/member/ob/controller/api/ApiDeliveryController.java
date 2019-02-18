@@ -8,12 +8,15 @@ import com.jsj.member.ob.dto.api.express.ExpressRequ;
 import com.jsj.member.ob.dto.api.express.ExpressResp;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.mini.*;
+import com.jsj.member.ob.entity.DeliveryStock;
+import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.DeliveryLogic;
 import com.jsj.member.ob.logic.ExpressApiLogic;
 import com.jsj.member.ob.logic.StockLogic;
 import com.jsj.member.ob.service.DeliveryService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,10 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -95,15 +95,37 @@ public class ApiDeliveryController extends BaseController {
         int deliveryId = requ1.getRequestBody().getDeliveryId();
         DeliveryDto deliveryDto = DeliveryLogic.GetDelivery(deliveryId);
 
-        //查询配送的物流信息
-        ExpressRequ requ = new ExpressRequ();
-        requ.setText(deliveryDto.getExpressNumber());
+        if (!org.apache.commons.lang3.StringUtils.isEmpty(deliveryDto.getExpressNumber())) {
+            //查询配送的物流信息
+            ExpressRequ requ = new ExpressRequ();
+            requ.setText(deliveryDto.getExpressNumber());
 
-        ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
+            ExpressResp resp = ExpressApiLogic.GetExpressHundred(requ);
+            List data = resp.getData();
+            resp1.setData(data);
+        }
 
-        List data = resp.getData();
+        List<DeliveryStock> deliveryStocks = DeliveryLogic.GetDeliveryStocks(deliveryId);
+        if (deliveryStocks.isEmpty()) {
+            throw new TipException("没有找到库存信息");
+        }
 
-        resp1.setData(data);
+        int stockId = requ1.getRequestBody().getStockId();
+        if (stockId > 0) {
+
+            Optional<DeliveryStock> deliveryStock = deliveryStocks.stream().filter(ds -> ds.getStockId().equals(stockId)).findFirst();
+            if (!deliveryStock.isPresent()) {
+                throw new TipException("没有找到库存信息");
+            }
+
+            if (StringUtils.isEmpty(deliveryStock.get().getActivityCode())) {
+                throw new TipException("没有找到活动码信息");
+            }
+
+            String imgUrl = String.format(super.webconfig.getQrcodeUrl(), deliveryStock.get().getActivityCode());
+            resp1.setImgUrl(imgUrl);
+        }
+
         resp1.setDeliveryDto(deliveryDto);
 
         return Response.ok(resp1);
