@@ -13,6 +13,9 @@ public class DeliveryDetailResp {
     @ApiModelProperty(value = "配送记录", required = true)
     private List data;
 
+    @ApiModelProperty(value = "活动码二维码地址", required = true)
+    private String imgUrl;
+
     public DeliveryDto getDeliveryDto() {
         return deliveryDto;
     }
@@ -27,5 +30,13 @@ public class DeliveryDetailResp {
 
     public void setData(List data) {
         this.data = data;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 }
