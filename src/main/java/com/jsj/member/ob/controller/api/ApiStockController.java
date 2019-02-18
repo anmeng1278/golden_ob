@@ -187,12 +187,12 @@ public class ApiStockController extends BaseController {
             CustomerInformationResponseOuterClass.CustomerInformationResponse customerInformation = MemberLogic.CustomerInformation(builder.build());
             if (!customerInformation.getBaseResponse().getIsSuccess()) {
                 //没有查询到会员信息
-                throw new TipException("没有查询到会员信息");
+                throw new TipException(String.format("获取会员信息失败，会员编号：%d", jsjId));
             }
 
             if (customerInformation.getListCount() == 0) {
                 //没有查询到会员信息
-                throw new TipException("没有查询到会员信息");
+                throw new TipException(String.format("获取会员信息失败，会员编号：%d", jsjId));
             }
 
             CustomerInfoNewOuterClass.CustomerInfoNew userInfo = customerInformation.getList(0);
