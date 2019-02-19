@@ -255,6 +255,8 @@ public class CartLogic extends BaseLogic {
 
         EntityWrapper<CartProduct> wrapper = new EntityWrapper<>();
         wrapper.where("cart_id={0} and delete_time is null", cart.getCartId());
+        wrapper.orderBy("create_time desc");
+
         List<CartProduct> cartProducts = cartLogic.cartProductService.selectList(wrapper);
 
         for (CartProduct cartProduct : cartProducts) {
