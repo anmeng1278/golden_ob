@@ -310,7 +310,7 @@ public class ApiShareController extends BaseController {
 
         resp.setGiftDto(giftDto);
         resp.setGiftStockDtos(giftStockDtos);
-        resp.setMyDraw(myDrawCount > 0);
+        resp.setMyDrawCount(myDrawCount);
         resp.setReceiveds(received);
         resp.setUnReceiveds(unReceived);
 
