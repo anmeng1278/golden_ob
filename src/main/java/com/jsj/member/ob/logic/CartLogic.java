@@ -278,6 +278,18 @@ public class CartLogic extends BaseLogic {
             dto.setActivityId(cartProduct.getActivityId());
             dto.setActivityType(ActivityType.valueOf(cartProduct.getActivityTypeId()));
 
+            //过滤非法商品
+            //if (cartProduct.getActivityId() != null) {
+            //    List<ActivityProductDto> activityProductDtos = ActivityLogic.GetActivityProductDtos(cartProduct.getActivityId());
+            //    if (activityProductDtos.isEmpty()) {
+            //        continue;
+            //    }
+            //    Optional<ActivityProductDto> first = activityProductDtos.stream().filter(apd -> apd.getProductId().equals(cartProduct.getProductId()) && apd.getProductSpecId().equals(cartProduct.getProductSpecId())).findFirst();
+            //    if (!first.isPresent()) {
+            //        continue;
+            //    }
+            //}
+
             cartProductDtos.add(dto);
         }
 

@@ -43,6 +43,8 @@ public class CreateOrderRequ {
      */
     private int activityId;
 
+    //创建订单来源
+    private String from;
 
     /**
      * 购买份数
@@ -132,4 +134,11 @@ public class CreateOrderRequ {
         this.sourceType = sourceType;
     }
 
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
 }
