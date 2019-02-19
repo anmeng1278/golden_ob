@@ -11,9 +11,8 @@ public class GetGiftDrawResp {
     @ApiModelProperty(value = "分享信息", required = true)
     private GiftDto giftDto;
 
-    @ApiModelProperty(value = "是否我已领取", required = true)
-    private boolean isMyDraw;
-
+    @ApiModelProperty(value = "本人领取数量", required = true)
+    private long myDrawCount;
 
     //待领取列表
     @ApiModelProperty(value = "待领取列表", required = true)
@@ -26,7 +25,6 @@ public class GetGiftDrawResp {
     @ApiModelProperty(value = "总赠送库存", required = true)
     private List<GiftStockDto> giftStockDtos;
 
-
     public GiftDto getGiftDto() {
         return giftDto;
     }
@@ -35,13 +33,6 @@ public class GetGiftDrawResp {
         this.giftDto = giftDto;
     }
 
-    public boolean isMyDraw() {
-        return isMyDraw;
-    }
-
-    public void setMyDraw(boolean myDraw) {
-        isMyDraw = myDraw;
-    }
 
     public List<GiftStockDto> getUnReceiveds() {
         return unReceiveds;
@@ -65,6 +56,14 @@ public class GetGiftDrawResp {
 
     public void setGiftStockDtos(List<GiftStockDto> giftStockDtos) {
         this.giftStockDtos = giftStockDtos;
+    }
+
+    public long getMyDrawCount() {
+        return myDrawCount;
+    }
+
+    public void setMyDrawCount(long myDrawCount) {
+        this.myDrawCount = myDrawCount;
     }
 }
 
