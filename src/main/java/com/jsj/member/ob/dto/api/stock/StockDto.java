@@ -1,5 +1,6 @@
 package com.jsj.member.ob.dto.api.stock;
 
+import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.gift.GiftDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
@@ -56,6 +57,10 @@ public class StockDto {
      */
     private GiftDto giftDto;
 
+    /**
+     * 活动信息
+     */
+    private ActivityDto activityDto;
 
     /**
      * 库存状态
@@ -220,5 +225,13 @@ public class StockDto {
 
     public void setUnionId(String unionId) {
         this.unionId = unionId;
+    }
+
+    public ActivityDto getActivityDto() {
+        return activityDto;
+    }
+
+    public void setActivityDto(ActivityDto activityDto) {
+        this.activityDto = activityDto;
     }
 }
