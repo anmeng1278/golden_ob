@@ -2,6 +2,8 @@ package com.jsj.member.ob.logic;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.jsj.member.ob.dto.api.activity.ActivityDto;
+import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.api.stock.StockDto;
@@ -278,6 +280,18 @@ public class StockLogic extends BaseLogic {
 
             ProductDto productDto = ProductLogic.GetProduct(stock.getProductId());
             stockDto.setProductDto(productDto);
+
+            if (stock.getOrderId() != null) {
+                int orderId = stock.getOrderId();
+                OrderDto orderDto = OrderLogic.GetOrder(orderId);
+                if (orderDto != null) {
+                    if (orderDto.getActivityId() != null) {
+                        int activityId = orderDto.getActivityId();
+                        ActivityDto activityDto = ActivityLogic.GetActivity(activityId);
+                        stockDto.setActivityDto(activityDto);
+                    }
+                }
+            }
 
             /*EntityWrapper<GiftStock> wrapper = new EntityWrapper<>();
             wrapper.where("stock_id={0}", stock.getStockId());

@@ -7,6 +7,7 @@ import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderDto;
+import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
 import com.jsj.member.ob.dto.mini.ProductDetailRequ;
@@ -15,10 +16,7 @@ import com.jsj.member.ob.enums.ActivityType;
 import com.jsj.member.ob.enums.SecKillStatus;
 import com.jsj.member.ob.enums.SourceType;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.logic.ActivityLogic;
-import com.jsj.member.ob.logic.MemberLogic;
-import com.jsj.member.ob.logic.OrderLogic;
-import com.jsj.member.ob.logic.ProductLogic;
+import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.logic.order.OrderBase;
 import com.jsj.member.ob.logic.order.OrderFactory;
 import com.jsj.member.ob.utils.DateUtils;
@@ -334,6 +332,26 @@ public class ApiProductController {
         } else {
             OrderBase orderBase = OrderFactory.GetInstance(requ.getRequestBody().getActivityType());
             resp = orderBase.CreateOrder(requ.getRequestBody());
+
+            //来源购物车购买
+            if ("cart".equals(requ.getRequestBody().getFrom())) {
+
+                String openId = requ.getRequestBody().getBaseRequ().getOpenId();
+                String unionId = requ.getRequestBody().getBaseRequ().getUnionId();
+
+                for (OrderProductDto op : requ.getRequestBody().getOrderProductDtos()) {
+                    //删除购物车购买商品
+                    CartLogic.AddUpdateCartProduct(openId,
+                            unionId,
+                            op.getProductId(),
+                            op.getProductSpecId(),
+                            0,
+                            "update",
+                            0,
+                            ActivityType.NORMAL
+                    );
+                }
+            }
         }
 
         return Response.ok(resp);
