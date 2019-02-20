@@ -10,6 +10,7 @@ import com.jsj.member.ob.dto.api.airport.JsAirportDto;
 import com.jsj.member.ob.dto.api.product.ProductDto;
 import com.jsj.member.ob.dto.mini.*;
 import com.jsj.member.ob.entity.Banner;
+import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.enums.*;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.*;
@@ -251,6 +252,40 @@ public class ApiIndexController {
         resp.setTrains(trains);
 
         return Response.ok(resp);
+
+    }
+    //endregion
+
+
+    //region (public) 获取字典 dicts
+
+    /**
+     * 获取字典
+     * @param requ
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "获取字典")
+    @PostMapping(value = {"/dicts"})
+    public Response<DictsResp> dicts(@ApiParam(value = "获取字典", required = true)
+                                          @RequestBody
+                                          @Validated Request<DictsRequ> requ) throws Exception {
+
+
+        DictType dictType = requ.getRequestBody().getDictType();
+        int count = requ.getRequestBody().getCount();
+
+        if(count <= 0){
+            count = 3;
+        }
+
+        //文案类型
+        List<Dict> dicts = DictLogic.GetDicts(dictType, count);
+
+        DictsResp dictsResp = new DictsResp();
+        dictsResp.setDicts(dicts);
+
+        return Response.ok(dictsResp);
 
     }
     //endregion

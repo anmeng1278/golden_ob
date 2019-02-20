@@ -12,11 +12,12 @@ import com.jsj.member.ob.dto.api.order.OrderDto;
 import com.jsj.member.ob.dto.api.redpacket.OrderRedpacketCouponDto;
 import com.jsj.member.ob.dto.mini.*;
 import com.jsj.member.ob.entity.Copywriter;
-import com.jsj.member.ob.entity.Dict;
-import com.jsj.member.ob.enums.DictType;
 import com.jsj.member.ob.enums.GiftStatus;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.logic.*;
+import com.jsj.member.ob.logic.CopywriterLogic;
+import com.jsj.member.ob.logic.GiftLogic;
+import com.jsj.member.ob.logic.OrderLogic;
+import com.jsj.member.ob.logic.RedpacketLogic;
 import com.jsj.member.ob.tuple.TwoTuple;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -112,11 +113,7 @@ public class ApiShareController extends BaseController {
             throw new TipException("没有找到分享信息");
         }
 
-        //文案类型
-        List<Dict> dicts = DictLogic.GetDicts(DictType.COPYWRITER, 3);
-
         resp.setGiftDto(giftDto);
-        resp.setDicts(dicts);
 
         return Response.ok(resp);
 
