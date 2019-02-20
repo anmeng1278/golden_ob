@@ -230,7 +230,7 @@ public class ApiShareController extends BaseController {
         String unionId = requ.getRequestBody().getUnionId();
 
         if (!GiftLogic.userSelfCanDraw(giftDto, openId)) {
-            throw new TipException("本人不能领取", 1500);
+            throw new TipException("本人不能领取", 1302);
         }
 
         //判断当前操作人是否已领取
