@@ -234,7 +234,7 @@ public class GiftLogic extends BaseLogic {
             throw new TipException("用户已取消分享");
         }
         if (gift.getGiftStatus().equals(GiftStatus.BROUGHTOUT)) {
-            throw new TipException("您来晚了，礼物已被抢完啦！");
+            throw new TipException("您来晚了，礼物已被抢完啦！", 1302);
         }
 
         //可领取状态
@@ -250,7 +250,7 @@ public class GiftLogic extends BaseLogic {
         //没有被领取过，当前状态已赠送
         List<GiftStock> giftStocks = GiftLogic.GetUnReceivedGiftstocks(gift.getGiftId());
         if (giftStocks.isEmpty()) {
-            throw new TipException("您来晚了，礼物已被抢完啦！");
+            throw new TipException("您来晚了，礼物已被抢完啦！", 1302);
         }
 
         //重复领取判断
@@ -305,6 +305,7 @@ public class GiftLogic extends BaseLogic {
             Stock getStock = new Stock();
 
             getStock.setOpenId(openId);
+            getStock.setUnionId(unionId);
             getStock.setProductId(stock.getProductId());
             getStock.setProductSpecId(stock.getProductSpecId());
             getStock.setOrderId(stock.getOrderId());
