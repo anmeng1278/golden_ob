@@ -67,7 +67,7 @@ public class CouponLogic extends BaseLogic {
 
         //查询当前使用券信息
         WechatCoupon wechatCoupon = couponLogic.wechatCouponService.selectById(requ.getWechatCouponId());
-        if (wechatCoupon.getStatus() != CouponStatus.UNUSE.getValue()) {
+        if (!wechatCoupon.getStatus().equals(CouponStatus.UNUSE.getValue())) {
             throw new TipException(String.format("当前优惠券不可用，%s", CouponStatus.valueOf(wechatCoupon.getStatus()).getMessage()));
         }
         if (wechatCoupon.getExpiredTime() < DateUtils.getCurrentUnixTime()) {
