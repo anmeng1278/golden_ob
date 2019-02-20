@@ -243,7 +243,7 @@ public class GiftLogic extends BaseLogic {
         //GiftStatus.DRAWING
 
         if (!userSelfCanDraw(gift, openId)) {
-            throw new TipException("不能领取自己发出的礼物");
+            throw new TipException("不能领取自己发出的礼物", 1302);
         }
 
         //待领取的礼物
