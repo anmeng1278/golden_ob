@@ -5,11 +5,15 @@ import com.jsj.member.ob.dto.api.Request;
 import com.jsj.member.ob.dto.api.Response;
 import com.jsj.member.ob.dto.api.cart.CartProductDto;
 import com.jsj.member.ob.dto.mini.*;
+import com.jsj.member.ob.interceptor.KTCheckSign;
 import com.jsj.member.ob.logic.CartLogic;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -28,6 +32,7 @@ public class ApiCartController extends BaseController {
      */
     @ApiOperation(value = "购物车列表")
     @RequestMapping(value = "/cart", method = RequestMethod.POST)
+    @KTCheckSign
     public Response<CartResp> cart(@ApiParam(value = "请求实体", required = true) @RequestBody @Validated Request<CartRequ> requ) {
 
         CartResp resp = new CartResp();
