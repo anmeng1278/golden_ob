@@ -85,7 +85,8 @@
             left join _wechat as w
                 on c.open_id = w.open_id
 
-        where a.union_id =  #{unionId}
+        where a.union_id =  #{unionId} and
+              ((a.status = 60 and c.stock_id is not null) or a.status <> 60)
         group by a.gift_id
         order by a.status asc, a.create_time desc
         ]]>
