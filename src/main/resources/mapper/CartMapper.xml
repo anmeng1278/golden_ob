@@ -39,7 +39,7 @@
                 c.delete_time is null and
                 d.delete_time is null AND
                 e.delete_time is null AND
-                (e.activity_id = 0 or (e.activity_id > 0 and f.activity_product_id is not null)) and
+                (a.activity_id = 0 or (a.activity_id > 0 and f.activity_product_id is not null and f.delete_time is null)) and
                 b.union_id = #{unionId}
             order by a.create_time desc
         ]]>
