@@ -17,4 +17,32 @@
         cart_id AS cartId, open_id AS openId, union_id AS unionId, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
+
+    <!-- 获取购物车列表 -->
+    <select id="getCartProducts" resultType="com.jsj.member.ob.entity.CartProduct">
+
+        <![CDATA[
+            select a.* from _cart_product as a
+                INNER JOIN _cart as b
+                    on a.cart_id = b.cart_id
+                INNER JOIN _product as c
+                    on a.product_id = c.product_id
+                inner join _product_spec as d
+                    on a.product_spec_id = d.product_spec_id
+                left join _activity as e
+                    on a.activity_id = e.activity_id
+                left join _activity_product as f
+                    on (e.activity_id = f.activity_id and f.product_id = a.product_id and f.product_spec_id = a.product_spec_id)
+
+            where a.delete_time is null and
+                b.delete_time is null and
+                c.delete_time is null and
+                d.delete_time is null AND
+                e.delete_time is null AND
+                (e.activity_id = 0 or (e.activity_id > 0 and f.activity_product_id is not null)) and
+                b.union_id = #{unionId}
+            order by a.create_time desc
+        ]]>
+    </select>
+
 </mapper>

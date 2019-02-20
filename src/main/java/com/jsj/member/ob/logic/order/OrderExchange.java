@@ -268,7 +268,6 @@ public class OrderExchange extends OrderBase {
         if (activityProductDtos.isEmpty()) {
             throw new TipException(String.format("没有发现活动商品，请稍后重试。活动编号：%d", activityDto.getActivityId()));
         }
-
         if (activityDto.getDeleteTime() != null) {
             throw new TipException("活动结束啦");
         }
@@ -278,7 +277,6 @@ public class OrderExchange extends OrderBase {
         if (activityDto.getEndTime() < DateUtils.getCurrentUnixTime()) {
             throw new TipException("活动结束啦");
         }
-
         if (activityDto.getActivityType() != this.getActivityType()) {
             throw new TipException("当前活动非兑换活动");
         }
@@ -301,6 +299,10 @@ public class OrderExchange extends OrderBase {
 
             //获取商品规格
             ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(op.getProductSpecId());
+            if (productSpecDto.getDeleteTime() != null ) {
+                throw new TipException("不允许兑换，所选商品规格已被删除");
+            }
+
             //获取规格金额
             orderAmount += productSpecDto.getSalePrice() * op.getNumber();
         }

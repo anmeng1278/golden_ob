@@ -1,15 +1,17 @@
 package com.jsj.member.ob.dto.api.product;
 
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductSpecDto {
 
-    public ProductSpecDto(){
+    public ProductSpecDto() {
         this.activityDtos = new ArrayList<>();
     }
+
     /**
      * 主键
      */
@@ -49,6 +51,13 @@ public class ProductSpecDto {
      * 正在参与的活动
      */
     private List<ActivityDto> activityDtos;
+
+
+    /*
+    删除时间
+     */
+    @ApiModelProperty(hidden = true)
+    private Integer deleteTime;
 
     public Integer getProductSpecId() {
         return productSpecId;
@@ -120,5 +129,13 @@ public class ProductSpecDto {
 
     public void setProductDto(ProductDto productDto) {
         this.productDto = productDto;
+    }
+
+    public Integer getDeleteTime() {
+        return deleteTime;
+    }
+
+    public void setDeleteTime(Integer deleteTime) {
+        this.deleteTime = deleteTime;
     }
 }
