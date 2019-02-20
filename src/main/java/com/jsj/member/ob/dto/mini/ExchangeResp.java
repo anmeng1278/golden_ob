@@ -30,25 +30,4 @@ public class ExchangeResp {
         this.exchange = exchange;
     }
 
-    @ApiModelProperty(value = "购物车数")
-    private int cartCount;
-
-    @ApiModelProperty(value = "用户未支付订单数")
-    private int unPayCount;
-
-    public int getCartCount() {
-        return cartCount;
-    }
-
-    public void setCartCount(int cartCount) {
-        this.cartCount = cartCount;
-    }
-
-    public int getUnPayCount() {
-        return unPayCount;
-    }
-
-    public void setUnPayCount(int unPayCount) {
-        this.unPayCount = unPayCount;
-    }
 }

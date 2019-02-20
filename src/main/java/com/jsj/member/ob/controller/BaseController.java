@@ -83,7 +83,7 @@ public abstract class BaseController {
      * @param content
      * @return
      */
-    public void SetAccessCache(AccessKey accessKey, String content) {
+    public <T> void SetAccessCache(AccessKey accessKey, T content) {
         redisService.set(accessKey, accessKey.getPrefix(), content);
     }
 
@@ -96,6 +96,17 @@ public abstract class BaseController {
         String s = redisService.get(accessKey, accessKey.getPrefix(), String.class);
         return s;
     }
+
+    /**
+     * 获取页面缓存
+     *
+     * @return
+     */
+    public <T> T  GetAccessCache(AccessKey accessKey, Class<T> clazz) {
+        T t = redisService.get(accessKey, accessKey.getPrefix(), clazz);
+        return t;
+    }
+
 
     /**
      * 登录用户OpenId

@@ -2,6 +2,7 @@ package com.jsj.member.ob.controller.api;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsj.member.ob.controller.BaseController;
 import com.jsj.member.ob.dto.api.Request;
 import com.jsj.member.ob.dto.api.Response;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
@@ -14,6 +15,7 @@ import com.jsj.member.ob.entity.Dict;
 import com.jsj.member.ob.enums.*;
 import com.jsj.member.ob.exception.TipException;
 import com.jsj.member.ob.logic.*;
+import com.jsj.member.ob.redis.AccessKey;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.validation.annotation.Validated;
@@ -28,7 +30,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("${webconfig.virtualPath}/mini")
-public class ApiIndexController {
+public class ApiIndexController extends BaseController {
 
     //region (public) 首页 index
 
@@ -43,6 +45,11 @@ public class ApiIndexController {
     public Response<IndexResp> index(@ApiParam(value = "请求实体", required = true)
                                      @RequestBody
                                      @Validated Request<IndexRequ> request) {
+
+        IndexResp indexResp = this.GetAccessCache(AccessKey.pageIndex2, IndexResp.class);
+        if (indexResp != null) {
+            return Response.ok(indexResp);
+        }
 
         IndexResp resp = new IndexResp();
 
@@ -82,6 +89,7 @@ public class ApiIndexController {
         }
         resp.setExchangeProducts(exchangeProducts);
 
+        this.SetAccessCache(AccessKey.pageIndex2, resp);
 
         return Response.ok(resp);
 
@@ -102,6 +110,11 @@ public class ApiIndexController {
                                            @RequestBody
                                            @Validated Request<ExchangeRequ> request) {
 
+        ExchangeResp exchangeResp = this.GetAccessCache(AccessKey.pageExchange2, ExchangeResp.class);
+        if (exchangeResp != null) {
+            return Response.ok(exchangeResp);
+        }
+
         ExchangeResp resp = new ExchangeResp();
 
         ActivityDto exchange = ActivityLogic.GetActivity(ActivityType.EXCHANGE);
@@ -114,16 +127,8 @@ public class ApiIndexController {
         resp.setExchange(exchange);
         resp.setExchangeProducts(exchangeProducts);
 
-        String openId = request.getRequestBody().getOpenId();
-        String unionId = request.getRequestBody().getUnionId();
 
-        //购物车商品数
-        int cartCount = CartLogic.GetCartProductCount(openId, unionId);
-        //用户未支付订单数
-        int unPayCount = OrderLogic.GetOrders(unionId, OrderFlag.UNPAIDORDERS).size();
-
-        resp.setCartCount(cartCount);
-        resp.setUnPayCount(unPayCount);
+        this.SetAccessCache(AccessKey.pageExchange2, resp);
 
         return Response.ok(resp);
 
@@ -232,6 +237,7 @@ public class ApiIndexController {
 
     /**
      * 机场高铁列表
+     *
      * @param requ
      * @return
      * @throws Exception
@@ -239,8 +245,8 @@ public class ApiIndexController {
     @ApiOperation(value = "机场高铁列表")
     @PostMapping(value = {"/airports"})
     public Response<AirportResp> airports(@ApiParam(value = "机场高铁列表", required = true)
-                                            @RequestBody
-                                            @Validated Request<AirportRequ> requ) throws Exception {
+                                          @RequestBody
+                                          @Validated Request<AirportRequ> requ) throws Exception {
 
         AirportResp resp = new AirportResp();
 
@@ -261,6 +267,7 @@ public class ApiIndexController {
 
     /**
      * 获取字典
+     *
      * @param requ
      * @return
      * @throws Exception
@@ -268,14 +275,14 @@ public class ApiIndexController {
     @ApiOperation(value = "获取字典")
     @PostMapping(value = {"/dicts"})
     public Response<DictsResp> dicts(@ApiParam(value = "获取字典", required = true)
-                                          @RequestBody
-                                          @Validated Request<DictsRequ> requ) throws Exception {
+                                     @RequestBody
+                                     @Validated Request<DictsRequ> requ) throws Exception {
 
 
         DictType dictType = requ.getRequestBody().getDictType();
         int count = requ.getRequestBody().getCount();
 
-        if(count <= 0){
+        if (count <= 0) {
             count = 3;
         }
 
