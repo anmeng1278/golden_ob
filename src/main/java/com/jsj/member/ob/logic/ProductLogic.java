@@ -151,6 +151,7 @@ public class ProductLogic extends BaseLogic {
 
         productSpecDto.setStockCount(productSpec.getStockCount());
         productSpecDto.setSort(productSpec.getSort());
+        productSpecDto.setDeleteTime(productSpec.getDeleteTime());
 
         //商品实体
         ProductDto productDto = new ProductDto();

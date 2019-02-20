@@ -253,19 +253,9 @@ public class ActivityLogic extends BaseLogic {
      */
     public static List<ActivityProductDto> GetActivityProductDtos(int activityId, int productSpecId) {
 
-        EntityWrapper<ActivityProduct> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where("delete_time is null");
-        entityWrapper.where("activity_id={0}", activityId);
-
-        if (productSpecId > 0) {
-            entityWrapper.where("product_spec_id={0}", productSpecId);
-        }
-
-        entityWrapper.orderBy("sort asc, update_time desc");
+        List<ActivityProduct> activityProducts = activityLogic.activityProductService.getActivityProducts(activityId, productSpecId);
 
         List<ActivityProductDto> activityProductDtos = new ArrayList<>();
-        List<ActivityProduct> activityProducts = activityLogic.activityProductService.selectList(entityWrapper);
-
         for (ActivityProduct ap : activityProducts) {
 
             ActivityProductDto dto = new ActivityProductDto();
@@ -287,6 +277,42 @@ public class ActivityLogic extends BaseLogic {
         }
 
         return activityProductDtos;
+
+        //EntityWrapper<ActivityProduct> entityWrapper = new EntityWrapper<>();
+        //entityWrapper.where("delete_time is null");
+        //entityWrapper.where("activity_id={0}", activityId);
+        //
+        //if (productSpecId > 0) {
+        //    entityWrapper.where("product_spec_id={0}", productSpecId);
+        //}
+        //
+        //
+        //entityWrapper.orderBy("sort asc, update_time desc");
+        //
+        //List<ActivityProductDto> activityProductDtos = new ArrayList<>();
+        //List<ActivityProduct> activityProducts = activityLogic.activityProductService.selectList(entityWrapper);
+        //
+        //for (ActivityProduct ap : activityProducts) {
+        //
+        //    ActivityProductDto dto = new ActivityProductDto();
+        //
+        //    dto.setActivityId(ap.getActivityId());
+        //    dto.setActivityProductId(ap.getActivityProductId());
+        //    dto.setCreateTime(ap.getCreateTime());
+        //    dto.setDeleteTime(ap.getDeleteTime());
+        //    dto.setProductId(ap.getProductId());
+        //
+        //    dto.setSalePrice(ap.getSalePrice());
+        //    dto.setProductSpecId(ap.getProductSpecId());
+        //    dto.setUpdateTime(ap.getUpdateTime());
+        //    dto.setStockCount(ap.getStockCount());
+        //
+        //    dto.setProductDto(ProductLogic.GetProduct(ap.getProductId()));
+        //
+        //    activityProductDtos.add(dto);
+        //}
+        //
+        //return activityProductDtos;
 
     }
     //endregion

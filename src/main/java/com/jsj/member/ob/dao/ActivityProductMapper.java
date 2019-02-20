@@ -1,9 +1,9 @@
 package com.jsj.member.ob.dao;
 
-import com.jsj.member.ob.entity.ActivityProduct;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.jsj.member.ob.entity.ActivityProduct;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import com.baomidou.mybatisplus.plugins.Page;
 
 import java.util.List;
 
@@ -15,5 +15,13 @@ import java.util.List;
  */
 @Repository
 public interface ActivityProductMapper extends BaseMapper<ActivityProduct> {
+
+    /**
+     * 获取活动商品信息
+     * @param activityId
+     * @param productSpecId
+     * @return
+     */
+    List<ActivityProduct> getActivityProducts(@Param("activityId")int activityId, @Param("productSpecId")int productSpecId);
 
 }

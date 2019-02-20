@@ -21,4 +21,30 @@
         activity_product_id AS activityProductId, activity_id AS activityId, product_id AS productId, product_spec_id AS productSpecId, sort, sale_price AS salePrice, stock_count AS stockCount, create_time AS createTime, update_time AS updateTime, delete_time AS deleteTime
     </sql>
 
+
+    <!-- 获取活动商品 -->
+    <select id="getActivityProducts" resultType="com.jsj.member.ob.entity.ActivityProduct">
+
+        <![CDATA[
+
+            select a.* from _activity_product as a
+                INNER JOIN _product as b
+                    on a.product_id = b.product_id
+                inner join _product_spec as c
+                    on a.product_spec_id = c.product_spec_id
+                INNER JOIN _activity as d
+                    on a.activity_id = d.activity_id
+
+            where d.delete_time is null and
+                b.delete_time is null AND
+                c.delete_time is null AND
+                a.delete_time is null and
+                d.activity_id = #{activityId} and
+                (#{productSpecId} = 0 or a.product_spec_id = #{productSpecId})
+
+            order by a.sort asc, a.update_time desc
+
+        ]]>
+    </select>
+
 </mapper>
