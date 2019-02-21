@@ -158,7 +158,7 @@ public class CartLogic extends BaseLogic {
 
         if(!activityType.equals(ActivityType.NORMAL)){
             if(activityId <= 0){
-                throw new TipException(String.format("请求参数错误，活动类型：%s下活动编号不能为空", activityType.getMessage()))
+                throw new TipException(String.format("请求参数错误，活动类型：%s下活动编号不能为空", activityType.getMessage()));
             }
         }
 
