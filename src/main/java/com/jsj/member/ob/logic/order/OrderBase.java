@@ -27,6 +27,7 @@ import com.jsj.member.ob.utils.DateUtils;
 import com.jsj.member.ob.utils.TupleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -241,8 +242,9 @@ public abstract class OrderBase {
         if (orderAmount > balance) {
 
             double payAmount = orderAmount - balance;
-            double giftAmount = balance;
+            payAmount = new BigDecimal(payAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
+            double giftAmount = balance;
             return TupleUtils.tuple(payAmount, giftAmount);
         }
         return TupleUtils.tuple(0d, orderAmount);
