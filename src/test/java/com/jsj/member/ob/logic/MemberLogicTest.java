@@ -146,7 +146,7 @@ public class MemberLogicTest {
     public void customerInformation() {
 
         CustomerInformationRequestOuterClass.CustomerInformationRequest.Builder requ = CustomerInformationRequestOuterClass.CustomerInformationRequest.newBuilder();
-        requ.setJSJID("20613259");
+        requ.setJSJID("20613354");
 
 
         CustomerInformationResponseOuterClass.CustomerInformationResponse resp = MemberLogic.CustomerInformation(requ.build());
