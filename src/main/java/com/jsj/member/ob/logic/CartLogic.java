@@ -156,6 +156,12 @@ public class CartLogic extends BaseLogic {
             number = 0;
         }
 
+        if(!activityType.equals(ActivityType.NORMAL)){
+            if(activityId <= 0){
+                throw new TipException(String.format("请求参数错误，活动类型：%s下活动编号不能为空", activityType.getMessage()))
+            }
+        }
+
         EntityWrapper<Cart> cartWrapper = new EntityWrapper<>();
         cartWrapper.where("union_id={0} and delete_time is null", unionId);
 
