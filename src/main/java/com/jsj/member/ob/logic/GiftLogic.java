@@ -219,13 +219,18 @@ public class GiftLogic extends BaseLogic {
         if (StringUtils.isBlank(requ.getGiftUniqueCode())) {
             throw new TipException("赠送编号不能为空");
         }
-        if (StringUtils.isBlank(requ.getBaseRequ().getOpenId())) {
-            throw new TipException("用户编号不能为空");
-        }
 
         //当前领取人
         String openId = requ.getBaseRequ().getOpenId();
         String unionId = requ.getBaseRequ().getUnionId();
+
+        if (StringUtils.isBlank(openId)) {
+            throw new TipException("参数不合法，用户openId为空");
+        }
+
+        if (StringUtils.isBlank(unionId)) {
+            throw new TipException("参数不合法，用户unionId为空");
+        }
 
         GiftDto gift = GiftLogic.GetGift(requ.getGiftUniqueCode());
         int giftId = gift.getGiftId();
