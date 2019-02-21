@@ -185,36 +185,31 @@ public class ApiStockController extends BaseController {
             builder.setJSJID(jsjId + "");
 
             CustomerInformationResponseOuterClass.CustomerInformationResponse customerInformation = MemberLogic.CustomerInformation(builder.build());
-            if (!customerInformation.getBaseResponse().getIsSuccess()) {
-                //没有查询到会员信息
-                throw new TipException(String.format("获取会员信息失败，会员编号：%d", jsjId));
+
+            if (customerInformation.getBaseResponse().getIsSuccess() && customerInformation.getListCount() > 0) {
+
+                CustomerInfoNewOuterClass.CustomerInfoNew userInfo = customerInformation.getList(0);
+
+                String cardId = userInfo.getCardID();
+                String cardTypeIdName = userInfo.getCardTypeName();
+                String mobile = userInfo.getContactmeans();
+                String cardInvalidDate = userInfo.getCardInvalidDate();
+                String customerName = userInfo.getCustomerName();
+
+                if (StringUtils.isEmpty(mobile)) {
+                    mobile = "15210000000";
+                }
+                if (StringUtils.isEmpty(customerName)) {
+                    customerName = "未填写";
+                }
+
+                resp.setCardId(cardId);
+                resp.setCardTypeIdName(cardTypeIdName);
+                resp.setMobile(mobile);
+                resp.setCardInvalidDate(cardInvalidDate);
+                resp.setCustomerName(customerName);
+
             }
-
-            if (customerInformation.getListCount() == 0) {
-                //没有查询到会员信息
-                throw new TipException(String.format("获取会员信息失败，会员编号：%d", jsjId));
-            }
-
-            CustomerInfoNewOuterClass.CustomerInfoNew userInfo = customerInformation.getList(0);
-
-            String cardId = userInfo.getCardID();
-            String cardTypeIdName = userInfo.getCardTypeName();
-            String mobile = userInfo.getContactmeans();
-            String cardInvalidDate = userInfo.getCardInvalidDate();
-            String customerName = userInfo.getCustomerName();
-
-            if (StringUtils.isEmpty(mobile)) {
-                mobile = "15210000000";
-            }
-            if (StringUtils.isEmpty(customerName)) {
-                customerName = "未填写";
-            }
-
-            resp.setCardId(cardId);
-            resp.setCardTypeIdName(cardTypeIdName);
-            resp.setMobile(mobile);
-            resp.setCardInvalidDate(cardInvalidDate);
-            resp.setCustomerName(customerName);
 
         }
 
