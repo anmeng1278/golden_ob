@@ -260,7 +260,7 @@ public class GiftLogic extends BaseLogic {
 
         //重复领取判断
         if (userIsDraw(giftId, unionId)) {
-            throw new TipException("礼物只能领取一次！");
+            throw new TipException("礼物只能领取一次！", 1302);
         }
 
         //分享方式
