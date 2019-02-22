@@ -236,7 +236,7 @@ public class GiftLogic extends BaseLogic {
         int giftId = gift.getGiftId();
 
         if (gift.getGiftStatus().equals(GiftStatus.CANCEL)) {
-            throw new TipException("用户已取消分享");
+            throw new TipException("用户已取消分享", 1302);
         }
         if (gift.getGiftStatus().equals(GiftStatus.BROUGHTOUT)) {
             throw new TipException("您来晚了，礼物已被抢完啦！", 1302);
