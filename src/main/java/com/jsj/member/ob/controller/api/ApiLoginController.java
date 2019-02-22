@@ -42,23 +42,23 @@ public class ApiLoginController {
     public Response<RegisterResp> register(@ApiParam(value = "请求实体", required = true) @RequestBody @Validated Request<RegisterRequ> requ, HttpServletRequest request) throws Exception {
 
         RegisterResp resp = new RegisterResp();
-        //MiniUserInfo userInfo = JSON.parseObject(requ.getRequestBody().getRawData(), MiniUserInfo.class);
-
         Object attribute = request.getSession().getAttribute(Constant.wxapp_session_key);
 
         if (attribute == null) {
             throw new TipException("登录信息丢失，请重新登录");
         }
+
         JSONObject jsonObject = (JSONObject) attribute;
-
         String sessionKey = jsonObject.getString("sessionKey");
-        logger.info("获取登录数据：{}", JSON.toJSONString(attribute));
 
+        logger.info("获取登录数据：{}", JSON.toJSONString(attribute));
         logger.info("{} {} {}", sessionKey, requ.getRequestBody().getEncryptedData(), requ.getRequestBody().getIv());
 
         WxaDUserInfo wxaDUserInfo = WxaUtil.decryptUserInfo(sessionKey, requ.getRequestBody().getEncryptedData(), requ.getRequestBody().getIv());
         if (wxaDUserInfo == null) {
-            throw new TipException("解密用户信息失败，请重试");
+            //解密失败后清空Session
+            request.getSession().removeAttribute(Constant.wxapp_session_key);
+            throw new TipException("解密用户信息失败，请重试。");
         }
 
         //数据插入数据库
