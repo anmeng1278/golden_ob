@@ -33,9 +33,12 @@ spring:
     publisher-confirms: true
     publisher-returns: true
   redis:
-    host: zen_yalow
+#    host: zen_yalow
+#    port: 6379
+#    password: JSB@#$%2345
+    host: 172.16.6.67
     port: 6379
-    password: JSB@#$%2345
+    password: ktgjredisservice
 
 webconfig:
 
@@ -135,10 +138,15 @@ webconfig:
 
 
 redis:
-  host: zen_yalow
+  host: 172.16.6.67
   port: 6379
+  password: ktgjredisservice
+#  host: zen_yalow
+#  port: 6379
   timeout: 10000
   pool-max-total: 100
   pool-max-idle: 500
   pool-max-wait: 500
-  password: JSB@#$%2345
+#  password: JSB@#$%2345
+
+
