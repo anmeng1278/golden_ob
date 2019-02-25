@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("${webconfig.virtualPath}/mini/share")
+@RequestMapping("/mini/share")
 public class ApiShareController extends BaseController {
 
     //region (public) 领取红包 redPacket

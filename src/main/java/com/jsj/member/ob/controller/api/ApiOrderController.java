@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("${webconfig.virtualPath}/mini")
+@RequestMapping("/mini")
 public class ApiOrderController extends BaseController {
 
     //region (public) 订单列表 index

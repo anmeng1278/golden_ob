@@ -84,7 +84,7 @@ build_dev_deploy:
   only:
     - dev.deploy
   script:
-    - echo "开始编译deploy"
+    - echo "开始编译deploy."
     - echo $PWD
     - echo "开始发布"
     - pname="memberob"

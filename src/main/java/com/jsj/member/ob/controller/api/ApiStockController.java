@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("${webconfig.virtualPath}/mini")
+@RequestMapping("/mini")
 public class ApiStockController extends BaseController {
 
 

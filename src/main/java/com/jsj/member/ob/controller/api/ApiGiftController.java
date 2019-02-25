@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("${webconfig.virtualPath}/mini")
+@RequestMapping("/mini")
 public class ApiGiftController extends BaseController {
 
     @Autowired

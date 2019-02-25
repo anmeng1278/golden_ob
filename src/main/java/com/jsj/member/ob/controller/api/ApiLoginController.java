@@ -22,7 +22,7 @@ import weixin.popular.util.WxaUtil;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("${webconfig.virtualPath}/mini")
+@RequestMapping("/mini")
 public class ApiLoginController {
 
 
