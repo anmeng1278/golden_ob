@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/mini")
+@RequestMapping("${webconfig.virtualPath}/mini")
 public class ApiCartController extends BaseController {
 
     //region (public) 购物车列表 cart

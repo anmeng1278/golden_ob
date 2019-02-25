@@ -19,7 +19,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/mini")
+@RequestMapping("${webconfig.virtualPath}/mini")
 public class ApiCouponController extends BaseController {
 
 

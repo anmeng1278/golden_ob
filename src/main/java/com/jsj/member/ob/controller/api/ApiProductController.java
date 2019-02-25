@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/mini")
+@RequestMapping("${webconfig.virtualPath}/mini")
 public class ApiProductController {
 
 

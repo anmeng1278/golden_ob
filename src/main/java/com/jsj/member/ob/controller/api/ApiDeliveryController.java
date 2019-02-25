@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/mini")
+@RequestMapping("${webconfig.virtualPath}/mini")
 public class ApiDeliveryController extends BaseController {
 
     @Autowired

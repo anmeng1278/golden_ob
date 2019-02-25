@@ -24,12 +24,12 @@ public class AccessKey extends BasePrefix {
     /**
      * 首页缓存Key
      */
-    public static AccessKey pageIndex2 = new AccessKey(7200, "pageIndex");
+    public static AccessKey pageIndex2 = new AccessKey(7200, "pageIndex2");
 
     /**
      * 兑换页面缓存
      */
-    public static AccessKey pageExchange2 = new AccessKey(7200, "pageExchange");
+    public static AccessKey pageExchange2 = new AccessKey(7200, "pageExchange2");
 
 
 }
