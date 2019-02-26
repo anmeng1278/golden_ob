@@ -62,8 +62,8 @@ build_master_release:
     -   docker stop $(docker ps -f "name=${pname}-task" -q)
     - fi
 
-    - docker run -d --link zen_yalow --rm -p 8090:80 -e RUN_MODEL="--spring.profiles.active=dep" --name ${pname} maven.jsjit.cn:9911/member/ob:latest
-    - docker run -d --link zen_yalow --rm -p 18090:80 -e RUN_MODEL="--spring.profiles.active=dep --webconfig.runJob=true" --name ${pname}-task maven.jsjit.cn:9911/member/ob:latest
+    - docker run -d --rm -p 8090:80 -e RUN_MODEL="--spring.profiles.active=dep" --name ${pname} maven.jsjit.cn:9911/member/ob:latest
+    - docker run -d --rm -p 18090:80 -e RUN_MODEL="--spring.profiles.active=dep --webconfig.runJob=true" --name ${pname}-task maven.jsjit.cn:9911/member/ob:latest
 
     - echo "服务创建 [OK]"
 
@@ -116,8 +116,8 @@ build_release:
     -   docker stop $(docker ps -f "name=${pname}-task" -q)
     - fi
 
-    - docker run -d --link zen_yalow --rm -p 8090:80 -e RUN_MODEL="--spring.profiles.active=dep" --name ${pname} maven.jsjit.cn:9911/member/ob:latest
-    - docker run -d --link zen_yalow --rm -p 18090:80 -e RUN_MODEL="--spring.profiles.active=dep --webconfig.runJob=true" --name ${pname}-task maven.jsjit.cn:9911/member/ob:latest
+    - docker run -d --rm -p 8090:80 -e RUN_MODEL="--spring.profiles.active=dep" --name ${pname} maven.jsjit.cn:9911/member/ob:latest
+    - docker run -d --rm -p 18090:80 -e RUN_MODEL="--spring.profiles.active=dep --webconfig.runJob=true" --name ${pname}-task maven.jsjit.cn:9911/member/ob:latest
 
     - echo "服务创建 [OK]"
 
