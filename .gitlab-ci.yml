@@ -21,6 +21,8 @@ build_master_review:
     - master.v2
   script:
 
+    - mvn clean package -DskipTests
+
     - echo "开始发布"
     - pname="member-ob"
     - if [ $(docker ps -a -q -f "name=$pname" | wc -l) -eq 1 ] ;
@@ -37,6 +39,9 @@ build_master_release:
   only:
     - master.deploy
   script:
+
+    - mvn clean package -DskipTests
+
     - echo "开始发布"
     - pname="member-ob"
 
@@ -70,6 +75,9 @@ build_review:
   only:
     - review.1.0.1
   script:
+
+    - mvn clean package -DskipTests
+
     - echo "开始发布"
     - pname="member-ob"
     - if [ $(docker ps -a -q -f "name=$pname" | wc -l) -eq 1 ] ;
@@ -87,6 +95,8 @@ build_release:
   only:
     - release.1.0.1
   script:
+
+    - mvn clean package -DskipTests
     - echo "开始发布"
     - pname="member-ob"
 
