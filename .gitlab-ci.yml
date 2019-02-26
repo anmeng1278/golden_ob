@@ -1,7 +1,7 @@
 stages:
 - build
 
-build_ob:
+build_master_review:
   stage: build
   tags:
     - build
@@ -21,27 +21,7 @@ build_ob:
     - echo "发布成功"
 
 
-build_ob:
-  stage: build
-  tags:
-    - build
-  only:
-    - dev.v2
-  script:
-    - echo "开始编译"
-    - echo $PWD
-    - mvn clean package -DskipTests
-
-    - echo "开始发布"
-    - pname="memberob"
-    - if [ $(docker ps -a -q -f "name=test-$pname" | wc -l) -eq 1 ] ;
-    -   then docker stop $(docker ps -a -q -f "name=test-$pname") && docker rm $(docker ps -a -q -f "name=test-$pname") ;
-    - fi
-    - docker run -d -v "$PWD/target/":/usr/src/myapp -e TZ="Asia/Shanghai" -p 8090:80 --name "test-$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --webconfig.runJob=true --spring.profiles.active=pub -Duser.timezone=Asia/Jerusalem
-    - echo "发布成功"
-
-
-build_master_deploy:
+build_master_release:
   stage: build
   tags:
     - release
@@ -76,15 +56,35 @@ build_master_deploy:
     - echo "服务创建 [OK]"
 
 
+build_review:
+  stage: build
+  tags:
+    - build
+  only:
+    - review.1.0.1
+  script:
+    - echo "开始编译 review.1.0.1"
+    - echo $PWD
+    - mvn clean package -DskipTests
 
-build_dev_deploy:
+    - echo "开始发布"
+    - pname="memberob"
+    - if [ $(docker ps -a -q -f "name=test-$pname" | wc -l) -eq 1 ] ;
+    -   then docker stop $(docker ps -a -q -f "name=test-$pname") && docker rm $(docker ps -a -q -f "name=test-$pname") ;
+    - fi
+    - docker run -d -v "$PWD/target/":/usr/src/myapp -e TZ="Asia/Shanghai" -p 8090:80 --name "test-$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --webconfig.runJob=true --spring.profiles.active=pub -Duser.timezone=Asia/Jerusalem
+    - echo "发布成功"
+
+
+
+build_release:
   stage: build
   tags:
     - release
   only:
-    - dev.deploy
+    - release.1.0.1
   script:
-    - echo "开始编译deploy."
+    - echo "开始编译 release.1.0.1"
     - echo $PWD
     - echo "开始发布"
     - pname="memberob"
