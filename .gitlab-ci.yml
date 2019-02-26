@@ -1,37 +1,44 @@
 stages:
 - build
+- deploy
 
-build_master_review:
+
+build_build:
   stage: build
   tags:
-    - build
-  only:
-    - master.v2
+    - develop
   script:
     - echo "开始编译"
     - echo $PWD
     - mvn clean package -DskipTests
 
+
+build_master_review:
+  stage: deploy
+  tags:
+    - build
+  only:
+    - master.v2
+  script:
+
     - echo "开始发布"
-    - pname="memberob"
-    - if [ $(docker ps -a -q -f "name=test-$pname" | wc -l) -eq 1 ] ;
-    -   then docker stop $(docker ps -a -q -f "name=test-$pname") && docker rm $(docker ps -a -q -f "name=test-$pname") ;
+    - pname="member-ob"
+    - if [ $(docker ps -a -q -f "name=$pname" | wc -l) -eq 1 ] ;
+    -   then docker stop $(docker ps -a -q -f "name=$pname") && docker rm $(docker ps -a -q -f "name=$pname") ;
     - fi
-    - docker run -d -v "$PWD/target/":/usr/src/myapp -e TZ="Asia/Shanghai" -p 8090:80 --name "test-$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --webconfig.runJob=true --spring.profiles.active=pub -Duser.timezone=Asia/Jerusalem
+    - docker run -d -v "$PWD/target/":/usr/src/myapp -e TZ="Asia/Shanghai" -p 8090:80 --name "$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --webconfig.runJob=true --spring.profiles.active=pub -Duser.timezone=Asia/Jerusalem
     - echo "发布成功"
 
 
 build_master_release:
-  stage: build
+  stage: deploy
   tags:
     - release
   only:
     - master.deploy
   script:
-    - echo "开始编译"
-    - echo $PWD
     - echo "开始发布"
-    - pname="memberob"
+    - pname="member-ob"
 
     - docker run -i --rm -v /opt/.m2:/root/.m2 -v $PWD:/usr/src/mymaven -w /usr/src/mymaven maven:3.5.3-jdk-8 mvn clean package -DskipTests
     - echo "编译并打包服务 [OK]"
@@ -63,10 +70,6 @@ build_review:
   only:
     - review.1.0.1
   script:
-    - echo "开始编译 review.1.0.1"
-    - echo $PWD
-    - mvn clean package -DskipTests
-
     - echo "开始发布"
     - pname="member-ob"
     - if [ $(docker ps -a -q -f "name=$pname" | wc -l) -eq 1 ] ;
@@ -84,10 +87,8 @@ build_release:
   only:
     - release.1.0.1
   script:
-    - echo "开始编译 release.1.0.1"
-    - echo $PWD
     - echo "开始发布"
-    - pname="memberob"
+    - pname="member-ob"
 
     - docker run -i --rm -v /opt/.m2:/root/.m2 -v $PWD:/usr/src/mymaven -w /usr/src/mymaven maven:3.5.3-jdk-8 mvn clean package -DskipTests
     - echo "编译并打包服务 [OK]"
