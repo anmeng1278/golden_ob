@@ -6,7 +6,7 @@ stages:
 build_build:
   stage: build
   tags:
-    - develop
+    - build
   script:
     - echo "开始编译"
     - echo $PWD
