@@ -65,6 +65,11 @@ public class MemberLogicTest {
         requ.setOperaTime(DateUtils.getCurrentUnixTime());
         requ.setServiceId(UpgradeServiceOuterClass.UpgradeService.Plus500);
 
+        BaseRequestOuterClass.BaseRequest.Builder baseBuilder = BaseRequestOuterClass.BaseRequest.newBuilder();
+        baseBuilder.setSourceWay(SourceWayOuterClass.SourceWay.KTGJ);
+
+        requ.setBaseRequest(baseBuilder.build());
+
         AddServiceResponseOuterClass.AddServiceResponse resp = MemberLogic.CreatePlus(requ.build());
         System.out.println(resp);
         System.out.println(resp.getMessage());
@@ -117,8 +122,8 @@ public class MemberLogicTest {
     public void strictChoiceSearch() {
 
         StrictChoiceSearchRequestOuterClass.StrictChoiceSearchRequest.Builder requ = StrictChoiceSearchRequestOuterClass.StrictChoiceSearchRequest.newBuilder();
-        //requ.setJSJID(20612968);
-        requ.setJSJID(20613259);
+        requ.setJSJID(20612968);
+        //requ.setJSJID(20613259);
 
         StrictChoiceSearchResponseOuterClass.StrictChoiceSearchResponse resp = MemberLogic.StrictChoiceSearch(requ.build());
         System.out.println(resp.toBuilder().toString());

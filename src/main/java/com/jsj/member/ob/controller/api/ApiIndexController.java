@@ -24,9 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${webconfig.virtualPath}/mini")
@@ -112,7 +111,7 @@ public class ApiIndexController extends BaseController {
 
         ExchangeResp exchangeResp = this.GetAccessCache(AccessKey.pageExchange2, ExchangeResp.class);
         if (exchangeResp != null) {
-            return Response.ok(exchangeResp);
+            return Response.ok(this.filterExchangeResp(exchangeResp, request.getRequestBody().getJsjId()));
         }
 
         ExchangeResp resp = new ExchangeResp();
@@ -130,10 +129,54 @@ public class ApiIndexController extends BaseController {
 
         this.SetAccessCache(AccessKey.pageExchange2, resp);
 
-        return Response.ok(resp);
+        return Response.ok(this.filterExchangeResp(exchangeResp, request.getRequestBody().getJsjId()));
 
     }
 
+    //endregion
+
+    //region (private) 筛选plus权益 filterExchangeResp
+
+    /**
+     * 筛选plus权益
+     *
+     * @param resp
+     * @param jsjId
+     * @return
+     */
+    private ExchangeResp filterExchangeResp(ExchangeResp resp, int jsjId) {
+
+        if (jsjId <= 0) {
+            return resp;
+        }
+        if (resp == null || resp.getExchangeProducts() == null || resp.getExchangeProducts().isEmpty()) {
+            return null;
+        }
+        Optional<ActivityProductDto> first = resp.getExchangeProducts().stream().filter(x -> x.getProductDto().getPropertyType().equals(PropertyType.PLUS)).findFirst();
+        if (!first.isPresent()) {
+            return resp;
+        }
+
+        JSONObject js = new JSONObject();
+        js.put("JSJID", jsjId);
+
+        JSONObject jsonObject = null;
+        boolean isAllowBuy = true;
+        try {
+            jsonObject = MemberLogic.GetCustAsset(js);
+            isAllowBuy = jsonObject.getBoolean("IsBuyPlus");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (!isAllowBuy) {
+            List<ActivityProductDto> collect = resp.getExchangeProducts().stream()
+                    .filter(x -> !x.getProductDto().getPropertyType().equals(PropertyType.PLUS)).collect(Collectors.toList());
+            resp.setExchangeProducts(collect);
+        }
+        return resp;
+
+    }
     //endregion
 
     //region (public) 会员资产 asset
@@ -165,7 +208,6 @@ public class ApiIndexController extends BaseController {
     }
     //endregion
 
-
     //region (public) 礼品券使用明细 strictChoiceDetail
 
     /**
@@ -190,7 +232,6 @@ public class ApiIndexController extends BaseController {
     }
     //endregion
 
-
     //region (public) 会员资产(全部) getCustAsset
 
     /**
@@ -211,7 +252,6 @@ public class ApiIndexController extends BaseController {
     }
     //endregion
 
-
     //region (public) plus券使用明细 plusDetail
 
     /**
@@ -231,7 +271,6 @@ public class ApiIndexController extends BaseController {
 
     }
     //endregion
-
 
     //region (public) 机场高铁列表 plusDetail
 
@@ -261,7 +300,6 @@ public class ApiIndexController extends BaseController {
 
     }
     //endregion
-
 
     //region (public) 获取字典 dicts
 

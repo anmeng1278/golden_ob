@@ -1,19 +1,27 @@
 package com.jsj.member.ob.logic.order;
 
 import com.jsj.member.ob.constant.Constant;
+import com.jsj.member.ob.dto.BaseRequ;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
 import com.jsj.member.ob.dto.api.activity.ActivityProductDto;
+import com.jsj.member.ob.dto.api.delivery.CreateDeliveryRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderRequ;
 import com.jsj.member.ob.dto.api.order.CreateOrderResp;
 import com.jsj.member.ob.dto.api.order.OrderProductDto;
 import com.jsj.member.ob.dto.api.product.ProductSpecDto;
+import com.jsj.member.ob.dto.api.stock.StockDto;
+import com.jsj.member.ob.dto.proto.CustomerInfoNewOuterClass;
+import com.jsj.member.ob.dto.proto.CustomerInformationRequestOuterClass;
+import com.jsj.member.ob.dto.proto.CustomerInformationResponseOuterClass;
+import com.jsj.member.ob.dto.proto.NotifyModelOuterClass;
 import com.jsj.member.ob.entity.Order;
 import com.jsj.member.ob.entity.OrderProduct;
 import com.jsj.member.ob.enums.ActivityType;
+import com.jsj.member.ob.enums.DeliveryType;
 import com.jsj.member.ob.enums.OrderStatus;
+import com.jsj.member.ob.enums.PropertyType;
 import com.jsj.member.ob.exception.TipException;
-import com.jsj.member.ob.logic.ActivityLogic;
-import com.jsj.member.ob.logic.ProductLogic;
+import com.jsj.member.ob.logic.*;
 import com.jsj.member.ob.rabbitmq.wx.WxSender;
 import com.jsj.member.ob.service.*;
 import com.jsj.member.ob.tuple.TwoTuple;
@@ -89,10 +97,6 @@ public class OrderExchange extends OrderBase {
             throw new TipException("参数不合法，用户unionId为空");
         }
 
-        if (requ.getBaseRequ().getJsjId() <= 0) {
-            throw new TipException("只有会员才能参与兑换活动");
-        }
-
         if (requ.getActivityId() == 0) {
             throw new TipException("活动编号不能为空");
         }
@@ -125,7 +129,6 @@ public class OrderExchange extends OrderBase {
             throw new TipException("当前活动非兑换活动");
         }
 
-
         //组织订单实体
         Order order = new Order();
 
@@ -151,9 +154,9 @@ public class OrderExchange extends OrderBase {
 
         //订单金额
         double orderAmount = 0d;
-
         String productName = "";
 
+        int plusNumber = 0;
         for (OrderProductDto op : requ.getOrderProductDtos()) {
 
             Optional<ActivityProductDto> first = activityProductDtos.stream().filter(ap -> ap.getProductId().equals(op.getProductId()) &&
@@ -165,6 +168,15 @@ public class OrderExchange extends OrderBase {
 
             if (first.get().getStockCount() < op.getNumber()) {
                 throw new TipException(String.format("商品\"%s\"库存不足，当前库存：%d", first.get().getProductDto().getProductName(), first.get().getStockCount()));
+            }
+
+            if (first.get().getProductDto().getPropertyType().equals(PropertyType.PLUS)) {
+                plusNumber += op.getNumber();
+            }
+
+            //判断是否多个plus权益
+            if (plusNumber > 1) {
+                throw new TipException("Plus权益只能兑换一个");
             }
 
             //用于创建商品订单
@@ -221,8 +233,13 @@ public class OrderExchange extends OrderBase {
         });
 
         if (payAmount == 0) {
-            this.PaySuccessed(order.getOrderId(), null);
+            this.PaySuccessed(order.getOrderId(),
+                    null,
+                    requ.getBaseRequ().getJsjId(),
+                    requ.getBaseRequ().getUnionId(),
+                    requ.getBaseRequ().getOpenId());
         }
+
 
         CreateOrderResp resp = new CreateOrderResp();
 
@@ -235,6 +252,69 @@ public class OrderExchange extends OrderBase {
 
         return resp;
 
+    }
+
+    /**
+     * 支付成功，兑换plus
+     *
+     * @param orderId
+     * @param notifyModel
+     * @param jsjId
+     * @param unionId
+     * @param openId
+     */
+    public void PaySuccessed(int orderId, NotifyModelOuterClass.NotifyModel notifyModel, int jsjId, String unionId, String openId) {
+
+        super.PaySuccessed(orderId, notifyModel);
+
+        List<StockDto> stockDtos = StockLogic.GetStocksByOrderId(orderId);
+
+        Optional<StockDto> first = stockDtos.stream().filter(x -> x.getProductDto().getPropertyType().equals(PropertyType.PLUS)).findFirst();
+        if (!first.isPresent()) {
+            return;
+        }
+
+        //查询会员信息
+        CustomerInformationRequestOuterClass.CustomerInformationRequest.Builder builder = CustomerInformationRequestOuterClass.CustomerInformationRequest.newBuilder();
+        builder.setJSJID(jsjId + "");
+
+        CustomerInformationResponseOuterClass.CustomerInformationResponse customerInformation = MemberLogic.CustomerInformation(builder.build());
+
+        if (customerInformation.getBaseResponse().getIsSuccess() && customerInformation.getListCount() > 0) {
+
+            CustomerInfoNewOuterClass.CustomerInfoNew userInfo = customerInformation.getList(0);
+
+            //String cardId = userInfo.getCardID();
+            //String cardTypeIdName = userInfo.getCardTypeName();
+            String mobile = userInfo.getContactmeans();
+            //String cardInvalidDate = userInfo.getCardInvalidDate();
+            String customerName = userInfo.getCustomerName();
+
+            if (org.apache.commons.lang3.StringUtils.isEmpty(mobile)) {
+                mobile = "15210000000";
+            }
+            if (org.apache.commons.lang3.StringUtils.isEmpty(customerName)) {
+                customerName = "未填写";
+            }
+
+            CreateDeliveryRequ requ = new CreateDeliveryRequ();
+            requ.setMobile(mobile);
+            requ.setContactName(customerName);
+            requ.setDeliveryType(DeliveryType.PICKUP);
+            requ.setPropertyType(PropertyType.PLUS);
+
+            requ.getStockDtos().add(first.get());
+
+            BaseRequ baseRequ = new BaseRequ();
+            baseRequ.setUnionId(unionId);
+            baseRequ.setOpenId(openId);
+            baseRequ.setJsjId(jsjId);
+
+            requ.setBaseRequ(baseRequ);
+
+            DeliveryLogic.CreateDelivery(requ);
+
+        }
     }
 
     @Override
@@ -299,7 +379,7 @@ public class OrderExchange extends OrderBase {
 
             //获取商品规格
             ProductSpecDto productSpecDto = ProductLogic.GetProductSpec(op.getProductSpecId());
-            if (productSpecDto.getDeleteTime() != null ) {
+            if (productSpecDto.getDeleteTime() != null) {
                 throw new TipException("不允许兑换，所选商品规格已被删除");
             }
 

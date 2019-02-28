@@ -30,6 +30,8 @@ target
 member-ob.iml
 
 generator
+src/test/java/proto
+src/test/java/member
 
 upload
 *.iml

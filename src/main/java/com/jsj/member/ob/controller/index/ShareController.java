@@ -245,6 +245,8 @@ public class ShareController extends BaseController {
             HttpServletRequest request) {
 
         String openId = this.OpenId();
+        String unionId = this.UnionId();
+
         String shareUrl = this.Url(String.format("/share/gift/%s", obs), false);
 
         try {
@@ -252,6 +254,7 @@ public class ShareController extends BaseController {
             ReceivedGiftRequ requ = new ReceivedGiftRequ();
             requ.setGiftUniqueCode(obs);
             requ.getBaseRequ().setOpenId(openId);
+            requ.getBaseRequ().setUnionId(unionId);
 
             ReceivedGiftResp resp = GiftLogic.ReceivedGift(requ);
             return RestResponseBo.ok("领取成功", shareUrl, resp);
