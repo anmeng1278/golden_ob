@@ -94,7 +94,7 @@ case ${env} in
 
     docker run -d \
                 -p ${server_port}:80 \
-                -e RUN_MODEL=${run_model} \
+                -e RUN_MODEL="${run_model}" \
                 --name ${name} \
         maven.jsjit.cn:9911/${team_group}/${name}:${docker_image_version} ;
 
