@@ -254,7 +254,7 @@ public class ShareController extends BaseController {
             ReceivedGiftRequ requ = new ReceivedGiftRequ();
             requ.setGiftUniqueCode(obs);
             requ.getBaseRequ().setOpenId(openId);
-            requ.getBaseRequ().setOpenId(unionId);
+            requ.getBaseRequ().setUnionId(unionId);
 
             ReceivedGiftResp resp = GiftLogic.ReceivedGift(requ);
             return RestResponseBo.ok("领取成功", shareUrl, resp);
