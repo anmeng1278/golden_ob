@@ -106,7 +106,7 @@ build_review:
 #
 #    - echo "服务创建 [OK]"
 
-     - bash deploy.sh -g member -p 8090 -n member-ob -m "--spring.profiles.active=pub --webconfig.runJob=true -Duser.timezone=Asia/Jerusalem" -e single
+     - bash deploy.sh -g member -p 8090 -n member-ob -m "--webconfig.runJob=true --spring.profiles.active=pub -Duser.timezone=Asia/Jerusalem" -e single
 
 
 
