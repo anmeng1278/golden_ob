@@ -118,8 +118,8 @@ build_release:
     - release.1.0.1
   script:
 
-    - echo "开始发布"
-    - pname="member-ob"
+#    - echo "开始发布"
+#    - pname="member-ob"
 
 #    - docker run -i --rm -v /opt/.m2:/root/.m2 -v $PWD:/usr/src/mymaven -w /usr/src/mymaven maven:3.5.3-jdk-8 mvn clean package -DskipTests
 #    - echo "编译并打包服务 [OK]"
@@ -130,17 +130,21 @@ build_release:
 #    - docker push maven.jsjit.cn:9911/member/ob:latest
 #    - echo "推送镜像 [OK]"
 
-    - if [[ $(docker ps -f "name=${pname}" -q | wc -l) -ne 0 ]]; then
-    -   docker stop $(docker ps -f "name=${pname}" -q) && docker rm $(docker ps -a -q -f "name=${pname}")
-    - fi
+#    - if [[ $(docker ps -f "name=${pname}" -q | wc -l) -ne 0 ]]; then
+#    -   docker stop $(docker ps -f "name=${pname}" -q) && docker rm $(docker ps -a -q -f "name=${pname}")
+#    - fi
+#
+#    - if [[ $(docker ps -f "name=${pname}-task" -q | wc -l) -ne 0 ]]; then
+#    -   docker stop $(docker ps -f "name=${pname}-task" -q) && docker rm $(docker ps -a -q -f "name=${pname}-task")
+#    - fi
+#
+#    - docker run -d -p 8090:80 -e RUN_MODEL="--spring.profiles.active=dep" --name ${pname} maven.jsjit.cn:9911/member/ob:latest
+#    - docker run -d -p 18090:80 -e RUN_MODEL="--spring.profiles.active=dep --webconfig.runJob=true" --name ${pname}-task maven.jsjit.cn:9911/member/ob:latest
+#
+#    - echo "服务创建 [OK]"
 
-    - if [[ $(docker ps -f "name=${pname}-task" -q | wc -l) -ne 0 ]]; then
-    -   docker stop $(docker ps -f "name=${pname}-task" -q) && docker rm $(docker ps -a -q -f "name=${pname}-task")
-    - fi
+    - bash deploy.sh -g member -p 8090 -n member-ob -m "--webconfig.runJob=true --spring.profiles.active=dep -Duser.timezone=Asia/Jerusalem" -e single
 
-    - docker run -d -p 8090:80 -e RUN_MODEL="--spring.profiles.active=dep" --name ${pname} maven.jsjit.cn:9911/member/ob:latest
-    - docker run -d -p 18090:80 -e RUN_MODEL="--spring.profiles.active=dep --webconfig.runJob=true" --name ${pname}-task maven.jsjit.cn:9911/member/ob:latest
 
-    - echo "服务创建 [OK]"
 
 
