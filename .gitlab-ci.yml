@@ -129,11 +129,11 @@ build_release:
 #    - echo "推送镜像 [OK]"
 
     - if [[ $(docker ps -f "name=${pname}" -q | wc -l) -ne 0 ]]; then
-    -   docker stop $(docker ps -f "name=${pname}" -q) && docker rm $(docker ps -f "name=${pname}" -q)
+    -   docker stop $(docker ps -f "name=${pname}" -q) && docker rm $(docker ps -a -q -f "name=${pname}")
     - fi
 
     - if [[ $(docker ps -f "name=${pname}-task" -q | wc -l) -ne 0 ]]; then
-    -   docker stop $(docker ps -f "name=${pname}-task" -q) && docker rm $(docker ps -f "name=${pname}-task" -q)
+    -   docker stop $(docker ps -f "name=${pname}-task" -q) && docker rm $(docker ps -a -q -f "name=${pname}-task")
     - fi
 
     - docker run -d -p 8090:80 -e RUN_MODEL="--spring.profiles.active=dep" --name ${pname} maven.jsjit.cn:9911/member/ob:latest
