@@ -10,6 +10,6 @@ WORKDIR /app
 
 COPY /target/*.jar /app/app.jar
 
-EXPOSE 8000
+EXPOSE 80
 
 CMD java -jar ${JAVA_OPTS} app.jar ${RUN_MODEL}
