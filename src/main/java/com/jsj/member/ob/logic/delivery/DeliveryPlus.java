@@ -5,9 +5,7 @@ import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.delivery.*;
 import com.jsj.member.ob.dto.api.stock.StockDto;
 import com.jsj.member.ob.dto.api.wechat.WechatDto;
-import com.jsj.member.ob.dto.proto.AddServiceRequestOuterClass;
-import com.jsj.member.ob.dto.proto.AddServiceResponseOuterClass;
-import com.jsj.member.ob.dto.proto.UpgradeServiceOuterClass;
+import com.jsj.member.ob.dto.proto.*;
 import com.jsj.member.ob.entity.Delivery;
 import com.jsj.member.ob.entity.DeliveryStock;
 import com.jsj.member.ob.entity.Stock;
@@ -194,6 +192,11 @@ public class DeliveryPlus extends DeliveryBase {
             createRequ.setOperapersonId(1);
             createRequ.setOperaTime(DateUtils.getCurrentUnixTime());
             createRequ.setServiceId(UpgradeServiceOuterClass.UpgradeService.Plus500);
+
+            BaseRequestOuterClass.BaseRequest.Builder baseBuilder = BaseRequestOuterClass.BaseRequest.newBuilder();
+            baseBuilder.setSourceWay(SourceWayOuterClass.SourceWay.KTGJ);
+
+            createRequ.setBaseRequest(baseBuilder.build());
 
             AddServiceResponseOuterClass.AddServiceResponse resp = MemberLogic.CreatePlus(createRequ.build());
 

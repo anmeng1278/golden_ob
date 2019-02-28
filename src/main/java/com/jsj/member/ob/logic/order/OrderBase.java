@@ -1,5 +1,6 @@
 package com.jsj.member.ob.logic.order;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jsj.member.ob.dto.api.coupon.UseCouponRequ;
 import com.jsj.member.ob.dto.api.coupon.UseCouponResp;
@@ -263,6 +264,21 @@ public abstract class OrderBase {
 
         if (jsjId <= 0) {
             throw new TipException("没有绑定会员，不允许兑换商品。");
+        }
+
+        JSONObject js = new JSONObject();
+        js.put("JSJID", jsjId);
+
+        //是否允许购买plus
+        boolean isAllowBuy = true;
+        try {
+            JSONObject jsonObject = MemberLogic.GetCustAsset(js);
+            isAllowBuy = jsonObject.getBoolean("IsBuyPlus");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!isAllowBuy) {
+            throw new TipException("不允许重复开通plus权益");
         }
 
         //扣减兑换金额

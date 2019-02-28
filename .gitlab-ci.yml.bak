@@ -1,0 +1,124 @@
+stages:
+- build
+- deploy
+
+
+build_build:
+  stage: build
+  tags:
+    - build
+  script:
+    - echo "开始编译"
+    - echo $PWD
+    - mvn clean package -DskipTests
+
+
+build_master_review:
+  stage: deploy
+  tags:
+    - build
+  only:
+    - master.v2
+  script:
+
+    - mvn clean package -DskipTests
+
+    - echo "开始发布"
+    - pname="member-ob"
+    - if [ $(docker ps -a -q -f "name=$pname" | wc -l) -eq 1 ] ;
+    -   then docker stop $(docker ps -a -q -f "name=$pname") && docker rm $(docker ps -a -q -f "name=$pname") ;
+    - fi
+    - docker run -d -v "$PWD/target/":/usr/src/myapp -e TZ="Asia/Shanghai" -p 8090:80 --name "$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --webconfig.runJob=true --spring.profiles.active=pub -Duser.timezone=Asia/Jerusalem
+    - echo "发布成功"
+
+
+build_master_release:
+  stage: deploy
+  tags:
+    - release
+  only:
+    - master.deploy
+  script:
+
+    - mvn clean package -DskipTests
+
+    - echo "开始发布"
+    - pname="member-ob"
+
+    - docker run -i --rm -v /opt/.m2:/root/.m2 -v $PWD:/usr/src/mymaven -w /usr/src/mymaven maven:3.5.3-jdk-8 mvn clean package -DskipTests
+    - echo "编译并打包服务 [OK]"
+
+    - docker build --no-cache -t maven.jsjit.cn:9911/member/ob:latest .
+    - echo "构建镜像 [OK]"
+
+    - docker push maven.jsjit.cn:9911/member/ob:latest
+    - echo "推送镜像 [OK]"
+
+    - if [[ $(docker ps -f "name=${pname}" -q | wc -l) -ne 0 ]]; then
+    -   docker stop $(docker ps -f "name=${pname}" -q)
+    - fi
+
+    - if [[ $(docker ps -f "name=${pname}-task" -q | wc -l) -ne 0 ]]; then
+    -   docker stop $(docker ps -f "name=${pname}-task" -q)
+    - fi
+
+    - docker run -d --rm -p 8090:80 -e RUN_MODEL="--spring.profiles.active=dep" --name ${pname} maven.jsjit.cn:9911/member/ob:latest
+    - docker run -d --rm -p 18090:80 -e RUN_MODEL="--spring.profiles.active=dep --webconfig.runJob=true" --name ${pname}-task maven.jsjit.cn:9911/member/ob:latest
+
+    - echo "服务创建 [OK]"
+
+
+build_review:
+  stage: build
+  tags:
+    - build
+  only:
+    - review.1.0.1
+  script:
+
+    - mvn clean package -DskipTests
+
+    - echo "开始发布"
+    - pname="member-ob"
+    - if [ $(docker ps -a -q -f "name=$pname" | wc -l) -eq 1 ] ;
+    -   then docker stop $(docker ps -a -q -f "name=$pname") && docker rm $(docker ps -a -q -f "name=$pname") ;
+    - fi
+    - docker run -d -v "$PWD/target/":/usr/src/myapp -e TZ="Asia/Shanghai" -p 8090:80 --name "$pname"  -w /usr/src/myapp  docker.io/java java -jar memberob.jar --webconfig.runJob=true --spring.profiles.active=pub -Duser.timezone=Asia/Jerusalem
+    - echo "发布成功"
+
+
+
+build_release:
+  stage: build
+  tags:
+    - release
+  only:
+    - release.1.0.1
+  script:
+
+    - echo "开始发布"
+    - pname="member-ob"
+
+    - docker run -i --rm -v /opt/.m2:/root/.m2 -v $PWD:/usr/src/mymaven -w /usr/src/mymaven maven:3.5.3-jdk-8 mvn clean package -DskipTests
+    - echo "编译并打包服务 [OK]"
+
+    - docker build --no-cache -t maven.jsjit.cn:9911/member/ob:latest .
+    - echo "构建镜像 [OK]"
+
+    - docker push maven.jsjit.cn:9911/member/ob:latest
+    - echo "推送镜像 [OK]"
+
+    - if [[ $(docker ps -f "name=${pname}" -q | wc -l) -ne 0 ]]; then
+    -   docker stop $(docker ps -f "name=${pname}" -q)
+    - fi
+
+    - if [[ $(docker ps -f "name=${pname}-task" -q | wc -l) -ne 0 ]]; then
+    -   docker stop $(docker ps -f "name=${pname}-task" -q)
+    - fi
+
+    - docker run -d --rm -p 8090:80 -e RUN_MODEL="--spring.profiles.active=dep" --name ${pname} maven.jsjit.cn:9911/member/ob:latest
+    - docker run -d --rm -p 18090:80 -e RUN_MODEL="--spring.profiles.active=dep --webconfig.runJob=true" --name ${pname}-task maven.jsjit.cn:9911/member/ob:latest
+
+    - echo "服务创建 [OK]"
+
+

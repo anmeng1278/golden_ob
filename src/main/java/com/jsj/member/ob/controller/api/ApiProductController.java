@@ -1,5 +1,6 @@
 package com.jsj.member.ob.controller.api;
 
+import com.jsj.member.ob.constant.Constant;
 import com.jsj.member.ob.dto.api.Request;
 import com.jsj.member.ob.dto.api.Response;
 import com.jsj.member.ob.dto.api.activity.ActivityDto;
@@ -22,6 +23,7 @@ import com.jsj.member.ob.logic.order.OrderFactory;
 import com.jsj.member.ob.utils.DateUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -314,6 +316,7 @@ public class ApiProductController {
      */
     @ApiOperation(value = "创建订单")
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
+    @Transactional(Constant.DBTRANSACTIONAL)
     public Response<CreateOrderResp> createOrder(@ApiParam(value = "请求实体", required = true)
                                                  @RequestBody @Validated Request<CreateOrderRequ> requ) throws Exception {
 
@@ -330,6 +333,7 @@ public class ApiProductController {
                 throw new TipException(resp.getMessage());
             }
         } else {
+
             OrderBase orderBase = OrderFactory.GetInstance(requ.getRequestBody().getActivityType());
             resp = orderBase.CreateOrder(requ.getRequestBody());
 
