@@ -55,7 +55,7 @@ public class ExportExcelController {
                                HttpServletResponse response) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("配送信息表");
-        String[] headers = {"用户openId", "用户昵称", "快递号", "手机号", "联系人", "省", "市", "区", "详细地址","身份证号","航班号","机场编号","机场名称","卡生效/活动码使用日期", "创建时间", "商品属性", "配送方式", "物流状态", "商品名称", "规格", "数量"};
+        String[] headers = {"用户openId", "用户昵称", "快递号", "手机号", "联系人", "省", "市", "区", "详细地址", "身份证号", "航班号", "机场编号", "机场名称", "卡生效/活动码使用日期", "创建时间", "商品属性", "配送方式", "物流状态", "商品名称", "规格", "数量"};
         EntityWrapper<Delivery> wrapper = new EntityWrapper<>();
         wrapper.where("delete_time is null");
 
@@ -80,7 +80,7 @@ public class ExportExcelController {
             row.createCell(2).setCellValue(delivery.getExpressNumber());
             row.createCell(3).setCellValue(delivery.getMobile());
             row.createCell(4).setCellValue(delivery.getContactName());
-            if(delivery.getProvinceId() !=null &&  delivery.getCityId() !=null && delivery.getDistrictId()!=null) {
+            if (delivery.getProvinceId() != null && delivery.getCityId() != null && delivery.getDistrictId() != null) {
                 row.createCell(5).setCellValue(GetDict(delivery.getProvinceId()).getDictName());
                 row.createCell(6).setCellValue(GetDict(delivery.getCityId()).getDictName());
                 row.createCell(7).setCellValue(GetDict(delivery.getDistrictId()).getDictName());
@@ -112,7 +112,6 @@ public class ExportExcelController {
     }
 
 
-
     @RequestMapping("/exportOrder")
     public void exportOrder(@RequestParam(value = "typeId", defaultValue = "-1") Integer typeId,
                             @RequestParam(value = "status", defaultValue = "-1") Integer status,
@@ -122,7 +121,7 @@ public class ExportExcelController {
                             HttpServletResponse response) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("订单信息表");
-        String[] headers = {"订单编号", "类型", "用户昵称", "openId", "商品样数", "金额", "状态", "创建时间", "商品名称", "规格", "数量"};
+        String[] headers = {"订单编号", "类型", "支付时间", "微信支付流水号", "用户昵称", "openId", "商品样数", "金额", "状态", "创建时间", "商品名称", "规格", "数量"};
 
         EntityWrapper<Order> wrapper = new EntityWrapper<>();
 
@@ -157,17 +156,19 @@ public class ExportExcelController {
             row = sheet.createRow(rowNum);
             row.createCell(0).setCellValue(order.getOrderId());
             row.createCell(1).setCellValue(ActivityType.valueOf(order.getTypeId()).getMessage());
-            row.createCell(2).setCellValue(WechatLogic.GetWechat(order.getOpenId()).getNickname());
-            row.createCell(3).setCellValue(order.getOpenId());
-            row.createCell(4).setCellValue(String.valueOf(OrderLogic.GetOrderProducts(order.getOrderId()).size()));
-            row.createCell(5).setCellValue(order.getAmount().doubleValue());
-            row.createCell(6).setCellValue(OrderStatus.valueOf(order.getStatus()).getMessage());
-            row.createCell(7).setCellValue(DateUtils.formatDateByUnixTime(Long.valueOf(order.getCreateTime()), "yyyy-MM-dd HH:mm:ss"));
+            row.createCell(2).setCellValue(DateUtils.formatDateByUnixTime(Long.valueOf(order.getPayTime() != null ? order.getPayTime() : '0'), "yyyy-MM-dd HH:mm:ss"));
+            row.createCell(3).setCellValue(order.getTransactionId());
+            row.createCell(4).setCellValue(WechatLogic.GetWechat(order.getOpenId()).getNickname());
+            row.createCell(5).setCellValue(order.getOpenId());
+            row.createCell(6).setCellValue(String.valueOf(OrderLogic.GetOrderProducts(order.getOrderId()).size()));
+            row.createCell(7).setCellValue(order.getAmount().doubleValue());
+            row.createCell(8).setCellValue(OrderStatus.valueOf(order.getStatus()).getMessage());
+            row.createCell(9).setCellValue(DateUtils.formatDateByUnixTime(Long.valueOf(order.getCreateTime()), "yyyy-MM-dd HH:mm:ss"));
             List<OrderProductDto> orderProductDtos = OrderLogic.GetOrderProducts(order.getOrderId());
             for (OrderProductDto orderProductDto : orderProductDtos) {
-                row.createCell(8).setCellValue(ProductLogic.GetProduct(orderProductDto.getProductId()).getProductName());
-                row.createCell(9).setCellValue(ProductLogic.GetProductSpec(orderProductDto.getProductSpecId()).getSpecName());
-                row.createCell(10).setCellValue(orderProductDto.getNumber());
+                row.createCell(10).setCellValue(ProductLogic.GetProduct(orderProductDto.getProductId()).getProductName());
+                row.createCell(11).setCellValue(ProductLogic.GetProductSpec(orderProductDto.getProductSpecId()).getSpecName());
+                row.createCell(12).setCellValue(orderProductDto.getNumber());
                 rowNum++;
                 row = sheet.createRow(rowNum);
             }
